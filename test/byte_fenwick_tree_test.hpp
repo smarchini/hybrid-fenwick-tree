@@ -4,15 +4,6 @@
 #include <gtest/gtest.h>
 #include <cstdint>
 #include "./test_utils.hpp"
-#include "../include/byte_fenwick_tree.hpp"
-
-class ByteFenwickTree_Test : public ByteFenwickTree {
-public:
-    ByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        ByteFenwickTree(sequence, length) {}
-    using ByteFenwickTree::tree;
-};
-
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
@@ -80,8 +71,8 @@ TEST(byte_fenwick_tree, increasing_increments)
     // find
     for (std::uint64_t i = 0; i < 15; i++)
         EXPECT_EQ(i, t.find(seq2[i])) << "at index " << i;
-    //for (std::uint64_t i = seq2[14]; i < 1000; i++)
-    //    EXPECT_EQ(14, t.find(i)) << "at index " << i;
+    for (std::uint64_t i = seq2[14]; i < 1000; i++)
+        EXPECT_EQ(14, t.find(i)) << "at index " << i;
 
     // set
     for (size_t i = 0; i < 15; i++)

@@ -14,7 +14,7 @@
 class SimpleFenwickTree : public FenwickTree
 {
 protected:
-    std::uint64_t *tree;
+    std::uint64_t *tree = nullptr;
     const std::size_t size;
 
 public:

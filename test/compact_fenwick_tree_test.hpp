@@ -4,15 +4,6 @@
 #include <gtest/gtest.h>
 #include <cstdint>
 #include "./test_utils.hpp"
-#include "../include/compact_fenwick_tree.hpp"
-
-class CompactFenwickTree_Test : public CompactFenwickTree {
-public:
-    CompactFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        CompactFenwickTree(sequence, length) {}
-    using CompactFenwickTree::tree;
-};
-
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];

@@ -99,7 +99,7 @@ TEST(broadword, mask_first_set)
         0b0000000000000000000000000000000010000000000000000000000000000000ULL
     };
 
-    for (std::size_t i = 0; i < SPECIAL_CASES_LENGTH; i++)
+    for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++)
         EXPECT_EQ(special_cases_solutions[i], mask_first_set(special_cases[i])) << " at index " << i;
 }
 
@@ -131,7 +131,8 @@ TEST(broadword, mask_last_set)
         0b0000000000000000000000000000000010000000000000000000000000000000ULL
     };
 
-    for (std::size_t i = 0; i < SPECIAL_CASES_LENGTH; i++)
+    // special_cases[0] is undefined
+    for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++)
         EXPECT_EQ(special_cases_solutions[i], mask_last_set(special_cases[i])) << " at index " << i;
 }
 
@@ -159,11 +160,12 @@ TEST(broadword, find_last_set)
 
     std::uint64_t special_cases_solutions[] = { 1, 32, 64, 64, 64, 32 };
 
-    for (std::size_t i = 0; i < SPECIAL_CASES_LENGTH; i++)
+    // special_cases[0] is undefined
+    for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++)
         EXPECT_EQ(special_cases_solutions[i], find_last_set(special_cases[i])) << " at index " << i;
 
-    std::uint64_t other_cases[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    std::uint64_t other_cases_solutions[] = { 1, 1, 2, 2, 3, 3, 3, 3, 4, 4 };
+    std::uint64_t other_cases[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    std::uint64_t other_cases_solutions[] = { 1, 2, 2, 3, 3, 3, 3, 4, 4 };
 
     for (std::size_t i = 0; i < sizeof(other_cases) / sizeof(std::uint64_t); i++)
         EXPECT_EQ(other_cases_solutions[i], find_last_set(other_cases[i])) << " at index " << i;

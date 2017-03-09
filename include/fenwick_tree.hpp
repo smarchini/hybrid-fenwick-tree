@@ -39,7 +39,7 @@ public:
      * TODO: nota sul comportamento con val=0
      * TODO: nota sul comportamento in caso size != 2^k-1 per qualche k
      */
-    virtual std::uint64_t find(std::uint64_t val) const = 0;
+    virtual std::size_t find(std::uint64_t val) const = 0;
 };
 
 #endif // __FENWICK_TREE_H__

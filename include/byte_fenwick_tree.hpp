@@ -19,7 +19,8 @@
 class ByteFenwickTree : public FenwickTree
 {
 public:
-    static constexpr std::uint64_t MASK[] = { 0xFFULL,
+    static constexpr std::uint64_t MASK[] = { 0x0ULL,
+                                              0xFFULL,
                                               0xFFFFULL,
                                               0xFFFFFFULL,
                                               0xFFFFFFFFULL,
@@ -28,10 +29,10 @@ public:
                                               0xFFFFFFFFFFFFFFULL,
                                               0xFFFFFFFFFFFFFFFFULL };
 protected:
-    std::uint8_t *tree;
+    std::uint8_t *tree = nullptr;
     const std::size_t size;
     const std::size_t levels;
-    std::size_t *level_start;
+    std::size_t *level_start = nullptr;
 
 public:
     /**
@@ -49,7 +50,7 @@ public:
 
     virtual void set(std::size_t idx, std::uint64_t inc);
 
-    virtual std::uint64_t find(std::uint64_t val) const;
+    virtual std::size_t find(std::uint64_t val) const;
 };
 
 #endif // __BYTE_FENWICK_TREE_H__

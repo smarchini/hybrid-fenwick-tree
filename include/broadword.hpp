@@ -36,9 +36,11 @@ inline std::uint64_t find_first_set(std::uint64_t word)
  *
  * This fucntion returns the position of the last (most significant) bit set
  * in @word. The least significant bit is position 1 and the most significant
- * position is 64. It returns 1 if @word is 0.
+ * position is 64.
  *
- * Return: The position of the last set bit in @word or 1 if there isn't one.
+ * Undefined behavior if @word is 0.
+ *
+ * Return: The position of the last set bit in @word if @word != 0.
  */
 inline std::uint64_t find_last_set(std::uint64_t word)
 {
@@ -61,12 +63,14 @@ inline std::uint64_t mask_first_set(std::uint64_t word)
  * mask_last_set - Given a word, mask its most significant bit out.
  * @word: Binary word.
  *
- * Return: @word with anything but its most significant one setted to zero or 1
- * if there isn't one.
+ * Undefined behavior if @word is 0.
+ *
+ * Return: @word with anything but its most significant one setted to zero,
+ * undefined behavior if @word is 0.
  */
 inline std::uint64_t mask_last_set(std::uint64_t word)
 {
-    return 1ULL << (find_last_set(word) - 1ULL);
+    return 0x8000000000000000 >> __builtin_clzll(word);
 }
 
 /**
@@ -82,6 +86,10 @@ inline std::uint64_t mask_last_set(std::uint64_t word)
  */
 inline std::uint64_t compact_bitmask(std::size_t count, std::size_t pos)
 {
+    // TODO: testare performance
+    // return (-(count == 64ULL)) | ((1ULL << count) - 1ULL) << pos;
+    // return (-(count == 64ULL)) | (((1ULL << (count+pos)) - 1ULL) ^ ((1ULL << pos) - 1ULL));
+
     return (-(count != 0ULL)) & (-1ULL >> (64ULL - count)) << pos;
 }
 

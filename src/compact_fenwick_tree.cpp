@@ -43,17 +43,16 @@ CompactFenwickTree::CompactFenwickTree(std::uint64_t sequence[], std::size_t siz
 
 CompactFenwickTree::~CompactFenwickTree()
 {
-    delete[] tree;
-    delete[] level_start;
+    if (tree) delete[] tree;
+    if (level_start) delete[] level_start;
 }
 
 
 std::uint64_t CompactFenwickTree::get(std::size_t idx) const
 {
     std::uint64_t sum = 0;
-    idx++;
 
-    while (idx != 0) {
+    for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
         const std::size_t height = find_first_set(idx) - 1;
         const std::size_t level_idx = idx >> (1 + height);
 
@@ -63,7 +62,6 @@ std::uint64_t CompactFenwickTree::get(std::size_t idx) const
         const std::uint64_t * const compact_element = reinterpret_cast<const std::uint64_t * const>(tree + bit_pos / 8);
 
         sum += (*compact_element & mask) >> shift;
-        idx = drop_first_set(idx);
     }
 
     return sum;
@@ -72,22 +70,18 @@ std::uint64_t CompactFenwickTree::get(std::size_t idx) const
 
 void CompactFenwickTree::set(std::size_t idx, std::uint64_t inc)
 {
-    idx++;
-
-    do {
+    for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const std::size_t height = find_first_set(idx) - 1;
         const std::size_t level_idx = idx >> (1 + height);
         const std::size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * level_idx;
         const std::size_t shift = bit_pos & 0b111;
         std::uint64_t * const compact_element = reinterpret_cast<std::uint64_t * const>(tree + bit_pos / 8);
         *compact_element += inc << shift;
-
-        idx += mask_first_set(idx);
-    } while (idx <= size);
+    }
 }
 
 
-std::uint64_t CompactFenwickTree::find(std::uint64_t val) const
+std::size_t CompactFenwickTree::find(std::uint64_t val) const
 {
     std::size_t node = 0, idx = 0;
 

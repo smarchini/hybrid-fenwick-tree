@@ -4,14 +4,13 @@
 #include <gtest/gtest.h>
 #include <cstdint>
 #include "./test_utils.hpp"
-#include "../include/simple_fenwick_tree.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
 
 TEST(simple_fenwick_tree, increments_by_one)
 {
-    SimpleFenwickTree t(inc1, 15);
+    SimpleFenwickTree_Test t(inc1, 15);
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
