@@ -86,10 +86,6 @@ inline std::uint64_t mask_last_set(std::uint64_t word)
  */
 inline std::uint64_t compact_bitmask(std::size_t count, std::size_t pos)
 {
-    // TODO: testare performance
-    // return (-(count == 64ULL)) | ((1ULL << count) - 1ULL) << pos;
-    // return (-(count == 64ULL)) | (((1ULL << (count+pos)) - 1ULL) ^ ((1ULL << pos) - 1ULL));
-
     return (-(count != 0ULL)) & (-1ULL >> (64ULL - count)) << pos;
 }
 

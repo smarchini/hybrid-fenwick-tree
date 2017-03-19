@@ -70,8 +70,8 @@ TEST(compact_fenwick_tree, increasing_increments)
     // find
     for (std::uint64_t i = 0; i < 15; i++)
         EXPECT_EQ(i, t.find(seq2[i])) << "at index " << i;
-    //for (std::uint64_t i = seq2[14]; i < 1000; i++)
-    //    EXPECT_EQ(14, t.find(i)) << "at index " << i;
+    for (std::uint64_t i = seq2[14]; i < 1000; i++)
+        EXPECT_EQ(14, t.find(i)) << "at index " << i;
 
     // set
     for (size_t i = 0; i < 15; i++)

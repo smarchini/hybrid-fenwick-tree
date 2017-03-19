@@ -12,7 +12,6 @@
 #include "../include/compact_fenwick_tree.hpp"
 #include "../include/typed_fenwick_tree.hpp"
 
-//#include <gperftools/profiler.h>
 
 template<typename T>
 void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint64_t increments[], std::uint64_t set_updates[]);
@@ -49,13 +48,10 @@ int main(int argc, char **argv)
         set_updates[i] = (increments[i] + inc) < 64 ? inc : 0;
     }
 
-//    ProfilerStart("nameOfProfile.log");
     bench<SimpleFenwickTree>("SimpleFenwickTree", size, order, increments, set_updates);
     bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates);
     bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates);
     bench<TypedFenwickTree>("TypedFenwickTree", size, order, increments, set_updates);
-//    ProfilerStop();
-
 
     delete[] increments;
     delete[] set_updates;
@@ -109,13 +105,6 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
     //     std::cout << array[i] << " ";
     // std::cout << "\n" << std::endl;
 
-    // get
-    begin = std::chrono::high_resolution_clock::now();
-    for (std::size_t i = 0; i <= size; i++)
-        array[i] = tree.get(order[i]);
-    end = std::chrono::high_resolution_clock::now();
-    get = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
-
     std::cout << "\n" << name << " time:\n";
     std::cout << "biuld: " << std::right << std::setw(12) << constructor << " nsec\n";
     std::cout << "get:   " << std::right << std::setw(12) << get << " nsec\n";
@@ -123,4 +112,5 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
     std::cout << "find:  " << std::right << std::setw(12) << find << " nsec\n";
 
     delete[] array;
+    delete[] sequence;
 }
