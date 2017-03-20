@@ -63,7 +63,7 @@ template<typename T>
 void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint64_t increments[], std::uint64_t set_updates[])
 {
     std::chrono::high_resolution_clock::time_point begin, end;
-    std::uint64_t *array = new std::uint64_t[size+1]; // in order to avoid compilers dead code elimination
+    std::uint64_t u = 0;
     std::uint64_t *sequence = new std::uint64_t[size];
     increments_to_sequence(increments, sequence, size);
 
@@ -75,8 +75,8 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
 
     // get
     begin = std::chrono::high_resolution_clock::now();
-    for (std::size_t i = 0; i <= size; i++)
-        array[i] = tree.get(order[i]);
+    for (std::size_t i = 0; i < size; i++)
+        u ^= tree.get(order[i]);
     end = std::chrono::high_resolution_clock::now();
     auto get = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
@@ -90,16 +90,23 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
     // find
     begin = std::chrono::high_resolution_clock::now();
     for (std::size_t i = 0; i < size; i++)
-        array[i] = tree.find(sequence[i]);
+        u ^= tree.find(sequence[i]);
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
-    std::cout << "\n" << name << " time:\n";
-    std::cout << "biuld: " << std::right << std::setw(12) << constructor << " nsec\n";
-    std::cout << "get:   " << std::right << std::setw(12) << get << " nsec\n";
-    std::cout << "set:   " << std::right << std::setw(12) << set << " nsec\n";
-    std::cout << "find:  " << std::right << std::setw(12) << find << " nsec\n";
+    const volatile std::uint64_t unused = u;
 
-    delete[] array;
+    // std::cout << "find:\n";
+    // for (std::size_t i = 0; i <= size; i++)
+    //     std::cout << array[i] << " ";
+    // std::cout << "\n" << std::endl;
+
+    const double c = 1. / size;
+    std::cout << "\n" << name << " time:\n";
+    std::cout << "build: " << std::right << std::setw(12) << constructor * c << " ns/item\n";
+    std::cout << "get:   " << std::right << std::setw(12) << get * c << " ns/item\n";
+    std::cout << "set:   " << std::right << std::setw(12) << set * c << " ns/item\n";
+    std::cout << "find:  " << std::right << std::setw(12) << find * c << " ns/item\n";
+
     delete[] sequence;
 }
