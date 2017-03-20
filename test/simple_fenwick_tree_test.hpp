@@ -12,6 +12,9 @@ TEST(simple_fenwick_tree, increments_by_one)
 {
     SimpleFenwickTree_Test t(inc1, 15);
 
+    // bit_count
+    EXPECT_EQ(15*64, t.bit_count());
+
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
 
@@ -47,6 +50,9 @@ TEST(simple_fenwick_tree, increments_by_one)
 TEST(simple_fenwick_tree, increasing_increments)
 {
     SimpleFenwickTree t(inc2, 15);
+
+    // bit_count
+    EXPECT_EQ(15*64, t.bit_count());
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);

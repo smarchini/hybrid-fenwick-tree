@@ -51,6 +51,8 @@ public:
     virtual void set(std::size_t idx, std::uint64_t inc);
 
     virtual std::size_t find(std::uint64_t val) const;
+
+    virtual std::size_t bit_count() const;
 };
 
 #endif // __BYTE_FENWICK_TREE_H__

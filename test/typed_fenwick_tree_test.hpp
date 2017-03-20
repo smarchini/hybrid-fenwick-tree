@@ -22,6 +22,9 @@ TEST(typed_fenwick_tree, increments_by_one)
 
     TypedFenwickTree_Test t(inc1, 15);
 
+    // bit_count
+    EXPECT_EQ(8*14 + 16, t.bit_count());
+
     std::string tree8_str = "0000010000000100000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "0000000000001000";
     EXPECT_EQ(tree8_str, tree_tostring(t.tree8, 8*8 + 8*4 + 8*2));
@@ -72,6 +75,9 @@ TEST(typed_fenwick_tree, increasing_increments)
     // 0000000000100100
 
     TypedFenwickTree_Test t(inc2, 15);
+
+    // bit_count
+    EXPECT_EQ(8*14 + 16, t.bit_count());
 
     std::string tree8_str = "0010101000001010000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
     std::string tree16_str = "0000000000100100";
