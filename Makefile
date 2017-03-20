@@ -10,14 +10,11 @@ all: test benchmark
 test: bin/test
 	bin/test --gtest_color=yes
 
-#134217727
-#67108863
-#33554431
-#1048575
 benchmark: bin/benchmark
 	bin/benchmark 1048575
 	bin/benchmark 33554431
 	bin/benchmark 67108863
+#bin/benchmark 134217727
 
 stats: $(OBJS) obj/benchmark.o
 	./genstats.sh
