@@ -46,7 +46,7 @@ public:
      * bit_count() - Returns an estimation of the number of bits used by
      * the tree.
      */
-    virtual std:sise_t bit_count() const = 0;
+    virtual std::size_t bit_count() const = 0;
 };
 
 #endif // __FENWICK_TREE_H__

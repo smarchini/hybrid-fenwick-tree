@@ -101,6 +101,9 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
     //     std::cout << array[i] << " ";
     // std::cout << "\n" << std::endl;
 
+
+    std::cout << "\n" << name << " space: " << tree.bit_count() / (double)size << "b/item\n";
+
     const double c = 1. / size;
     std::cout << "\n" << name << " time:\n";
     std::cout << "build: " << std::right << std::setw(12) << constructor * c << " ns/item\n";
