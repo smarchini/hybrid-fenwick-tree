@@ -9,6 +9,7 @@
 #include "../include/compact_fenwick_tree.hpp"
 #include "../include/byte_fenwick_tree.hpp"
 #include "../include/typed_fenwick_tree.hpp"
+#include "../include/shrank_fenwick_tree.hpp"
 
 
 // Exposed trees
@@ -43,6 +44,14 @@ public:
     using TypedFenwickTree::tree32;
     using TypedFenwickTree::tree64;
 };
+
+class ShrankFenwickTree_Test : public ShrankFenwickTree {
+public:
+    ShrankFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        ShrankFenwickTree(sequence, length) {}
+    using ShrankFenwickTree::tree;
+};
+
 
 
 // Test data

@@ -1,4 +1,4 @@
-OBJS = obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o obj/typed_fenwick_tree.o
+OBJS = obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o obj/typed_fenwick_tree.o obj/shrank_fenwick_tree.o
 CC = g++
 DEBUG = -O3 -march=native -g
 CFLAGS = -std=c++14 -Wall -Wextra -c $(DEBUG)
@@ -15,8 +15,12 @@ test: bin/test
 #33554431
 #1048575
 benchmark: bin/benchmark
-	bin/benchmark 33554431
 	bin/benchmark 1048575
+	bin/benchmark 33554431
+	bin/benchmark 67108863
+
+stats: $(OBJS) obj/benchmark.o
+	./genstats.sh
 
 bin/test: $(OBJS) obj/test.o
 	@mkdir -p $(@D)
@@ -42,7 +46,11 @@ obj/typed_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/typed_fenwick_tree.cpp
 
-obj/test.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o test/test_utils.hpp test/broadword_test.hpp test/simple_fenwick_tree_test.hpp test/compact_fenwick_tree_test.hpp test/byte_fenwick_tree_test.hpp test/typed_fenwick_tree_test.hpp test/same_behavior_test.hpp test/test.cpp
+obj/shrank_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/shrank_fenwick_tree.hpp src/shrank_fenwick_tree.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ src/shrank_fenwick_tree.cpp
+
+obj/test.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o test/test_utils.hpp test/broadword_test.hpp test/simple_fenwick_tree_test.hpp test/compact_fenwick_tree_test.hpp test/byte_fenwick_tree_test.hpp test/typed_fenwick_tree_test.hpp test/shrank_fenwick_tree_test.hpp test/same_behavior_test.hpp test/test.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ test/test.cpp
 

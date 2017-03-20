@@ -21,10 +21,10 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 6;
 
 protected:
-    std::uint8_t *tree8 = nullptr;
-    std::uint16_t *tree16 = nullptr;
-    std::uint32_t *tree32 = nullptr;
     std::uint64_t *tree64 = nullptr;
+    std::uint32_t *tree32 = nullptr;
+    std::uint16_t *tree16 = nullptr;
+    std::uint8_t *tree8 = nullptr;
 
     const std::size_t size;
     const std::size_t levels;
@@ -49,9 +49,6 @@ private:
                 std::size_t sequence_idx = node-1;
                 T value = sequence[sequence_idx];
 
-                // TODO: Rivedere e scrivere meglio
-                // se ne salta uno per via di (j < l) non ha senso fare i successivi
-                // poco rilevante visto che è già abbastanza veloce
                 for (std::size_t j = 0; j < l && j <= 8-LEAF_BITSIZE; j++) {
                     sequence_idx >>= 1;
                     value += tree8[level_start[j] + sequence_idx];

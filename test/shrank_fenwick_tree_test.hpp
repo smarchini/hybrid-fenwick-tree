@@ -1,5 +1,5 @@
-#ifndef __COMPACT_FENWICK_TREE_TEST_H__
-#define __COMPACT_FENWICK_TREE_TEST_H__
+#ifndef __SHRANK_FENWICK_TREE_TEST_H__
+#define __SHRANK_FENWICK_TREE_TEST_H__
 
 #include <gtest/gtest.h>
 #include <cstdint>
@@ -8,14 +8,14 @@
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
 
-TEST(compact_fenwick_tree, increments_by_one)
+TEST(shrank_fenwick_tree, increments_by_one)
 {
-    // heigth  3 |                 2 |                               1 |                                                       0
-    // node   15 |       14       13 |      12      11      10       9 |      8      7      6      5      4      3      2      1
-    // 000001000 | 00000100 00000100 | 0000010 0000010 0000010 0000010 | 000001 000001 000001 000001 000001 000001 000001 000001
-    CompactFenwickTree_Test t(inc1, 15);
+    // nod 15      14     13       12     11      10      9         8      7       6      5        4      3       2      1
+    // 666666 7777777 666666 88888888 666666 7777777 666666 999999999 666666 7777777 666666 88888888 666666 7777777 666666
+    // 000001 0000010 000001 00000100 000001 0000010 000001 000001000 000001 0000010 000001 00000100 000001 0000010 000001
+    ShrankFenwickTree_Test t(inc1, 15);
 
-    std::string tree_str = "00000100000000100000001000000010000001000000100000010000001000001000001000001000001000001000001000001";
+    std::string tree_str = "00000100000100000010000010000000100000100000010000010000000010000010000001000001000000010000010000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree, 6*8 + 7*4 + 8*2 + 9));
 
     std::uint64_t seq1[15];
@@ -50,14 +50,14 @@ TEST(compact_fenwick_tree, increments_by_one)
 }
 
 
-TEST(compact_fenwick_tree, increasing_increments)
+TEST(shrank_fenwick_tree, increasing_increments)
 {
-    // heigth  3 |                 2 |                               1 |                                                       0
-    // node   15 |       14       13 |      12      11      10       9 |      8      7      6      5      4      3      2      1
-    // 000100100 | 00101010 00001010 | 0011011 0010011 0001011 0000011 | 001111 001101 001011 001001 000111 000101 000011 000001
-    CompactFenwickTree_Test t(inc2, 15);
+    // nod 15      14     13       12     11      10      9         8      7       6      5        4      3       2      1
+    // 666666 7777777 666666 88888888 666666 7777777 666666 999999999 666666 7777777 666666 88888888 666666 7777777 666666
+    // 001111 0011011 001101 00101010 001011 0010011 001001 000100100 000111 0001011 000101 00001010 000011 0000011 000001
+    ShrankFenwickTree_Test t(inc2, 15);
 
-    std::string tree_str = "00010010000101010000010100011011001001100010110000011001111001101001011001001000111000101000011000001";
+    std::string tree_str = "00111100110110011010010101000101100100110010010001001000001110001011000101000010100000110000011000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree, 6*8 + 7*4 + 8*2 + 9));
 
     std::uint64_t seq2[15];
@@ -91,4 +91,4 @@ TEST(compact_fenwick_tree, increasing_increments)
     }
 }
 
-#endif // __COMPACT_FENWICK_TREE_TEST_H__
+#endif // __SHRANK_FENWICK_TREE_TEST_H__

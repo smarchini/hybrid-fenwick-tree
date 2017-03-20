@@ -7,7 +7,7 @@ constexpr std::uint64_t ByteFenwickTree::MASK[];
  * get_size - Given it's height, compute the required size of an element
  * @height: Height of the element.
  *
- * This function compute (@height+6) / 8 + 1 in order to avoid some magic
+ * This function compute (@height+6-1) / 8 + 1 in order to avoid some magic
  * numbers around the code.
  *
  * 6 is the LEAF_BITSIZE as in CompactFenwickTree and 8 is one Byte in bit.
@@ -32,8 +32,8 @@ ByteFenwickTree::ByteFenwickTree(std::uint64_t sequence[], std::size_t size) :
     tree = new std::uint8_t[level_start[levels]];
 
     for (std::size_t l = 0; l < levels; l++) {
-        for (std::size_t node = 1<<l; node <= size; node += 1 << (l+1)) { // teoricamente potrebbe essere in parallelo (?)
-            const std::size_t curr_byte_pos = level_start[l] + get_size(l) * (node >> (l+1)); // volendo lo posso incrementare man mano
+        for (std::size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
+            const std::size_t curr_byte_pos = level_start[l] + get_size(l) * (node >> (l+1));
             std::uint64_t * const curr_element = reinterpret_cast<std::uint64_t * const>(tree + curr_byte_pos);
 
             std::size_t sequence_idx = node-1;
@@ -62,15 +62,19 @@ std::uint64_t ByteFenwickTree::get(std::size_t idx) const
 {
     std::uint64_t sum = 0;
 
-    for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
-        const std::size_t height = find_first_set(idx) - 1;
+    idx++;
+    std::size_t index = 0;
+
+    do {
+        index += mask_last_set(idx ^ index);
+        const std::size_t height = find_first_set(index) - 1;
         const std::size_t level_idx = idx >> (1 + height);
         const std::size_t size = get_size(height);
         const std::size_t byte_pos = level_start[height] + size * level_idx;
         const std::uint64_t * const compact_element = reinterpret_cast<const std::uint64_t * const>(tree + byte_pos);
 
         sum += *compact_element & MASK[size];
-    }
+    } while (idx ^ index);
 
     return sum;
 }

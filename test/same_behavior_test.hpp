@@ -23,6 +23,7 @@ void random_test(std::size_t size)
     CompactFenwickTree_Test compact(increments, size);
     ByteFenwickTree_Test byte(increments, size);
     TypedFenwickTree_Test typed(increments, size);
+    ShrankFenwickTree_Test shrank(increments, size);
 
     // get
     for (size_t i = 0; i < size; i++) {
@@ -31,6 +32,7 @@ void random_test(std::size_t size)
         EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i;
         EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i;
         EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i;
+        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i;
     }
 
     // find
@@ -40,6 +42,7 @@ void random_test(std::size_t size)
         EXPECT_EQ(simple_find, compact.find(i)) << "at index " << i;
         EXPECT_EQ(simple_find, byte.find(i)) << "at index " << i;
         EXPECT_EQ(simple_find, typed.find(i)) << "at index " << i;
+        EXPECT_EQ(simple_find, shrank.find(i)) << "at index " << i;
     }
 
     // set
@@ -48,6 +51,7 @@ void random_test(std::size_t size)
         compact.set(i, set_updates[i]);
         byte.set(i, set_updates[i]);
         typed.set(i, set_updates[i]);
+        shrank.set(i, set_updates[i]);
     }
 
     // get
@@ -57,6 +61,7 @@ void random_test(std::size_t size)
         EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i;
         EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i;
         EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i;
+        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i;
     }
 
     delete[] increments;
