@@ -15,6 +15,9 @@ TEST(compact_fenwick_tree, increments_by_one)
     // 000001000 | 00000100 00000100 | 0000010 0000010 0000010 0000010 | 000001 000001 000001 000001 000001 000001 000001 000001
     CompactFenwickTree_Test t(inc1, 15);
 
+    // bit_count
+    EXPECT_EQ(6*8 + 7*4 + 8*2 + 9, t.bit_count());
+
     std::string tree_str = "00000100000000100000001000000010000001000000100000010000001000001000001000001000001000001000001000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree, 6*8 + 7*4 + 8*2 + 9));
 
@@ -56,6 +59,9 @@ TEST(compact_fenwick_tree, increasing_increments)
     // node   15 |       14       13 |      12      11      10       9 |      8      7      6      5      4      3      2      1
     // 000100100 | 00101010 00001010 | 0011011 0010011 0001011 0000011 | 001111 001101 001011 001001 000111 000101 000011 000001
     CompactFenwickTree_Test t(inc2, 15);
+
+    // bit_count
+    EXPECT_EQ(6*8 + 7*4 + 8*2 + 9, t.bit_count());
 
     std::string tree_str = "00010010000101010000010100011011001001100010110000011001111001101001011001001000111000101000011000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree, 6*8 + 7*4 + 8*2 + 9));

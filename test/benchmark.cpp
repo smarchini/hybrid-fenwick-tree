@@ -12,8 +12,11 @@
 #include "../include/compact_fenwick_tree.hpp"
 #include "../include/typed_fenwick_tree.hpp"
 
+
+using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
+
 template<typename T>
-void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint64_t increments[], std::uint64_t set_updates[]);
+void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[]);
 
 int main(int argc, char **argv)
 {
@@ -24,23 +27,23 @@ int main(int argc, char **argv)
 
     std::istringstream iss(argv[1]);
 
-    std::size_t size;
+    size_t size;
     if (!(iss >> size)) {
         std::cerr << "Invalid number " << argv[1] << '\n';
         return -1;
     }
 
-    std::uint64_t *order = new std::uint64_t[size];
-    for (std::size_t i = 0; i < size; i++)
+    uint64_t *order = new uint64_t[size];
+    for (size_t i = 0; i < size; i++)
         order[i] = i;
     std::random_shuffle(order, order+size);
 
-    std::uint64_t *increments = new std::uint64_t[size];
-    std::uint64_t *set_updates = new std::uint64_t[size];
+    uint64_t *increments = new uint64_t[size];
+    uint64_t *set_updates = new uint64_t[size];
 
     fill_with_random_values(increments, size);
     fill_with_random_values(set_updates, size);
-    for (std::size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         int inc = set_updates[i] - increments[i];
         if (inc < 0) inc = -inc;
         set_updates[i] = (increments[i] + inc) < 64 ? inc : 0;
@@ -60,11 +63,11 @@ int main(int argc, char **argv)
 }
 
 template<typename T>
-void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint64_t increments[], std::uint64_t set_updates[])
+void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[])
 {
     std::chrono::high_resolution_clock::time_point begin, end;
-    std::uint64_t u = 0;
-    std::uint64_t *sequence = new std::uint64_t[size];
+    uint64_t u = 0;
+    uint64_t *sequence = new uint64_t[size];
     increments_to_sequence(increments, sequence, size);
 
     // constructor
@@ -75,29 +78,29 @@ void bench(const char* name, std::size_t size, std::uint64_t order[], std::uint6
 
     // get
     begin = std::chrono::high_resolution_clock::now();
-    for (std::size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         u ^= tree.get(order[i]);
     end = std::chrono::high_resolution_clock::now();
     auto get = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
     // set
     begin = std::chrono::high_resolution_clock::now();
-    for (std::size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         tree.set(order[i], set_updates[i]);
     end = std::chrono::high_resolution_clock::now();
     auto set = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
     // find
     begin = std::chrono::high_resolution_clock::now();
-    for (std::size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         u ^= tree.find(sequence[i]);
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
-    const volatile std::uint64_t unused = u;
+    const volatile uint64_t unused = u;
 
     // std::cout << "find:\n";
-    // for (std::size_t i = 0; i <= size; i++)
+    // for (size_t i = 0; i <= size; i++)
     //     std::cout << array[i] << " ";
     // std::cout << "\n" << std::endl;
 

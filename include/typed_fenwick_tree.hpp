@@ -41,6 +41,8 @@ public:
 
     virtual std::size_t find(std::uint64_t val) const;
 
+    virtual std::size_t bit_count() const;
+
 private:
     template <typename T, std::size_t start, std::size_t end>
     inline void fill_tree(T *tree, std::uint64_t sequence[]) {

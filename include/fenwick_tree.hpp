@@ -43,8 +43,8 @@ public:
 
 
     /**
-     * bit_count() - Returns an estimation of the number of bits used by
-     * the tree.
+     * bit_count() - Returns an estimation of the number of bits used by the
+     * tree.
      */
     virtual std::size_t bit_count() const = 0;
 };
