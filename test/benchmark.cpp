@@ -99,8 +99,6 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 
-    //std::cout << "\n" << name << " space: " << tree.bit_count() / (double)size << "b/item\n";
-
     const double c = 1. / size;
     std::cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
     std::cout << "build: " << std::fixed << std::setw(12) << constructor * c << " ns/item\n";

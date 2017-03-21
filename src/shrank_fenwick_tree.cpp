@@ -19,7 +19,7 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
     for (size_t i = 1; i <= size; i++) {
         const size_t bitpos = get_bitpos(i-1);
         uint64_t * const element = reinterpret_cast<uint64_t * const>(tree + bitpos / 8);
-        __builtin_prefetch (element, 0, 1);
+        //__builtin_prefetch (element, 0, 1);
 
         const size_t bitsize = 5 + find_first_set(i);
         const size_t shift = bitpos & 0b111;
@@ -33,12 +33,12 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
         for (size_t idx = m; idx <= size; idx += m) {
             const size_t left_bitpos = get_bitpos(idx-1);
             uint64_t * const left_element = reinterpret_cast<uint64_t * const>(tree + left_bitpos / 8);
-            __builtin_prefetch (left_element, 0, 1);
+            //__builtin_prefetch (left_element, 0, 1);
             const size_t left_shift = left_bitpos & 0b111;
 
             const size_t right_bitpos = get_bitpos(idx - m/2 - 1);
             uint64_t * const right_element = reinterpret_cast<uint64_t * const>(tree + right_bitpos / 8);
-            __builtin_prefetch (left_element, 0, 0);
+            //__builtin_prefetch (left_element, 0, 0);
             const size_t right_shift = right_bitpos & 0b111;
 
             const size_t right_bitsize = 5 + find_first_set(idx - m/2);
@@ -108,7 +108,6 @@ size_t ShrankFenwickTree::find(uint64_t val) const
         // TODO: meglio non prefetchare quello che è già in chache, trovare un
         // modo per risolvere. verificare se è davvero questo il problema.
         __builtin_prefetch (compact_element, 0, 1);
-
 
         const size_t height = find_first_set(node+m) - 1;
         const size_t shift = bit_pos & 0b111;
