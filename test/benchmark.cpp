@@ -50,9 +50,9 @@ int main(int argc, char **argv)
     }
 
     bench<SimpleFenwickTree>("SimpleFenwickTree", size, order, increments, set_updates);
-    bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates);
-    bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates);
     bench<TypedFenwickTree>("TypedFenwickTree", size, order, increments, set_updates);
+    bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates);
+    bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates);
     bench<ShrankFenwickTree>("ShrankFenwickTree", size, order, increments, set_updates);
 
     delete[] increments;
@@ -97,22 +97,16 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
-    const volatile uint64_t unused = u;
+    const volatile uint64_t __attribute__((unused)) unused = u;
 
-    // std::cout << "find:\n";
-    // for (size_t i = 0; i <= size; i++)
-    //     std::cout << array[i] << " ";
-    // std::cout << "\n" << std::endl;
-
-
-    std::cout << "\n" << name << " space: " << tree.bit_count() / (double)size << "b/item\n";
+    //std::cout << "\n" << name << " space: " << tree.bit_count() / (double)size << "b/item\n";
 
     const double c = 1. / size;
-    std::cout << "\n" << name << " time:\n";
-    std::cout << "build: " << std::right << std::setw(12) << constructor * c << " ns/item\n";
-    std::cout << "get:   " << std::right << std::setw(12) << get * c << " ns/item\n";
-    std::cout << "set:   " << std::right << std::setw(12) << set * c << " ns/item\n";
-    std::cout << "find:  " << std::right << std::setw(12) << find * c << " ns/item\n";
+    std::cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
+    std::cout << "build: " << std::fixed << std::setw(12) << constructor * c << " ns/item\n";
+    std::cout << "get:   " << std::fixed << std::setw(12) << get * c << " ns/item\n";
+    std::cout << "set:   " << std::fixed << std::setw(12) << set * c << " ns/item\n";
+    std::cout << "find:  " << std::fixed << std::setw(12) << find * c << " ns/item\n";
 
     delete[] sequence;
 }

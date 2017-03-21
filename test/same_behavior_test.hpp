@@ -64,6 +64,9 @@ void random_test(std::size_t size)
         EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i;
     }
 
+    // bit_count
+    EXPECT_EQ(shrank.bit_count(), compact.bit_count());
+
     delete[] increments;
     delete[] set_updates;
 }

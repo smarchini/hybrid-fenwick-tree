@@ -11,9 +11,11 @@ test: bin/test
 	bin/test --gtest_color=yes
 
 benchmark: bin/benchmark
+	@echo
 	bin/benchmark 1048575
+	@echo
 	bin/benchmark 33554431
-	bin/benchmark 67108863
+#bin/benchmark 67108863
 #bin/benchmark 134217727
 
 stats: $(OBJS) obj/benchmark.o
