@@ -30,14 +30,15 @@ public:
     virtual void set(std::size_t idx, std::uint64_t inc) = 0;
 
     /**
-     * find() - Find the closest element less or equal then a given one.
+     * find() - Find the closest element less or equal than a given one.
      * @val: Value to search.
      *
      * This method find the maximum value less or equal then @val mantained by
-     * the cumulative frequency.
+     * the cumulative frequency, -1 if the fisrt element of the sequence is
+     * greter than @val.
      *
-     * TODO: nota sul comportamento con val=0
-     * TODO: nota sul comportamento in caso size != 2^k-1 per qualche k
+     * Return: The closest element less or equal than @val or -1 if it doesn't
+     * exists.
      */
     virtual std::size_t find(std::uint64_t val) const = 0;
 

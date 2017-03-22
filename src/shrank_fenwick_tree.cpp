@@ -14,7 +14,7 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
     levels(find_last_set(size))
 {
-    tree = new uint8_t[get_bitpos(size-1) / 8 + 1];
+    tree = new uint8_t[get_bitpos(size-1) / 8 + 1 + 4]; // +4 to prevent segfault on the last element
 
     for (size_t i = 1; i <= size; i++) {
         const size_t bitpos = get_bitpos(i-1);
@@ -96,6 +96,7 @@ void ShrankFenwickTree::set(size_t idx, uint64_t inc)
 size_t ShrankFenwickTree::find(uint64_t val) const
 {
     size_t node = 0;
+    const size_t bit_max = bit_count();
 
     for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
         const size_t bit_pos = get_bitpos(node+m-1);
@@ -112,7 +113,10 @@ size_t ShrankFenwickTree::find(uint64_t val) const
         const size_t height = find_first_set(node+m) - 1;
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
-        const uint64_t value = (*compact_element >> shift) & mask;
+
+        uint64_t value = 0;
+        if (bit_pos >= bit_max) value = -1ULL;
+        else value = (*compact_element >> shift) & mask;
 
         if (val >= value) {
             node += m;

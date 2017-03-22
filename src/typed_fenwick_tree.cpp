@@ -9,11 +9,9 @@ TypedFenwickTree::TypedFenwickTree(uint64_t sequence[], size_t size) :
     levels(find_last_set(size)),
     level_start(new size_t[levels+1])
 {
-    size_t type_ends[4] = {0};
-
     level_start[0] = 0;
     for (size_t i = 1, j = 0; i <= levels; i++) {
-        type_ends[j] = level_start[i-1] + ((size+1) / (1<<i));
+        type_ends[j] = (size + (1<<(i-1))) / (1<<i) + level_start[i-1];
         level_start[i] = (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) ? 0 : type_ends[j];
 
         if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) j++;
@@ -90,10 +88,21 @@ size_t TypedFenwickTree::find(uint64_t val) const
 
         uint64_t value=0;
         switch(height+6) {
-        case 6 ... 8:   value =  tree8[tree_idx]; break;
-        case 9 ... 16:  value = tree16[tree_idx]; break;
-        case 17 ... 32: value = tree32[tree_idx]; break;
-        case 33 ... 64: value = tree64[tree_idx];
+        case 6 ... 8:
+            if (tree_idx >= type_ends[0]) value = -1ULL;
+            else value =  tree8[tree_idx];
+            break;
+        case 9 ... 16:
+            if (tree_idx >= type_ends[1]) value = -1ULL;
+            else value = tree16[tree_idx];
+            break;
+        case 17 ... 32:
+            if (tree_idx >= type_ends[2]) value = -1ULL;
+            else value = tree32[tree_idx];
+            break;
+        case 33 ... 64:
+            if (tree_idx >= type_ends[3]) value = -1ULL;
+            else value = tree64[tree_idx];
         }
 
         idx <<= 1;
@@ -105,19 +114,11 @@ size_t TypedFenwickTree::find(uint64_t val) const
         }
     }
 
-    return node - 1;
+    return node <= size ? node-1 : size-1;
 }
 
 size_t TypedFenwickTree::bit_count() const
 {
-    size_t type_ends[4] = {0};
-
-    for (size_t i = 1, j = 0; i <= levels; i++) {
-        type_ends[j] = level_start[i-1] + ((size+1) / (1<<i));
-
-        if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) j++;
-    }
-
     return type_ends[0] * 8
         + type_ends[1] * 16
         + type_ends[2] * 32

@@ -10,11 +10,11 @@ CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
 {
     level_start[0] = 0;
     for (size_t i = 1; i <= levels; i++) {
-        // Compute: \sum_{i=1}^{k} \frac{(5+i)*2^n}{2^k}
-        level_start[i] = (-i + 7*(1<<i) - 7) * (1 << (levels-i));
+        // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * (5+k)
+        level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * (5+i) + level_start[i-1];
     }
 
-    tree = new uint8_t[(level_start[levels]-1) / 8 + 1];
+    tree = new uint8_t[(level_start[levels]-1) / 8 + 1 + 4]; // +4 to prevent segfault on the last element
 
     for (size_t l = 0; l < levels; l++) {
         for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
@@ -89,6 +89,7 @@ void CompactFenwickTree::set(size_t idx, uint64_t inc)
 size_t CompactFenwickTree::find(uint64_t val) const
 {
     size_t node = 0, idx = 0;
+    const size_t bit_max = bit_count();
 
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * idx;
@@ -97,9 +98,12 @@ size_t CompactFenwickTree::find(uint64_t val) const
 
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
-        const uint64_t value = (*compact_element >> shift) & mask;
 
         idx <<= 1;
+
+        uint64_t value = 0;
+        if (bit_pos >= bit_max) value = -1ULL;
+        else value = (*compact_element >> shift) & mask;
 
         if (val >= value) {
             idx++;
@@ -108,7 +112,7 @@ size_t CompactFenwickTree::find(uint64_t val) const
         }
     }
 
-    return node - 1;
+    return node <= size ? node-1 : size-1;
 }
 
 size_t CompactFenwickTree::bit_count() const

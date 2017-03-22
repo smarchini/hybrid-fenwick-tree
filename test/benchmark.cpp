@@ -16,7 +16,7 @@
 using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
 template<typename T>
-void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[]);
+void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[], uint64_t sequence[]);
 
 int main(int argc, char **argv)
 {
@@ -49,26 +49,29 @@ int main(int argc, char **argv)
         set_updates[i] = (increments[i] + inc) < 64 ? inc : 0;
     }
 
-    bench<SimpleFenwickTree>("SimpleFenwickTree", size, order, increments, set_updates);
-    bench<TypedFenwickTree>("TypedFenwickTree", size, order, increments, set_updates);
-    bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates);
-    bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates);
-    bench<ShrankFenwickTree>("ShrankFenwickTree", size, order, increments, set_updates);
+    uint64_t *sequence = new uint64_t[size];
+    increments_to_sequence(increments, sequence, size);
+    std::random_shuffle(sequence, sequence+size);
+
+    bench<SimpleFenwickTree>("SimpleFenwickTree", size, order, increments, set_updates, sequence);
+    bench<TypedFenwickTree>("TypedFenwickTree", size, order, increments, set_updates, sequence);
+    bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates, sequence);
+    bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates, sequence);
+    bench<ShrankFenwickTree>("ShrankFenwickTree", size, order, increments, set_updates, sequence);
 
     delete[] increments;
     delete[] set_updates;
     delete[] order;
+    delete[] sequence;
 
     return 0;
 }
 
 template<typename T>
-void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[])
+void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[], uint64_t sequence[])
 {
     std::chrono::high_resolution_clock::time_point begin, end;
     uint64_t u = 0;
-    uint64_t *sequence = new uint64_t[size];
-    increments_to_sequence(increments, sequence, size);
 
     // constructor
     begin = std::chrono::high_resolution_clock::now();
@@ -83,19 +86,19 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     end = std::chrono::high_resolution_clock::now();
     auto get = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
-    // set
-    begin = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < size; i++)
-        tree.set(order[i], set_updates[i]);
-    end = std::chrono::high_resolution_clock::now();
-    auto set = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
-
     // find
     begin = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
         u ^= tree.find(sequence[i]);
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+
+    // set
+    begin = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < size; i++)
+        tree.set(order[i], set_updates[i]);
+    end = std::chrono::high_resolution_clock::now();
+    auto set = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 
@@ -105,6 +108,4 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     std::cout << "get:   " << std::fixed << std::setw(12) << get * c << " ns/item\n";
     std::cout << "set:   " << std::fixed << std::setw(12) << set * c << " ns/item\n";
     std::cout << "find:  " << std::fixed << std::setw(12) << find * c << " ns/item\n";
-
-    delete[] sequence;
 }

@@ -85,4 +85,44 @@ TEST(simple_fenwick_tree, increasing_increments)
     }
 }
 
+
+TEST(simple_fenwick_tree, non_complete)
+{
+    SimpleFenwickTree t(inc3, 20);
+
+    // bit_count
+    EXPECT_EQ(20*64, t.bit_count());
+
+    std::uint64_t seq3[20];
+    increments_to_sequence(inc3, seq3, 20);
+
+    // get
+    for (size_t i = 0; i < 20; i++)
+        EXPECT_EQ(seq3[i], t.get(i)) << "at index " << i;
+
+    // find
+    for (std::uint64_t i = 0; i < 20; i++)
+        EXPECT_EQ(i, t.find(seq3[i])) << "at index " << i;
+    for (std::uint64_t i = seq3[19]; i < 1000; i++)
+        EXPECT_EQ(19, t.find(i)) << "at index " << i;
+
+    // set
+    for (size_t i = 0; i < 20; i++)
+        t.set(i, i);
+
+    size_t sum = 0;
+    for (size_t i = 0; i < 20; i++) {
+        sum += i;
+        EXPECT_EQ(seq3[i]+sum, t.get(i)) << "at index " << i;
+    }
+
+    // find
+    sum = 0;
+    for (std::uint64_t i = 0; i < 20; i++) {
+        sum += i;
+        EXPECT_EQ(i, t.find(seq3[i]+sum)) << "at index " << i;
+    }
+}
+
+
 #endif // __SIMPLE_FENWICK_TREE_TEST_H__
