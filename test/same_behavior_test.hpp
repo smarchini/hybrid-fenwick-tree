@@ -100,4 +100,10 @@ TEST(same_behavior, random_big)
     random_test(1024*1024-1);
 }
 
+TEST(same_behavior, partial_tree)
+{
+    for (std::size_t i = 1; i < 10000; i++)
+        random_test(i);
+}
+
 #endif // __SAME_BEHAVIOR_TEST_H__

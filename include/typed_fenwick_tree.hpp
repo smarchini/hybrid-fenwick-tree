@@ -29,6 +29,7 @@ protected:
     const std::size_t size;
     const std::size_t levels;
     std::size_t *level_start = nullptr;
+    std::size_t type_ends[4] = {0};
 
 public:
     TypedFenwickTree(std::uint64_t sequence[], std::size_t size);

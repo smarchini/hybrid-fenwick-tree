@@ -47,9 +47,13 @@ size_t SimpleFenwickTree::find(uint64_t val) const
     size_t node = 0;
 
     for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
-        if (val >= tree[node+m-1]) {
+        uint64_t value = 0;
+        if (node+m-1 >= size) value = -1ULL;
+        else value = tree[node+m-1];
+
+        if(val >= value) {
             node += m;
-            val -= tree[node-1];
+            val -= value;
         }
     }
 

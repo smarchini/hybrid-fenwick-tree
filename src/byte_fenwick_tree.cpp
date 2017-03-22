@@ -18,6 +18,10 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
  */
 static inline size_t get_size(size_t height)
 {
+    // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
+    // con la popcount che permette di fare l'interleaving nel caso Shrank per
+    // fare interleaving nel caso byte?" (mail Vigna)
+
     return (height+13) >> 3;
 }
 
@@ -27,10 +31,12 @@ ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
     level_start(new size_t[levels+1])
 {
     level_start[0] = 0;
-    for (size_t i = 1; i <= levels; i++)
-        level_start[i] = level_start[i-1] + ((size+1) / (1<<i)) * get_size(i-1);
+    for (size_t i = 1; i <= levels; i++) {
+        // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * get_size(k)
+        level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level_start[i-1];
+    }
 
-    tree = new uint8_t[level_start[levels]];
+    tree = new uint8_t[level_start[levels] + 3]; // +3 to prevent segfault on the last element
 
     for (size_t l = 0; l < levels; l++) {
         for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
@@ -70,11 +76,11 @@ uint64_t ByteFenwickTree::get(size_t idx) const
         index += mask_last_set(idx ^ index);
         const size_t height = find_first_set(index) - 1;
         const size_t level_idx = index >> (1 + height);
-        const size_t size = get_size(height);
-        const size_t byte_pos = level_start[height] + size * level_idx;
+        const size_t elem_size = get_size(height);
+        const size_t byte_pos = level_start[height] + elem_size * level_idx;
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + byte_pos);
 
-        sum += *compact_element & MASK[size];
+        sum += *compact_element & MASK[elem_size];
     } while (idx ^ index);
 
     return sum;
@@ -97,23 +103,25 @@ size_t ByteFenwickTree::find(uint64_t val) const
     size_t node = 0, idx = 0;
 
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
-        const size_t size = get_size(height);
-        const size_t byte_pos = level_start[height] + size * idx;
+        const size_t elem_size = get_size(height);
+        const size_t byte_pos = level_start[height] + elem_size * idx;
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + byte_pos);
         __builtin_prefetch(compact_element, 0, 0);
 
-        const uint64_t value = *compact_element & MASK[size];
+        uint64_t value = 0;
+        if (byte_pos >= level_start[levels]) value = -1ULL;
+        else value = *compact_element & MASK[elem_size];
 
         idx <<= 1;
 
-        if (val >= value) {
+        if(val >= value) {
             idx++;
             val -= value;
             node += 1 << height;
         }
     }
 
-    return node - 1;
+    return node <= size ? node-1 : size-1;
 }
 
 size_t ByteFenwickTree::bit_count() const
