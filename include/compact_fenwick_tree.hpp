@@ -11,18 +11,18 @@
  * @level_start: Lookup table, it store the starting bit-position of each level.
  *
  * Each node use exactly the number of bits it needs. It's supposed to store
- * increments up to 63, so each leaf needs 6 bit (LEAF_BITSIZE).
+ * increments up to 64, so each leaf needs 7 bit (LEAF_BITSIZE).
  *
  * The data is stored in a bottom-up level-order manner. Let @n be the number of
  * elements in the Fenwick Tree:
- * - from bit 0 to bit 6*n/2: leaves
- * - from bit 6*n/2 to bit 6*n/2+7*n/4: height 1 internal nodes
+ * - from bit 0 to bit 7*n/2: leaves
+ * - from bit 7*n/2 to bit 7*n/2+7*n/4: height 1 internal nodes
  * and so on until the end of the tree.
  */
 class CompactFenwickTree : public FenwickTree
 {
 public:
-    static constexpr std::size_t LEAF_BITSIZE = 6;
+    static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
     std::uint8_t *tree = nullptr;

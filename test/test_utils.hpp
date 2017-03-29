@@ -10,9 +10,10 @@
 #include "../include/byte_fenwick_tree.hpp"
 #include "../include/typed_fenwick_tree.hpp"
 #include "../include/shrank_fenwick_tree.hpp"
+#include "../include/dynamic_rank_select.hpp"
 
 
-// Exposed trees
+// Exposed classes
 // -----------------------------------------------------------------------------
 class SimpleFenwickTree_Test : public SimpleFenwickTree {
 public:
@@ -52,6 +53,13 @@ public:
     using ShrankFenwickTree::tree;
 };
 
+template<typename T>
+class DynRankSelect_Test : public DynRankSelect<T> {
+public:
+    DynRankSelect_Test(std::uint64_t bitvector[], std::size_t length):
+        DynRankSelect<T>(bitvector, length) {}
+    using DynRankSelect<T>::fenwick;
+};
 
 
 // Test data

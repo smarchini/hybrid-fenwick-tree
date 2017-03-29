@@ -10,6 +10,8 @@
 
 #include "same_behavior_test.hpp"
 
+//#include "dynamic_rank_select_test.hpp"
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

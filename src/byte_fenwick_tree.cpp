@@ -8,21 +8,15 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
  * get_size - Given it's height, compute the required size of an element
  * @height: Height of the element.
  *
- * This function compute (@height+6-1) / 8 + 1 in order to avoid some magic
- * numbers around the code.
- *
- * 6 is the LEAF_BITSIZE as in CompactFenwickTree and 8 is one Byte in bit.
- * Anything less than or equal k*8 require k Bytes.
+ * This function compute (@height+7-1) / 8 + 1 in order to avoid some magic
+ * numbers around the code, 7 being the LEAF_BITSIZE and 8 being one byte.
+ * Anything less or equal than k*8 require k Bytes.
  *
  * Returns: The size of an element of a given height.
  */
 static inline size_t get_size(size_t height)
 {
-    // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
-    // con la popcount che permette di fare l'interleaving nel caso Shrank per
-    // fare interleaving nel caso byte?" (mail Vigna)
-
-    return (height+13) >> 3;
+    return (height+14) >> 3;
 }
 
 ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
@@ -30,6 +24,10 @@ ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
     levels(find_last_set(size)),
     level_start(new size_t[levels+1])
 {
+    // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
+    // con la popcount che permette di fare l'interleaving nel caso Shrank per
+    // fare interleaving nel caso byte?" (da vedere)
+
     level_start[0] = 0;
     for (size_t i = 1; i <= levels; i++) {
         // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * get_size(k)

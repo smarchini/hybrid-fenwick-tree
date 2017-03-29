@@ -17,7 +17,7 @@ TypedFenwickTree::TypedFenwickTree(uint64_t sequence[], size_t size) :
         if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) j++;
     }
 
-    switch(levels+6) {
+    switch(levels+LEAF_BITSIZE) {
     case 33 ... 64: tree64 = new uint64_t[type_ends[3]];
     case 17 ... 32: tree32 = new uint32_t[type_ends[2]];
     case 9 ... 16:  tree16 = new uint16_t[type_ends[1]];
@@ -52,11 +52,11 @@ uint64_t TypedFenwickTree::get(size_t idx) const
         const size_t level_idx = index >> (1 + height);
         const size_t tree_idx = level_start[height] + level_idx;
 
-        switch(height+6) {
-        case 6 ... 8:   sum +=  tree8[tree_idx]; break;
-        case 9 ... 16:  sum += tree16[tree_idx]; break;
+        switch(height+LEAF_BITSIZE) {
+        case 33 ... 64: sum += tree64[tree_idx]; break;
         case 17 ... 32: sum += tree32[tree_idx]; break;
-        case 33 ... 64: sum += tree64[tree_idx];
+        case  9 ... 16: sum += tree16[tree_idx]; break;
+        default:        sum +=  tree8[tree_idx]; break;
         }
     } while (idx ^ index);
 
@@ -70,11 +70,11 @@ void TypedFenwickTree::set(size_t idx, uint64_t inc)
         const size_t level_idx = idx >> (1 + height);
         const size_t tree_idx = level_start[height] + level_idx;
 
-        switch(height+6) {
-        case 6 ... 8:    tree8[tree_idx] += inc; break;
-        case 9 ... 16:  tree16[tree_idx] += inc; break;
+        switch(height+LEAF_BITSIZE) {
+        case 33 ... 64: tree64[tree_idx] += inc; break;
         case 17 ... 32: tree32[tree_idx] += inc; break;
-        case 33 ... 64: tree64[tree_idx] += inc;
+        case  9 ... 16: tree16[tree_idx] += inc; break;
+        default       :  tree8[tree_idx] += inc; break;
         }
     }
 }
@@ -87,22 +87,23 @@ size_t TypedFenwickTree::find(uint64_t val) const
         const size_t tree_idx = level_start[height] + idx;
 
         uint64_t value=0;
-        switch(height+6) {
-        case 6 ... 8:
-            if (tree_idx >= type_ends[0]) value = -1ULL;
-            else value =  tree8[tree_idx];
-            break;
-        case 9 ... 16:
-            if (tree_idx >= type_ends[1]) value = -1ULL;
-            else value = tree16[tree_idx];
+        switch(height+LEAF_BITSIZE) {
+        case 33 ... 64:
+            if (tree_idx >= type_ends[3]) value = -1ULL;
+            else value = tree64[tree_idx];
             break;
         case 17 ... 32:
             if (tree_idx >= type_ends[2]) value = -1ULL;
             else value = tree32[tree_idx];
             break;
-        case 33 ... 64:
-            if (tree_idx >= type_ends[3]) value = -1ULL;
-            else value = tree64[tree_idx];
+        case 9 ... 16:
+            if (tree_idx >= type_ends[1]) value = -1ULL;
+            else value = tree16[tree_idx];
+            break;
+        default:
+            if (tree_idx >= type_ends[0]) value = -1ULL;
+            else value =  tree8[tree_idx];
+            break;
         }
 
         idx <<= 1;

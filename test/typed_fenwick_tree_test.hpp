@@ -11,24 +11,24 @@ extern std::uint64_t inc2[];
 TEST(typed_fenwick_tree, increments_by_one)
 {
     // tree8
-    // heigth          2 |                                   1 |                                                                       0
-    // node  12        4 |       14       10        6        2 |       15       13       11        9       7         5        3        1
-    // 00000100 00000100 | 00000010 00000010 00000010 00000010 | 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001
+    // heigth                            1 |                                                                       0
+    // node  14       10        6        2 |       15       13       11        9       7         5        3        1
+    // 00000010 00000010 00000010 00000010 | 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001
 
     // tree16
-    // heigth         3
-    // node           8
-    // 0000000000001000
+    // heigth         3 |                                 2
+    // node           8 |               12                4
+    // 0000000000001000 | 0000000000000100 0000000000000100
 
     TypedFenwickTree_Test t(inc1, 15);
 
     // bit_count
-    EXPECT_EQ(8*14 + 16, t.bit_count());
+    EXPECT_EQ(8*12 + 16*3, t.bit_count());
 
-    std::string tree8_str = "0000010000000100000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
-    std::string tree16_str = "0000000000001000";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, 8*8 + 8*4 + 8*2));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), 16*1));
+    std::string tree8_str = "000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
+    std::string tree16_str = "000000000000100000000000000001000000000000000100";
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -65,24 +65,24 @@ TEST(typed_fenwick_tree, increments_by_one)
 TEST(typed_fenwick_tree, increasing_increments)
 {
     // tree8
-    // heigth          2 |                                   1 |                                                                       0
-    // node  12        4 |       14       10        6        2 |       15       13       11        9       7         5        3        1
-    // 00101010 00001010 | 00011011 00010011 00001011 00000011 | 00001111 00001101 00001011 00001001 00000111 00000101 00000011 00000001
+    // heigth                            1 |                                                                       0
+    // node  14       10        6        2 |       15       13       11        9       7         5        3        1
+    // 00011011 00010011 00001011 00000011 | 00001111 00001101 00001011 00001001 00000111 00000101 00000011 00000001
 
     // tree16
-    // heigth         3
-    // node           8
-    // 0000000000100100
+    // heigth         3 |                                 2
+    // node           8 |               12                4
+    // 0000000000100100 | 0000000000101010 0000000000001010
 
     TypedFenwickTree_Test t(inc2, 15);
 
     // bit_count
-    EXPECT_EQ(8*14 + 16, t.bit_count());
+    EXPECT_EQ(8*12 + 16*3, t.bit_count());
 
-    std::string tree8_str = "0010101000001010000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
-    std::string tree16_str = "0000000000100100";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, 8*8 + 8*4 + 8*2));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), 16*1));
+    std::string tree8_str = "000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
+    std::string tree16_str = "000000000010010000000000001010100000000000001010";
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -120,23 +120,23 @@ TEST(typed_fenwick_tree, non_complete)
 {
     // tree8
     // heigth                   2 |                                            1 |                                                                                         0
-    // node  18       17       16 |       15       14       13       12       11 |       10        9        8        7        6        5       4         3        2        1
-    // 00000100 00000100 00000100 | 00000010 00000010 00000010 00000010 00000010 | 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001
+    // node  15       14       13       12       11 |       10        9        8        7        6        5       4         3        2        1
+    // 00000010 00000010 00000010 00000010 00000010 | 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001 00000001
 
     // tree16
     // heigth         4 |                3
-    // node          16 |               15
-    // 0000000000010000 | 0000000000001000
+    // node          16 |               15 |               18               17               16
+    // 0000000000010000 | 0000000000001000 | 0000000000000100 0000000000000100 0000000000000100
 
     TypedFenwickTree_Test t(inc3, 20);
 
     // bit_count
-    EXPECT_EQ(8*10 + 8*5 + 8*3 + 16*1 + 16*1, t.bit_count());
+    EXPECT_EQ(8*10 + 8*5 + 16*3 + 16*1 + 16*1, t.bit_count());
 
-    std::string tree8_str = "000001000000010000000100000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
-    std::string tree16_str = "00000000000100000000000000001000";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, 8*10 + 8*5 + 8*3));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), 16*1 + 16*1));
+    std::string tree8_str = "000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
+    std::string tree16_str = "00000000000100000000000000001000000000000000010000000000000001000000000000000100";
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);

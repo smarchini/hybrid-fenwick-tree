@@ -6,7 +6,7 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 
 inline size_t get_bitpos(size_t n)
 {
-    return 7*n - __builtin_popcountll(n);
+    return (ShrankFenwickTree::LEAF_BITSIZE+1)*n - __builtin_popcountll(n);
 }
 
 
@@ -21,7 +21,7 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
         uint64_t * const element = reinterpret_cast<uint64_t * const>(tree + bitpos / 8);
         //__builtin_prefetch (element, 0, 1);
 
-        const size_t bitsize = 5 + find_first_set(i);
+        const size_t bitsize = LEAF_BITSIZE + find_first_set(i) - 1;
         const size_t shift = bitpos & 0b111;
         const uint64_t mask = compact_bitmask(bitsize, shift);
 
@@ -41,7 +41,7 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
             //__builtin_prefetch (left_element, 0, 0);
             const size_t right_shift = right_bitpos & 0b111;
 
-            const size_t right_bitsize = 5 + find_first_set(idx - m/2);
+            const size_t right_bitsize = LEAF_BITSIZE + find_first_set(idx - m/2) - 1;
             const uint64_t right_mask = compact_bitmask(right_bitsize, right_shift);
 
             uint64_t value = (right_mask & *right_element) >> right_shift;

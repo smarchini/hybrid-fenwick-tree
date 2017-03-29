@@ -10,8 +10,8 @@ CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
 {
     level_start[0] = 0;
     for (size_t i = 1; i <= levels; i++) {
-        // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * (5+k)
-        level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * (5+i) + level_start[i-1];
+        // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * (6+k) // TODO sistemare commento
+        level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level_start[i-1];
     }
 
     tree = new uint8_t[(level_start[levels]-1) / 8 + 1 + 4]; // +4 to prevent segfault on the last element

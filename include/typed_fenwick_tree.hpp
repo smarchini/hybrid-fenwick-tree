@@ -11,14 +11,14 @@
  * @level_start: Lookup table, it store every starting level index.
  *
  * Each node is the smallest datatype capable of holding its data. It's supposed
- * to store increments up to 63.
+ * to store increments up to 64.
  *
  * In each tree, the data is stored in a bottom-up level-order manner.
  */
 class TypedFenwickTree : public FenwickTree
 {
 public:
-    static constexpr std::size_t LEAF_BITSIZE = 6;
+    static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
     std::uint64_t *tree64 = nullptr;

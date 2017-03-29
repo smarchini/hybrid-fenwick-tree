@@ -9,7 +9,7 @@
 class ShrankFenwickTree : public FenwickTree
 {
 public:
-    static constexpr std::size_t LEAF_BITSIZE = 6;
+    static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
     std::uint8_t *tree = nullptr;
