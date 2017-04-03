@@ -42,7 +42,7 @@ void SimpleFenwickTree::set(size_t idx, uint64_t inc)
 }
 
 
-size_t SimpleFenwickTree::find(uint64_t val) const
+size_t SimpleFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0;
 
@@ -50,6 +50,9 @@ size_t SimpleFenwickTree::find(uint64_t val) const
         uint64_t value = 0;
         if (node+m-1 >= size) value = -1ULL;
         else value = tree[node+m-1];
+
+        if (complement)
+            value = (1ULL << (LEAF_BITSIZE + (find_first_set(m) - 1) - 1)) - value;
 
         if(val >= value) {
             node += m;

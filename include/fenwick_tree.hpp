@@ -39,9 +39,10 @@ public:
      *
      * Return: The closest element less or equal than @val or -1 if it doesn't
      * exists.
+     *
+     * TODO: aggiungere significato complement nei commenti
      */
-    virtual std::size_t find(std::uint64_t val) const = 0;
-
+    virtual std::size_t find(std::uint64_t val, bool complement=false) const = 0;
 
     /**
      * bit_count() - Returns an estimation of the number of bits used by the

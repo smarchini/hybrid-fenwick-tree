@@ -6,7 +6,7 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 
 inline size_t get_bitpos(size_t n)
 {
-    return (ShrankFenwickTree::LEAF_BITSIZE+1)*n - __builtin_popcountll(n);
+    return (ShrankFenwickTree::LEAF_BITSIZE+1)*n - popcount(n);
 }
 
 
@@ -19,7 +19,6 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
     for (size_t i = 1; i <= size; i++) {
         const size_t bitpos = get_bitpos(i-1);
         uint64_t * const element = reinterpret_cast<uint64_t * const>(tree + bitpos / 8);
-        //__builtin_prefetch (element, 0, 1);
 
         const size_t bitsize = LEAF_BITSIZE + find_first_set(i) - 1;
         const size_t shift = bitpos & 0b111;
@@ -33,12 +32,10 @@ ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
         for (size_t idx = m; idx <= size; idx += m) {
             const size_t left_bitpos = get_bitpos(idx-1);
             uint64_t * const left_element = reinterpret_cast<uint64_t * const>(tree + left_bitpos / 8);
-            //__builtin_prefetch (left_element, 0, 1);
             const size_t left_shift = left_bitpos & 0b111;
 
             const size_t right_bitpos = get_bitpos(idx - m/2 - 1);
             uint64_t * const right_element = reinterpret_cast<uint64_t * const>(tree + right_bitpos / 8);
-            //__builtin_prefetch (left_element, 0, 0);
             const size_t right_shift = right_bitpos & 0b111;
 
             const size_t right_bitsize = LEAF_BITSIZE + find_first_set(idx - m/2) - 1;
@@ -64,7 +61,6 @@ uint64_t ShrankFenwickTree::get(size_t idx) const
     for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
         const size_t bit_pos = get_bitpos(idx-1);
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + bit_pos / 8);
-        //__builtin_prefetch (compact_element, 0, 1);
 
         const size_t height = find_first_set(idx) - 1;
         const size_t shift = bit_pos & 0b111;
@@ -83,32 +79,20 @@ void ShrankFenwickTree::set(size_t idx, uint64_t inc)
         const size_t bit_pos = get_bitpos(idx-1);
         uint64_t * const compact_element = reinterpret_cast<uint64_t * const>(tree + bit_pos / 8);
 
-        // TODO: quando si risolve il problema della find, provare a usare un
-        // do-while e fare accessi forward. attualmente il do-while è più lento.
-        __builtin_prefetch (compact_element, 1, 1);
-
         const size_t shift = bit_pos & 0b111;
         *compact_element += inc << shift;
     }
 }
 
 
-size_t ShrankFenwickTree::find(uint64_t val) const
+size_t ShrankFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0;
     const size_t bit_max = bit_count();
 
     for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
         const size_t bit_pos = get_bitpos(node+m-1);
-
-        // TODO: provare ad usare le parentesi quadre: non ho bisogno di
-        // ricordarmi del pointer. non dovrebbe cambiare niente, mi aspetto che
-        // il compilatore ottimizzi tutto.
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + bit_pos / 8);
-
-        // TODO: meglio non prefetchare quello che è già in chache, trovare un
-        // modo per risolvere. verificare se è davvero questo il problema.
-        __builtin_prefetch (compact_element, 0, 1);
 
         const size_t height = find_first_set(node+m) - 1;
         const size_t shift = bit_pos & 0b111;
@@ -117,6 +101,9 @@ size_t ShrankFenwickTree::find(uint64_t val) const
         uint64_t value = 0;
         if (bit_pos >= bit_max) value = -1ULL;
         else value = (*compact_element >> shift) & mask;
+
+        if (complement)
+            value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
 
         if (val >= value) {
             node += m;

@@ -13,6 +13,9 @@
  */
 class SimpleFenwickTree : public FenwickTree
 {
+public:
+    static constexpr std::size_t LEAF_BITSIZE = 7;
+
 protected:
     std::uint64_t *tree = nullptr;
     const std::size_t size;
@@ -33,7 +36,7 @@ public:
 
     virtual void set(std::size_t idx, std::uint64_t inc);
 
-    virtual std::uint64_t find(std::uint64_t val) const;
+    virtual std::size_t find(std::uint64_t val, bool complement=false) const;
 
     virtual std::size_t bit_count() const;
 };

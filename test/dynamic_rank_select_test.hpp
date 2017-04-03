@@ -1,0 +1,102 @@
+#ifndef __DYNAMIC_RANK_SELECT_TEST_H__
+#define __DYNAMIC_RANK_SELECT_TEST_H__
+
+#include <gtest/gtest.h>
+#include <cstdint>
+#include "./test_utils.hpp"
+
+
+TEST(dynamic_rank_select, all_ones_1024)
+{
+    constexpr size_t MAX = 16;
+    std::uint64_t bitvect[MAX] = { -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL,
+                                   -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL };
+
+    DynRankSelect<SimpleFenwickTree> simple(bitvect, MAX);
+    DynRankSelect<TypedFenwickTree> typed(bitvect, MAX);
+    DynRankSelect<ByteFenwickTree> byte(bitvect, MAX);
+    DynRankSelect<CompactFenwickTree> compact(bitvect, MAX);
+    DynRankSelect<ShrankFenwickTree> shrank(bitvect, MAX);
+
+    for (size_t i = 0; i <= 1024; i++) {
+        EXPECT_EQ(i, simple.rank(i)) << "at indext " << i;
+        EXPECT_EQ(i, typed.rank(i)) << "at indext " << i;
+        EXPECT_EQ(i, byte.rank(i)) << "at indext " << i;
+        EXPECT_EQ(i, compact.rank(i)) << "at indext " << i;
+        EXPECT_EQ(i, shrank.rank(i)) << "at indext " << i;
+    }
+
+    for (size_t i = 0; i <= 1024; i++) {
+        EXPECT_EQ(0, simple.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(0, typed.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(0, byte.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(0, compact.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(0, shrank.rankZero(i)) << "at indext " << i;
+    }
+
+    for (size_t i = 0; i < 1024; i++) {
+        EXPECT_EQ(i, simple.select(i)) << "at indext " << i;
+        EXPECT_EQ(i, typed.select(i)) << "at indext " << i;
+        EXPECT_EQ(i, byte.select(i)) << "at indext " << i;
+        EXPECT_EQ(i, compact.select(i)) << "at indext " << i;
+        EXPECT_EQ(i, shrank.select(i)) << "at indext " << i;
+    }
+
+    // TODO: sistemare il comportamento della selectZero se non ci sono zeri
+    // for (size_t i = 0; i < 10; i++) {
+    //     EXPECT_EQ(-1ULL ????, simple.selectZero(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, typed.selectZero(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, byte.selectZero(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, compact.selectZero(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, shrank.selectZero(i)) << "at indext " << i;
+    // }
+}
+
+
+TEST(dynamic_rank_select, all_zeroes_1024)
+{
+    constexpr size_t MAX = 16;
+    std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
+                                   0, 0, 0, 0, 0, 0, 0, 0 };
+
+    DynRankSelect<SimpleFenwickTree> simple(bitvect, MAX);
+    DynRankSelect<TypedFenwickTree> typed(bitvect, MAX);
+    DynRankSelect<ByteFenwickTree> byte(bitvect, MAX);
+    DynRankSelect<CompactFenwickTree> compact(bitvect, MAX);
+    DynRankSelect<ShrankFenwickTree> shrank(bitvect, MAX);
+
+    for (size_t i = 0; i <= 1024; i++) {
+        EXPECT_EQ(0, simple.rank(i)) << "at indext " << i;
+        EXPECT_EQ(0, typed.rank(i)) << "at indext " << i;
+        EXPECT_EQ(0, byte.rank(i)) << "at indext " << i;
+        EXPECT_EQ(0, compact.rank(i)) << "at indext " << i;
+        EXPECT_EQ(0, shrank.rank(i)) << "at indext " << i;
+    }
+
+    for (size_t i = 0; i <= 1024; i++) {
+        EXPECT_EQ(i, simple.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, typed.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, byte.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, compact.rankZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, shrank.rankZero(i)) << "at indext " << i;
+    }
+
+    // TODO: sistemare il comportamento della select se non ci sono uni
+    // for (size_t i = 0; i < 1024; i++) {
+    //     EXPECT_EQ(-1ULL ????, simple.select(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, typed.select(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, byte.select(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, compact.select(i)) << "at indext " << i;
+    //     EXPECT_EQ(-1ULL ????, shrank.select(i)) << "at indext " << i;
+    // }
+
+    for (size_t i = 0; i < 10; i++) {
+        EXPECT_EQ(i, simple.selectZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, typed.selectZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, byte.selectZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, compact.selectZero(i)) << "at indext " << i;
+        EXPECT_EQ(i, shrank.selectZero(i)) << "at indext " << i;
+    }
+}
+
+#endif // __DYNAMIC_RANK_SELECT_TEST_H__

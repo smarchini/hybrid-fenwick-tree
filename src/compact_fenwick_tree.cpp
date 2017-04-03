@@ -86,7 +86,7 @@ void CompactFenwickTree::set(size_t idx, uint64_t inc)
 }
 
 
-size_t CompactFenwickTree::find(uint64_t val) const
+size_t CompactFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0, idx = 0;
     const size_t bit_max = bit_count();
@@ -94,7 +94,6 @@ size_t CompactFenwickTree::find(uint64_t val) const
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * idx;
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + bit_pos / 8);
-        __builtin_prefetch(compact_element, 0, 1);
 
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
@@ -104,6 +103,9 @@ size_t CompactFenwickTree::find(uint64_t val) const
         uint64_t value = 0;
         if (bit_pos >= bit_max) value = -1ULL;
         else value = (*compact_element >> shift) & mask;
+
+        if (complement)
+            value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
 
         if (val >= value) {
             idx++;

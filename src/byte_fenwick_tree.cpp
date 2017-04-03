@@ -96,7 +96,7 @@ void ByteFenwickTree::set(size_t idx, uint64_t inc)
     }
 }
 
-size_t ByteFenwickTree::find(uint64_t val) const
+size_t ByteFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0, idx = 0;
 
@@ -104,11 +104,13 @@ size_t ByteFenwickTree::find(uint64_t val) const
         const size_t elem_size = get_size(height);
         const size_t byte_pos = level_start[height] + elem_size * idx;
         const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + byte_pos);
-        __builtin_prefetch(compact_element, 0, 0);
 
         uint64_t value = 0;
         if (byte_pos >= level_start[levels]) value = -1ULL;
         else value = *compact_element & MASK[elem_size];
+
+        if (complement)
+            value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
 
         idx <<= 1;
 

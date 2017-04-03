@@ -19,6 +19,8 @@
 class ByteFenwickTree : public FenwickTree
 {
 public:
+    static constexpr std::size_t LEAF_BITSIZE = 7;
+
     // TODO: provare a sostituire con compact_bitmask (calcolata a runtime).
     // l'array è il modo più efficiente su i7 4770.
     static constexpr std::uint64_t MASK[] = { 0x0ULL,
@@ -52,7 +54,7 @@ public:
 
     virtual void set(std::size_t idx, std::uint64_t inc);
 
-    virtual std::size_t find(std::uint64_t val) const;
+    virtual std::size_t find(std::uint64_t val, bool complement=false) const;
 
     virtual std::size_t bit_count() const;
 };

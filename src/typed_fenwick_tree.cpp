@@ -79,14 +79,14 @@ void TypedFenwickTree::set(size_t idx, uint64_t inc)
     }
 }
 
-size_t TypedFenwickTree::find(uint64_t val) const
+size_t TypedFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0, idx = 0;
 
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t tree_idx = level_start[height] + idx;
 
-        uint64_t value=0;
+        uint64_t value = 0;
         switch(height+LEAF_BITSIZE) {
         case 33 ... 64:
             if (tree_idx >= type_ends[3]) value = -1ULL;
@@ -105,6 +105,9 @@ size_t TypedFenwickTree::find(uint64_t val) const
             else value =  tree8[tree_idx];
             break;
         }
+
+        if (complement)
+            value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
 
         idx <<= 1;
 
