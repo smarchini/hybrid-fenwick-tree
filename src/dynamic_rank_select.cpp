@@ -80,7 +80,6 @@ std::size_t DynRankSelect<T>::bit_count() const
 template<typename T>
 std::uint64_t DynRankSelect<T>::update(std::size_t index, std::uint64_t word)
 {
-    // TODO: testare sta roba
     const uint64_t old = bitvector[index];
     bitvector[index] = word;
     tree.set(index, popcount(word) - popcount(old));

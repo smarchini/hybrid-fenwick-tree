@@ -33,10 +33,10 @@ public:
                                               0xFFFFFFFFFFFFFFULL,
                                               0xFFFFFFFFFFFFFFFFULL };
 protected:
-    std::uint8_t *tree = nullptr;
+    std::unique_ptr<std::uint8_t[]> tree;
     const std::size_t size;
     const std::size_t levels;
-    std::size_t *level_start = nullptr;
+    std::unique_ptr<std::size_t[]> level_start;
 
 public:
     /**
@@ -47,8 +47,6 @@ public:
      * Running time: O(length)
      */
     ByteFenwickTree(std::uint64_t sequence[], std::size_t size);
-
-    virtual ~ByteFenwickTree();
 
     virtual std::uint64_t get(std::size_t idx) const;
 

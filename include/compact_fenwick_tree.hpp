@@ -25,10 +25,10 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
-    std::uint8_t *tree = nullptr;
+    std::unique_ptr<std::uint8_t[]> tree;
     const std::size_t size;
     const std::size_t levels;
-    std::size_t *level_start = nullptr;
+    std::unique_ptr<std::size_t[]> level_start;
 
 public:
     /**
@@ -39,8 +39,6 @@ public:
      * Running time: O(length)
      */
     CompactFenwickTree(std::uint64_t sequence[], std::size_t size);
-
-    virtual ~CompactFenwickTree();
 
     virtual std::uint64_t get(std::size_t idx) const;
 

@@ -27,8 +27,8 @@ TEST(typed_fenwick_tree, increments_by_one)
 
     std::string tree8_str = "000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "000000000000100000000000000001000000000000000100";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8.get(), tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16.get()), tree16_str.length()));
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -89,8 +89,8 @@ TEST(typed_fenwick_tree, increasing_increments)
 
     std::string tree8_str = "000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
     std::string tree16_str = "000000000010010000000000001010100000000000001010";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8.get(), tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16.get()), tree16_str.length()));
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -151,8 +151,8 @@ TEST(typed_fenwick_tree, non_complete)
 
     std::string tree8_str = "000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "00000000000100000000000000001000000000000000010000000000000001000000000000000100";
-    EXPECT_EQ(tree8_str, tree_tostring(t.tree8, tree8_str.length()));
-    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16), tree16_str.length()));
+    EXPECT_EQ(tree8_str, tree_tostring(t.tree8.get(), tree8_str.length()));
+    EXPECT_EQ(tree16_str, tree_tostring(reinterpret_cast<std::uint8_t*>(t.tree16.get()), tree16_str.length()));
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);

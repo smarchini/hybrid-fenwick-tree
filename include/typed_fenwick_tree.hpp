@@ -21,20 +21,18 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
-    std::uint64_t *tree64 = nullptr;
-    std::uint32_t *tree32 = nullptr;
-    std::uint16_t *tree16 = nullptr;
-    std::uint8_t *tree8 = nullptr;
+    std::unique_ptr<std::uint64_t[]> tree64;
+    std::unique_ptr<std::uint32_t[]> tree32;
+    std::unique_ptr<std::uint16_t[]> tree16;
+    std::unique_ptr<std::uint8_t[]>  tree8;
 
     const std::size_t size;
     const std::size_t levels;
-    std::size_t *level_start = nullptr;
+    std::unique_ptr<std::size_t[]> level_start;
     std::size_t type_ends[4] = {0};
 
 public:
     TypedFenwickTree(std::uint64_t sequence[], std::size_t size);
-
-    virtual ~TypedFenwickTree();
 
     virtual std::uint64_t get(std::size_t idx) const;
 

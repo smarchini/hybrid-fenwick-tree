@@ -6,21 +6,15 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 
 
 SimpleFenwickTree::SimpleFenwickTree(uint64_t sequence[], size_t size) :
-    tree(new uint64_t[size]),
+    tree(std::make_unique<uint64_t[]>(size)),
     size(size)
 {
-    std::copy_n(sequence, size, tree);
+    std::copy_n(sequence, size, tree.get());
 
     for (size_t m = 2; m <= size; m <<= 1) {
         for (size_t idx = m; idx <= size; idx += m)
             tree[idx - 1] += tree[idx - m/2 - 1];
     }
-}
-
-
-SimpleFenwickTree::~SimpleFenwickTree()
-{
-    if (tree) delete[] tree;
 }
 
 

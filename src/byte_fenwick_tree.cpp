@@ -22,7 +22,7 @@ static inline size_t get_size(size_t height)
 ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
     levels(find_last_set(size)),
-    level_start(new size_t[levels+1])
+    level_start(std::make_unique<size_t[]>(levels+1))
 {
     // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
     // con la popcount che permette di fare l'interleaving nel caso Shrank per
@@ -34,19 +34,19 @@ ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
         level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level_start[i-1];
     }
 
-    tree = new uint8_t[level_start[levels] + 3]; // +3 to prevent segfault on the last element
+    tree = std::make_unique<uint8_t[]>(level_start[levels] + 3); // +3 to prevent segfault on the last element
 
     for (size_t l = 0; l < levels; l++) {
         for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
             const size_t curr_byte_pos = level_start[l] + get_size(l) * (node >> (l+1));
-            uint64_t * const curr_element = reinterpret_cast<uint64_t * const>(tree + curr_byte_pos);
+            uint64_t * const curr_element = reinterpret_cast<uint64_t*>(&tree[curr_byte_pos]);
 
             size_t sequence_idx = node-1;
             uint64_t value = sequence[sequence_idx];
             for (size_t j = 0; j < l; j++) {
                 sequence_idx >>= 1;
                 const size_t prev_byte_pos = level_start[j] + get_size(j) * sequence_idx;
-                const uint64_t * const prev_element = reinterpret_cast<const uint64_t * const>(tree + prev_byte_pos);
+                const uint64_t * const prev_element = reinterpret_cast<uint64_t*>(&tree[prev_byte_pos]);
 
                 value += *prev_element & MASK[get_size(j)];
             }
@@ -55,12 +55,6 @@ ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
             *curr_element |= value & MASK[get_size(l)];
         }
     }
-}
-
-ByteFenwickTree::~ByteFenwickTree()
-{
-    if (tree) delete[] tree;
-    if (level_start) delete[] level_start;
 }
 
 uint64_t ByteFenwickTree::get(size_t idx) const
@@ -76,7 +70,7 @@ uint64_t ByteFenwickTree::get(size_t idx) const
         const size_t level_idx = index >> (1 + height);
         const size_t elem_size = get_size(height);
         const size_t byte_pos = level_start[height] + elem_size * level_idx;
-        const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + byte_pos);
+        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
 
         sum += *compact_element & MASK[elem_size];
     } while (idx ^ index);
@@ -90,7 +84,7 @@ void ByteFenwickTree::set(size_t idx, uint64_t inc)
         const size_t height = find_first_set(idx) - 1;
         const size_t level_idx = idx >> (1 + height);
         const size_t byte_pos = level_start[height] + get_size(height) * level_idx;
-        uint64_t * const compact_element = reinterpret_cast<uint64_t * const>(tree + byte_pos);
+        uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
 
         *compact_element += inc;
     }
@@ -103,7 +97,7 @@ size_t ByteFenwickTree::find(uint64_t val, bool complement) const
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t elem_size = get_size(height);
         const size_t byte_pos = level_start[height] + elem_size * idx;
-        const uint64_t * const compact_element = reinterpret_cast<const uint64_t * const>(tree + byte_pos);
+        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
 
         uint64_t value = 0;
         if (byte_pos >= level_start[levels]) value = -1ULL;

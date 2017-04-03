@@ -20,7 +20,7 @@ TEST(shrank_fenwick_tree, increments_by_one)
     EXPECT_EQ(7*8 + 8*4 + 9*2 + 10, t.bit_count());
 
     std::string tree_str = "00000010000001000000010000001000000001000000100000001000000100000000010000001000000010000001000000001000000100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree, tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -73,7 +73,7 @@ TEST(shrank_fenwick_tree, increasing_increments)
     EXPECT_EQ(7*8 + 8*4 + 9*2 + 10, t.bit_count());
 
     std::string tree_str = "00011110001101100011010001010100001011000100110001001000010010000001110000101100001010000010100000011000000110000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree, tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -126,7 +126,7 @@ TEST(shrank_fenwick_tree, non_complete)
     EXPECT_EQ(7*10 + 8*5 + 9*3 + 10*1 + 11*1, t.bit_count());
 
     std::string tree_str = "0000010000000010000001000000010000001000000000010000001000000010000001000000001000000100000001000000100000000010000001000000010000001000000001000000100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree, tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);

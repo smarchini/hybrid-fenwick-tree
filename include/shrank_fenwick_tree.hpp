@@ -12,7 +12,7 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
-    std::uint8_t *tree = nullptr;
+    std::unique_ptr<std::uint8_t[]> tree;
     const std::size_t size;
     const std::size_t levels;
 
@@ -25,8 +25,6 @@ public:
      * Running time: O(length)
      */
     ShrankFenwickTree(std::uint64_t sequence[], std::size_t size);
-
-    virtual ~ShrankFenwickTree();
 
     virtual std::uint64_t get(std::size_t idx) const;
 

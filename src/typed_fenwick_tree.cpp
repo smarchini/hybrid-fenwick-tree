@@ -7,7 +7,7 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 TypedFenwickTree::TypedFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
     levels(find_last_set(size)),
-    level_start(new size_t[levels+1])
+    level_start(std::make_unique<size_t[]>(levels+1))
 {
     level_start[0] = 0;
     for (size_t i = 1, j = 0; i <= levels; i++) {
@@ -18,25 +18,16 @@ TypedFenwickTree::TypedFenwickTree(uint64_t sequence[], size_t size) :
     }
 
     switch(levels+LEAF_BITSIZE) {
-    case 33 ... 64: tree64 = new uint64_t[type_ends[3]];
-    case 17 ... 32: tree32 = new uint32_t[type_ends[2]];
-    case 9 ... 16:  tree16 = new uint16_t[type_ends[1]];
-    default:         tree8 = new uint8_t[type_ends[0]];
+    case 33 ... 64: tree64 = std::make_unique<uint64_t[]>(type_ends[3]);
+    case 17 ... 32: tree32 = std::make_unique<uint32_t[]>(type_ends[2]);
+    case 9 ... 16:  tree16 = std::make_unique<uint16_t[]>(type_ends[1]);
+    default:         tree8 = std::make_unique<uint8_t[]>(type_ends[0]);
     }
 
-    fill_tree<uint8_t, LEAF_BITSIZE, 8>(tree8, sequence);
-    fill_tree<uint16_t, 9, 16>(tree16, sequence);
-    fill_tree<uint32_t, 17, 32>(tree32, sequence);
-    fill_tree<uint64_t, 33, 64>(tree64, sequence);
-}
-
-TypedFenwickTree::~TypedFenwickTree()
-{
-    if (tree8) delete[] tree8;
-    if (tree16) delete[] tree16;
-    if (tree32) delete[] tree32;
-    if (tree64) delete[] tree64;
-    if (level_start) delete[] level_start;
+    fill_tree<uint8_t, LEAF_BITSIZE, 8>(tree8.get(), sequence);
+    fill_tree<uint16_t, 9, 16>(tree16.get(), sequence);
+    fill_tree<uint32_t, 17, 32>(tree32.get(), sequence);
+    fill_tree<uint64_t, 33, 64>(tree64.get(), sequence);
 }
 
 uint64_t TypedFenwickTree::get(size_t idx) const
