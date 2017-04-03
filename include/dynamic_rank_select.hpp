@@ -77,9 +77,14 @@ public:
      */
     std::size_t selectZero(std::uint64_t rank) const;
 
-
-    // TODO: aggiungere la parte dinamica
-
+    /**
+     * updateWord - replace a word of the given in the bitvector.
+     * @index: index of the bitvector.
+     * @word: new value for bitvector[@index]
+     *
+     * Returns: the replaced value.
+     */
+    std::uint64_t update(std::size_t index, std::uint64_t word);
 
     /**
      * bit_count - Returns an estimation of the number of bits used by the this

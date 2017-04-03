@@ -65,7 +65,6 @@ std::size_t DynRankSelect<T>::select(std::uint64_t rank) const
 template<typename T>
 std::size_t DynRankSelect<T>::selectZero(std::uint64_t rank) const
 {
-    // TODO: testare sta roba 
     // TODO: spostare il controllo sul -1 dentro l'albero?
     const size_t idx = tree.find(rank, true) + 1;
     return idx*64 + select64(~bitvector[idx], rank - (64*idx - (idx != 0 ? tree.get(idx-1) : 0)));
@@ -75,4 +74,16 @@ template<typename T>
 std::size_t DynRankSelect<T>::bit_count() const
 {
     return size + tree.bit_count();
+}
+
+
+template<typename T>
+std::uint64_t DynRankSelect<T>::update(std::size_t index, std::uint64_t word)
+{
+    // TODO: testare sta roba
+    const uint64_t old = bitvector[index];
+    bitvector[index] = word;
+    tree.set(index, popcount(word) - popcount(old));
+
+    return old;
 }

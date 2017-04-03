@@ -50,6 +50,23 @@ TEST(dynamic_rank_select, all_ones_1024)
     //     EXPECT_EQ(-1ULL ????, compact.selectZero(i)) << "at indext " << i;
     //     EXPECT_EQ(-1ULL ????, shrank.selectZero(i)) << "at indext " << i;
     // }
+
+    for (size_t i = 0; i < 16; i++) {
+        simple.update(i, 1);
+        typed.update(i, 1);
+        byte.update(i, 1);
+        compact.update(i, 1);
+        shrank.update(i, 1);
+    }
+
+    for (size_t i = 0; i < 16; i++) {
+        EXPECT_EQ(i*64, simple.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64, typed.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64, byte.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64, compact.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64, shrank.select(i)) << "at indext " << i;
+    }
+
 }
 
 
@@ -90,13 +107,30 @@ TEST(dynamic_rank_select, all_zeroes_1024)
     //     EXPECT_EQ(-1ULL ????, shrank.select(i)) << "at indext " << i;
     // }
 
-    for (size_t i = 0; i < 10; i++) {
+    for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(i, simple.selectZero(i)) << "at indext " << i;
         EXPECT_EQ(i, typed.selectZero(i)) << "at indext " << i;
         EXPECT_EQ(i, byte.selectZero(i)) << "at indext " << i;
         EXPECT_EQ(i, compact.selectZero(i)) << "at indext " << i;
         EXPECT_EQ(i, shrank.selectZero(i)) << "at indext " << i;
     }
+
+    for (size_t i = 0; i < 16; i++) {
+        simple.update(i, 0b10);
+        typed.update(i, 0b10);
+        byte.update(i, 0b10);
+        compact.update(i, 0b10);
+        shrank.update(i, 0b10);
+    }
+
+    for (size_t i = 0; i < 16; i++) {
+        EXPECT_EQ(i*64+1, simple.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64+1, typed.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64+1, byte.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64+1, compact.select(i)) << "at indext " << i;
+        EXPECT_EQ(i*64+1, shrank.select(i)) << "at indext " << i;
+    }
+
 }
 
 #endif // __DYNAMIC_RANK_SELECT_TEST_H__
