@@ -10,7 +10,6 @@ extern std::uint64_t inc2[];
 
 TEST(shrank_fenwick_tree, increments_by_one)
 {
-    // TODO: aggiungi un bit su tutto e modifica expect_eq, riabilita same_behavior_test
     // height  0        1       0         2       0        1       0          3       0        1       0         2       0        1       0
     // node   15       14      13        12      11       10       9          8       7        6       5         4       3        2       1
     //   0000001 00000010 0000001 000000100 0000001 00000010 0000001 0000001000 0000001 00000010 0000001 000000100 0000001 00000010 0000001
@@ -166,6 +165,5 @@ TEST(shrank_fenwick_tree, non_complete)
         EXPECT_EQ(i, t.find(seq3[i]+sum)) << "at index " << i;
     }
 }
-
 
 #endif // __SHRANK_FENWICK_TREE_TEST_H__

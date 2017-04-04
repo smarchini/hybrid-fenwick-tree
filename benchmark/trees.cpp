@@ -4,7 +4,7 @@
 #include <chrono>
 #include <algorithm>
 
-#include "test_utils.hpp"
+#include "../test/test_utils.hpp"
 
 #include "../include/fenwick_tree.hpp"
 #include "../include/simple_fenwick_tree.hpp"

@@ -7,27 +7,27 @@ LFLAGS = -std=c++14 -Wall -Wextra $(OPTIMIZATIONS)
 all: test benchmark
 
 # https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options
-test: bin/test
-	bin/test --gtest_color=yes
+test: bin/test/test
+	bin/test/test --gtest_color=yes
 
-benchmark: bin/benchmark
+benchmark: bin/benchmark/trees
 	@echo
-	bin/benchmark 1048575
+	bin/benchmark/trees 1048575
 	@echo
-	bin/benchmark 33554431
-#bin/benchmark 67108863
-#bin/benchmark 134217727
+	bin/benchmark/trees 33554431
+#bin/benchmark_trees 67108863
+#bin/benchmark_trees 134217727
 
-stats: $(OBJS) obj/benchmark.o
+stats: $(OBJS) obj/benchmark/trees.o
 	./genstats.sh
 
-bin/test: $(OBJS) obj/test.o
+bin/test/test: $(OBJS) obj/test/test.o
 	@mkdir -p $(@D)
-	$(CC) $(LFLAGS) $(OBJS) obj/test.o -lgtest -o bin/test
+	$(CC) $(LFLAGS) $(OBJS) obj/test/test.o -lgtest -o bin/test/test
 
-bin/benchmark: $(OBJS) obj/benchmark.o
+bin/benchmark/trees: $(OBJS) obj/benchmark/trees.o
 	@mkdir -p $(@D)
-	$(CC) $(LFLAGS) $(OBJS) obj/benchmark.o -o bin/benchmark
+	$(CC) $(LFLAGS) $(OBJS) obj/benchmark/trees.o -o bin/benchmark/trees
 
 obj/simple_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/simple_fenwick_tree.hpp src/simple_fenwick_tree.cpp
 	@mkdir -p $(@D)
@@ -53,16 +53,16 @@ obj/dynamic_ranw_select.o: include/broadword.hpp include/dynamic_rank_select.hpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/dynamic_rank_select.cpp
 
-obj/test.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o test/test_utils.hpp test/broadword_test.hpp test/simple_fenwick_tree_test.hpp test/compact_fenwick_tree_test.hpp test/byte_fenwick_tree_test.hpp test/typed_fenwick_tree_test.hpp test/shrank_fenwick_tree_test.hpp test/same_behavior_test.hpp test/dynamic_rank_select_test.hpp test/test.cpp
+obj/test/test.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o test/test_utils.hpp test/broadword_test.hpp test/simple_fenwick_tree_test.hpp test/compact_fenwick_tree_test.hpp test/byte_fenwick_tree_test.hpp test/typed_fenwick_tree_test.hpp test/shrank_fenwick_tree_test.hpp test/same_behavior_test.hpp test/dynamic_rank_select_test.hpp test/test.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ test/test.cpp
 
-obj/benchmark.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o test/benchmark.cpp
+obj/benchmark/trees.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o benchmark/trees.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ test/benchmark.cpp
+	$(CC) $(CFLAGS) -o $@ benchmark/trees.cpp
 
 
 .PHONY: clean
 
 clean:
-	rm -f obj/* bin/*
+	rm -rf obj/* bin/*

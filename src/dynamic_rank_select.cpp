@@ -12,9 +12,6 @@ T build_fenwick(std::uint64_t bitvector[], std::size_t length)
     for (size_t i = 0; i < length; i++)
         sequence[i] = popcount(bitvector[i]);
 
-    // TODO: il move constructor adesso è indispensabile (da scrivere)
-    // dopo averlo scritto verificare se funziona (roba non deallocata?)
-    // rule of five su tutte le classi, visto che gestisco la memoria a mano
     return T(sequence, length);
 }
 
