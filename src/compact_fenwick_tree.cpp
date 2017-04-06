@@ -3,6 +3,21 @@
 
 using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
+/**
+ * auint64_t - Aliased uint64_t
+ *
+ * Strict aliasing rule: it is illegal (with some exceptions [1]) to access the
+ * same memory location using pointers of different types. Accessing such an
+ * object invokes undefined behavior.
+ *
+ * GCC __may_alias__ attribute prevents the compiler to makes optimizations who
+ * relies on strict aliasing rule. With this type is now valid to access aliased
+ * data.
+ *
+ * [1] Type aliasing http://en.cppreference.com/w/cpp/language/reinterpret_cast
+ */
+using auint64_t = std::uint64_t __attribute__((__may_alias__));
+
 CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
     levels(find_last_set(size)),
@@ -21,7 +36,7 @@ CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
             const size_t curr_bit_pos = level_start[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
             const size_t curr_shift = curr_bit_pos & 0b111;
             const uint64_t curr_mask = compact_bitmask(LEAF_BITSIZE+l, curr_shift);
-            uint64_t * const curr_element = reinterpret_cast<uint64_t*>(&tree[curr_bit_pos/8]);
+            auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_bit_pos/8]);
 
             size_t sequence_idx = node-1;
             uint64_t value = sequence[sequence_idx];
@@ -31,7 +46,7 @@ CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
                 const size_t prev_bit_pos = level_start[j] + (LEAF_BITSIZE+j) * sequence_idx;
                 const size_t prev_shift = prev_bit_pos & 0b111;
                 const uint64_t prev_mask = compact_bitmask(LEAF_BITSIZE+j, prev_shift);
-                const uint64_t * const prev_element = reinterpret_cast<uint64_t*>(&tree[prev_bit_pos/8]);
+                const auint64_t * const prev_element = reinterpret_cast<auint64_t*>(&tree[prev_bit_pos/8]);
 
                 value += (*prev_element & prev_mask) >> prev_shift;
             }
@@ -57,7 +72,7 @@ uint64_t CompactFenwickTree::get(size_t idx) const
         const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * level_idx;
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
-        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[bit_pos/8]);
+        const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
         sum += (*compact_element & mask) >> shift;
     } while (idx ^ index);
@@ -73,7 +88,7 @@ void CompactFenwickTree::set(size_t idx, int64_t inc)
         const size_t level_idx = idx >> (1 + height);
         const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * level_idx;
         const size_t shift = bit_pos & 0b111;
-        uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[bit_pos/8]);
+        auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
         *compact_element += inc << shift;
     }
 }
@@ -86,7 +101,7 @@ size_t CompactFenwickTree::find(uint64_t val, bool complement) const
 
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * idx;
-        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[bit_pos/8]);
+        const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);

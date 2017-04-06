@@ -5,6 +5,21 @@ constexpr std::uint64_t ByteFenwickTree::MASK[];
 using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
 /**
+ * auint64_t - Aliased uint64_t
+ *
+ * Strict aliasing rule: it is illegal (with some exceptions [1]) to access the
+ * same memory location using pointers of different types. Accessing such an
+ * object invokes undefined behavior.
+ *
+ * GCC __may_alias__ attribute prevents the compiler to makes optimizations who
+ * relies on strict aliasing rule. With this type is now valid to access aliased
+ * data.
+ *
+ * [1] Type aliasing http://en.cppreference.com/w/cpp/language/reinterpret_cast
+ */
+using auint64_t = std::uint64_t __attribute__((__may_alias__));
+
+/**
  * get_size - Given it's height, compute the required size of an element
  * @height: Height of the element.
  *
@@ -39,14 +54,14 @@ ByteFenwickTree::ByteFenwickTree(uint64_t sequence[], size_t size) :
     for (size_t l = 0; l < levels; l++) {
         for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
             const size_t curr_byte_pos = level_start[l] + get_size(l) * (node >> (l+1));
-            uint64_t * const curr_element = reinterpret_cast<uint64_t*>(&tree[curr_byte_pos]);
+            auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_byte_pos]);
 
             size_t sequence_idx = node-1;
             uint64_t value = sequence[sequence_idx];
             for (size_t j = 0; j < l; j++) {
                 sequence_idx >>= 1;
                 const size_t prev_byte_pos = level_start[j] + get_size(j) * sequence_idx;
-                const uint64_t * const prev_element = reinterpret_cast<uint64_t*>(&tree[prev_byte_pos]);
+                const auint64_t * const prev_element = reinterpret_cast<auint64_t*>(&tree[prev_byte_pos]);
 
                 value += *prev_element & MASK[get_size(j)];
             }
@@ -70,7 +85,7 @@ uint64_t ByteFenwickTree::get(size_t idx) const
         const size_t level_idx = index >> (1 + height);
         const size_t elem_size = get_size(height);
         const size_t byte_pos = level_start[height] + elem_size * level_idx;
-        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
+        const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
 
         sum += *compact_element & MASK[elem_size];
     } while (idx ^ index);
@@ -84,7 +99,7 @@ void ByteFenwickTree::set(size_t idx, int64_t inc)
         const size_t height = find_first_set(idx) - 1;
         const size_t level_idx = idx >> (1 + height);
         const size_t byte_pos = level_start[height] + get_size(height) * level_idx;
-        uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
+        auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
 
         *compact_element += inc;
     }
@@ -97,7 +112,7 @@ size_t ByteFenwickTree::find(uint64_t val, bool complement) const
     for (uint64_t height = levels - 1; height != -1ULL; height--) {
         const size_t elem_size = get_size(height);
         const size_t byte_pos = level_start[height] + elem_size * idx;
-        const uint64_t * const compact_element = reinterpret_cast<uint64_t*>(&tree[byte_pos]);
+        const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
 
         uint64_t value = 0;
         if (byte_pos >= level_start[levels]) value = -1ULL;
