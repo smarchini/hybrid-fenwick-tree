@@ -8,7 +8,7 @@
 #include "typed_fenwick_tree_test.hpp"
 #include "shrank_fenwick_tree_test.hpp"
 
-//#include "same_behavior_test.hpp"
+#include "same_behavior_test.hpp"
 
 #include "dynamic_rank_select_test.hpp"
 

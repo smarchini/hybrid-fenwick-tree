@@ -42,7 +42,7 @@ public:
 
     virtual std::uint64_t get(std::size_t idx) const;
 
-    virtual void set(std::size_t idx, std::uint64_t inc);
+    virtual void set(std::size_t idx, std::int64_t inc);
 
     virtual std::size_t find(std::uint64_t val, bool complement=false) const;
 

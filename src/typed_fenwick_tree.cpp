@@ -54,7 +54,7 @@ uint64_t TypedFenwickTree::get(size_t idx) const
     return sum;
 }
 
-void TypedFenwickTree::set(size_t idx, uint64_t inc)
+void TypedFenwickTree::set(size_t idx, int64_t inc)
 {
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const size_t height = find_first_set(idx) - 1;

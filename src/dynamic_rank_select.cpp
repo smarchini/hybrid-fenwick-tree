@@ -6,7 +6,7 @@
 using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
 template<typename T>
-T build_fenwick(std::uint64_t bitvector[], std::size_t length)
+T build_fenwick(const std::uint64_t bitvector[], std::size_t length)
 {
     uint64_t *sequence = new uint64_t[length];
     for (size_t i = 0; i < length; i++)
@@ -18,17 +18,37 @@ T build_fenwick(std::uint64_t bitvector[], std::size_t length)
 template<typename T>
 DynRankSelect<T>::DynRankSelect(std::uint64_t bitvector[], std::size_t length) :
     tree(build_fenwick<T>(bitvector, length)),
-    size(length)
+    size(length),
+    bitvector(std::make_unique<uint64_t[]>(length))
 {
-    this->bitvector = new uint64_t[length];
-    std::copy_n(bitvector, length, this->bitvector);
+    std::copy_n(bitvector, length, this->bitvector.get());
+}
+
+template<typename T>
+DynRankSelect<T>::DynRankSelect(std::unique_ptr<std::uint64_t[]> bitvector, std::size_t length) :
+    tree(build_fenwick<T>(bitvector.get(), length)),
+    size(length),
+    bitvector(std::move(bitvector))
+{
+}
+
+template<typename T>
+const uint64_t* DynRankSelect<T>::get_bitvector() const
+{
+    return bitvector.get();
+}
+
+template<typename T>
+size_t DynRankSelect<T>::bitvector_size() const
+{
+    return size;
 }
 
 template<typename T>
 std::uint64_t DynRankSelect<T>::rank(std::size_t pos) const
 {
     // TODO: spostare il controllo sul -1 dentro l'albero?
-    return (pos/64 ? tree.get(pos/64 - 1) : 0)
+    return ((pos/64) ? tree.get(pos/64 - 1) : 0)
         + popcount(bitvector[pos/64] & compact_bitmask(pos % 64, 0));
 }
 
@@ -68,13 +88,6 @@ std::size_t DynRankSelect<T>::selectZero(std::uint64_t rank) const
 }
 
 template<typename T>
-std::size_t DynRankSelect<T>::bit_count() const
-{
-    return size + tree.bit_count();
-}
-
-
-template<typename T>
 std::uint64_t DynRankSelect<T>::update(std::size_t index, std::uint64_t word)
 {
     const uint64_t old = bitvector[index];
@@ -82,4 +95,12 @@ std::uint64_t DynRankSelect<T>::update(std::size_t index, std::uint64_t word)
     tree.set(index, popcount(word) - popcount(old));
 
     return old;
+}
+
+template<typename T>
+std::size_t DynRankSelect<T>::bit_count() const
+{
+    // TODO: + sizeof(DynRankSelect)? Stesso discorso per i fenwick tree,
+    // evntualmente aggiungendo -sizeof(T) per evitare di contarli due volte
+    return size*64 + tree.bit_count();
 }

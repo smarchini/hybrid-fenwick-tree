@@ -63,7 +63,7 @@ uint64_t ShrankFenwickTree::get(size_t idx) const
     return sum;
 }
 
-void ShrankFenwickTree::set(size_t idx, uint64_t inc)
+void ShrankFenwickTree::set(size_t idx, int64_t inc)
 {
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const size_t bit_pos = get_bitpos(idx-1);

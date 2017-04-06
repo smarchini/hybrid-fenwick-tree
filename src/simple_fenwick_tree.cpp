@@ -17,7 +17,6 @@ SimpleFenwickTree::SimpleFenwickTree(uint64_t sequence[], size_t size) :
     }
 }
 
-
 uint64_t SimpleFenwickTree::get(size_t idx) const
 {
     uint64_t sum = 0;
@@ -28,13 +27,11 @@ uint64_t SimpleFenwickTree::get(size_t idx) const
     return sum;
 }
 
-
-void SimpleFenwickTree::set(size_t idx, uint64_t inc)
+void SimpleFenwickTree::set(size_t idx, int64_t inc)
 {
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx))
         tree[idx-1] += inc;
 }
-
 
 size_t SimpleFenwickTree::find(uint64_t val, bool complement) const
 {

@@ -1,8 +1,11 @@
 OBJS = obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o obj/typed_fenwick_tree.o obj/shrank_fenwick_tree.o obj/dynamic_ranw_select.o
 CC = g++
 OPTIMIZATIONS = -O3 -march=native -g
-CFLAGS = -std=c++14 -Wall -Wextra -c $(OPTIMIZATIONS)
+CFLAGS = -std=c++14 -Wall -Wextra -c $(OPTIMIZATIONS) 
 LFLAGS = -std=c++14 -Wall -Wextra $(OPTIMIZATIONS)
+
+L1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE)
+L2_CACHE_SIZE=$(shell getconf LEVEL2_CACHE_SIZE)
 
 all: test benchmark
 
@@ -10,13 +13,11 @@ all: test benchmark
 test: bin/test/test
 	bin/test/test --gtest_color=yes
 
-benchmark: bin/benchmark/trees
+benchmark: bin/benchmark/trees bin/benchmark/trees_micro
 	@echo
 	bin/benchmark/trees 1048575
 	@echo
-	bin/benchmark/trees 33554431
-#bin/benchmark_trees 67108863
-#bin/benchmark_trees 134217727
+	bin/benchmark/trees_micro
 
 stats: $(OBJS) obj/benchmark/trees.o
 	./genstats.sh
@@ -28,6 +29,10 @@ bin/test/test: $(OBJS) obj/test/test.o
 bin/benchmark/trees: $(OBJS) obj/benchmark/trees.o
 	@mkdir -p $(@D)
 	$(CC) $(LFLAGS) $(OBJS) obj/benchmark/trees.o -o bin/benchmark/trees
+
+bin/benchmark/trees_micro: $(OBJS) obj/benchmark/trees_micro.o
+	@mkdir -p $(@D)
+	$(CC) $(LFLAGS) $(OBJS) obj/benchmark/trees_micro.o -o bin/benchmark/trees_micro
 
 obj/simple_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/simple_fenwick_tree.hpp src/simple_fenwick_tree.cpp
 	@mkdir -p $(@D)
@@ -60,6 +65,10 @@ obj/test/test.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_f
 obj/benchmark/trees.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o benchmark/trees.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ benchmark/trees.cpp
+
+obj/benchmark/trees_micro.o: obj/simple_fenwick_tree.o obj/compact_fenwick_tree.o obj/byte_fenwick_tree.o benchmark/trees_micro.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ benchmark/trees_micro.cpp  -DL1_CACHE_SIZE=$(L1_CACHE_SIZE) -DL2_CACHE_SIZE=$(L2_CACHE_SIZE)
 
 
 .PHONY: clean

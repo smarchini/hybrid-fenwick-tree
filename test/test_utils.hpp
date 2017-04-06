@@ -94,7 +94,7 @@ void fill_with_random_values(std::uint64_t array[], std::size_t size)
     static std::random_device rd;
     static std::mt19937 mte(rd());
 
-    std::uniform_int_distribution<std::uint64_t> dist(0, 63);
+    std::uniform_int_distribution<std::uint64_t> dist(0, 64);
 
     for (std::size_t i = 0; i < size; i++)
         array[i] = dist(mte);

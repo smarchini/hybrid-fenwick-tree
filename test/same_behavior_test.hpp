@@ -102,7 +102,7 @@ TEST(same_behavior, random_big)
 
 TEST(same_behavior, partial_tree)
 {
-    for (std::size_t i = 1; i < 10000; i++)
+    for (std::size_t i = 1; i < 1000; i++)
         random_test(i);
 }
 

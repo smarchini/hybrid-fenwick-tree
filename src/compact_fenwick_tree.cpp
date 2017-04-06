@@ -66,7 +66,7 @@ uint64_t CompactFenwickTree::get(size_t idx) const
 }
 
 
-void CompactFenwickTree::set(size_t idx, uint64_t inc)
+void CompactFenwickTree::set(size_t idx, int64_t inc)
 {
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const size_t height = find_first_set(idx) - 1;
