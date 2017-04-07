@@ -25,9 +25,8 @@ inline size_t get_bitpos(size_t n)
 
 ShrankFenwickTree::ShrankFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
-    levels(find_last_set(size))
+    tree(get_bitpos(size-1) / 8 + 1 + 4) // +4 to prevent segfault on the last element
 {
-    tree = std::make_unique<uint8_t[]>(get_bitpos(size-1) / 8 + 1 + 4); // +4 to prevent segfault on the last element
 
     for (size_t i = 1; i <= size; i++) {
         const size_t bitpos = get_bitpos(i-1);

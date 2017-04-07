@@ -2,7 +2,7 @@
 #define __FENWICK_TREE_H__
 
 #include <cstdint>
-#include <memory>
+#include "darray.hpp"
 
 class FenwickTree
 {

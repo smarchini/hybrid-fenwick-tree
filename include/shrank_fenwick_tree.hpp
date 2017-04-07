@@ -12,9 +12,8 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
-    std::unique_ptr<std::uint8_t[]> tree;
     const std::size_t size;
-    const std::size_t levels;
+    DArray<std::uint8_t> tree;
 
 public:
     /**

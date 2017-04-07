@@ -20,20 +20,20 @@ using auint64_t = std::uint64_t __attribute__((__may_alias__));
 
 CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
-    levels(find_last_set(size)),
-    level_start(std::make_unique<size_t[]>(levels+1))
+    level(find_last_set(size) + 1)
 {
-    level_start[0] = 0;
-    for (size_t i = 1; i <= levels; i++) {
+    level[0] = 0;
+    for (size_t i = 1; i < level.size(); i++) {
         // Compute: sum_{k=0}^{i} [(size + 2^{k-i}) / 2^k] * (6+k) // TODO sistemare commento
-        level_start[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level_start[i-1];
+        level[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level[i-1];
     }
 
-    tree = std::make_unique<uint8_t[]>((level_start[levels]-1) / 8 + 1 + 4); // +4 to prevent segfault on the last element
+    const size_t levels = level.size() - 1;
+    tree = DArray<uint8_t>((level[levels]-1) / 8 + 1 + 4); // +4 to prevent segfault on the last element
 
     for (size_t l = 0; l < levels; l++) {
         for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
-            const size_t curr_bit_pos = level_start[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
+            const size_t curr_bit_pos = level[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
             const size_t curr_shift = curr_bit_pos & 0b111;
             const uint64_t curr_mask = compact_bitmask(LEAF_BITSIZE+l, curr_shift);
             auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_bit_pos/8]);
@@ -43,7 +43,7 @@ CompactFenwickTree::CompactFenwickTree(uint64_t sequence[], size_t size) :
             for (size_t j = 0; j < l; j++) {
                 sequence_idx >>= 1;
 
-                const size_t prev_bit_pos = level_start[j] + (LEAF_BITSIZE+j) * sequence_idx;
+                const size_t prev_bit_pos = level[j] + (LEAF_BITSIZE+j) * sequence_idx;
                 const size_t prev_shift = prev_bit_pos & 0b111;
                 const uint64_t prev_mask = compact_bitmask(LEAF_BITSIZE+j, prev_shift);
                 const auint64_t * const prev_element = reinterpret_cast<auint64_t*>(&tree[prev_bit_pos/8]);
@@ -69,7 +69,7 @@ uint64_t CompactFenwickTree::get(size_t idx) const
         const size_t height = find_first_set(index) - 1;
         const size_t level_idx = index >> (1 + height);
 
-        const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * level_idx;
+        const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
         const size_t shift = bit_pos & 0b111;
         const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
         const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
@@ -86,7 +86,7 @@ void CompactFenwickTree::set(size_t idx, int64_t inc)
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const size_t height = find_first_set(idx) - 1;
         const size_t level_idx = idx >> (1 + height);
-        const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * level_idx;
+        const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
         const size_t shift = bit_pos & 0b111;
         auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
         *compact_element += inc << shift;
@@ -99,8 +99,8 @@ size_t CompactFenwickTree::find(uint64_t val, bool complement) const
     size_t node = 0, idx = 0;
     const size_t bit_max = bit_count();
 
-    for (uint64_t height = levels - 1; height != -1ULL; height--) {
-        const size_t bit_pos = level_start[height] + (LEAF_BITSIZE+height) * idx;
+    for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
+        const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
         const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
         const size_t shift = bit_pos & 0b111;
@@ -127,5 +127,5 @@ size_t CompactFenwickTree::find(uint64_t val, bool complement) const
 
 size_t CompactFenwickTree::bit_count() const
 {
-    return level_start[levels];
+    return level[level.size()-1];
 }

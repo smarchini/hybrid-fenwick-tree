@@ -33,10 +33,9 @@ public:
                                               0xFFFFFFFFFFFFFFULL,
                                               0xFFFFFFFFFFFFFFFFULL };
 protected:
-    std::unique_ptr<std::uint8_t[]> tree;
     const std::size_t size;
-    const std::size_t levels;
-    std::unique_ptr<std::size_t[]> level_start;
+    DArray<std::uint8_t> tree;
+    DArray<std::size_t> level;
 
 public:
     /**

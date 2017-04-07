@@ -14,5 +14,5 @@ done;
 
 for val in 1048575 33554431 67108863 134217727; do
     echo "benchmark" $val
-    ./bin/benchmark $val > stats/$DIRNAME/benchmark/$val.txt
+    ./bin/benchmark/trees $val > stats/$DIRNAME/benchmark/$val.txt
 done 

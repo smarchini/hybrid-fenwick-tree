@@ -35,27 +35,27 @@ bin/benchmark/trees_micro: $(OBJS) obj/benchmark/trees_micro.o
 
 
 # lib objects
-obj/simple_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/simple_fenwick_tree.hpp src/simple_fenwick_tree.cpp
+obj/simple_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/darray.hpp include/simple_fenwick_tree.hpp src/simple_fenwick_tree.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/simple_fenwick_tree.cpp
 
-obj/typed_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/typed_fenwick_tree.hpp src/typed_fenwick_tree.cpp
+obj/typed_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/darray.hpp include/typed_fenwick_tree.hpp src/typed_fenwick_tree.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/typed_fenwick_tree.cpp
 
-obj/byte_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/byte_fenwick_tree.hpp src/byte_fenwick_tree.cpp
+obj/byte_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/darray.hpp include/byte_fenwick_tree.hpp src/byte_fenwick_tree.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/byte_fenwick_tree.cpp
 
-obj/compact_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/compact_fenwick_tree.hpp src/compact_fenwick_tree.cpp
+obj/compact_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/darray.hpp include/compact_fenwick_tree.hpp src/compact_fenwick_tree.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/compact_fenwick_tree.cpp
 
-obj/shrank_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/shrank_fenwick_tree.hpp src/shrank_fenwick_tree.cpp
+obj/shrank_fenwick_tree.o: include/broadword.hpp include/fenwick_tree.hpp include/darray.hpp include/shrank_fenwick_tree.hpp src/shrank_fenwick_tree.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/shrank_fenwick_tree.cpp
 
-obj/dynamic_rank_select.o: include/broadword.hpp include/dynamic_rank_select.hpp src/dynamic_rank_select.cpp
+obj/dynamic_rank_select.o: include/broadword.hpp include/darray.hpp include/dynamic_rank_select.hpp src/dynamic_rank_select.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ src/dynamic_rank_select.cpp
 

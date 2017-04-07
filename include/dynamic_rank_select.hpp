@@ -12,8 +12,7 @@ template<typename T>
 class DynRankSelect {
 private:
     T tree;
-    std::size_t size;
-    std::unique_ptr<std::uint64_t[]> bitvector;
+    DArray<std::uint64_t> _bitvector;
 
 public:
     /**
@@ -27,7 +26,7 @@ public:
      * touch its underlining bitvector, so it prevents you to do it.
      */
     DynRankSelect(std::uint64_t bitvector[], std::size_t length);
-    DynRankSelect(std::unique_ptr<std::uint64_t[]> bitvector, std::size_t length);
+    DynRankSelect(DArray<std::uint64_t> bitvector, size_t length);
 
     /**
      * get_bitvector() - Give you the underlining bitvector
@@ -37,7 +36,7 @@ public:
      *
      * Returns: The underlining bitvector
      */
-    const uint64_t* get_bitvector() const;
+    const uint64_t* bitvector() const;
 
     /**
      * bitvector_size() - Returns the length of the bitvector

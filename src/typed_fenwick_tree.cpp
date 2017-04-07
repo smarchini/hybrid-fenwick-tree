@@ -6,22 +6,21 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 
 TypedFenwickTree::TypedFenwickTree(uint64_t sequence[], size_t size) :
     size(size),
-    levels(find_last_set(size)),
-    level_start(std::make_unique<size_t[]>(levels+1))
+    level(find_last_set(size)+1)
 {
-    level_start[0] = 0;
-    for (size_t i = 1, j = 0; i <= levels; i++) {
-        type_ends[j] = (size + (1<<(i-1))) / (1<<i) + level_start[i-1];
-        level_start[i] = (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) ? 0 : type_ends[j];
+    level[0] = 0;
+    for (size_t i = 1, j = 0; i < level.size(); i++) {
+        type_ends[j] = (size + (1<<(i-1))) / (1<<i) + level[i-1];
+        level[i] = (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) ? 0 : type_ends[j];
 
         if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) j++;
     }
 
-    switch(levels+LEAF_BITSIZE) {
-    case 33 ... 64: tree64 = std::make_unique<uint64_t[]>(type_ends[3]);
-    case 17 ... 32: tree32 = std::make_unique<uint32_t[]>(type_ends[2]);
-    case 9 ... 16:  tree16 = std::make_unique<uint16_t[]>(type_ends[1]);
-    default:         tree8 = std::make_unique<uint8_t[]>(type_ends[0]);
+    switch(level.size() + LEAF_BITSIZE - 1) {
+    case 33 ... 64: tree64 = DArray<uint64_t>(type_ends[3]);
+    case 17 ... 32: tree32 = DArray<uint32_t>(type_ends[2]);
+    case 9 ... 16:  tree16 = DArray<uint16_t>(type_ends[1]);
+    default:         tree8 = DArray<uint8_t>(type_ends[0]);
     }
 
     fill_tree<uint8_t, LEAF_BITSIZE, 8>(tree8.get(), sequence);
@@ -41,7 +40,7 @@ uint64_t TypedFenwickTree::get(size_t idx) const
         index += mask_last_set(idx ^ index);
         const size_t height = find_first_set(index) - 1;
         const size_t level_idx = index >> (1 + height);
-        const size_t tree_idx = level_start[height] + level_idx;
+        const size_t tree_idx = level[height] + level_idx;
 
         switch(height+LEAF_BITSIZE) {
         case 33 ... 64: sum += tree64[tree_idx]; break;
@@ -59,7 +58,7 @@ void TypedFenwickTree::set(size_t idx, int64_t inc)
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
         const size_t height = find_first_set(idx) - 1;
         const size_t level_idx = idx >> (1 + height);
-        const size_t tree_idx = level_start[height] + level_idx;
+        const size_t tree_idx = level[height] + level_idx;
 
         switch(height+LEAF_BITSIZE) {
         case 33 ... 64: tree64[tree_idx] += inc; break;
@@ -74,8 +73,8 @@ size_t TypedFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0, idx = 0;
 
-    for (uint64_t height = levels - 1; height != -1ULL; height--) {
-        const size_t tree_idx = level_start[height] + idx;
+    for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
+        const size_t tree_idx = level[height] + idx;
 
         uint64_t value = 0;
         switch(height+LEAF_BITSIZE) {

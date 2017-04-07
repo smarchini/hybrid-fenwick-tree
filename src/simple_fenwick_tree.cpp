@@ -6,8 +6,7 @@ using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t
 
 
 SimpleFenwickTree::SimpleFenwickTree(uint64_t sequence[], size_t size) :
-    tree(std::make_unique<uint64_t[]>(size)),
-    size(size)
+    tree(size)
 {
     std::copy_n(sequence, size, tree.get());
 
@@ -29,6 +28,7 @@ uint64_t SimpleFenwickTree::get(size_t idx) const
 
 void SimpleFenwickTree::set(size_t idx, int64_t inc)
 {
+    const size_t size = tree.size();
     for (idx = idx+1; idx <= size; idx += mask_first_set(idx))
         tree[idx-1] += inc;
 }
@@ -37,9 +37,9 @@ size_t SimpleFenwickTree::find(uint64_t val, bool complement) const
 {
     size_t node = 0;
 
-    for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+    for (size_t m = mask_last_set(tree.size()); m != 0; m >>= 1) {
         uint64_t value = 0;
-        if (node+m-1 >= size) value = -1ULL;
+        if (node+m-1 >= tree.size()) value = -1ULL;
         else value = tree[node+m-1];
 
         if (complement)
@@ -56,5 +56,5 @@ size_t SimpleFenwickTree::find(uint64_t val, bool complement) const
 
 size_t SimpleFenwickTree::bit_count() const
 {
-    return 64 * size;
+    return 64 * tree.size();
 }

@@ -7,8 +7,7 @@
  * class TypedFenwickTree
  * @tree8-16-32-64: Fenwick Tree data.
  * @size: Number of elements in the tree.
- * @levels: Number of levels of the tree.
- * @level_start: Lookup table, it store every starting level index.
+ * @level: Lookup table, it store every starting level index.
  *
  * Each node is the smallest datatype capable of holding its data. It's supposed
  * to store increments up to 64.
@@ -21,15 +20,15 @@ public:
     static constexpr std::size_t LEAF_BITSIZE = 7;
 
 protected:
-    std::unique_ptr<std::uint64_t[]> tree64;
-    std::unique_ptr<std::uint32_t[]> tree32;
-    std::unique_ptr<std::uint16_t[]> tree16;
-    std::unique_ptr<std::uint8_t[]>  tree8;
-
     const std::size_t size;
-    const std::size_t levels;
-    std::unique_ptr<std::size_t[]> level_start;
+
     std::size_t type_ends[4] = {0};
+    DArray<std::uint64_t> tree64;
+    DArray<std::uint32_t> tree32;
+    DArray<std::uint16_t> tree16;
+    DArray<std::uint8_t>  tree8;
+
+    DArray<std::size_t> level;
 
 public:
     TypedFenwickTree(std::uint64_t sequence[], std::size_t size);
@@ -45,6 +44,7 @@ public:
 private:
     template <typename T, std::size_t start, std::size_t end>
     inline void fill_tree(T *tree, std::uint64_t sequence[]) {
+        const size_t levels = level.size() - 1;
         for (std::size_t l = start-LEAF_BITSIZE; l < levels && l <= end-LEAF_BITSIZE; l++) {
             for (std::size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
                 std::size_t sequence_idx = node-1;
@@ -52,22 +52,22 @@ private:
 
                 for (std::size_t j = 0; j < l && j <= 8-LEAF_BITSIZE; j++) {
                     sequence_idx >>= 1;
-                    value += tree8[level_start[j] + sequence_idx];
+                    value += tree8[level[j] + sequence_idx];
                 }
                 for (std::size_t j = 8-LEAF_BITSIZE+1; j < l && j <= 16-LEAF_BITSIZE; j++) {
                     sequence_idx >>= 1;
-                    value += tree16[level_start[j] + sequence_idx];
+                    value += tree16[level[j] + sequence_idx];
                 }
                 for (std::size_t j = 16-LEAF_BITSIZE+1; j < l && j <= 32-LEAF_BITSIZE; j++) {
                     sequence_idx >>= 1;
-                    value += tree32[level_start[j] + sequence_idx];
+                    value += tree32[level[j] + sequence_idx];
                 }
                 for (std::size_t j = 32-LEAF_BITSIZE+1; j < l && j <= 64-LEAF_BITSIZE; j++) {
                     sequence_idx >>= 1;
-                    value += tree64[level_start[j] + sequence_idx];
+                    value += tree64[level[j] + sequence_idx];
                 }
 
-                tree[level_start[l] + (node >> (l+1))] = value;
+                tree[level[l] + (node >> (l+1))] = value;
             }
         }
     }
