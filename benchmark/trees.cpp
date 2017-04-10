@@ -53,11 +53,11 @@ int main(int argc, char **argv)
     increments_to_sequence(increments, sequence, size);
     std::random_shuffle(sequence, sequence+size);
 
-    bench<SimpleFenwickTree>("SimpleFenwickTree", size, order, increments, set_updates, sequence);
-    bench<TypedFenwickTree>("TypedFenwickTree", size, order, increments, set_updates, sequence);
-    bench<ByteFenwickTree>("ByteFenwickTree", size, order, increments, set_updates, sequence);
-    bench<CompactFenwickTree>("CompactFenwickTree", size, order, increments, set_updates, sequence);
-    bench<ShrankFenwickTree>("ShrankFenwickTree", size, order, increments, set_updates, sequence);
+    bench<SimpleFenwickTree>("Simple", size, order, increments, set_updates, sequence);
+    bench<TypedFenwickTree>("Typed", size, order, increments, set_updates, sequence);
+    bench<ByteFenwickTree>("Byte", size, order, increments, set_updates, sequence);
+    bench<CompactFenwickTree>("Compact", size, order, increments, set_updates, sequence);
+    bench<ShrankFenwickTree>("Shrank", size, order, increments, set_updates, sequence);
 
     delete[] increments;
     delete[] set_updates;

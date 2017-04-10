@@ -16,9 +16,10 @@
 
 #include "../include/fenwick_tree.hpp"
 #include "../include/simple_fenwick_tree.hpp"
+#include "../include/typed_fenwick_tree.hpp"
 #include "../include/byte_fenwick_tree.hpp"
 #include "../include/compact_fenwick_tree.hpp"
-#include "../include/typed_fenwick_tree.hpp"
+#include "../include/shrank_fenwick_tree.hpp"
 
 using namespace std;
 
