@@ -1,9 +1,7 @@
 #ifndef __COMPACT_FENWICK_TREE_TEST_H__
 #define __COMPACT_FENWICK_TREE_TEST_H__
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "./test_utils.hpp"
+#include "test_utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
@@ -14,9 +12,6 @@ TEST(compact_fenwick_tree, increments_by_one)
     // node     8 |         12        4 |          14      10       6       2 |      15      13      11       9       7       5       3       1
     // 0000001000 | 000000100 000000100 | 00000010 00000010 00000010 00000010 | 0000001 0000001 0000001 0000001 0000001 0000001 0000001 0000001
     CompactFenwickTree_Test t(inc1, 15);
-
-    // bit_count
-    EXPECT_EQ(7*8 + 8*4 + 9*2 + 10, t.bit_count());
 
     std::string tree_str = "00000010000000001000000001000000001000000010000000100000001000000010000001000000100000010000001000000100000010000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
@@ -68,9 +63,6 @@ TEST(compact_fenwick_tree, increasing_increments)
     // 0000100100 | 000101010 000001010 | 00011011 00010011 00001011 00000011 | 0001111 0001101 0001011 0001001 0000111 0000101 0000011 0000001
     CompactFenwickTree_Test t(inc2, 15);
 
-    // bit_count
-    EXPECT_EQ(7*8 + 8*4 + 9*2 + 10, t.bit_count());
-
     std::string tree_str = "00001001000001010100000010100001101100010011000010110000001100011110001101000101100010010000111000010100000110000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
 
@@ -120,9 +112,6 @@ TEST(compact_fenwick_tree, non_complete)
     // node     16 |          8 |          20       12        4 |           18      14      10       6       2 |      19      17      15      13      11       9       7       5       3       1
     // 00000010000 | 0000001000 | 000000100 000000100 000000100 | 00000010 00000010 00000010 00000010 00000010 | 0000001 0000001 0000001 0000001 0000001 0000001 0000001 0000001 0000001 0000001
     CompactFenwickTree_Test t(inc3, 20);
-
-    // bit_count
-    EXPECT_EQ(7*10 + 8*5 + 9*3 + 10*1 + 11*1, t.bit_count());
 
     std::string tree_str = "00000010000000000100000000010000000010000000010000000010000000100000001000000010000000100000001000000100000010000001000000100000010000001000000100000010000001";
     EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));

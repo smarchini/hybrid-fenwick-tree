@@ -1,9 +1,7 @@
 #ifndef __DYNAMIC_RANK_SELECT_TEST_H__
 #define __DYNAMIC_RANK_SELECT_TEST_H__
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "./test_utils.hpp"
+#include "test_utils.hpp"
 
 
 TEST(dynamic_rank_select, all_ones_1024)
@@ -12,11 +10,11 @@ TEST(dynamic_rank_select, all_ones_1024)
     std::uint64_t bitvect[MAX] = { -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL,
                                    -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL };
 
-    DynRankSelect<SimpleFenwickTree> simple(bitvect, MAX);
-    DynRankSelect<TypedFenwickTree> typed(bitvect, MAX);
-    DynRankSelect<ByteFenwickTree> byte(bitvect, MAX);
-    DynRankSelect<CompactFenwickTree> compact(bitvect, MAX);
-    DynRankSelect<ShrankFenwickTree> shrank(bitvect, MAX);
+    dyn::WordRankSelect<dyn::SimpleFenwickTree> simple(bitvect, MAX);
+    dyn::WordRankSelect<dyn::TypedFenwickTree> typed(bitvect, MAX);
+    dyn::WordRankSelect<dyn::ByteFenwickTree> byte(bitvect, MAX);
+    dyn::WordRankSelect<dyn::CompactFenwickTree> compact(bitvect, MAX);
+    dyn::WordRankSelect<dyn::ShrankFenwickTree> shrank(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(i, simple.rank(i)) << "at indext " << i;
@@ -92,11 +90,11 @@ TEST(dynamic_rank_select, all_zeroes_1024)
     std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                    0, 0, 0, 0, 0, 0, 0, 0 };
 
-    DynRankSelect<SimpleFenwickTree> simple(bitvect, MAX);
-    DynRankSelect<TypedFenwickTree> typed(bitvect, MAX);
-    DynRankSelect<ByteFenwickTree> byte(bitvect, MAX);
-    DynRankSelect<CompactFenwickTree> compact(bitvect, MAX);
-    DynRankSelect<ShrankFenwickTree> shrank(bitvect, MAX);
+    dyn::WordRankSelect<dyn::SimpleFenwickTree> simple(bitvect, MAX);
+    dyn::WordRankSelect<dyn::TypedFenwickTree> typed(bitvect, MAX);
+    dyn::WordRankSelect<dyn::ByteFenwickTree> byte(bitvect, MAX);
+    dyn::WordRankSelect<dyn::CompactFenwickTree> compact(bitvect, MAX);
+    dyn::WordRankSelect<dyn::ShrankFenwickTree> shrank(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(0, simple.rank(i)) << "at indext " << i;

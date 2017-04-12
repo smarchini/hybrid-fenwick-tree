@@ -4,6 +4,7 @@
 int main()
 {
     using namespace std;
+    using namespace dyn;
 
     cout << "Elements,Simple,Typed,Byte,Compact,Shrank\n";
 
@@ -15,11 +16,11 @@ int main()
         random_shuffle(order, order+size);
 
         cout << size << ',';
-        cout << bench_get<SimpleFenwickTree> (size, increments, order) << ','
-             << bench_get<TypedFenwickTree>  (size, increments, order) << ','
-             << bench_get<ByteFenwickTree>   (size, increments, order) << ','
-             << bench_get<CompactFenwickTree>(size, increments, order) << ','
-             << bench_get<ShrankFenwickTree> (size, increments, order) << '\n';
+        cout << bench_get<SimpleFenwickTree<7>> (size, increments, order) << ','
+             << bench_get<TypedFenwickTree<7>>  (size, increments, order) << ','
+             << bench_get<ByteFenwickTree<7>>   (size, increments, order) << ','
+             << bench_get<CompactFenwickTree<7>>(size, increments, order) << ','
+             << bench_get<ShrankFenwickTree<7>> (size, increments, order) << '\n';
 
         delete[] increments;
         delete[] order;

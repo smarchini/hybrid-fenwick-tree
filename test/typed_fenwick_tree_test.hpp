@@ -1,9 +1,7 @@
 #ifndef __TYPED_FENWICK_TREE_TEST_H__
 #define __TYPED_FENWICK_TREE_TEST_H__
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "./test_utils.hpp"
+#include "test_utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
@@ -21,9 +19,6 @@ TEST(typed_fenwick_tree, increments_by_one)
     // 0000000000001000 | 0000000000000100 0000000000000100
 
     TypedFenwickTree_Test t(inc1, 15);
-
-    // bit_count
-    EXPECT_EQ(8*12 + 16*3, t.bit_count());
 
     std::string tree8_str = "000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "000000000000100000000000000001000000000000000100";
@@ -84,9 +79,6 @@ TEST(typed_fenwick_tree, increasing_increments)
 
     TypedFenwickTree_Test t(inc2, 15);
 
-    // bit_count
-    EXPECT_EQ(8*12 + 16*3, t.bit_count());
-
     std::string tree8_str = "000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
     std::string tree16_str = "000000000010010000000000001010100000000000001010";
     EXPECT_EQ(tree8_str, tree_tostring(t.tree8.get(), tree8_str.length()));
@@ -145,9 +137,6 @@ TEST(typed_fenwick_tree, non_complete)
     // 0000000000010000 | 0000000000001000 | 0000000000000100 0000000000000100 0000000000000100
 
     TypedFenwickTree_Test t(inc3, 20);
-
-    // bit_count
-    EXPECT_EQ(8*10 + 8*5 + 16*3 + 16*1 + 16*1, t.bit_count());
 
     std::string tree8_str = "000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "00000000000100000000000000001000000000000000010000000000000001000000000000000100";

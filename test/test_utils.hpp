@@ -1,64 +1,71 @@
 #ifndef __TEST_UTILS_H__
 #define __TEST_UTILS_H__
 
-#include <cstdint>
+#include <gtest/gtest.h>
+
 #include <bitset>
 #include <random>
 
-#include "../include/simple_fenwick_tree.hpp"
-#include "../include/compact_fenwick_tree.hpp"
-#include "../include/byte_fenwick_tree.hpp"
-#include "../include/typed_fenwick_tree.hpp"
-#include "../include/shrank_fenwick_tree.hpp"
-#include "../include/dynamic_rank_select.hpp"
+#include "../include/common.hpp"
+
+#include "../include/fenwick/fenwick_tree.hpp"
+#include "../include/fenwick/simple.hpp"
+#include "../include/fenwick/typed.hpp"
+#include "../include/fenwick/byte.hpp"
+#include "../include/fenwick/compact.hpp"
+#include "../include/fenwick/shrank.hpp"
+
+#include "../include/rankselect/rank_select.hpp"
+#include "../include/rankselect/word.hpp"
 
 
 // Exposed classes
 // -----------------------------------------------------------------------------
-class SimpleFenwickTree_Test : public SimpleFenwickTree {
+class SimpleFenwickTree_Test : public dyn::SimpleFenwickTree<7> {
 public:
     SimpleFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        SimpleFenwickTree(sequence, length) {}
-    using SimpleFenwickTree::tree;
+        dyn::SimpleFenwickTree<7>(sequence, length) {}
+    using dyn::SimpleFenwickTree<7>::tree;
 };
 
-class CompactFenwickTree_Test : public CompactFenwickTree {
-public:
-    CompactFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        CompactFenwickTree(sequence, length) {}
-    using CompactFenwickTree::tree;
-};
-
-class ByteFenwickTree_Test : public ByteFenwickTree {
-public:
-    ByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        ByteFenwickTree(sequence, length) {}
-    using ByteFenwickTree::tree;
-};
-
-class TypedFenwickTree_Test : public TypedFenwickTree {
+class TypedFenwickTree_Test : public dyn::TypedFenwickTree<7> {
 public:
     TypedFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        TypedFenwickTree(sequence, length) {}
-    using TypedFenwickTree::tree8;
-    using TypedFenwickTree::tree16;
-    using TypedFenwickTree::tree32;
-    using TypedFenwickTree::tree64;
+        dyn::TypedFenwickTree<7>(sequence, length) {}
+    using dyn::TypedFenwickTree<7>::tree8;
+    using dyn::TypedFenwickTree<7>::tree16;
+    using dyn::TypedFenwickTree<7>::tree32;
+    using dyn::TypedFenwickTree<7>::tree64;
 };
 
-class ShrankFenwickTree_Test : public ShrankFenwickTree {
+class ByteFenwickTree_Test : public dyn::ByteFenwickTree<7> {
+public:
+    ByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::ByteFenwickTree<7>(sequence, length) {}
+    using dyn::ByteFenwickTree<7>::tree;
+};
+
+class CompactFenwickTree_Test : public dyn::CompactFenwickTree<7> {
+public:
+    CompactFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::CompactFenwickTree<7>(sequence, length) {}
+    using dyn::CompactFenwickTree<7>::tree;
+};
+
+class ShrankFenwickTree_Test : public dyn::ShrankFenwickTree<7> {
 public:
     ShrankFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        ShrankFenwickTree(sequence, length) {}
-    using ShrankFenwickTree::tree;
+        dyn::ShrankFenwickTree<7>(sequence, length) {}
+    using dyn::ShrankFenwickTree<7>::tree;
 };
 
-template<typename T>
-class DynRankSelect_Test : public DynRankSelect<T> {
+
+template <template<size_t> class T>
+class WordRankSelect_Test : public dyn::WordRankSelect<T> {
 public:
-    DynRankSelect_Test(std::uint64_t bitvector[], std::size_t length):
-        DynRankSelect<T>(bitvector, length) {}
-    using DynRankSelect<T>::fenwick;
+    WordRankSelect_Test(std::uint64_t bitvector[], std::size_t length):
+        dyn::WordRankSelect<T>(bitvector, length) {}
+    using dyn::WordRankSelect<T>::fenwick;
 };
 
 

@@ -13,12 +13,12 @@
 #include <algorithm>
 #include <random>
 
-#include "../include/fenwick_tree.hpp"
-#include "../include/simple_fenwick_tree.hpp"
-#include "../include/typed_fenwick_tree.hpp"
-#include "../include/byte_fenwick_tree.hpp"
-#include "../include/compact_fenwick_tree.hpp"
-#include "../include/shrank_fenwick_tree.hpp"
+#include "../include/fenwick/simple.hpp"
+#include "../include/fenwick/typed.hpp"
+#include "../include/fenwick/byte.hpp"
+#include "../include/fenwick/compact.hpp"
+#include "../include/fenwick/shrank.hpp"
+
 
 template<typename T> T* random_array(size_t size);
 void inc_to_seq(std::uint64_t *inc, std::uint64_t *seq, std::size_t size);

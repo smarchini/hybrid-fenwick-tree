@@ -53,7 +53,6 @@ uint64_t DynRankSelect<T>::rank(size_t pos) const
 template<typename T>
 uint64_t DynRankSelect<T>::rank(size_t from, size_t to) const
 {
-    // forse si può sfruttare il fatto che sono fenwick tree per beccare la differenza fare to-from in un unico passaggio?
     return rank(to) - rank(from);
 }
 

@@ -1,9 +1,7 @@
 #ifndef __SIMPLE_FENWICK_TREE_TEST_H__
 #define __SIMPLE_FENWICK_TREE_TEST_H__
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "./test_utils.hpp"
+#include "test_utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
@@ -11,9 +9,6 @@ extern std::uint64_t inc2[];
 TEST(simple_fenwick_tree, increments_by_one)
 {
     SimpleFenwickTree_Test t(inc1, 15);
-
-    // bit_count
-    EXPECT_EQ(15*64, t.bit_count());
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -57,10 +52,7 @@ TEST(simple_fenwick_tree, increments_by_one)
 
 TEST(simple_fenwick_tree, increasing_increments)
 {
-    SimpleFenwickTree t(inc2, 15);
-
-    // bit_count
-    EXPECT_EQ(15*64, t.bit_count());
+    SimpleFenwickTree_Test t(inc2, 15);
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -104,10 +96,7 @@ TEST(simple_fenwick_tree, increasing_increments)
 
 TEST(simple_fenwick_tree, non_complete)
 {
-    SimpleFenwickTree t(inc3, 20);
-
-    // bit_count
-    EXPECT_EQ(20*64, t.bit_count());
+    SimpleFenwickTree_Test t(inc3, 20);
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);

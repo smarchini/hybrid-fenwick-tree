@@ -1,9 +1,7 @@
 #ifndef __SAME_BEHAVIOR_TEST_H__
 #define __SAME_BEHAVIOR_TEST_H__
 
-#include <gtest/gtest.h>
-#include <cstdint>
-#include "./test_utils.hpp"
+#include "test_utils.hpp"
 
 void random_test(std::size_t size)
 {
@@ -63,9 +61,6 @@ void random_test(std::size_t size)
         EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i;
         EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i;
     }
-
-    // bit_count
-    EXPECT_EQ(shrank.bit_count(), compact.bit_count());
 
     delete[] increments;
     delete[] set_updates;

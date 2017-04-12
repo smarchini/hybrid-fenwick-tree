@@ -5,21 +5,18 @@
 #include <algorithm>
 
 #include "../test/test_utils.hpp"
+#include "bench_utils.hpp"
 
-#include "../include/fenwick_tree.hpp"
-#include "../include/simple_fenwick_tree.hpp"
-#include "../include/byte_fenwick_tree.hpp"
-#include "../include/compact_fenwick_tree.hpp"
-#include "../include/typed_fenwick_tree.hpp"
-
-
-using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
 template<typename T>
 void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t set_updates[], uint64_t sequence[]);
 
+
 int main(int argc, char **argv)
 {
+    using namespace std;
+    using namespace dyn;
+
     if (argc < 2) {
         std::cerr << "Not enough parameters\n";
         return -1;
@@ -53,11 +50,11 @@ int main(int argc, char **argv)
     increments_to_sequence(increments, sequence, size);
     std::random_shuffle(sequence, sequence+size);
 
-    bench<SimpleFenwickTree>("Simple", size, order, increments, set_updates, sequence);
-    bench<TypedFenwickTree>("Typed", size, order, increments, set_updates, sequence);
-    bench<ByteFenwickTree>("Byte", size, order, increments, set_updates, sequence);
-    bench<CompactFenwickTree>("Compact", size, order, increments, set_updates, sequence);
-    bench<ShrankFenwickTree>("Shrank", size, order, increments, set_updates, sequence);
+    bench<SimpleFenwickTree<7>>("Simple", size, order, increments, set_updates, sequence);
+    bench<TypedFenwickTree<7>>("Typed", size, order, increments, set_updates, sequence);
+    bench<ByteFenwickTree<7>>("Byte", size, order, increments, set_updates, sequence);
+    bench<CompactFenwickTree<7>>("Compact", size, order, increments, set_updates, sequence);
+    bench<ShrankFenwickTree<7>>("Shrank", size, order, increments, set_updates, sequence);
 
     delete[] increments;
     delete[] set_updates;

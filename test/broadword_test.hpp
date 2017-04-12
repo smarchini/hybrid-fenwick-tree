@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <cstdint>
+
 #include "../include/broadword.hpp"
 
 /**
@@ -42,6 +42,7 @@ static std::uint64_t special_cases[] = {
 
 TEST(broadword, drop_first_set)
 {
+    using namespace dyn;
     std::uint64_t tests_solutions[] = {
         0b1111010100101011010101110101011010100111010000000000000000000000ULL,
         0b0111011100011111000011000111000100110110101001011110000000000000ULL,
@@ -74,6 +75,7 @@ TEST(broadword, drop_first_set)
 
 TEST(broadword, mask_first_set)
 {
+    using namespace dyn;
     std::uint64_t tests_solutions[] = {
         0b0000000000000000000000000000000000000000000001000000000000000000ULL,
         0b0000000000000000000000000000000000000000000000000000100000000000ULL,
@@ -106,6 +108,7 @@ TEST(broadword, mask_first_set)
 
 TEST(broadword, mask_last_set)
 {
+    using namespace dyn;
     std::uint64_t tests_solutions[] = {
         0b1000000000000000000000000000000000000000000000000000000000000000ULL,
         0b0100000000000000000000000000000000000000000000000000000000000000ULL,
@@ -139,6 +142,7 @@ TEST(broadword, mask_last_set)
 
 TEST(broadword, find_first_set)
 {
+    using namespace dyn;
     std::uint64_t tests_solutions[] = { 19, 12, 46, 60, 51, 30, 27, 5, 37, 29 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
@@ -153,6 +157,7 @@ TEST(broadword, find_first_set)
 
 TEST(broadword, find_last_set)
 {
+    using namespace dyn;
     std::uint64_t tests_solutions[] = { 64, 63, 64, 64, 62, 62, 62, 63, 64, 64 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
@@ -174,6 +179,7 @@ TEST(broadword, find_last_set)
 
 TEST(broadword, compact_bitmask)
 {
+    using namespace dyn;
     constexpr std::size_t LEN = 10;
     std::size_t count[] = {  64, 63, 62, 61, 60, 59, 58, 57, 56, 55 };
     std::size_t start[] = {   0,  0,  0,  1,  1,  2,  2,  3,  3,  4 };

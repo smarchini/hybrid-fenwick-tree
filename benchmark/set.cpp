@@ -4,6 +4,7 @@
 int main()
 {
     using namespace std;
+    using namespace dyn;
 
     cout << "Elements,Simple,Typed,Byte,Compact,Shrank\n";
 
@@ -22,11 +23,11 @@ int main()
         }
 
         cout << size << ',';
-        cout << bench_set<SimpleFenwickTree> (size, increments, order, value) << ','
-             << bench_set<TypedFenwickTree>  (size, increments, order, value) << ','
-             << bench_set<ByteFenwickTree>   (size, increments, order, value) << ','
-             << bench_set<CompactFenwickTree>(size, increments, order, value) << ','
-             << bench_set<ShrankFenwickTree> (size, increments, order, value) << '\n';
+        cout << bench_set<SimpleFenwickTree<7>> (size, increments, order, value) << ','
+             << bench_set<TypedFenwickTree<7>>  (size, increments, order, value) << ','
+             << bench_set<ByteFenwickTree<7>>   (size, increments, order, value) << ','
+             << bench_set<CompactFenwickTree<7>>(size, increments, order, value) << ','
+             << bench_set<ShrankFenwickTree<7>> (size, increments, order, value) << '\n';
 
         delete[] increments;
         delete[] order;
