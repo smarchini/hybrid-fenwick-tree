@@ -15,6 +15,7 @@
 
 #include "../include/fenwick/simple.hpp"
 #include "../include/fenwick/typed.hpp"
+#include "../include/fenwick/ityped.hpp"
 #include "../include/fenwick/byte.hpp"
 #include "../include/fenwick/compact.hpp"
 #include "../include/fenwick/shrank.hpp"

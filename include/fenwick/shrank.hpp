@@ -26,7 +26,7 @@ namespace dyn {
          */
         ShrankFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
-            tree(get_bitpos(size-1) / 8 + 1 + 4) // +4 to prevent segfault on the last element
+            tree(get_bitpos(size-1)/8 + (find_first_set(size)+LEAF_BITSIZE-1)/8 + 1 + 4)
         {
 
             for (size_t i = 1; i <= size; i++) {

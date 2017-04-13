@@ -22,6 +22,9 @@ namespace dyn {
      * type is now valid to access aliased data.
      */
     using auint64_t = std::uint64_t __attribute__((__may_alias__));
+    using auint32_t = std::uint32_t __attribute__((__may_alias__));
+    using auint16_t = std::uint16_t __attribute__((__may_alias__));
+    using  auint8_t =  std::uint8_t __attribute__((__may_alias__));
 }
 
 #endif // __COMMON_H__

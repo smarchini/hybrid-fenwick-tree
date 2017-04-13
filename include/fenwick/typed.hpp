@@ -4,6 +4,7 @@
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
 
+// TODO: buggato per LEAF_BITSIZE parametrizzato
 namespace dyn {
 
    /**

@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 
     bench<SimpleFenwickTree<7>>("Simple", size, order, increments, set_updates, sequence);
     bench<TypedFenwickTree<7>>("Typed", size, order, increments, set_updates, sequence);
+    bench<ITypedFenwickTree<7>>("ITyped", size, order, increments, set_updates, sequence);
     bench<ByteFenwickTree<7>>("Byte", size, order, increments, set_updates, sequence);
     bench<CompactFenwickTree<7>>("Compact", size, order, increments, set_updates, sequence);
     bench<ShrankFenwickTree<7>>("Shrank", size, order, increments, set_updates, sequence);
