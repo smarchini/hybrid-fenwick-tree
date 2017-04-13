@@ -1,12 +1,12 @@
 #ifndef __BROADWORD_H__
 #define __BROADWORD_H__
 
-#include <cstdint>
+#include "common.hpp"
 #include <x86intrin.h>
 
 namespace dyn {
 
-    constexpr std::uint8_t kSelectInByte[2048] = {
+    constexpr uint8_t kSelectInByte[2048] = {
         8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0,
         1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0,
         2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0,
@@ -94,7 +94,7 @@ namespace dyn {
      *
      * Return: @word with its least significant one setted to zero.
      */
-    inline std::uint64_t drop_first_set(std::uint64_t word)
+    inline uint64_t drop_first_set(uint64_t word)
     {
         return word & (word - 1ULL);
     }
@@ -109,7 +109,7 @@ namespace dyn {
      *
      * Return: The position of the first set bit in @word or 0 if there isn't one.
      */
-    inline std::uint64_t find_first_set(std::uint64_t word)
+    inline uint64_t find_first_set(uint64_t word)
     {
         return __builtin_ffsll(word);
     }
@@ -126,7 +126,7 @@ namespace dyn {
      *
      * Return: The position of the last set bit in @word if @word != 0.
      */
-    inline std::uint64_t find_last_set(std::uint64_t word)
+    inline uint64_t find_last_set(uint64_t word)
     {
         return 64ULL - __builtin_clzll(word);
     }
@@ -138,7 +138,7 @@ namespace dyn {
      * Return: @word with anything but its least significant one setted to zero.
      * Same as 2^(find_first_set(word)-1) for any @word != 0.
      */
-    inline std::uint64_t mask_first_set(std::uint64_t word)
+    inline uint64_t mask_first_set(uint64_t word)
     {
         return word & (-word);
     }
@@ -152,7 +152,7 @@ namespace dyn {
      * Return: @word with anything but its most significant one setted to zero,
      * undefined behavior if @word is 0.
      */
-    inline std::uint64_t mask_last_set(std::uint64_t word)
+    inline uint64_t mask_last_set(uint64_t word)
     {
         return 0x8000000000000000 >> __builtin_clzll(word);
     }
@@ -168,13 +168,13 @@ namespace dyn {
      *
      * Return: A bitmask with @count 1-bit starting from @pos
      */
-    inline std::uint64_t compact_bitmask(std::size_t count, std::size_t pos)
+    inline uint64_t compact_bitmask(size_t count, size_t pos)
     {
         return (-(count != 0ULL)) & (-1ULL >> (64ULL - count)) << pos;
     }
 
 
-    inline std::uint64_t popcount(std::uint64_t word)
+    inline uint64_t popcount(uint64_t word)
     {
         return __builtin_popcountll(word);
     }
@@ -200,31 +200,29 @@ namespace dyn {
      *
      * Returns: the position of the k-th 1 in the 64-bit word x.
      */
-    inline std::uint64_t select64(std::uint64_t x, std::uint64_t k)
+    inline uint64_t select64(uint64_t x, uint64_t k)
     {
-        // TODO: vedere se esiste una macro predefinita. se non esiste, provare
-        // ad ottenerala automaticamente con il makefile
-#ifndef CPU_INTEL_HASWELL
+#ifndef __haswell__
         //DCHECK_LT(k, popcount(x)); // TODO: Serve? forse no, visto che la select la uso solo dopo aver usato la find
 
-        constexpr std::uint64_t kOnesStep4  = 0x1111111111111111ULL;
-        constexpr std::uint64_t kOnesStep8  = 0x0101010101010101ULL;
-        constexpr std::uint64_t kMSBsStep8  = 0x80ULL * kOnesStep8;
+        constexpr uint64_t kOnesStep4  = 0x1111111111111111ULL;
+        constexpr uint64_t kOnesStep8  = 0x0101010101010101ULL;
+        constexpr uint64_t kMSBsStep8  = 0x80ULL * kOnesStep8;
 
         auto s = x;
         s = s - ((s & 0xA * kOnesStep4) >> 1);
         s = (s & 0x3 * kOnesStep4) + ((s >> 2) & 0x3 * kOnesStep4);
         s = (s + (s >> 4)) & 0xF * kOnesStep8;
-        std::uint64_t byteSums = s * kOnesStep8;
+        uint64_t byteSums = s * kOnesStep8;
 
-        std::uint64_t kStep8 = k * kOnesStep8;
-        std::uint64_t geqKStep8 = (((kStep8 | kMSBsStep8) - byteSums) & kMSBsStep8);
-        std::uint64_t place = popcount(geqKStep8) * 8;
-        std::uint64_t byteRank = k - (((byteSums << 8) >> place) & uint64_t(0xFF));
+        uint64_t kStep8 = k * kOnesStep8;
+        uint64_t geqKStep8 = (((kStep8 | kMSBsStep8) - byteSums) & kMSBsStep8);
+        uint64_t place = popcount(geqKStep8) * 8;
+        uint64_t byteRank = k - (((byteSums << 8) >> place) & uint64_t(0xFF));
         return place + kSelectInByte[((x >> place) & 0xFF) | (byteRank << 8)];
 #elif defined(__GNUC__) || defined(__clang__)
         // GCC and Clang won't inline the intrinsics.
-        std::uint64_t result = uint64_t(1) << k;
+        uint64_t result = uint64_t(1) << k;
 
         asm("pdep %1, %0, %0\n\t"
             "tzcnt %0, %0"
