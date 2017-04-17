@@ -47,7 +47,7 @@ namespace dyn {
          */
         ByteFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
-            level(find_last_set(size) + 1)
+            level(msb(size) + 2)
         {
             // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
             // con la popcount che permette di fare l'interleaving nel caso Shrank per
@@ -83,21 +83,19 @@ namespace dyn {
 
         virtual uint64_t get(size_t idx) const
         {
-            uint64_t sum = 0;
-
-            idx++;
+            uint64_t sum = 0ULL;
             size_t index = 0ULL;
 
-            do {
+            for (idx++; idx != index;) {
                 index += mask_last_set(idx ^ index);
-                const size_t height = find_first_set(index) - 1;
+                const int height = lsb(index);
                 const size_t level_idx = index >> (1 + height);
                 const size_t elem_size = get_size(height);
                 const size_t byte_pos = level[height] + elem_size * level_idx;
                 const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
 
                 sum += *compact_element & BYTE_MASK[elem_size];
-            } while (idx ^ index);
+            }
 
             return sum;
         }
@@ -105,7 +103,7 @@ namespace dyn {
         virtual void set(size_t idx, int64_t inc)
         {
             for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
-                const size_t height = find_first_set(idx) - 1;
+                const int height = lsb(idx);
                 const size_t level_idx = idx >> (1 + height);
                 const size_t byte_pos = level[height] + get_size(height) * level_idx;
                 auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);

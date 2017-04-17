@@ -66,7 +66,7 @@ namespace dyn {
                 else value = tree[node+m-1];
 
                 if (complement)
-                    value = (1ULL << (LEAF_BITSIZE + (find_first_set(m) - 1) - 1)) - value;
+                    value = (1ULL << (LEAF_BITSIZE + lsb(m) - 1)) - value;
 
                 if(val >= value) {
                     node += m;

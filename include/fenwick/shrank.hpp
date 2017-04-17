@@ -26,14 +26,14 @@ namespace dyn {
          */
         ShrankFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
-            tree(get_bitpos(size-1)/8 + (find_first_set(size)+LEAF_BITSIZE-1)/8 + 1 + 4)
+            tree(get_bitpos(size-1)/8 + (lsb(size)+LEAF_BITSIZE)/8 + 1 + 4)
         {
 
             for (size_t i = 1; i <= size; i++) {
                 const size_t bitpos = get_bitpos(i-1);
                 auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[bitpos/8]);
 
-                const size_t bitsize = LEAF_BITSIZE + find_first_set(i) - 1;
+                const int bitsize = LEAF_BITSIZE + lsb(i);
                 const size_t shift = bitpos & 0b111;
                 const uint64_t mask = compact_bitmask(bitsize, shift);
 
@@ -51,7 +51,7 @@ namespace dyn {
                     auint64_t * const right_element = reinterpret_cast<auint64_t*>(&tree[right_bitpos/8]);
                     const size_t right_shift = right_bitpos & 0b111;
 
-                    const size_t right_bitsize = LEAF_BITSIZE + find_first_set(idx - m/2) - 1;
+                    const int right_bitsize = LEAF_BITSIZE + lsb(idx - m/2);
                     const uint64_t right_mask = compact_bitmask(right_bitsize, right_shift);
 
                     uint64_t value = (right_mask & *right_element) >> right_shift;
@@ -68,7 +68,7 @@ namespace dyn {
                 const size_t bit_pos = get_bitpos(idx-1);
                 const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
-                const size_t height = find_first_set(idx) - 1;
+                const int height = lsb(idx);
                 const size_t shift = bit_pos & 0b111;
                 const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
 
@@ -96,15 +96,17 @@ namespace dyn {
 
             for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
                 const size_t bit_pos = get_bitpos(node+m-1);
-                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
-                const size_t height = find_first_set(node+m) - 1;
-                const size_t shift = bit_pos & 0b111;
-                const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
+                const int height = lsb(node+m);
 
                 uint64_t value = 0;
                 if (bit_pos >= bit_max) value = -1ULL;
-                else value = (*compact_element >> shift) & mask;
+                else {
+                    const size_t shift = bit_pos & 0b111;
+                    const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
+
+                    value = (*reinterpret_cast<auint64_t*>(&tree[bit_pos/8]) >> shift) & mask;
+                }
+
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;

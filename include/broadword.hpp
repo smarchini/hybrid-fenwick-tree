@@ -100,35 +100,33 @@ namespace dyn {
     }
 
     /**
-     * find_first_set - Find the position of the first bit set in a word.
+     * lsb - Find the index of the first bit set in a word.
      * @word: Binary word.
      *
-     * This fucntion returns the position of the first (least significant) bit set
-     * in @word. The least significant bit is position 1 and the most significant
-     * position is 64. It returns 0 if @word is 0.
+     * This function returns the number of trailing 0-bits in @word, starting at
+     * the least significant bit position. If @word is 2^0 it returns 0 and if
+     * if @word is 2^63 it returns 63. If @word is 0 the result is undefined.
      *
-     * Return: The position of the first set bit in @word or 0 if there isn't one.
+     * Return: The index of the first set bit in @word.
      */
-    inline uint64_t find_first_set(uint64_t word)
+    inline int lsb(uint64_t word)
     {
-        return __builtin_ffsll(word);
+        return __builtin_ctzll(word);
     }
 
     /**
-     * find_last_set - Find the position of the last bit set in a word.
+     * msb - Find the index of the last bit set in a word.
      * @word: Binary word.
      *
-     * This fucntion returns the position of the last (most significant) bit set
-     * in @word. The least significant bit is position 1 and the most significant
-     * position is 64.
+     * This fucntion returns the number of bits before the most significat 1-bit
+     * in @word. If @word is 2^0 it returns 0 and if if @word is 2^63 it returns
+     * 63. If @word is 0 the result is undefined.
      *
-     * Undefined behavior if @word is 0.
-     *
-     * Return: The position of the last set bit in @word if @word != 0.
+     * Return: The index of the last set bit in @word.
      */
-    inline uint64_t find_last_set(uint64_t word)
+    inline int msb(uint64_t word)
     {
-        return 64ULL - __builtin_clzll(word);
+        return 63 - __builtin_clzll(word);
     }
 
     /**
@@ -136,7 +134,7 @@ namespace dyn {
      * @word: Binary word.
      *
      * Return: @word with anything but its least significant one setted to zero.
-     * Same as 2^(find_first_set(word)-1) for any @word != 0.
+     * Same as 2^lsb(word) for any @word != 0.
      */
     inline uint64_t mask_first_set(uint64_t word)
     {
@@ -170,11 +168,11 @@ namespace dyn {
      */
     inline uint64_t compact_bitmask(size_t count, size_t pos)
     {
-        return (-(count != 0ULL)) & (-1ULL >> (64ULL - count)) << pos;
+        return (-(count != 0ULL)) & (-1ULL >> (64 - count)) << pos;
     }
 
 
-    inline uint64_t popcount(uint64_t word)
+    inline int popcount(uint64_t word)
     {
         return __builtin_popcountll(word);
     }
