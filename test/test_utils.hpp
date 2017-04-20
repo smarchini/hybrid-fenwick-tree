@@ -18,6 +18,7 @@
 
 #include "../include/rankselect/rank_select.hpp"
 #include "../include/rankselect/word.hpp"
+#include "../include/rankselect/line.hpp"
 
 
 // Exposed classes
@@ -65,15 +66,6 @@ public:
     ShrankFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
         dyn::ShrankFenwickTree<7>(sequence, length) {}
     using dyn::ShrankFenwickTree<7>::tree;
-};
-
-
-template <template<size_t> class T>
-class WordRankSelect_Test : public dyn::WordRankSelect<T> {
-public:
-    WordRankSelect_Test(std::uint64_t bitvector[], std::size_t length):
-        dyn::WordRankSelect<T>(bitvector, length) {}
-    using dyn::WordRankSelect<T>::fenwick;
 };
 
 

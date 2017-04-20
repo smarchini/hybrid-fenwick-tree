@@ -4,11 +4,11 @@
 #include "rank_select.hpp"
 
 namespace dyn {
-    // TODO TODO TODO
+
     template <template<size_t> class T, size_t WORDS>
     class LineRankSelect {
     private:
-        static constexpr size_t LEAF_BITSIZE = 7 + WORDS;
+        static constexpr size_t LEAF_BITSIZE = 7 + WORDS - 1;
         T<LEAF_BITSIZE> tree;
         DArray<uint64_t> _bitvector;
 
@@ -50,17 +50,18 @@ namespace dyn {
         virtual uint64_t rank(size_t pos) const
         {
             // TODO: spostare il controllo sul -1 dentro l'albero?
-            uint64_t value = ((pos/(64*WORDS)) ? tree.get(pos/(64*WORDS) - 1) : 0);
+            size_t idx = pos/(64*WORDS);
+            uint64_t value = idx ? tree.get(idx-1) : 0;
 
-            // TODO: implementare! è sbagliata quasi sicuramente
-            for (size_t i = 0; i < WORDS; i++)
-                value += popcount(_bitvector[pos/(64*WORDS)] & compact_bitmask(pos % (64*WORDS), 0));
+            for (size_t i = idx*WORDS; i < pos/64; i++)
+                value += popcount(_bitvector[i]);
 
-            return value;
+            return value + popcount(_bitvector[pos/64] & compact_bitmask(pos%64, 0));
         }
 
         virtual uint64_t rank(size_t from, size_t to) const
         {
+            // TODO: ottimizzabile
             return rank(to) - rank(from);
         }
 
@@ -78,21 +79,41 @@ namespace dyn {
         {
             // TODO: spostare il controllo sul -1 dentro l'albero?
             const size_t idx = tree.find(rank) + 1;
-            return idx*64 + select64(_bitvector[idx], rank - (idx != 0 ? tree.get(idx-1) : 0));
+            rank -= (idx != 0 ? tree.get(idx-1) : 0);
+
+            for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
+                const int rank_chunk = popcount(_bitvector[i]);
+                if (rank < rank_chunk)
+                    return i*64 + select64(_bitvector[i], rank);
+                else
+                    rank -= rank_chunk;
+            }
+
+            return (idx+1)*WORDS*64;
         }
 
         virtual size_t selectZero(uint64_t rank) const
         {
             // TODO: spostare il controllo sul -1 dentro l'albero?
             const size_t idx = tree.find(rank, true) + 1;
-            return idx*64 + select64(~_bitvector[idx], rank - (64*idx - (idx != 0 ? tree.get(idx-1) : 0)));
+            rank -= 64*idx*WORDS - (idx != 0 ? tree.get(idx-1) : 0);
+
+            for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
+                const int rank_chunk = popcount(~_bitvector[i]);
+                if (rank < rank_chunk)
+                    return i*64 + select64(~_bitvector[i], rank);
+                else
+                    rank -= rank_chunk;
+            }
+
+            return (idx+1)*WORDS*64;
         }
 
         virtual uint64_t update(size_t index, uint64_t word)
         {
             const uint64_t old = _bitvector[index];
             _bitvector[index] = word;
-            tree.set(index, popcount(word) - popcount(old));
+            tree.set(index / WORDS, popcount(word) - popcount(old));
 
             return old;
         }
@@ -107,9 +128,9 @@ namespace dyn {
     private:
         T<LEAF_BITSIZE> build_fenwick(const uint64_t bitvector[], size_t length)
         {
-            uint64_t *sequence = new uint64_t[length];
+            uint64_t *sequence = new uint64_t[length/WORDS + 1]();
             for (size_t i = 0; i < length; i++)
-                sequence[i] = popcount(bitvector[i]);
+                sequence[i/WORDS] += popcount(bitvector[i]);
 
             return T<LEAF_BITSIZE>(sequence, length);
         }

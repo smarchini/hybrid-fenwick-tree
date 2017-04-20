@@ -1,20 +1,21 @@
-#ifndef __DYNAMIC_RANK_SELECT_TEST_H__
-#define __DYNAMIC_RANK_SELECT_TEST_H__
+#ifndef __LINE_RANK_SELECT_TEST_H__
+#define __LINE_RANK_SELECT_TEST_H__
 
 #include "test_utils.hpp"
 
 
-TEST(dynamic_rank_select, all_ones_1024)
+TEST(line_rank_select, all_ones_1024)
 {
     constexpr size_t MAX = 16;
     std::uint64_t bitvect[MAX] = { -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL,
                                    -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL };
 
-    dyn::WordRankSelect<dyn::SimpleFenwickTree> simple(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypedFenwickTree> typed(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteFenwickTree> byte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::CompactFenwickTree> compact(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ShrankFenwickTree> shrank(bitvect, MAX);
+    dyn::LineRankSelect<dyn::SimpleFenwickTree, 8> simple(bitvect, MAX);
+    dyn::LineRankSelect<dyn::TypedFenwickTree, 8> typed(bitvect, MAX);
+    dyn::LineRankSelect<dyn::ByteFenwickTree, 8> byte(bitvect, MAX);
+    dyn::LineRankSelect<dyn::CompactFenwickTree, 8> compact(bitvect, MAX);
+    dyn::LineRankSelect<dyn::ShrankFenwickTree, 8> shrank(bitvect, MAX);
+
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(i, simple.rank(i)) << "at indext " << i;
@@ -80,21 +81,20 @@ TEST(dynamic_rank_select, all_ones_1024)
         EXPECT_EQ(i, compact.rank(i)) << "at indext " << i;
         EXPECT_EQ(i, shrank.rank(i)) << "at indext " << i;
     }
-
 }
 
 
-TEST(dynamic_rank_select, all_zeroes_1024)
+TEST(line_rank_select, all_zeroes_1024)
 {
     constexpr size_t MAX = 16;
     std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                    0, 0, 0, 0, 0, 0, 0, 0 };
 
-    dyn::WordRankSelect<dyn::SimpleFenwickTree> simple(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypedFenwickTree> typed(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteFenwickTree> byte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::CompactFenwickTree> compact(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ShrankFenwickTree> shrank(bitvect, MAX);
+    dyn::LineRankSelect<dyn::SimpleFenwickTree, 2> simple(bitvect, MAX);
+    dyn::LineRankSelect<dyn::TypedFenwickTree, 2> typed(bitvect, MAX);
+    dyn::LineRankSelect<dyn::ByteFenwickTree, 2> byte(bitvect, MAX);
+    dyn::LineRankSelect<dyn::CompactFenwickTree, 2> compact(bitvect, MAX);
+    dyn::LineRankSelect<dyn::ShrankFenwickTree, 2> shrank(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(0, simple.rank(i)) << "at indext " << i;
@@ -163,4 +163,4 @@ TEST(dynamic_rank_select, all_zeroes_1024)
 
 }
 
-#endif // __DYNAMIC_RANK_SELECT_TEST_H__
+#endif // __LINE_RANK_SELECT_TEST_H__

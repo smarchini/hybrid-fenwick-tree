@@ -201,8 +201,6 @@ namespace dyn {
     inline uint64_t select64(uint64_t x, uint64_t k)
     {
 #ifndef __haswell__
-        //DCHECK_LT(k, popcount(x)); // TODO: Serve? forse no, visto che la select la uso solo dopo aver usato la find
-
         constexpr uint64_t kOnesStep4  = 0x1111111111111111ULL;
         constexpr uint64_t kOnesStep8  = 0x0101010101010101ULL;
         constexpr uint64_t kMSBsStep8  = 0x80ULL * kOnesStep8;
