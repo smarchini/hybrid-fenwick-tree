@@ -110,7 +110,7 @@ namespace dyn {
         virtual size_t find(uint64_t val, bool complement=false) const
         {
             size_t node = 0, idx = 0;
-            const size_t bit_max = bit_count();
+            const size_t bit_max = level[level.size()-1];
 
             for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
                 const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;

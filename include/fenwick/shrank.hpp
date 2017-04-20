@@ -92,21 +92,20 @@ namespace dyn {
         virtual size_t find(uint64_t val, bool complement=false) const
         {
             size_t node = 0;
-            const size_t bit_max = get_bitpos(size);
+            const size_t bit_max = get_bitpos(size-1);
 
             for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
                 const size_t bit_pos = get_bitpos(node+m-1);
                 const int height = lsb(node+m);
 
                 uint64_t value = 0;
-                if (bit_pos >= bit_max) value = -1ULL;
+                if (bit_pos > bit_max) value = -1ULL;
                 else {
                     const size_t shift = bit_pos & 0b111;
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
 
                     value = (*reinterpret_cast<auint64_t*>(&tree[bit_pos/8]) >> shift) & mask;
                 }
-
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
