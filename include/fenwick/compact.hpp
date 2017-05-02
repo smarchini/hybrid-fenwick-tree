@@ -1,5 +1,5 @@
-#ifndef __COMPACT_FENWICK_TREE_H__
-#define __COMPACT_FENWICK_TREE_H__
+#ifndef __FENWICK_COMPACT_H__
+#define __FENWICK_COMPACT_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -110,20 +110,17 @@ namespace dyn {
         virtual size_t find(uint64_t val, bool complement=false) const
         {
             size_t node = 0, idx = 0;
-            const size_t bit_max = level[level.size()-1];
 
-            for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != -1ULL; height--) {
                 const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
                 const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
                 const size_t shift = bit_pos & 0b111;
                 const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
 
                 idx <<= 1;
 
-                uint64_t value = 0;
-                if (bit_pos >= bit_max) value = -1ULL;
-                else value = (*compact_element >> shift) & mask;
+                if (bit_pos >= level[height+1]) continue;
+                uint64_t value = (*compact_element >> shift) & mask;
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
@@ -147,4 +144,4 @@ namespace dyn {
 
 }
 
-#endif // __COMPACT_FENWICK_TREE_H__
+#endif // __FENWICK_COMPACT_H__

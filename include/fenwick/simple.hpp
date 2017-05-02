@@ -1,5 +1,5 @@
-#ifndef __SIMPLE_FENWICK_TREE_H__
-#define __SIMPLE_FENWICK_TREE_H__
+#ifndef __FENWICK_SIMPLE_H__
+#define __FENWICK_SIMPLE_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -61,9 +61,9 @@ namespace dyn {
             size_t node = 0;
 
             for (size_t m = mask_last_set(tree.size()); m != 0; m >>= 1) {
-                uint64_t value = 0;
-                if (node+m-1 >= tree.size()) value = -1ULL;
-                else value = tree[node+m-1];
+                if (node+m-1 >= tree.size()) continue;
+
+                uint64_t value = tree[node+m-1];
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + lsb(m) - 1)) - value;
@@ -85,4 +85,4 @@ namespace dyn {
 
 }
 
-#endif // __SIMPLE_FENWICK_TREE_H__
+#endif // __FENWICK_SIMPLE_H__

@@ -1,5 +1,5 @@
-#ifndef __TYPED_FENWICK_TREE_H__
-#define __TYPED_FENWICK_TREE_H__
+#ifndef __FENWICK_TYPED_H__
+#define __FENWICK_TYPED_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -24,7 +24,6 @@ namespace dyn {
     protected:
         const size_t size;
 
-        size_t type_ends[4] = {0};
         DArray<uint8_t >  tree8;
         DArray<uint16_t> tree16;
         DArray<uint32_t> tree32;
@@ -37,6 +36,7 @@ namespace dyn {
             size(size),
             level(msb(size) + 2)
         {
+            size_t type_ends[4] = {0};
             level[0] = 0;
 
             size_t j = (LEAF_BITSIZE <= 8) ? 0 : (LEAF_BITSIZE <= 16) ? 1 : (LEAF_BITSIZE <= 32) ? 2 : 3;
@@ -117,32 +117,29 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != -1ULL; height--) {
                 const size_t tree_idx = level[height] + idx;
 
-                uint64_t value = 0;
+                idx <<= 1;
+
+                uint64_t value;
                 switch (height+LEAF_BITSIZE) {
                 case 33 ... 64:
-                    if (tree_idx >= type_ends[3]) value = -1ULL;
-                    else value = tree64[tree_idx];
-                    break;
+                    if (tree_idx >= tree64.size()) continue;
+                    value = tree64[tree_idx]; break;
                 case 17 ... 32:
-                    if (tree_idx >= type_ends[2]) value = -1ULL;
-                    else value = tree32[tree_idx];
-                    break;
+                    if (tree_idx >= tree32.size()) continue;
+                    value = tree32[tree_idx]; break;
                 case 9 ... 16:
-                    if (tree_idx >= type_ends[1]) value = -1ULL;
-                    else value = tree16[tree_idx];
-                    break;
+                    if (tree_idx >= tree16.size()) continue;
+                    value = tree16[tree_idx]; break;
                 default:
-                    if (tree_idx >= type_ends[0]) value = -1ULL;
-                    else value =  tree8[tree_idx];
+                    if (tree_idx >=  tree8.size()) continue;
+                    value =  tree8[tree_idx];
                 }
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
-
-                idx <<= 1;
 
                 if (val >= value) {
                     idx++;
@@ -158,10 +155,10 @@ namespace dyn {
         virtual size_t bit_count() const
         {
             return sizeof(TypedFenwickTree<LEAF_BITSIZE>)*8
-                + type_ends[0] * 8
-                + type_ends[1] * 16
-                + type_ends[2] * 32
-                + type_ends[3] * 64;
+                +  tree8.size() *  8
+                + tree16.size() * 16
+                + tree32.size() * 32
+                + tree64.size() * 64;
         }
 
     private:
@@ -207,4 +204,4 @@ namespace dyn {
 
 }
 
-#endif // __TYPED_FENWICK_TREE_H__
+#endif // __FENWICK_TYPED_H__

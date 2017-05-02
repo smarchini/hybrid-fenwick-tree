@@ -1,5 +1,5 @@
-#ifndef __ITYPED_FENWICK_TREE_H__
-#define __ITYPED_FENWICK_TREE_H__
+#ifndef __FENWICK_ITYPED_H__
+#define __FENWICK_ITYPED_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -118,21 +118,19 @@ namespace dyn {
         virtual size_t find(uint64_t val, bool complement=false) const
         {
             size_t node = 0;
-            const size_t byte_max = get_bytepos(size-1) + (lsb(size-1)+LEAF_BITSIZE)/8 + 1;
 
             for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+                if (node+m-1 >= size) continue;
+
                 const size_t bytepos = get_bytepos(node+m-1);
                 const int bitlen = LEAF_BITSIZE + lsb(node+m);
 
-                uint64_t value = 0;
-                if (bytepos >= byte_max) value = -1ULL;
-                else {
-                    switch (bitlen) {
-                    case 33 ... 64: value = *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
-                    case 17 ... 32: value = *reinterpret_cast<auint32_t*>(&tree[bytepos]); break;
-                    case  9 ... 16: value = *reinterpret_cast<auint16_t*>(&tree[bytepos]); break;
-                    default:        value = *reinterpret_cast< auint8_t*>(&tree[bytepos]);
-                    }
+                uint64_t value;
+                switch (bitlen) {
+                case 33 ... 64: value = *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
+                case 17 ... 32: value = *reinterpret_cast<auint32_t*>(&tree[bytepos]); break;
+                case  9 ... 16: value = *reinterpret_cast<auint16_t*>(&tree[bytepos]); break;
+                default:        value = *reinterpret_cast< auint8_t*>(&tree[bytepos]);
                 }
 
                 if (complement)
@@ -156,30 +154,14 @@ namespace dyn {
     private:
         inline size_t get_bytepos(size_t n) const
         {
-            // C++17: constexpr if statement http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0292r2.html
-            // TODO: controllare se gli shift > lg2(n) sono effettivamente leciti o è undefined behavior
-            if (LEAF_BITSIZE <= 8) {
-                return n
-                    + (n >> ( 8 - LEAF_BITSIZE + 1))
-                    + (n >> (16 - LEAF_BITSIZE + 1)) * 2
-                    + (n >> (32 - LEAF_BITSIZE + 1)) * 4;
-            }
-            else if (LEAF_BITSIZE <= 16) {
-                return n*2
-                    + (n >> (16 - LEAF_BITSIZE + 1)) * 2
-                    + (n >> (32 - LEAF_BITSIZE + 1)) * 4;
-            }
-            else if (LEAF_BITSIZE <= 32) {
-                return n*4
-                    + (n >> (32 - LEAF_BITSIZE + 1)) * 4;
-            }
-            else {
-                return n*8;
-            }
+            return n
+                + (n >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
+                + (n >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 2
+                + (n >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0)) * 4;
         }
 
     };
 
 }
 
-#endif // __ITYPED_FENWICK_TREE_H__
+#endif // __FENWICK_ITYPED_H__

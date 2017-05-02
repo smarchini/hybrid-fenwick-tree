@@ -46,7 +46,7 @@ namespace dyn {
          *
          * It returns -1 if such an element doesn't exists.
          *
-         * Returns: The closest indext whose its element is less or equal than
+         * Returns: The closest index whose its element is less or equal than
          * @val, its complement if @complement is true or -1ULL if it doesn't
          * exists.
          */

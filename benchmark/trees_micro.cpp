@@ -1,25 +1,11 @@
-#ifndef L1_CACHE_SIZE
-#error "L1_CACHE_SIZE is undefined"
-#endif
-
-#ifndef L2_CACHE_SIZE
-#error "L2_CACHE_SIZE is undefined"
-#endif
-
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <chrono>
 #include <algorithm>
 
-#include "../test/test_utils.hpp"
-
-#include "../include/fenwick_tree.hpp"
-#include "../include/simple_fenwick_tree.hpp"
-#include "../include/typed_fenwick_tree.hpp"
-#include "../include/byte_fenwick_tree.hpp"
-#include "../include/compact_fenwick_tree.hpp"
-#include "../include/shrank_fenwick_tree.hpp"
+#include "utils.hpp"
+#include "../test/utils.hpp"
 
 using namespace std;
 
@@ -33,11 +19,11 @@ int main()
         uint64_t *increments = random_array(i-1);
 
         cout << i << " Elements\n";
-        microbench<SimpleFenwickTree>("SimpleFenwickTree", i-1, increments);
-        microbench<TypedFenwickTree>("TypedFenwickTree", i-1, increments);
-        microbench<ByteFenwickTree>("ByteFenwickTree", i-1, increments);
-        microbench<CompactFenwickTree>("CompactFenwickTree", i-1, increments);
-        microbench<ShrankFenwickTree>("ShrankFenwickTree", i-1, increments);
+        microbench<dyn::SimpleFenwickTree>("SimpleFenwickTree", i-1, increments);
+        microbench<dyn::TypedFenwickTree>("TypedFenwickTree", i-1, increments);
+        microbench<dyn::ByteFenwickTree>("ByteFenwickTree", i-1, increments);
+        microbench<dyn::CompactFenwickTree>("CompactFenwickTree", i-1, increments);
+        microbench<dyn::ShrankFenwickTree>("ShrankFenwickTree", i-1, increments);
         cout << "------------------------------------------------------------\n\n";
 
         delete[] increments;

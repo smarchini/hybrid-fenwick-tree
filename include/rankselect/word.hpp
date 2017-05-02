@@ -1,5 +1,5 @@
-#ifndef __WORD_RANK_SELECT_H__
-#define __WORD_RANK_SELECT_H__
+#ifndef __RANKSELECT_WORD_H__
+#define __RANKSELECT_WORD_H__
 
 #include "rank_select.hpp"
 
@@ -71,11 +71,17 @@ namespace dyn {
 
         virtual size_t select(uint64_t rank) const
         {
-            // TODO: spostare il controllo sul -1 dentro l'albero?
             const size_t idx = tree.find(rank) + 1;
-            return idx*64 + select64(_bitvector[idx], rank - (idx != 0 ? tree.get(idx-1) : 0));
+            rank -= (idx > 0 ? tree.get(idx-1) : 0);
+
+            const uint64_t rank_chunk = popcount(_bitvector[idx]);
+            if (rank < rank_chunk)
+                return idx*64 + select64(_bitvector[idx], rank);
+
+            return -1ULL;
         }
 
+        // TODO fare come sopra
         virtual size_t selectZero(uint64_t rank) const
         {
             // TODO: spostare il controllo sul -1 dentro l'albero?
@@ -106,10 +112,12 @@ namespace dyn {
             for (size_t i = 0; i < length; i++)
                 sequence[i] = popcount(bitvector[i]);
 
-            return T<LEAF_BITSIZE>(sequence, length);
+            T<LEAF_BITSIZE> tree(sequence, length);
+            delete[] sequence;
+            return tree;
         }
     };
 
 }
 
-#endif // __WORD_RANK_SELECT_H__
+#endif // __RANKSELECT_WORD_H__

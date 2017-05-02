@@ -1,18 +1,20 @@
 #include <gtest/gtest.h>
 
-#include "broadword_test.hpp"
+#include "broadword.hpp"
 
-#include "simple_fenwick_tree_test.hpp"
-#include "compact_fenwick_tree_test.hpp"
-#include "byte_fenwick_tree_test.hpp"
-#include "typed_fenwick_tree_test.hpp"
-#include "ityped_fenwick_tree_test.hpp"
-#include "shrank_fenwick_tree_test.hpp"
+#include "fenwick/simple.hpp"
+#include "fenwick/compact.hpp"
+#include "fenwick/byte.hpp"
+#include "fenwick/typed.hpp"
+#include "fenwick/ityped.hpp"
+#include "fenwick/shrank.hpp"
 
-#include "same_behavior_test.hpp"
+#include "fenwick/same_behavior.hpp"
 
-#include "word_rank_select_test.hpp"
-#include "line_rank_select_test.hpp"
+#include "rankselect/word.hpp"
+#include "rankselect/line.hpp"
+
+#include "rankselect/same_behavior.hpp"
 
 int main(int argc, char **argv)
 {

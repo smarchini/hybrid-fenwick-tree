@@ -18,7 +18,7 @@ namespace dyn {
      * data invokes undefined behavior.
      *
      * GCC __may_alias__ attribute is basically the opposite of the C keywoard
-     * 'restrict'. It prevents the compiler to makes such assumptions. With this
+     * 'restrict', it prevents the compiler to makes such assumptions. With this
      * type is now valid to access aliased data.
      */
     using auint64_t = std::uint64_t __attribute__((__may_alias__));

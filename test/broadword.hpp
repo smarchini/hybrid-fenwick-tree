@@ -1,3 +1,6 @@
+#ifndef __TEST_BROADWORD_H__
+#define __TEST_BROADWORD_H__
+
 #include <gtest/gtest.h>
 
 #include "../include/broadword.hpp"
@@ -199,3 +202,6 @@ TEST(broadword, compact_bitmask)
     for (std::size_t i = 0; i < LEN; i++)
         EXPECT_EQ(solution[i], compact_bitmask(count[i], start[i])) << " at index " << i;
 }
+
+
+#endif // __TEST_BROADWORD_H__

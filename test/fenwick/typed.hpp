@@ -1,7 +1,7 @@
-#ifndef __TYPED_FENWICK_TREE_TEST_H__
-#define __TYPED_FENWICK_TREE_TEST_H__
+#ifndef __TEST_FENWICK_TYPED_H__
+#define __TEST_FENWICK_TYPED_H__
 
-#include "test_utils.hpp"
+#include "../utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
@@ -182,4 +182,4 @@ TEST(typed_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TYPED_FENWICK_TREE_TEST_H__
+#endif // __TEST_FENWICK_TYPED_H__

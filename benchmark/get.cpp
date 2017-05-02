@@ -1,5 +1,5 @@
 #include <iostream>
-#include "bench_utils.hpp"
+#include "utils.hpp"
 
 int main()
 {

@@ -1,8 +1,9 @@
-#ifndef __BYTE_FENWICK_TREE_H__
-#define __BYTE_FENWICK_TREE_H__
+#ifndef __FENWICK_BYTE_H__
+#define __FENWICK_BYTE_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
+#include <iostream>
 
 namespace dyn {
 
@@ -49,13 +50,9 @@ namespace dyn {
             size(size),
             level(msb(size) + 2)
         {
-            // TODO: "Ma non dovrebbe essere relativamente semplice estendere la formula
-            // con la popcount che permette di fare l'interleaving nel caso Shrank per
-            // fare interleaving nel caso byte?" (da vedere)
-
             level[0] = 0;
             for (size_t i = 1; i < level.size(); i++)
-                level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1];
+                level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1]; // TODO: probabilmente qui il problema
 
             const size_t levels = level.size() - 1;
             tree = DArray<uint8_t>(level[levels] + 3); // +3 to prevent segfault on the last element
@@ -83,8 +80,8 @@ namespace dyn {
 
         virtual uint64_t get(size_t idx) const
         {
-            uint64_t sum = 0ULL;
-            size_t index = 0ULL;
+            uint64_t sum = 0;
+            size_t index = 0;
 
             for (idx++; idx != index;) {
                 index += mask_last_set(idx ^ index);
@@ -116,19 +113,20 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (uint64_t height = level.size() - 2; height != -1ULL; height--) {
+            //std::cout << "LEVEL = " << level.size() << "\n";
+            for (size_t height = level.size() - 2; height != -1ULL; height--) {
                 const size_t elem_size = get_size(height);
                 const size_t byte_pos = level[height] + elem_size * idx;
-                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
 
-                uint64_t value = 0;
-                if (byte_pos >= level[level.size()-1]) value = -1ULL;
-                else value = *compact_element & BYTE_MASK[elem_size];
+                idx <<= 1;
+
+                if (byte_pos >= level[height+1]) continue;
+
+                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
+                uint64_t value = *compact_element & BYTE_MASK[elem_size];
 
                 if (complement)
                     value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
-
-                idx <<= 1;
 
                 if(val >= value) {
                     idx++;
@@ -154,4 +152,4 @@ namespace dyn {
 
 }
 
-#endif // __BYTE_FENWICK_TREE_H__
+#endif // __FENWICK_BYTE_H__

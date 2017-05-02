@@ -1,5 +1,5 @@
-#ifndef __BENCH_UTILS_H__
-#define __BENCH_UTILS_H__
+#ifndef __BENCHMARK_UTILS_H__
+#define __BENCHMARK_UTILS_H__
 
 #ifndef L1_CACHE_SIZE
 #error "L1_CACHE_SIZE is undefined"
@@ -7,6 +7,10 @@
 
 #ifndef L2_CACHE_SIZE
 #error "L2_CACHE_SIZE is undefined"
+#endif
+
+#ifndef L3_CACHE_SIZE
+#error "L3_CACHE_SIZE is undefined"
 #endif
 
 #include <chrono>
@@ -110,4 +114,4 @@ double bench_find(std::size_t size, std::uint64_t increments[], std::uint64_t el
 }
 
 
-#endif // __BENCH_UTILS_H__
+#endif // __BENCHMARK_UTILS_H__

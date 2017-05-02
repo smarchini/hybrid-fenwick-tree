@@ -4,8 +4,8 @@
 #include <chrono>
 #include <algorithm>
 
-#include "../test/test_utils.hpp"
-#include "bench_utils.hpp"
+#include "utils.hpp"
+#include "../test/utils.hpp"
 
 
 template<typename T>
