@@ -59,6 +59,11 @@ namespace dyn {
         inline T* get() const { return buffer.get(); }
         inline T& operator[](size_t i) const { return buffer[i]; };
         inline size_t size() const { return _size; }
+
+        size_t bit_count() const
+        {
+            return sizeof(DArray<T>)*8 + sizeof(T)*_size*8;
+        }
     };
 
 }
