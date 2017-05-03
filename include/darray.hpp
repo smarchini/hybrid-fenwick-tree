@@ -15,7 +15,7 @@ namespace dyn {
     class DArray
     {
     private:
-        size_t _size;
+        size_t _size = 0;
         std::unique_ptr<T[]> buffer;
 
     public:
