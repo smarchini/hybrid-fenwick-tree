@@ -138,7 +138,9 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(CompactFenwickTree<LEAF_BITSIZE>)*8 + level[level.size()-1];
+            return sizeof(CompactFenwickTree<LEAF_BITSIZE>)*8
+                + tree.bit_count() - sizeof(tree)
+                + level.bit_count() - sizeof(level);
         }
     };
 

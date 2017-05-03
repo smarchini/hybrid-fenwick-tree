@@ -3,7 +3,6 @@
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace dyn {
 
@@ -113,7 +112,6 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            //std::cout << "LEVEL = " << level.size() << "\n";
             for (size_t height = level.size() - 2; height != -1ULL; height--) {
                 const size_t elem_size = get_size(height);
                 const size_t byte_pos = level[height] + elem_size * idx;
@@ -140,7 +138,9 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(ByteFenwickTree<LEAF_BITSIZE>)*8 + level[level.size()-1]*8;
+            return sizeof(ByteFenwickTree<LEAF_BITSIZE>)*8
+                + tree.bit_count() - sizeof(tree)
+                + level.bit_count() - sizeof(level);
         }
 
     private:

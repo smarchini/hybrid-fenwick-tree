@@ -79,7 +79,8 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(SimpleFenwickTree<LEAF_BITSIZE>)*8 + tree.size()*64;
+            return sizeof(SimpleFenwickTree<LEAF_BITSIZE>)*8
+                + tree.bit_count() - sizeof(tree);
         }
     };
 

@@ -117,7 +117,8 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(ShrankFenwickTree<LEAF_BITSIZE>)*8 + get_bitpos(size);
+            return sizeof(ShrankFenwickTree<LEAF_BITSIZE>)*8
+                + tree.bit_count() - sizeof(tree);
         }
 
     private:

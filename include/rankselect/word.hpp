@@ -101,7 +101,7 @@ namespace dyn {
         virtual size_t bit_count() const
         {
             return sizeof(WordRankSelect<T>)
-                + _bitvector.size()*64
+                + _bitvector.bit_count() - sizeof(_bitvector)
                 + tree.bit_count() - sizeof(tree);
         }
 

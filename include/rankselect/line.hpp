@@ -62,7 +62,7 @@ namespace dyn {
 
         virtual uint64_t rank(size_t from, size_t to) const
         {
-            // TODO: ottimizzabile
+            // TODO: ottimizzabile?
             return rank(to) - rank(from);
         }
 
@@ -120,7 +120,7 @@ namespace dyn {
         virtual size_t bit_count() const
         {
             return sizeof(LineRankSelect<T, WORDS>)
-                + _bitvector.size()*64
+                + _bitvector.bit_count() - sizeof(_bitvector)
                 + tree.bit_count() - sizeof(tree);
         }
 

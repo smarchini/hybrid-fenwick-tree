@@ -41,10 +41,12 @@ namespace dyn {
 
             size_t j = (LEAF_BITSIZE <= 8) ? 0 : (LEAF_BITSIZE <= 16) ? 1 : (LEAF_BITSIZE <= 32) ? 2 : 3;
             for (size_t i = 1; i < level.size(); i++) {
-                type_ends[j] = (size + (1<<(i-1))) / (1<<i) + level[i-1];
-                level[i] = (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) ? 0 : type_ends[j];
+                type_ends[j] = level[i] = (size + (1<<(i-1))) / (1<<i) + level[i-1];
 
-                if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) j++;
+                if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE || i-1 == 32-LEAF_BITSIZE) {
+                    level[i] = 0;
+                    j++;
+                }
             }
 
             switch (level.size() + LEAF_BITSIZE - 1) {
@@ -155,10 +157,11 @@ namespace dyn {
         virtual size_t bit_count() const
         {
             return sizeof(TypedFenwickTree<LEAF_BITSIZE>)*8
-                +  tree8.size() *  8
-                + tree16.size() * 16
-                + tree32.size() * 32
-                + tree64.size() * 64;
+                +  tree8.bit_count() - sizeof(tree8)
+                + tree16.bit_count() - sizeof(tree16)
+                + tree32.bit_count() - sizeof(tree32)
+                + tree64.bit_count() - sizeof(tree64)
+                + level.bit_count() - sizeof(level);
         }
 
     private:
