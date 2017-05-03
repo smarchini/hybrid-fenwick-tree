@@ -49,7 +49,6 @@ namespace dyn {
 
         virtual uint64_t rank(size_t pos) const
         {
-            // TODO: spostare il controllo sul -1 dentro l'albero?
             return ((pos/64) ? tree.get(pos/64 - 1) : 0)
                 + popcount(_bitvector[pos/64] & compact_bitmask(pos % 64, 0));
         }
@@ -72,7 +71,9 @@ namespace dyn {
         virtual size_t select(uint64_t rank) const
         {
             const size_t idx = tree.find(rank) + 1;
-            rank -= (idx > 0 ? tree.get(idx-1) : 0);
+            rank -= idx > 0 ? tree.get(idx-1) : 0;
+
+            if (idx >= _bitvector.size()) return -1ULL;
 
             const uint64_t rank_chunk = popcount(_bitvector[idx]);
             if (rank < rank_chunk)
@@ -84,7 +85,9 @@ namespace dyn {
         virtual size_t selectZero(uint64_t rank) const
         {
             const size_t idx = tree.find(rank, true) + 1;
-            rank -= 64*idx - (idx != 0 ? tree.get(idx-1) : 0);
+            rank -= 64*idx - (idx > 0 ? tree.get(idx-1) : 0);
+
+            if (idx >= _bitvector.size()) return -1ULL;
 
             const uint64_t rank_chunk = popcount(~_bitvector[idx]);
             if (rank < rank_chunk)

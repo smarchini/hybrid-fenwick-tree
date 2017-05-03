@@ -82,6 +82,8 @@ namespace dyn {
             rank -= (idx > 0 ? tree.get(idx-1) : 0);
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
+                if (i >= _bitvector.size()) return -1ULL;
+
                 const uint64_t rank_chunk = popcount(_bitvector[i]);
                 if (rank < rank_chunk)
                     return i*64 + select64(_bitvector[i], rank);
@@ -98,6 +100,8 @@ namespace dyn {
             rank -= 64*idx*WORDS - (idx > 0 ? tree.get(idx-1) : 0);
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
+                if (i >= _bitvector.size()) return -1ULL;
+
                 const uint64_t rank_chunk = popcount(~_bitvector[i]);
                 if (rank < rank_chunk)
                     return i*64 + select64(~_bitvector[i], rank);

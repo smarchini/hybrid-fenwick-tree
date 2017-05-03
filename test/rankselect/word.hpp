@@ -40,13 +40,13 @@ TEST(word_rank_select, all_ones_1024)
     }
 
     // TODO: sistemare il comportamento della selectZero se non ci sono zeri
-    // for (size_t i = 0; i < 10; i++) {
-    //     EXPECT_EQ(-1ULL ????, simple.selectZero(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, typed.selectZero(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, byte.selectZero(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, compact.selectZero(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, shrank.selectZero(i)) << "at index: " << i;
-    // }
+    for (size_t i = 0; i < 10; i++) {
+        EXPECT_EQ(-1ULL, simple.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, typed.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, byte.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, compact.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, shrank.selectZero(i)) << "at index: " << i;
+    }
 
     for (size_t i = 0; i < MAX; i++) {
         simple.update(i, 1);
@@ -112,13 +112,13 @@ TEST(word_rank_select, all_zeroes_1024)
     }
 
     // TODO: sistemare il comportamento della select se non ci sono uni
-    // for (size_t i = 0; i < 1024; i++) {
-    //     EXPECT_EQ(-1ULL ????, simple.select(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, typed.select(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, byte.select(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, compact.select(i)) << "at index: " << i;
-    //     EXPECT_EQ(-1ULL ????, shrank.select(i)) << "at index: " << i;
-    // }
+    for (size_t i = 0; i < 1024; i++) {
+        EXPECT_EQ(-1ULL, simple.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, typed.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, byte.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, compact.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, shrank.select(i)) << "at index: " << i;
+    }
 
     for (size_t i = 0; i < 1024; i++) {
         EXPECT_EQ(i, simple.selectZero(i)) << "at index: " << i;

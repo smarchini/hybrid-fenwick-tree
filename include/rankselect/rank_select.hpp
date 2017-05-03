@@ -86,8 +86,8 @@ namespace dyn {
          * This method returns the greatest position that is preceded by the
          * specified number of ones.
          *
-         * Returns: the greatest position that is preceded by @rank ones
-         * TODO: cosa deve succedere se questo valore non esiste? (ritornare -1ULL ?)
+         * Returns: the greatest position that is preceded by @rank ones or
+         * -1ULL if there isn't one
          */
         virtual size_t select(uint64_t rank) const;
 
@@ -98,8 +98,8 @@ namespace dyn {
          * This method returns the greatest position that is preceded by the
          * specified number of zeroes.
          *
-         * Returns: The greatest position that is preceded by @rank zeroes
-         * TODO: cosa deve succedere se questo valore non esiste? (ritornare -1ULL ?)
+         * Returns: The greatest position that is preceded by @rank zeroes or
+         * -1ULL if there isn't one
          */
         virtual size_t selectZero(uint64_t rank) const;
 

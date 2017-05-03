@@ -3,7 +3,6 @@
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace dyn {
 
