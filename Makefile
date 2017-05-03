@@ -5,10 +5,9 @@ LFLAGS = -std=c++14 -Wall -Wextra $(PARAMS)
 
 INCLUDES = $(shell find include -name '*.hpp')
 TEST_INCLUDES = $(shell find test -name '*.hpp')
+INCLUDE_DYNAMIC = -Ibenchmark/rankselect/DYNAMIC -Ibenchmark/rankselect/DYNAMIC/algorithms -Ibenchmark/rankselect/DYNAMIC/internal
 
-L1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE)
-L2_CACHE_SIZE=$(shell getconf LEVEL2_CACHE_SIZE)
-L3_CACHE_SIZE=$(shell getconf LEVEL3_CACHE_SIZE)
+MACRO_CACHESIZE = -DL1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE) -DL2_CACHE_SIZE=$(shell getconf LEVEL2_CACHE_SIZE) -DL3_CACHE_SIZE=$(shell getconf LEVEL3_CACHE_SIZE)
 
 
 all: test benchmark
@@ -17,15 +16,11 @@ all: test benchmark
 test: bin/test/test
 	bin/test/test --gtest_color=yes
 
-benchmark: bin/benchmark/trees bin/benchmark/get bin/benchmark/set bin/benchmark/find
-	@echo
-	bin/benchmark/trees 1048575
-	@echo
-	bin/benchmark/get
-	@echo
-	bin/benchmark/set
-	@echo
-	bin/benchmark/find
+benchmark: benchmark/fenwick benchmark/rankselect
+
+benchmark/fenwick: bin/benchmark/fenwick/trees bin/benchmark/fenwick/get bin/benchmark/fenwick/set bin/benchmark/fenwick/find
+
+benchmark/rankselect: bin/benchmark/rankselect/rankselect
 
 
 # bin
@@ -33,22 +28,25 @@ bin/test/test: $(INCLUDES) $(TEST_INCLUDES) test/test.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) test/test.cpp -o bin/test/test -lgtest
 
-bin/benchmark/trees: $(INCLUDES) benchmark/trees.cpp
+bin/benchmark/fenwick/trees: $(INCLUDES) benchmark/trees.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) benchmark/trees.cpp -o bin/benchmark/trees -DL1_CACHE_SIZE=$(L1_CACHE_SIZE) -DL2_CACHE_SIZE=$(L2_CACHE_SIZE) -DL3_CACHE_SIZE=$(L3_CACHE_SIZE)
+	$(CC) $(CFLAGS) $(MACRO_CACHESIZE) benchmark/trees.cpp -o bin/benchmark/fenwick/trees 
 
-bin/benchmark/get: $(INCLUDES) benchmark/get.cpp
+bin/benchmark/fenwick/get: $(INCLUDES) benchmark/get.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) benchmark/get.cpp -o bin/benchmark/get -DL1_CACHE_SIZE=$(L1_CACHE_SIZE) -DL2_CACHE_SIZE=$(L2_CACHE_SIZE) -DL3_CACHE_SIZE=$(L3_CACHE_SIZE)
+	$(CC) $(CFLAGS) $(MACRO_CACHESIZE) benchmark/get.cpp -o bin/benchmark/fenwick/get
 
-bin/benchmark/set: $(INCLUDES) benchmark/set.cpp
+bin/benchmark/fenwick/set: $(INCLUDES) benchmark/set.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) benchmark/set.cpp -o bin/benchmark/set -DL1_CACHE_SIZE=$(L1_CACHE_SIZE) -DL2_CACHE_SIZE=$(L2_CACHE_SIZE) -DL3_CACHE_SIZE=$(L3_CACHE_SIZE)
+	$(CC) $(CFLAGS) $(MACRO_CACHESIZE) benchmark/set.cpp -o bin/benchmark/fenwick/set
 
-bin/benchmark/find: $(INCLUDES) benchmark/find.cpp
+bin/benchmark/fenwick/find: $(INCLUDES) benchmark/find.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) benchmark/find.cpp -o bin/benchmark/find -DL1_CACHE_SIZE=$(L1_CACHE_SIZE) -DL2_CACHE_SIZE=$(L2_CACHE_SIZE) -DL3_CACHE_SIZE=$(L3_CACHE_SIZE)
+	$(CC) $(CFLAGS) $(MACRO_CACHESIZE) benchmark/find.cpp -o bin/benchmark/fenwick/find
 
+bin/benchmark/rankselect/rankselect: $(INCLUDES) benchmark/rankselect/rank_select.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCLUDE_DYNAMIC) benchmark/rankselect/rank_select.cpp -o bin/benchmark/rankselect/rankselect
 
 
 # other
