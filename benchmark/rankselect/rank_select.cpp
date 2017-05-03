@@ -1,11 +1,12 @@
 #include <chrono>
 #include <algorithm>
 #include <random>
+#include <iomanip>
 
 #include <rankselect/rank_select.hpp>
 #include <rankselect/word.hpp>
 #include <rankselect/line.hpp>
-         
+
 #include <fenwick/fenwick_tree.hpp>
 #include <fenwick/simple.hpp>
 #include <fenwick/typed.hpp>
@@ -72,20 +73,21 @@ int main(int argc, char *argv[])
 
 
     dynamic("DYNAMIC", bitvector, rank, select0, select1, size);
-    internal<WordRankSelect<SimpleFenwickTree>>("WordRankSelect<SimpleFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<WordRankSelect<TypedFenwickTree>>("WordRankSelect<TypedFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<WordRankSelect<ITypedFenwickTree>>("WordRankSelect<ITypedFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<WordRankSelect<ByteFenwickTree>>("WordRankSelect<ByteFenwickTree>", bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<SimpleFenwickTree>> ("WordRankSelect<SimpleFenwickTree>",  bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<TypedFenwickTree>>  ("WordRankSelect<TypedFenwickTree>",   bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<ITypedFenwickTree>> ("WordRankSelect<ITypedFenwickTree>",  bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<ByteFenwickTree>>   ("WordRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
     internal<WordRankSelect<CompactFenwickTree>>("WordRankSelect<CompactFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<WordRankSelect<ShrankFenwickTree>>("WordRankSelect<ShrankFenwickTree>", bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<ShrankFenwickTree>> ("WordRankSelect<ShrankFenwickTree>",  bitvector, rank, select0, select1, size);
 
-    internal<LineRankSelect<SimpleFenwickTree, 8>>("LineRankSelect<SimpleFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<LineRankSelect<TypedFenwickTree, 8>>("LineRankSelect<TypedFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<LineRankSelect<ITypedFenwickTree, 8>>("LineRankSelect<ITypedFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<LineRankSelect<ByteFenwickTree, 8>>("LineRankSelect<ByteFenwickTree>", bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<SimpleFenwickTree,  8>>("LineRankSelect<SimpleFenwickTree>",  bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<TypedFenwickTree,   8>>("LineRankSelect<TypedFenwickTree>",   bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<ITypedFenwickTree,  8>>("LineRankSelect<ITypedFenwickTree>",  bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<ByteFenwickTree,    8>>("LineRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
     internal<LineRankSelect<CompactFenwickTree, 8>>("LineRankSelect<CompactFenwickTree>", bitvector, rank, select0, select1, size);
-    internal<LineRankSelect<ShrankFenwickTree, 8>>("LineRankSelect<ShrankFenwickTree>", bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<ShrankFenwickTree,  8>>("LineRankSelect<ShrankFenwickTree>",  bitvector, rank, select0, select1, size);
 
+    internal<LineRankSelect<ByteFenwickTree,   32>>("LineRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
 
     delete[] bitvector;
     delete[] rank;
@@ -100,6 +102,7 @@ template <typename T>
 void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size)
 {
     high_resolution_clock::time_point begin, end;
+    uint64_t u = 0;
 
 	begin = high_resolution_clock::now();
 	T bv(bitvector, size);
@@ -108,41 +111,44 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *s
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.rankZero(rank[i]);
+		u ^= bv.rankZero(rank[i]);
 	end = high_resolution_clock::now();
     auto rank0 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.rank(rank[i], 1);
+		u ^= bv.rank(rank[i], 1);
 	end = high_resolution_clock::now();
     auto rank1 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.selectZero(select0[i]);
+		u ^= bv.selectZero(select0[i]);
 	end = high_resolution_clock::now();
     auto sel0 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.select(select1[i]);
+		u ^= bv.select(select1[i]);
 	end = high_resolution_clock::now();
     auto sel1 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
+    const volatile uint64_t __attribute__((unused)) unused = u;
 
-    cout << name << " implementation (" << bv.bit_count() << " bits)" << endl;
-	cout << "build: " << (double)insert/size << " ns/item" << endl;
-	cout << "rank0: " << (double)rank0/size  << " ns/item" << endl;
-	cout << "rank1: " << (double)rank1/size  << " ns/item" << endl;
-	cout << "sel0:  " << (double)sel0/size   << " ns/item" << endl;
-	cout << "sel1:  " << (double)sel1/size   << " ns/item" << endl << endl;
+    const double c = 1. / size;
+    cout << "\n" << name << ": " << bv.bit_count() / (double)size << " b/item\n";
+	cout << "build: " << fixed << setw(12) << insert * c << " ns/item\n";
+	cout << "rank0: " << fixed << setw(12) << rank0  * c << " ns/item\n";
+	cout << "rank1: " << fixed << setw(12) << rank1  * c << " ns/item\n";
+	cout << "sel0:  " << fixed << setw(12) << sel0   * c << " ns/item\n";
+	cout << "sel1:  " << fixed << setw(12) << sel1   * c << " ns/item\n";
 }
 
 
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size)
 {
     high_resolution_clock::time_point begin, end;
+    uint64_t u = 0;
 
 	begin = high_resolution_clock::now();
 	suc_bv bv;
@@ -155,33 +161,35 @@ void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *se
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.rank(rank[i]);
+		u ^= bv.rank(rank[i]);
 	end = high_resolution_clock::now();
     auto rank0 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.rank(rank[i], 1);
+		u ^= bv.rank(rank[i], 1);
 	end = high_resolution_clock::now();
     auto rank1 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.select(select0[i], 0);
+		u ^= bv.select(select0[i], 0);
 	end = high_resolution_clock::now();
     auto sel0 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
 	for(uint64_t i = 0; i < size; ++i)
-		bv.select(select1[i], 1);
+		u ^= bv.select(select1[i], 1);
 	end = high_resolution_clock::now();
     auto sel1 = duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
+    const volatile uint64_t __attribute__((unused)) unused = u;
 
-    cout << name << " implementation (" << bv.bit_size() << " bits)" << endl;
-	cout << "build: " << (double)insert/size << " ns/item" << endl;
-	cout << "rank0: " << (double)rank0/size  << " ns/item" << endl;
-	cout << "rank1: " << (double)rank1/size  << " ns/item" << endl;
-	cout << "sel0:  " << (double)sel0/size   << " ns/item" << endl;
-	cout << "sel1:  " << (double)sel1/size   << " ns/item" << endl << endl;
+    const double c = 1. / size;
+    cout << "\n" << name << ": " << bv.bit_size() / (double)size << " b/item\n";
+	cout << "build: " << fixed << setw(12) << insert * c << " ns/item\n";
+	cout << "rank0: " << fixed << setw(12) << rank0  * c << " ns/item\n";
+	cout << "rank1: " << fixed << setw(12) << rank1  * c << " ns/item\n";
+	cout << "sel0:  " << fixed << setw(12) << sel0   * c << " ns/item\n";
+	cout << "sel1:  " << fixed << setw(12) << sel1   * c << " ns/item\n";
 }

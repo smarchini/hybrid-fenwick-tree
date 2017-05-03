@@ -81,12 +81,16 @@ namespace dyn {
             return -1ULL;
         }
 
-        // TODO fare come sopra
         virtual size_t selectZero(uint64_t rank) const
         {
-            // TODO: spostare il controllo sul -1 dentro l'albero?
             const size_t idx = tree.find(rank, true) + 1;
-            return idx*64 + select64(~_bitvector[idx], rank - (64*idx - (idx != 0 ? tree.get(idx-1) : 0)));
+            rank -= 64*idx - (idx != 0 ? tree.get(idx-1) : 0);
+
+            const uint64_t rank_chunk = popcount(~_bitvector[idx]);
+            if (rank < rank_chunk)
+                return idx*64 + select64(~_bitvector[idx], rank);
+
+            return -1ULL;
         }
 
         virtual uint64_t update(size_t index, uint64_t word)
