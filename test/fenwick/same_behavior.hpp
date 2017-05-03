@@ -120,8 +120,9 @@ TEST(same_behavior, partial_tree)
 
 TEST(same_behavior, random_mixed)
 {
+    fenwick_random_test<7>(1024-1);
     fenwick_random_test<8>(1024-1);
-    fenwick_random_test<10>(16-1);
+    fenwick_random_test<9>(1024-1);
 
     fenwick_random_test<10>(1024-1);
     fenwick_random_test<11>(1024-1);
@@ -161,7 +162,7 @@ TEST(same_behavior, random_mixed)
     fenwick_random_test<52>(1024-1);
     fenwick_random_test<53>(1024-1);
     fenwick_random_test<54>(1024-1);
-    // fenwick_random_test<55>(1024-1); SEGMENTATION FAULT
+    //fenwick_random_test<55>(1024-1); // segmentation fault
 }
 
 #endif // __TEST_FENWICK_SAME_BEHAVIOR_H__
