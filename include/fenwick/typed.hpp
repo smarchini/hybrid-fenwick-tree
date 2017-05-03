@@ -3,7 +3,6 @@
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace dyn {
 
@@ -21,6 +20,9 @@ namespace dyn {
     template<size_t LEAF_BITSIZE>
     class TypedFenwickTree : public FenwickTree
     {
+        static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
+        static_assert(LEAF_BITSIZE <= 54, "A leaf should be at most 54 bit long");
+
     protected:
         const size_t size;
 

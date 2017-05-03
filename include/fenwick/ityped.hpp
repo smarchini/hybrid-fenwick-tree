@@ -19,6 +19,9 @@ namespace dyn {
     template<size_t LEAF_BITSIZE>
     class ITypedFenwickTree : public FenwickTree
     {
+        static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
+        static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
+
     protected:
         const size_t size;
         DArray<uint8_t> tree;
