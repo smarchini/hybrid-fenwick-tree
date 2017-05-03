@@ -8,7 +8,7 @@ int main()
 
     cout << "Elements,Simple,Typed,ITyped,Byte,Compact,Shrank\n";
 
-    for (size_t size = 64; size < L2_CACHE_SIZE*1000; size <<= 1) {
+    for (size_t size = 64; size < L3_CACHE_SIZE*2; size <<= 1) {
         uint64_t *increments = random_array<uint64_t>(size);
         uint64_t *order = new uint64_t[size];
         for (size_t i = 0; i < size; i++)

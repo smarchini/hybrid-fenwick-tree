@@ -2,18 +2,18 @@
 #include <algorithm>
 #include <random>
 
-#include "../../include/rankselect/rank_select.hpp"
-#include "../../include/rankselect/word.hpp"
-#include "../../include/rankselect/line.hpp"
-
-#include "../../include/fenwick/fenwick_tree.hpp"
-#include "../../include/fenwick/simple.hpp"
-#include "../../include/fenwick/typed.hpp"
-#include "../../include/fenwick/ityped.hpp"
-#include "../../include/fenwick/ityped.hpp"
-#include "../../include/fenwick/byte.hpp"
-#include "../../include/fenwick/compact.hpp"
-#include "../../include/fenwick/shrank.hpp"
+#include <rankselect/rank_select.hpp>
+#include <rankselect/word.hpp>
+#include <rankselect/line.hpp>
+         
+#include <fenwick/fenwick_tree.hpp>
+#include <fenwick/simple.hpp>
+#include <fenwick/typed.hpp>
+#include <fenwick/ityped.hpp>
+#include <fenwick/ityped.hpp>
+#include <fenwick/byte.hpp>
+#include <fenwick/compact.hpp>
+#include <fenwick/shrank.hpp>
 
 #include <dynamic.hpp>
 

@@ -17,12 +17,12 @@
 #include <algorithm>
 #include <random>
 
-#include "../include/fenwick/simple.hpp"
-#include "../include/fenwick/typed.hpp"
-#include "../include/fenwick/ityped.hpp"
-#include "../include/fenwick/byte.hpp"
-#include "../include/fenwick/compact.hpp"
-#include "../include/fenwick/shrank.hpp"
+#include <fenwick/simple.hpp>
+#include <fenwick/typed.hpp>
+#include <fenwick/ityped.hpp>
+#include <fenwick/byte.hpp>
+#include <fenwick/compact.hpp>
+#include <fenwick/shrank.hpp>
 
 
 template<typename T> T* random_array(size_t size);
