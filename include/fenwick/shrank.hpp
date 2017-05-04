@@ -31,7 +31,6 @@ namespace dyn {
             size(size),
             tree(get_bitpos(size-1)/8 + (lsb(size)+LEAF_BITSIZE)/8 + 1 + 4)
         {
-
             for (size_t i = 1; i <= size; i++) {
                 const size_t bitpos = get_bitpos(i-1);
                 auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[bitpos/8]);
@@ -65,7 +64,7 @@ namespace dyn {
 
         virtual uint64_t get(size_t idx) const
         {
-            uint64_t sum = 0ULL;
+            uint64_t sum = 0;
 
             for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
                 const size_t bit_pos = get_bitpos(idx-1);

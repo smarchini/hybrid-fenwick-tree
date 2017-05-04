@@ -6,25 +6,11 @@
 
 namespace dyn {
 
-    static constexpr uint64_t BYTE_MASK[] = { 0x0ULL,
-                                              0xFFULL,
-                                              0xFFFFULL,
-                                              0xFFFFFFULL,
-                                              0xFFFFFFFFULL,
-                                              0xFFFFFFFFFFULL,
-                                              0xFFFFFFFFFFFFULL,
-                                              0xFFFFFFFFFFFFFFULL,
-                                              0xFFFFFFFFFFFFFFFFULL };
-
    /**
     * class ByteFenwickTree
     * @tree: Byte indexted Fenwick Tree data.
     * @size: Number of elements in the tree.
     * @level: Lookup table, it store the starting bit-position of each level.
-    *
-    * It's supposed to store * increments up to 63, so a single byte per element
-    * is enough up to level 3. * Then, every 8 levels you add a byte per
-    * element.
     *
     * The data is stored in a bottom-up level-order manner.
     */
@@ -53,7 +39,7 @@ namespace dyn {
         {
             level[0] = 0;
             for (size_t i = 1; i < level.size(); i++)
-                level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1]; // TODO: probabilmente qui il problema
+                level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1];
 
             const size_t levels = level.size() - 1;
             tree = DArray<uint8_t>(level[levels] + 3); // +3 to prevent segfault on the last element

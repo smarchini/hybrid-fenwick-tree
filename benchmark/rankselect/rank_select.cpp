@@ -11,8 +11,8 @@
 #include <fenwick/simple.hpp>
 #include <fenwick/typed.hpp>
 #include <fenwick/ityped.hpp>
-#include <fenwick/ityped.hpp>
 #include <fenwick/byte.hpp>
+#include <fenwick/ibyte.hpp>
 #include <fenwick/compact.hpp>
 #include <fenwick/shrank.hpp>
 
@@ -28,10 +28,15 @@ template <typename T>
 void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
 
+template<class T>
+T uniform_bits(std::mt19937& g){
+    std::uniform_int_distribution<T> dist(std::numeric_limits<T>::lowest(),std::numeric_limits<T>::max());
+    return dist( g );
+}
+
 int main(int argc, char *argv[])
 {
-    random_device rd;
-    mt19937 mte(rd());
+    mt19937 mte;
 
     if (argc < 2) {
         std::cerr << "Not enough parameters\n";
@@ -72,11 +77,13 @@ int main(int argc, char *argv[])
         select1[i] = select1dist(mte);
 
 
-    dynamic("DYNAMIC", bitvector, rank, select0, select1, size);
+    //dynamic("DYNAMIC", bitvector, rank, select0, select1, size);
+    
     internal<WordRankSelect<SimpleFenwickTree>> ("WordRankSelect<SimpleFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<WordRankSelect<TypedFenwickTree>>  ("WordRankSelect<TypedFenwickTree>",   bitvector, rank, select0, select1, size);
     internal<WordRankSelect<ITypedFenwickTree>> ("WordRankSelect<ITypedFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<WordRankSelect<ByteFenwickTree>>   ("WordRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<IByteFenwickTree>>  ("WordRankSelect<IByteFenwickTree>",   bitvector, rank, select0, select1, size);
     internal<WordRankSelect<CompactFenwickTree>>("WordRankSelect<CompactFenwickTree>", bitvector, rank, select0, select1, size);
     internal<WordRankSelect<ShrankFenwickTree>> ("WordRankSelect<ShrankFenwickTree>",  bitvector, rank, select0, select1, size);
 
@@ -84,10 +91,12 @@ int main(int argc, char *argv[])
     internal<LineRankSelect<TypedFenwickTree,   8>>("LineRankSelect<TypedFenwickTree>",   bitvector, rank, select0, select1, size);
     internal<LineRankSelect<ITypedFenwickTree,  8>>("LineRankSelect<ITypedFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<LineRankSelect<ByteFenwickTree,    8>>("LineRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<IByteFenwickTree,   8>>("LineRankSelect<IByteFenwickTree>",   bitvector, rank, select0, select1, size);
     internal<LineRankSelect<CompactFenwickTree, 8>>("LineRankSelect<CompactFenwickTree>", bitvector, rank, select0, select1, size);
     internal<LineRankSelect<ShrankFenwickTree,  8>>("LineRankSelect<ShrankFenwickTree>",  bitvector, rank, select0, select1, size);
 
     internal<LineRankSelect<ByteFenwickTree,   32>>("LineRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
+    internal<LineRankSelect<IByteFenwickTree,  32>>("LineRankSelect<ByteFenwickTree>",    bitvector, rank, select0, select1, size);
 
     delete[] bitvector;
     delete[] rank;

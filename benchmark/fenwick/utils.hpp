@@ -21,6 +21,7 @@
 #include <fenwick/typed.hpp>
 #include <fenwick/ityped.hpp>
 #include <fenwick/byte.hpp>
+#include <fenwick/ibyte.hpp>
 #include <fenwick/compact.hpp>
 #include <fenwick/shrank.hpp>
 

@@ -1,0 +1,7 @@
+#ifndef __TEST_RANKSELECT_SAME_BEHAVIOR_H__
+#define __TEST_RANKSELECT_SAME_BEHAVIOR_H__
+
+#include "../utils.hpp"
+
+
+#endif __TEST_RANKSELECT_SAME_BEHAVIOR_H__

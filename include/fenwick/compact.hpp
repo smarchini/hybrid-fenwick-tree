@@ -12,14 +12,8 @@ namespace dyn {
     * @tree: Byte indexted Fenwick Tree data.
     * @level: Lookup table, it store the starting bit-position of each level.
     *
-    * Each node use exactly the number of bits it needs. It's supposed to store
-    * increments up to 64, so each leaf needs 7 bit (LEAF_BITSIZE).
-    *
-    * The data is stored in a bottom-up level-order manner. Let @n be the number
-    * of elements in the Fenwick Tree:
-    * - from bit 0 to bit 7*n/2: leaves
-    * - from bit 7*n/2 to bit 7*n/2+7*n/4: height 1 internal nodes
-    * and so on until the end of the tree.
+    * Each node use exactly the number of bits it needs. The data is stored in a
+    * bottom-up level-order manner.
     */
     template<size_t LEAF_BITSIZE>
     class CompactFenwickTree : public FenwickTree

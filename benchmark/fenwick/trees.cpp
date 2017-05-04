@@ -54,6 +54,7 @@ int main(int argc, char **argv)
     bench<TypedFenwickTree<7>>("Typed", size, order, increments, set_updates, sequence);
     bench<ITypedFenwickTree<7>>("ITyped", size, order, increments, set_updates, sequence);
     bench<ByteFenwickTree<7>>("Byte", size, order, increments, set_updates, sequence);
+    bench<IByteFenwickTree<7>>("IByte", size, order, increments, set_updates, sequence);
     bench<CompactFenwickTree<7>>("Compact", size, order, increments, set_updates, sequence);
     bench<ShrankFenwickTree<7>>("Shrank", size, order, increments, set_updates, sequence);
 
@@ -91,6 +92,13 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
+    // find
+    begin = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < size; i++)
+        u ^= tree.find(64*size - sequence[i], true);
+    end = std::chrono::high_resolution_clock::now();
+    auto findc = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+
     // set
     begin = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
@@ -106,4 +114,5 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     std::cout << "get:   " << std::fixed << std::setw(12) << get * c << " ns/item\n";
     std::cout << "set:   " << std::fixed << std::setw(12) << set * c << " ns/item\n";
     std::cout << "find:  " << std::fixed << std::setw(12) << find * c << " ns/item\n";
+    std::cout << "findc: " << std::fixed << std::setw(12) << findc * c << " ns/item\n";
 }

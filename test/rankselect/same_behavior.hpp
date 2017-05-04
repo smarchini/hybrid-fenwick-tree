@@ -22,6 +22,7 @@ void rankselect_random_test(std::size_t size)
     dyn::LineRankSelect<dyn::TypedFenwickTree, S>   line_typed(bitvect, size);
     dyn::LineRankSelect<dyn::ITypedFenwickTree, S>  line_ityped(bitvect, size);
     dyn::LineRankSelect<dyn::ByteFenwickTree, S>    line_byte(bitvect, size);
+    dyn::LineRankSelect<dyn::IByteFenwickTree, S>   line_ibyte(bitvect, size);
     dyn::LineRankSelect<dyn::CompactFenwickTree, S> line_compact(bitvect, size);
     dyn::LineRankSelect<dyn::ShrankFenwickTree, S>  line_shrank(bitvect, size);
 
@@ -29,6 +30,7 @@ void rankselect_random_test(std::size_t size)
     dyn::WordRankSelect<dyn::TypedFenwickTree>   word_typed(bitvect, size);
     dyn::WordRankSelect<dyn::ITypedFenwickTree>  word_ityped(bitvect, size);
     dyn::WordRankSelect<dyn::ByteFenwickTree>    word_byte(bitvect, size);
+    dyn::WordRankSelect<dyn::IByteFenwickTree>   word_ibyte(bitvect, size);
     dyn::WordRankSelect<dyn::CompactFenwickTree> word_compact(bitvect, size);
     dyn::WordRankSelect<dyn::ShrankFenwickTree>  word_shrank(bitvect, size);
 
@@ -38,6 +40,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, word_typed.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.rank(i)) << "at index: " << i << " template parameter " << S;
 
@@ -45,6 +48,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.rank(i)) << "at index: " << i << " template parameter " << S;
     }
@@ -55,6 +59,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, word_typed.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.rankZero(i)) << "at index: " << i << " template parameter " << S;
 
@@ -62,17 +67,18 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.rankZero(i)) << "at index: " << i << " template parameter " << S;
     }
 
-    // TODO: sistemare il comportamento della select se non ci sono uni
     for (size_t i = 0; i < size; i++) {
         auto res = word_simple.select(i);
 
         EXPECT_EQ(res, word_typed.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.select(i)) << "at index: " << i << " template parameter " << S;
 
@@ -80,18 +86,19 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_simple.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_typed.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S << " size: " << size;
-        EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S << "size " << size;
+        EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
-    //TODO: sistemare il comportamento della selectZero se non ci sono zeri
     for (size_t i = 0; i < 10; i++) {
         auto res = word_simple.selectZero(i);
 
         EXPECT_EQ(res, word_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
 
@@ -99,6 +106,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
@@ -108,6 +116,7 @@ void rankselect_random_test(std::size_t size)
         word_typed.update(i, updates[i]);
         word_ityped.update(i, updates[i]);
         word_byte.update(i, updates[i]);
+        word_ibyte.update(i, updates[i]);
         word_compact.update(i, updates[i]);
         word_shrank.update(i, updates[i]);
         line_simple.update(i, updates[i]);
@@ -118,14 +127,13 @@ void rankselect_random_test(std::size_t size)
         line_shrank.update(i, updates[i]);
     }
 
-
-    // TODO: sistemare il comportamento della select se non ci sono uni
     for (size_t i = 0; i < size; i++) {
         auto res = word_simple.select(i);
 
         EXPECT_EQ(res, word_typed.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.select(i)) << "at index: " << i << " template parameter " << S;
 
@@ -133,17 +141,18 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
-    //TODO: sistemare il comportamento della selectZero se non ci sono zeri
     for (size_t i = 0; i < 10; i++) {
         auto res = word_simple.selectZero(i);
 
         EXPECT_EQ(res, word_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
 
@@ -151,10 +160,11 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
- 
+
     delete[] bitvect;
 }
 
@@ -167,8 +177,6 @@ TEST(rankselect_same_behavior, cache_line)
 
 TEST(rankselect_same_behavior, random_mixed)
 {
-    // TODO caso <0> dovrà dare errore (stessa cosa per gli alberi)
-    // TODO imporre anche un limite superiore (stessa cosa per gli alberi)
     rankselect_random_test<1>(1024);
     rankselect_random_test<2>(1024);
     rankselect_random_test<3>(1024);

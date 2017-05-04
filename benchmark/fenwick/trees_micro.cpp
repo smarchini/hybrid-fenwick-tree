@@ -21,7 +21,9 @@ int main()
         cout << i << " Elements\n";
         microbench<dyn::SimpleFenwickTree>("SimpleFenwickTree", i-1, increments);
         microbench<dyn::TypedFenwickTree>("TypedFenwickTree", i-1, increments);
+        microbench<dyn::ITypedFenwickTree>("ITypedFenwickTree", i-1, increments);
         microbench<dyn::ByteFenwickTree>("ByteFenwickTree", i-1, increments);
+        microbench<dyn::IByteFenwickTree>("IByteFenwickTree", i-1, increments);
         microbench<dyn::CompactFenwickTree>("CompactFenwickTree", i-1, increments);
         microbench<dyn::ShrankFenwickTree>("ShrankFenwickTree", i-1, increments);
         cout << "------------------------------------------------------------\n\n";

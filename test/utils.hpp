@@ -13,6 +13,7 @@
 #include "../include/fenwick/typed.hpp"
 #include "../include/fenwick/ityped.hpp"
 #include "../include/fenwick/byte.hpp"
+#include "../include/fenwick/ibyte.hpp"
 #include "../include/fenwick/compact.hpp"
 #include "../include/fenwick/shrank.hpp"
 
@@ -52,6 +53,13 @@ public:
     ByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
         dyn::ByteFenwickTree<7>(sequence, length) {}
     using dyn::ByteFenwickTree<7>::tree;
+};
+
+class IByteFenwickTree_Test : public dyn::IByteFenwickTree<7> {
+public:
+    IByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::IByteFenwickTree<7>(sequence, length) {}
+    using dyn::IByteFenwickTree<7>::tree;
 };
 
 class CompactFenwickTree_Test : public dyn::CompactFenwickTree<7> {

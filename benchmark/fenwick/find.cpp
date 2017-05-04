@@ -16,8 +16,13 @@ int main()
 
         cout << size << ',';
         cout << bench_find<SimpleFenwickTree<7>> (size, increments, sequence) << ','
+            // type aligned
              << bench_find<TypedFenwickTree<7>>  (size, increments, sequence) << ','
+             << bench_find<ITypedFenwickTree<7>> (size, increments, sequence) << ','
+            // byte aligned
              << bench_find<ByteFenwickTree<7>>   (size, increments, sequence) << ','
+             << bench_find<IByteFenwickTree<7>>   (size, increments, sequence) << ','
+            // bit aligned
              << bench_find<CompactFenwickTree<7>>(size, increments, sequence) << ','
              << bench_find<ShrankFenwickTree<7>> (size, increments, sequence) << '\n';
 
