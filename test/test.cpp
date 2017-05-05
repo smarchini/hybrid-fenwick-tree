@@ -2,13 +2,13 @@
 
 #include "broadword.hpp"
 
-#include "fenwick/simple.hpp"
-#include "fenwick/compact.hpp"
+#include "fenwick/naive.hpp"
+#include "fenwick/type.hpp"
+#include "fenwick/ltype.hpp"
 #include "fenwick/byte.hpp"
-#include "fenwick/ibyte.hpp"
-#include "fenwick/typed.hpp"
-#include "fenwick/ityped.hpp"
-#include "fenwick/shrank.hpp"
+#include "fenwick/lbyte.hpp"
+#include "fenwick/bit.hpp"
+#include "fenwick/lbit.hpp"
 
 #include "fenwick/same_behavior.hpp"
 

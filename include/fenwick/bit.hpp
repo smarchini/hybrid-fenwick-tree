@@ -1,5 +1,5 @@
-#ifndef __FENWICK_SHRANK_H__
-#define __FENWICK_SHRANK_H__
+#ifndef __FENWICK_BIT_H__
+#define __FENWICK_BIT_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -10,7 +10,7 @@ namespace dyn {
     * class
     */
     template<size_t LEAF_BITSIZE>
-    class ShrankFenwickTree : public FenwickTree
+    class BitFenwickTree : public FenwickTree
     {
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
@@ -21,13 +21,13 @@ namespace dyn {
 
     public:
         /**
-         * ShrankFenwickTree - Build a FenwickTree given a sequence of increments.
+         * BitFenwickTree - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments.
          * @size: Number of elements stored by the sequence.
          *
          * Running time: O(length)
          */
-        ShrankFenwickTree(uint64_t sequence[], size_t size) :
+        BitFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
             tree(get_bitpos(size-1)/8 + (lsb(size)+LEAF_BITSIZE)/8 + 1 + 4)
         {
@@ -119,7 +119,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(ShrankFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(BitFenwickTree<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
 
@@ -133,4 +133,4 @@ namespace dyn {
 
 }
 
-#endif // __FENWICK_SHRANK_H__
+#endif // __FENWICK_BIT_H__

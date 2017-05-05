@@ -29,7 +29,7 @@ TEST(rankselect_like_dynamic, random)
 
     size_t zeroes = 64*SIZE - ones;
 
-    WordRankSelect<SimpleFenwickTree> internal(bitvect, SIZE);
+    WordRankSelect<NaiveFenwickTree> internal(bitvect, SIZE);
 
     suc_bv dynamic;
 	for (uint64_t i = 0; i < SIZE; ++i) {

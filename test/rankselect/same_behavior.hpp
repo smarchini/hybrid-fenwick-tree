@@ -13,153 +13,153 @@ void rankselect_random_test(std::size_t size)
     std::uint64_t *updates = new std::uint64_t[size];
     fill_with_random_values(updates, size);
 
-    dyn::LineRankSelect<dyn::SimpleFenwickTree, S>  line_simple(bitvect, size);
-    dyn::LineRankSelect<dyn::TypedFenwickTree, S>   line_typed(bitvect, size);
-    dyn::LineRankSelect<dyn::ITypedFenwickTree, S>  line_ityped(bitvect, size);
-    dyn::LineRankSelect<dyn::ByteFenwickTree, S>    line_byte(bitvect, size);
-    dyn::LineRankSelect<dyn::IByteFenwickTree, S>   line_ibyte(bitvect, size);
-    dyn::LineRankSelect<dyn::CompactFenwickTree, S> line_compact(bitvect, size);
-    dyn::LineRankSelect<dyn::ShrankFenwickTree, S>  line_shrank(bitvect, size);
+    dyn::LineRankSelect<dyn::NaiveFenwickTree, S>  line_naive(bitvect, size);
+    dyn::LineRankSelect<dyn::LTypeFenwickTree, S>   line_ltype(bitvect, size);
+    dyn::LineRankSelect<dyn::TypeFenwickTree, S>  line_type(bitvect, size);
+    dyn::LineRankSelect<dyn::LByteFenwickTree, S>    line_lbyte(bitvect, size);
+    dyn::LineRankSelect<dyn::ByteFenwickTree, S>   line_byte(bitvect, size);
+    dyn::LineRankSelect<dyn::LBitFenwickTree, S> line_lbit(bitvect, size);
+    dyn::LineRankSelect<dyn::BitFenwickTree, S>  line_bit(bitvect, size);
 
-    dyn::WordRankSelect<dyn::SimpleFenwickTree>  word_simple(bitvect, size);
-    dyn::WordRankSelect<dyn::TypedFenwickTree>   word_typed(bitvect, size);
-    dyn::WordRankSelect<dyn::ITypedFenwickTree>  word_ityped(bitvect, size);
-    dyn::WordRankSelect<dyn::ByteFenwickTree>    word_byte(bitvect, size);
-    dyn::WordRankSelect<dyn::IByteFenwickTree>   word_ibyte(bitvect, size);
-    dyn::WordRankSelect<dyn::CompactFenwickTree> word_compact(bitvect, size);
-    dyn::WordRankSelect<dyn::ShrankFenwickTree>  word_shrank(bitvect, size);
+    dyn::WordRankSelect<dyn::NaiveFenwickTree>  word_naive(bitvect, size);
+    dyn::WordRankSelect<dyn::LTypeFenwickTree>   word_ltype(bitvect, size);
+    dyn::WordRankSelect<dyn::TypeFenwickTree>  word_type(bitvect, size);
+    dyn::WordRankSelect<dyn::LByteFenwickTree>    word_lbyte(bitvect, size);
+    dyn::WordRankSelect<dyn::ByteFenwickTree>   word_byte(bitvect, size);
+    dyn::WordRankSelect<dyn::LBitFenwickTree> word_lbit(bitvect, size);
+    dyn::WordRankSelect<dyn::BitFenwickTree>  word_bit(bitvect, size);
 
     for (size_t i = 0; i <= size; i++) {
-        auto res = word_simple.rank(i);
+        auto res = word_naive.rank(i);
 
-        EXPECT_EQ(res, word_typed.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.rank(i)) << "at index: " << i << " template parameter " << S;
 
-        EXPECT_EQ(res, line_simple.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_naive.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.rank(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.rank(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.rank(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.rank(i)) << "at index: " << i << " template parameter " << S;
     }
 
     for (size_t i = 0; i <= size; i++) {
-        auto res = word_simple.rankZero(i);
+        auto res = word_naive.rankZero(i);
 
-        EXPECT_EQ(res, word_typed.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.rankZero(i)) << "at index: " << i << " template parameter " << S;
 
-        EXPECT_EQ(res, line_simple.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_naive.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.rankZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.rankZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.rankZero(i)) << "at index: " << i << " template parameter " << S;
     }
 
     for (size_t i = 0; i < size; i++) {
-        auto res = word_simple.select(i);
+        auto res = word_naive.select(i);
 
-        EXPECT_EQ(res, word_typed.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.select(i)) << "at index: " << i << " template parameter " << S;
 
-        res = line_simple.select(i);
-        EXPECT_EQ(res, line_simple.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.select(i)) << "at index: " << i << " template parameter " << S;
+        res = line_naive.select(i);
+        EXPECT_EQ(res, line_naive.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
     for (size_t i = 0; i < 10; i++) {
-        auto res = word_simple.selectZero(i);
+        auto res = word_naive.selectZero(i);
 
-        EXPECT_EQ(res, word_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
 
-        EXPECT_EQ(res, line_simple.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_naive.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
 
     for (size_t i = 0; i < size; i++) {
-        word_simple.update(i, updates[i]);
-        word_typed.update(i, updates[i]);
-        word_ityped.update(i, updates[i]);
+        word_naive.update(i, updates[i]);
+        word_ltype.update(i, updates[i]);
+        word_type.update(i, updates[i]);
+        word_lbyte.update(i, updates[i]);
         word_byte.update(i, updates[i]);
-        word_ibyte.update(i, updates[i]);
-        word_compact.update(i, updates[i]);
-        word_shrank.update(i, updates[i]);
+        word_lbit.update(i, updates[i]);
+        word_bit.update(i, updates[i]);
 
-        line_simple.update(i, updates[i]);
-        line_typed.update(i, updates[i]);
-        line_ityped.update(i, updates[i]);
+        line_naive.update(i, updates[i]);
+        line_ltype.update(i, updates[i]);
+        line_type.update(i, updates[i]);
+        line_lbyte.update(i, updates[i]);
         line_byte.update(i, updates[i]);
-        line_ibyte.update(i, updates[i]);
-        line_compact.update(i, updates[i]);
-        line_shrank.update(i, updates[i]);
+        line_lbit.update(i, updates[i]);
+        line_bit.update(i, updates[i]);
     }
 
     for (size_t i = 0; i < size; i++) {
-        auto res = word_simple.select(i);
+        auto res = word_naive.select(i);
 
-        EXPECT_EQ(res, word_typed.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.select(i)) << "at index: " << i << " template parameter " << S;
 
-        EXPECT_EQ(res, line_simple.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_naive.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
     for (size_t i = 0; i < 10; i++) {
-        auto res = word_simple.selectZero(i);
+        auto res = word_naive.selectZero(i);
 
-        EXPECT_EQ(res, word_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, word_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, word_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, word_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
 
-        EXPECT_EQ(res, line_simple.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_naive.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, line_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
 
     delete[] bitvect;

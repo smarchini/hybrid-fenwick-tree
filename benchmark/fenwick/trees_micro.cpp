@@ -5,7 +5,6 @@
 #include <algorithm>
 
 #include "utils.hpp"
-#include "../test/utils.hpp"
 
 using namespace std;
 
@@ -19,13 +18,13 @@ int main()
         uint64_t *increments = random_array(i-1);
 
         cout << i << " Elements\n";
-        microbench<dyn::SimpleFenwickTree>("SimpleFenwickTree", i-1, increments);
-        microbench<dyn::TypedFenwickTree>("TypedFenwickTree", i-1, increments);
-        microbench<dyn::ITypedFenwickTree>("ITypedFenwickTree", i-1, increments);
+        microbench<dyn::NaiveFenwickTree>("NaiveFenwickTree", i-1, increments);
+        microbench<dyn::LTypeFenwickTree>("LTypeFenwickTree", i-1, increments);
+        microbench<dyn::TypeFenwickTree>("TypeFenwickTree", i-1, increments);
+        microbench<dyn::LByteFenwickTree>("LByteFenwickTree", i-1, increments);
         microbench<dyn::ByteFenwickTree>("ByteFenwickTree", i-1, increments);
-        microbench<dyn::IByteFenwickTree>("IByteFenwickTree", i-1, increments);
-        microbench<dyn::CompactFenwickTree>("CompactFenwickTree", i-1, increments);
-        microbench<dyn::ShrankFenwickTree>("ShrankFenwickTree", i-1, increments);
+        microbench<dyn::LBitFenwickTree>("LBitFenwickTree", i-1, increments);
+        microbench<dyn::BitFenwickTree>("BitFenwickTree", i-1, increments);
         cout << "------------------------------------------------------------\n\n";
 
         delete[] increments;

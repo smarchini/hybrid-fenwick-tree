@@ -17,13 +17,13 @@
 #include <algorithm>
 #include <random>
 
-#include <fenwick/simple.hpp>
-#include <fenwick/typed.hpp>
-#include <fenwick/ityped.hpp>
+#include <fenwick/naive.hpp>
+#include <fenwick/ltype.hpp>
+#include <fenwick/type.hpp>
+#include <fenwick/lbyte.hpp>
 #include <fenwick/byte.hpp>
-#include <fenwick/ibyte.hpp>
-#include <fenwick/compact.hpp>
-#include <fenwick/shrank.hpp>
+#include <fenwick/lbit.hpp>
+#include <fenwick/bit.hpp>
 
 
 template<typename T> T* random_array(size_t size);
@@ -37,8 +37,7 @@ template<typename T>
 T* random_array(size_t size)
 {
     using namespace std;
-    static random_device rd;
-    static mt19937 mte(rd());
+    static mt19937 mte;
 
     uniform_int_distribution<T> dist(0, 64);
 
@@ -47,6 +46,16 @@ T* random_array(size_t size)
         array[i] = dist(mte);
 
     return array;
+}
+
+void fill_with_random_values(std::uint64_t array[], std::size_t size)
+{
+    static std::mt19937 mte;
+
+    std::uniform_int_distribution<std::uint64_t> dist(1, 60); // 0, 64
+
+    for (std::size_t i = 0; i < size; i++)
+        array[i] = dist(mte);
 }
 
 void inc_to_seq(std::uint64_t *inc, std::uint64_t *seq, std::size_t size)

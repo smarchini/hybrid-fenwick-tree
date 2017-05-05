@@ -1,5 +1,5 @@
-#ifndef __FENWICK_COMPACT_H__
-#define __FENWICK_COMPACT_H__
+#ifndef __FENWICK_LBIT_H__
+#define __FENWICK_LBIT_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -7,7 +7,7 @@
 namespace dyn {
 
    /**
-    * class CompactFenwickTree
+    * class LBitFenwickTree
     * @size: Number of elements in the tree.
     * @tree: Byte indexted Fenwick Tree data.
     * @level: Lookup table, it store the starting bit-position of each level.
@@ -16,7 +16,7 @@ namespace dyn {
     * bottom-up level-order manner.
     */
     template<size_t LEAF_BITSIZE>
-    class CompactFenwickTree : public FenwickTree
+    class LBitFenwickTree : public FenwickTree
     {
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
@@ -28,13 +28,13 @@ namespace dyn {
 
     public:
         /**
-         * CompactFenwickTree - Build a FenwickTree given a sequence of increments.
+         * LBitFenwickTree - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments.
          * @size: Number of elements stored by the sequence.
          *
          * Running time: O(length)
          */
-        CompactFenwickTree(uint64_t sequence[], size_t size) :
+        LBitFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
             level(msb(size) + 2)
         {
@@ -135,7 +135,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(CompactFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(LBitFenwickTree<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree)
                 + level.bit_count() - sizeof(level);
         }
@@ -143,4 +143,4 @@ namespace dyn {
 
 }
 
-#endif // __FENWICK_COMPACT_H__
+#endif // __FENWICK_LBIT_H__

@@ -1,5 +1,5 @@
-#ifndef __FENWICK_ITYPED_H__
-#define __FENWICK_ITYPED_H__
+#ifndef __FENWICK_TYPE_H__
+#define __FENWICK_TYPE_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -7,16 +7,16 @@
 namespace dyn {
 
     /**
-     * class ITypedFenwickTree
+     * class TypeFenwickTree
      * @tree: Fenwick Tree data.
      * @size: Number of elements in the tree.
      * @level: Lookup table, it store every starting level index.
      *
      * Each node is the smallest datatype capable of holding its data.
-     * Interleaved version of TypedFenwickTree.
+     * Interleaved version of LTypeFenwickTree.
      */
     template<size_t LEAF_BITSIZE>
-    class ITypedFenwickTree : public FenwickTree
+    class TypeFenwickTree : public FenwickTree
     {
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
@@ -26,7 +26,7 @@ namespace dyn {
         DArray<uint8_t> tree;
 
     public:
-        ITypedFenwickTree(uint64_t sequence[], size_t size) :
+        TypeFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
             tree(get_bytepos(size-1) + (lsb(size-1)+LEAF_BITSIZE)/8 + 1 + 4)
         {
@@ -150,7 +150,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(ITypedFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(TypeFenwickTree<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
 
@@ -167,4 +167,4 @@ namespace dyn {
 
 }
 
-#endif // __FENWICK_ITYPED_H__
+#endif // __FENWICK_TYPE_H__

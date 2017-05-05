@@ -9,13 +9,13 @@
 #include "../include/common.hpp"
 
 #include "../include/fenwick/fenwick_tree.hpp"
-#include "../include/fenwick/simple.hpp"
-#include "../include/fenwick/typed.hpp"
-#include "../include/fenwick/ityped.hpp"
+#include "../include/fenwick/naive.hpp"
+#include "../include/fenwick/type.hpp"
+#include "../include/fenwick/ltype.hpp"
 #include "../include/fenwick/byte.hpp"
-#include "../include/fenwick/ibyte.hpp"
-#include "../include/fenwick/compact.hpp"
-#include "../include/fenwick/shrank.hpp"
+#include "../include/fenwick/lbyte.hpp"
+#include "../include/fenwick/bit.hpp"
+#include "../include/fenwick/lbit.hpp"
 
 #include "../include/rankselect/rank_select.hpp"
 #include "../include/rankselect/word.hpp"
@@ -24,28 +24,35 @@
 
 // Exposed classes
 // -----------------------------------------------------------------------------
-class SimpleFenwickTree_Test : public dyn::SimpleFenwickTree<7> {
+class NaiveFenwickTree_Test : public dyn::NaiveFenwickTree<7> {
 public:
-    SimpleFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::SimpleFenwickTree<7>(sequence, length) {}
-    using dyn::SimpleFenwickTree<7>::tree;
+    NaiveFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::NaiveFenwickTree<7>(sequence, length) {}
+    using dyn::NaiveFenwickTree<7>::tree;
 };
 
-class TypedFenwickTree_Test : public dyn::TypedFenwickTree<7> {
+class LTypeFenwickTree_Test : public dyn::LTypeFenwickTree<7> {
 public:
-    TypedFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::TypedFenwickTree<7>(sequence, length) {}
-    using dyn::TypedFenwickTree<7>::tree8;
-    using dyn::TypedFenwickTree<7>::tree16;
-    using dyn::TypedFenwickTree<7>::tree32;
-    using dyn::TypedFenwickTree<7>::tree64;
+    LTypeFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::LTypeFenwickTree<7>(sequence, length) {}
+    using dyn::LTypeFenwickTree<7>::tree8;
+    using dyn::LTypeFenwickTree<7>::tree16;
+    using dyn::LTypeFenwickTree<7>::tree32;
+    using dyn::LTypeFenwickTree<7>::tree64;
 };
 
-class ITypedFenwickTree_Test : public dyn::ITypedFenwickTree<7> {
+class TypeFenwickTree_Test : public dyn::TypeFenwickTree<7> {
 public:
-    ITypedFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::ITypedFenwickTree<7>(sequence, length) {}
-    using dyn::ITypedFenwickTree<7>::tree;
+    TypeFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::TypeFenwickTree<7>(sequence, length) {}
+    using dyn::TypeFenwickTree<7>::tree;
+};
+
+class LByteFenwickTree_Test : public dyn::LByteFenwickTree<7> {
+public:
+    LByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::LByteFenwickTree<7>(sequence, length) {}
+    using dyn::LByteFenwickTree<7>::tree;
 };
 
 class ByteFenwickTree_Test : public dyn::ByteFenwickTree<7> {
@@ -55,25 +62,18 @@ public:
     using dyn::ByteFenwickTree<7>::tree;
 };
 
-class IByteFenwickTree_Test : public dyn::IByteFenwickTree<7> {
+class LBitFenwickTree_Test : public dyn::LBitFenwickTree<7> {
 public:
-    IByteFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::IByteFenwickTree<7>(sequence, length) {}
-    using dyn::IByteFenwickTree<7>::tree;
+    LBitFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::LBitFenwickTree<7>(sequence, length) {}
+    using dyn::LBitFenwickTree<7>::tree;
 };
 
-class CompactFenwickTree_Test : public dyn::CompactFenwickTree<7> {
+class BitFenwickTree_Test : public dyn::BitFenwickTree<7> {
 public:
-    CompactFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::CompactFenwickTree<7>(sequence, length) {}
-    using dyn::CompactFenwickTree<7>::tree;
-};
-
-class ShrankFenwickTree_Test : public dyn::ShrankFenwickTree<7> {
-public:
-    ShrankFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::ShrankFenwickTree<7>(sequence, length) {}
-    using dyn::ShrankFenwickTree<7>::tree;
+    BitFenwickTree_Test(std::uint64_t sequence[], std::size_t length) :
+        dyn::BitFenwickTree<7>(sequence, length) {}
+    using dyn::BitFenwickTree<7>::tree;
 };
 
 
@@ -106,8 +106,7 @@ std::string tree_tostring(std::uint8_t *tree, std::size_t length) {
 
 void fill_with_random_values(std::uint64_t array[], std::size_t size)
 {
-    static std::random_device rd;
-    static std::mt19937 mte(rd());
+    static std::mt19937 mte;
 
     std::uniform_int_distribution<std::uint64_t> dist(1, 60); // 0, 64
 

@@ -1,5 +1,5 @@
-#ifndef __FENWICK_SIMPLE_H__
-#define __FENWICK_SIMPLE_H__
+#ifndef __FENWICK_NAIVE_H__
+#define __FENWICK_NAIVE_H__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -7,7 +7,7 @@
 namespace dyn {
 
    /**
-    * class SimpleFenwickTree - Naive implementation of a Fenwick Tree.
+    * class NaiveFenwickTree - Naive implementation of a Fenwick Tree.
     * @tree: Fenwick Tree data.
     * @size: Number of elements.
     *
@@ -15,7 +15,7 @@ namespace dyn {
     * original paper.
     */
     template<size_t LEAF_BITSIZE>
-    class SimpleFenwickTree : public FenwickTree
+    class NaiveFenwickTree : public FenwickTree
     {
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 64, "A leaf should be at most 64 bit long");
@@ -25,13 +25,13 @@ namespace dyn {
 
     public:
         /**
-         * SimpleFenwickTree - Build a FenwickTree given a sequence of increments.
+         * NaiveFenwickTree - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments to compress.
          * @length: Number of elements stored by the sequence.
          *
          * Running time: O(@length)
          */
-        SimpleFenwickTree(uint64_t sequence[], size_t size):
+        NaiveFenwickTree(uint64_t sequence[], size_t size):
             tree(size)
         {
             std::copy_n(sequence, size, tree.get());
@@ -82,11 +82,11 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(SimpleFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(NaiveFenwickTree<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
     };
 
 }
 
-#endif // __FENWICK_SIMPLE_H__
+#endif // __FENWICK_NAIVE_H__

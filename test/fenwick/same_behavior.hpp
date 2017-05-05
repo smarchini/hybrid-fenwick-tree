@@ -18,71 +18,71 @@ void fenwick_random_test(std::size_t size)
         set_updates[i] = (increments[i] + inc) < 64 ? inc : 0;
     }
 
-    dyn::SimpleFenwickTree<S> simple(increments, size);
-    dyn::CompactFenwickTree<S> compact(increments, size);
+    dyn::NaiveFenwickTree<S> naive(increments, size);
+    dyn::LBitFenwickTree<S> lbit(increments, size);
+    dyn::LByteFenwickTree<S> lbyte(increments, size);
+    dyn::LTypeFenwickTree<S> ltype(increments, size);
+    dyn::BitFenwickTree<S> bit(increments, size);
+    dyn::TypeFenwickTree<S> type(increments, size);
     dyn::ByteFenwickTree<S> byte(increments, size);
-    dyn::TypedFenwickTree<S> typed(increments, size);
-    dyn::ShrankFenwickTree<S> shrank(increments, size);
-    dyn::ITypedFenwickTree<S> ityped(increments, size);
-    dyn::IByteFenwickTree<S> ibyte(increments, size);
 
     // get
     for (size_t i = 0; i < size; i++) {
-        std::uint64_t simple_get = simple.get(i);
+        std::uint64_t naive_get = naive.get(i);
 
-        EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, ibyte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbit.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbyte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, ltype.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, bit.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, type.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, byte.get(i)) << "at index " << i << " template parameter " << S;
     }
 
     // find
     for (std::uint64_t i = 0; i < size; i++) {
-        std::uint64_t simple_find = simple.find(i);
+        std::uint64_t naive_find = naive.find(i);
 
-        EXPECT_EQ(simple_find, compact.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_find, byte.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_find, typed.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_find, shrank.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_find, ityped.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_find, ibyte.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, lbit.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, lbyte.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, ltype.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, bit.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, type.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, byte.find(i)) << "at index " << i << " template parameter " << S;
     }
 
     // set
     for (size_t i = 0; i < size; i++) {
-        simple.set(i, set_updates[i]);
-        compact.set(i, set_updates[i]);
+        naive.set(i, set_updates[i]);
+        lbit.set(i, set_updates[i]);
+        lbyte.set(i, set_updates[i]);
+        ltype.set(i, set_updates[i]);
+        bit.set(i, set_updates[i]);
+        type.set(i, set_updates[i]);
         byte.set(i, set_updates[i]);
-        typed.set(i, set_updates[i]);
-        shrank.set(i, set_updates[i]);
-        ityped.set(i, set_updates[i]);
-        ibyte.set(i, set_updates[i]);
     }
 
     // get
     for (size_t i = 0; i < size; i++) {
-        std::uint64_t simple_get = simple.get(i);
+        std::uint64_t naive_get = naive.get(i);
 
-        EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_get, ibyte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbit.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbyte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, ltype.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, bit.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, type.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, byte.get(i)) << "at index " << i << " template parameter " << S;
     }
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++) {
-        std::uint64_t simple_findcomplement = simple.find(i, true);
+        std::uint64_t naive_findcomplement = naive.find(i, true);
 
-        EXPECT_EQ(simple_findcomplement, compact.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_findcomplement, byte.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_findcomplement, typed.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_findcomplement, shrank.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_findcomplement, ityped.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(simple_findcomplement, ibyte.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, lbit.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, lbyte.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, ltype.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, bit.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, type.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, byte.find(i, true)) << "at index " << i << " template parameter " << S;
     }
 
     delete[] increments;

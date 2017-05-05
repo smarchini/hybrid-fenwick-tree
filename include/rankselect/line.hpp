@@ -50,7 +50,6 @@ namespace dyn {
 
         virtual uint64_t rank(size_t pos) const
         {
-            // TODO: spostare il controllo sul -1 dentro l'albero?
             size_t idx = pos/(64*WORDS);
             uint64_t value = idx ? tree.get(idx-1) : 0;
 

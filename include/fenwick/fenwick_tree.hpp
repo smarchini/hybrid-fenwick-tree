@@ -50,6 +50,9 @@ namespace dyn {
          * @val, its complement if @complement is true or -1ULL if it doesn't
          * exists.
          */
+        // TODO: dividere in due funzioni per evitare un if nel codice. Forse la
+        // selectZero più veloce della select in LineRankSelect è dovuta a
+        // questo if.
         virtual std::size_t find(std::uint64_t val, bool complement=false) const = 0;
 
         /**

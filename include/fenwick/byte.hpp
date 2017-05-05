@@ -8,22 +8,22 @@ namespace dyn {
 
    /**
     * class ByteFenwickTree
-    * @tree: Byte indexted Fenwick Tree data.
+    * @tree: Fenwick Tree data.
     * @size: Number of elements in the tree.
     * @level: Lookup table, it store the starting bit-position of each level.
     *
-    * The data is stored in a bottom-up level-order manner.
+    * Each node have the smallest byte-size capable of holding its data. It's the
+    * interleaved version of ByteFenwickTree.
     */
     template<size_t LEAF_BITSIZE>
     class ByteFenwickTree : public FenwickTree
     {
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-        static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
+        static_assert(LEAF_BITSIZE <= 56, "A leaf should be at most 56 bit long");
 
     protected:
         const size_t size;
         DArray<uint8_t> tree;
-        DArray<size_t> level;
 
     public:
         /**
@@ -35,32 +35,23 @@ namespace dyn {
          */
         ByteFenwickTree(uint64_t sequence[], size_t size) :
             size(size),
-            level(msb(size) + 2)
+            tree(get_bytepos(size))
         {
-            level[0] = 0;
-            for (size_t i = 1; i < level.size(); i++)
-                level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1];
+            for (size_t i = 1; i <= size; i++) {
+                auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(i-1)]);
 
-            const size_t levels = level.size() - 1;
-            tree = DArray<uint8_t>(level[levels] + 3); // +3 to prevent segfault on the last element
+                const size_t bytesize = get_bytesize(i);
+                *element &= ~BYTE_MASK[bytesize];
+                *element |= sequence[i-1] & BYTE_MASK[bytesize];
+            }
 
-            for (size_t l = 0; l < levels; l++) {
-                for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
-                    const size_t curr_byte_pos = level[l] + get_size(l) * (node >> (l+1));
-                    auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_byte_pos]);
+            for (size_t m = 2; m <= size; m <<= 1) {
+                for (size_t idx = m; idx <= size; idx += m) {
+                    auint64_t * const left_element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
+                    auint64_t * const right_element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx - m/2 - 1)]);
 
-                    size_t sequence_idx = node-1;
-                    uint64_t value = sequence[sequence_idx];
-                    for (size_t j = 0; j < l; j++) {
-                        sequence_idx >>= 1;
-                        const size_t prev_byte_pos = level[j] + get_size(j) * sequence_idx;
-                        const auint64_t * const prev_element = reinterpret_cast<auint64_t*>(&tree[prev_byte_pos]);
-
-                        value += *prev_element & BYTE_MASK[get_size(j)];
-                    }
-
-                    *curr_element &= ~BYTE_MASK[get_size(l)];
-                    *curr_element |= value & BYTE_MASK[get_size(l)];
+                    uint64_t value = *right_element & BYTE_MASK[get_bytesize(idx - m/2)];
+                    *left_element += value;
                 }
             }
         }
@@ -68,17 +59,10 @@ namespace dyn {
         virtual uint64_t get(size_t idx) const
         {
             uint64_t sum = 0;
-            size_t index = 0;
 
-            for (idx++; idx != index;) {
-                index += mask_last_set(idx ^ index);
-                const int height = lsb(index);
-                const size_t level_idx = index >> (1 + height);
-                const size_t elem_size = get_size(height);
-                const size_t byte_pos = level[height] + elem_size * level_idx;
-                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
-
-                sum += *compact_element & BYTE_MASK[elem_size];
+            for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
+                const auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
+                sum += *element & BYTE_MASK[get_bytesize(idx)];
             }
 
             return sum;
@@ -86,56 +70,55 @@ namespace dyn {
 
         virtual void set(size_t idx, int64_t inc)
         {
-            for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
-                const int height = lsb(idx);
-                const size_t level_idx = idx >> (1 + height);
-                const size_t byte_pos = level[height] + get_size(height) * level_idx;
-                auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
-
-                *compact_element += inc;
-            }
+            for (idx = idx+1; idx <= size; idx += mask_first_set(idx))
+                *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
         }
 
         virtual size_t find(uint64_t val, bool complement=false) const
         {
-            size_t node = 0, idx = 0;
+            size_t node = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
-                const size_t elem_size = get_size(height);
-                const size_t byte_pos = level[height] + elem_size * idx;
+            for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+                if (node+m-1 >= size) continue;
 
-                idx <<= 1;
-
-                if (byte_pos >= level[height+1]) continue;
-
-                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
-                uint64_t value = *compact_element & BYTE_MASK[elem_size];
+                uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)];
 
                 if (complement)
-                    value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
+                    value = (1ULL << (LEAF_BITSIZE + lsb(node+m) - 1)) - value;
 
-                if(val >= value) {
-                    idx++;
+                if (val >= value) {
+                    node += m;
                     val -= value;
-                    node += 1 << height;
                 }
             }
 
-            return node <= size ? node-1 : size-1;
+            return node - 1;
         }
 
         virtual size_t bit_count() const
         {
             return sizeof(ByteFenwickTree<LEAF_BITSIZE>)*8
-                + tree.bit_count() - sizeof(tree)
-                + level.bit_count() - sizeof(level);
+                + tree.bit_count() - sizeof(tree);
         }
 
     private:
-        static inline size_t get_size(size_t height)
+        static inline size_t get_bytesize(size_t n)
         {
-            return (height+LEAF_BITSIZE-1) / 8 + 1;
+            return (lsb(n) + LEAF_BITSIZE - 1) / 8 + 1;
         }
+
+        static inline size_t get_bytepos(size_t idx)
+        {
+            return idx
+                + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 24 ? (24 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 40 ? (40 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 48 ? (48 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 56 ? (56 - LEAF_BITSIZE + 1) : 0));
+        }
+
     };
 
 }

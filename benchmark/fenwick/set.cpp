@@ -6,7 +6,7 @@ int main()
     using namespace std;
     using namespace dyn;
 
-    cout << "Elements,Simple,Typed,Byte,Compact,Shrank\n";
+    cout << "Elements,Naive,LType,LByte,LBit,Bit\n";
 
     for (size_t size = 128; size < L2_CACHE_SIZE*4; size <<= 1) {
         uint64_t *increments = random_array<uint64_t>(size);
@@ -23,16 +23,16 @@ int main()
         }
 
         cout << size << ',';
-        cout << bench_set<SimpleFenwickTree<7>> (size, increments, order, value) << ','
+        cout << bench_set<NaiveFenwickTree<7>> (size, increments, order, value) << ','
             // type aligned
-             << bench_set<TypedFenwickTree<7>>  (size, increments, order, value) << ','
-             << bench_set<ITypedFenwickTree<7>> (size, increments, order, value) << ','
+             << bench_set<LTypeFenwickTree<7>>  (size, increments, order, value) << ','
+             << bench_set<TypeFenwickTree<7>> (size, increments, order, value) << ','
             // byte aligned
-             << bench_set<ByteFenwickTree<7>>   (size, increments, order, value) << ','
-             << bench_set<IByteFenwickTree<7>>  (size, increments, order, value) << ','
+             << bench_set<LByteFenwickTree<7>>   (size, increments, order, value) << ','
+             << bench_set<ByteFenwickTree<7>>  (size, increments, order, value) << ','
             // bit aligned
-             << bench_set<CompactFenwickTree<7>>(size, increments, order, value) << ','
-             << bench_set<ShrankFenwickTree<7>> (size, increments, order, value) << '\n';
+             << bench_set<LBitFenwickTree<7>>(size, increments, order, value) << ','
+             << bench_set<BitFenwickTree<7>> (size, increments, order, value) << '\n';
 
         delete[] increments;
         delete[] order;

@@ -1,20 +1,14 @@
-#ifndef __TEST_FENWICK_IBYTE_H__
-#define __TEST_FENWICK_IBYTE_H__
+#ifndef __TEST_FENWICK_NAIVE_H__
+#define __TEST_FENWICK_NAIVE_H__
 
 #include "../utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
 
-TEST(ibyte_fenwick_tree, increments_by_one)
+TEST(naive_fenwick_tree, increments_by_one)
 {
-    // height 0        1        0                2        0        1        0                3        0        1        0                2        0        1        0
-    // node  15       14       13               12       11       10        9                8        7        6        5                4        3        2        1
-    // 00000001 00000010 00000001 0000000000000100 00000001 00000010 00000001 0000000000001000 00000001 00000010 00000001 0000000000000100 00000001 00000010 00000001
-    IByteFenwickTree_Test t(inc1, 15);
-
-    std::string tree_str = "000000010000001000000001000000000000010000000001000000100000000100000000000010000000000100000010000000010000000000000100000000010000001000000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    NaiveFenwickTree_Test t(inc1, 15);
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -55,15 +49,10 @@ TEST(ibyte_fenwick_tree, increments_by_one)
     }
 }
 
-TEST(ibyte_fenwick_tree, increasing_increments)
-{
-    // height 0        1        0                2        0        1        0                3        0        1        0                2        0        1        0
-    // node  15       14       13               12       11       10        9                8        7        6        5                4        3        2        1
-    // 00001111 00011011 00001101 0000000000101010 00001011 00010011 00001001 0000000000100100 00000111 00001011 00000101 0000000000001010 00000011 00000011 00000001
-    IByteFenwickTree_Test t(inc2, 15);
 
-    std::string tree_str = "000011110001101100001101000000000010101000001011000100110000100100000000001001000000011100001011000001010000000000001010000000110000001100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+TEST(naive_fenwick_tree, increasing_increments)
+{
+    NaiveFenwickTree_Test t(inc2, 15);
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -105,16 +94,9 @@ TEST(ibyte_fenwick_tree, increasing_increments)
 }
 
 
-TEST(ibyte_fenwick_tree, non_complete)
+TEST(naive_fenwick_tree, non_complete)
 {
-    // height 2       0        1       0           4       0        1       0         2       0        1       0          3       0        1       0         2       0        1       0
-    // node          20       19       18       17               16       15       14       13               12       11       10        9                8       7         6        5                4        3        2        1
-    // 0000000000000100 00000001 00000010 00000001 0000000000010000 00000001 00000010 00000001 0000000000000100 00000001 00000010 00000001 0000000000001000 00000001 00000010 00000001 0000000000000100 00000001 00000010 00000001
-
-    IByteFenwickTree_Test t(inc3, 20);
-
-    std::string tree_str = "00000000000001000000000100000010000000010000000000010000000000010000001000000001000000000000010000000001000000100000000100000000000010000000000100000010000000010000000000000100000000010000001000000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    NaiveFenwickTree_Test t(inc3, 20);
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);
@@ -155,5 +137,5 @@ TEST(ibyte_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_IBYTE_H__
 
+#endif // __TEST_FENWICK_NAIVE_H__

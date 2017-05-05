@@ -1,12 +1,12 @@
-#ifndef __TEST_FENWICK_TYPED_H__
-#define __TEST_FENWICK_TYPED_H__
+#ifndef __TEST_FENWICK_LTYPE_H__
+#define __TEST_FENWICK_LTYPE_H__
 
 #include "../utils.hpp"
 
 extern std::uint64_t inc1[];
 extern std::uint64_t inc2[];
 
-TEST(typed_fenwick_tree, increments_by_one)
+TEST(ltype_fenwick_tree, increments_by_one)
 {
     // tree8
     // heigth                            1 |                                                                       0
@@ -18,7 +18,7 @@ TEST(typed_fenwick_tree, increments_by_one)
     // node           8 |               12                4
     // 0000000000001000 | 0000000000000100 0000000000000100
 
-    TypedFenwickTree_Test t(inc1, 15);
+    LTypeFenwickTree_Test t(inc1, 15);
 
     std::string tree8_str = "000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "000000000000100000000000000001000000000000000100";
@@ -65,7 +65,7 @@ TEST(typed_fenwick_tree, increments_by_one)
 }
 
 
-TEST(typed_fenwick_tree, increasing_increments)
+TEST(ltype_fenwick_tree, increasing_increments)
 {
     // tree8
     // heigth                            1 |                                                                       0
@@ -77,7 +77,7 @@ TEST(typed_fenwick_tree, increasing_increments)
     // node           8 |               12                4
     // 0000000000100100 | 0000000000101010 0000000000001010
 
-    TypedFenwickTree_Test t(inc2, 15);
+    LTypeFenwickTree_Test t(inc2, 15);
 
     std::string tree8_str = "000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
     std::string tree16_str = "000000000010010000000000001010100000000000001010";
@@ -124,7 +124,7 @@ TEST(typed_fenwick_tree, increasing_increments)
 }
 
 
-TEST(typed_fenwick_tree, non_complete)
+TEST(ltype_fenwick_tree, non_complete)
 {
     // tree8
     // heigth                   2 |                                            1 |                                                                                         0
@@ -136,7 +136,7 @@ TEST(typed_fenwick_tree, non_complete)
     // node          16 |               15 |               18               17               16
     // 0000000000010000 | 0000000000001000 | 0000000000000100 0000000000000100 0000000000000100
 
-    TypedFenwickTree_Test t(inc3, 20);
+    LTypeFenwickTree_Test t(inc3, 20);
 
     std::string tree8_str = "000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
     std::string tree16_str = "00000000000100000000000000001000000000000000010000000000000001000000000000000100";
@@ -182,4 +182,4 @@ TEST(typed_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_TYPED_H__
+#endif // __TEST_FENWICK_LTYPE_H__

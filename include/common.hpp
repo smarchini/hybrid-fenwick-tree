@@ -27,7 +27,7 @@ namespace dyn {
     using  auint8_t =  std::uint8_t __attribute__((__may_alias__));
 
     /**
-     * Bitmask array used in ByteFenwickTree and IByteFenwickTree
+     * Bitmask array used in LByteFenwickTree and ByteFenwickTree
      */
     static constexpr uint64_t BYTE_MASK[] = { 0x0ULL,
                                               0xFFULL,

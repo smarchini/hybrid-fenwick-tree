@@ -9,93 +9,93 @@ TEST(line_rank_select, all_ones_1024)
     std::uint64_t bitvect[MAX] = { -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL,
                                    -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL };
 
-    dyn::LineRankSelect<dyn::SimpleFenwickTree, 8> simple(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypedFenwickTree, 8> typed(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ITypedFenwickTree, 8> ityped(bitvect, MAX);
+    dyn::LineRankSelect<dyn::NaiveFenwickTree, 8> naive(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LTypeFenwickTree, 8> ltype(bitvect, MAX);
+    dyn::LineRankSelect<dyn::TypeFenwickTree, 8> type(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LByteFenwickTree, 8> lbyte(bitvect, MAX);
     dyn::LineRankSelect<dyn::ByteFenwickTree, 8> byte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::IByteFenwickTree, 8> ibyte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::CompactFenwickTree, 8> compact(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ShrankFenwickTree, 8> shrank(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LBitFenwickTree, 8> lbit(bitvect, MAX);
+    dyn::LineRankSelect<dyn::BitFenwickTree, 8> bit(bitvect, MAX);
 
 
     for (size_t i = 0; i <= 1024; i++) {
-        EXPECT_EQ(i, simple.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, typed.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, ityped.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, naive.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, ltype.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, type.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbyte.rank(i)) << "at index: " << i;
         EXPECT_EQ(i, byte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, ibyte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, compact.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, shrank.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbit.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, bit.rank(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i <= 1024; i++) {
-        EXPECT_EQ(0, simple.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(0, typed.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(0, ityped.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, naive.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, ltype.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, type.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, lbyte.rankZero(i)) << "at index: " << i;
         EXPECT_EQ(0, byte.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(0, ibyte.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(0, compact.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(0, shrank.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, lbit.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(0, bit.rankZero(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < 1024; i++) {
-        EXPECT_EQ(i, simple.select(i)) << "at index: " << i;
-        EXPECT_EQ(i, typed.select(i)) << "at index: " << i;
-        EXPECT_EQ(i, ityped.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, naive.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, ltype.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, type.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbyte.select(i)) << "at index: " << i;
         EXPECT_EQ(i, byte.select(i)) << "at index: " << i;
-        EXPECT_EQ(i, ibyte.select(i)) << "at index: " << i;
-        EXPECT_EQ(i, compact.select(i)) << "at index: " << i;
-        EXPECT_EQ(i, shrank.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbit.select(i)) << "at index: " << i;
+        EXPECT_EQ(i, bit.select(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < 10; i++) {
-        EXPECT_EQ(-1ULL, simple.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, typed.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ityped.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, naive.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, ltype.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, type.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, lbyte.selectZero(i)) << "at index: " << i;
         EXPECT_EQ(-1ULL, byte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ibyte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, compact.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, shrank.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, lbit.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, bit.selectZero(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < MAX; i++) {
-        simple.update(i, 1);
-        typed.update(i, 1);
-        ityped.update(i, 1);
+        naive.update(i, 1);
+        ltype.update(i, 1);
+        type.update(i, 1);
+        lbyte.update(i, 1);
         byte.update(i, 1);
-        ibyte.update(i, 1);
-        compact.update(i, 1);
-        shrank.update(i, 1);
+        lbit.update(i, 1);
+        bit.update(i, 1);
     }
 
     for (size_t i = 0; i < MAX; i++) {
-        EXPECT_EQ(i*64, simple.select(i)) << "at index: " << i;
-        EXPECT_EQ(i*64, typed.select(i)) << "at index: " << i;
-        EXPECT_EQ(i*64, ityped.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, naive.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, ltype.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, type.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, lbyte.select(i)) << "at index: " << i;
         EXPECT_EQ(i*64, byte.select(i)) << "at index: " << i;
-        EXPECT_EQ(i*64, ibyte.select(i)) << "at index: " << i;
-        EXPECT_EQ(i*64, compact.select(i)) << "at index: " << i;
-        EXPECT_EQ(i*64, shrank.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, lbit.select(i)) << "at index: " << i;
+        EXPECT_EQ(i*64, bit.select(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < MAX; i++) {
-        simple.update(i, -1ULL);
-        typed.update(i, -1ULL);
-        ityped.update(i, -1ULL);
+        naive.update(i, -1ULL);
+        ltype.update(i, -1ULL);
+        type.update(i, -1ULL);
+        lbyte.update(i, -1ULL);
         byte.update(i, -1ULL);
-        ibyte.update(i, -1ULL);
-        compact.update(i, -1ULL);
-        shrank.update(i, -1ULL);
+        lbit.update(i, -1ULL);
+        bit.update(i, -1ULL);
     }
 
     for (size_t i = 0; i <= 1024; i++) {
-        EXPECT_EQ(i, simple.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, typed.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, ityped.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, naive.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, ltype.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, type.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbyte.rank(i)) << "at index: " << i;
         EXPECT_EQ(i, byte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, ibyte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, compact.rank(i)) << "at index: " << i;
-        EXPECT_EQ(i, shrank.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbit.rank(i)) << "at index: " << i;
+        EXPECT_EQ(i, bit.rank(i)) << "at index: " << i;
     }
 }
 
@@ -106,92 +106,92 @@ TEST(line_rank_select, all_zeroes_1024)
     std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                    0, 0, 0, 0, 0, 0, 0, 0 };
 
-    dyn::LineRankSelect<dyn::SimpleFenwickTree, 2> simple(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypedFenwickTree, 2> typed(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ITypedFenwickTree, 2> ityped(bitvect, MAX);
+    dyn::LineRankSelect<dyn::NaiveFenwickTree, 2> naive(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LTypeFenwickTree, 2> ltype(bitvect, MAX);
+    dyn::LineRankSelect<dyn::TypeFenwickTree, 2> type(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LByteFenwickTree, 2> lbyte(bitvect, MAX);
     dyn::LineRankSelect<dyn::ByteFenwickTree, 2> byte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::IByteFenwickTree, 2> ibyte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::CompactFenwickTree, 2> compact(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ShrankFenwickTree, 2> shrank(bitvect, MAX);
+    dyn::LineRankSelect<dyn::LBitFenwickTree, 2> lbit(bitvect, MAX);
+    dyn::LineRankSelect<dyn::BitFenwickTree, 2> bit(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
-        EXPECT_EQ(0, simple.rank(i)) << "at index: " << i;
-        EXPECT_EQ(0, typed.rank(i)) << "at index: " << i;
-        EXPECT_EQ(0, ityped.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, naive.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, ltype.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, type.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, lbyte.rank(i)) << "at index: " << i;
         EXPECT_EQ(0, byte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(0, ibyte.rank(i)) << "at index: " << i;
-        EXPECT_EQ(0, compact.rank(i)) << "at index: " << i;
-        EXPECT_EQ(0, shrank.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, lbit.rank(i)) << "at index: " << i;
+        EXPECT_EQ(0, bit.rank(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i <= 1024; i++) {
-        EXPECT_EQ(i, simple.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, typed.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, ityped.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, naive.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, ltype.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, type.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbyte.rankZero(i)) << "at index: " << i;
         EXPECT_EQ(i, byte.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, ibyte.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, compact.rankZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, shrank.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbit.rankZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, bit.rankZero(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < 1024; i++) {
-        EXPECT_EQ(-1ULL, simple.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, typed.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ityped.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, naive.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, ltype.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, type.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, lbyte.select(i)) << "at index: " << i;
         EXPECT_EQ(-1ULL, byte.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ibyte.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, compact.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, shrank.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, lbit.select(i)) << "at index: " << i;
+        EXPECT_EQ(-1ULL, bit.select(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < 1024; i++) {
-        EXPECT_EQ(i, simple.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, typed.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, ityped.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, naive.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, ltype.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, type.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbyte.selectZero(i)) << "at index: " << i;
         EXPECT_EQ(i, byte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, ibyte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, compact.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(i, shrank.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, lbit.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(i, bit.selectZero(i)) << "at index: " << i;
     }
 
      for (size_t i = 0; i < MAX; i++) {
-         simple.update(i, 0b10);
-         typed.update(i, 0b10);
-         ityped.update(i, 0b10);
+         naive.update(i, 0b10);
+         ltype.update(i, 0b10);
+         type.update(i, 0b10);
+         lbyte.update(i, 0b10);
          byte.update(i, 0b10);
-         ibyte.update(i, 0b10);
-         compact.update(i, 0b10);
-         shrank.update(i, 0b10);
+         lbit.update(i, 0b10);
+         bit.update(i, 0b10);
      }
 
      for (size_t i = 0; i < MAX; i++) {
-         EXPECT_EQ(i*64+1, simple.select(i)) << "at index: " << i;
-         EXPECT_EQ(i*64+1, typed.select(i)) << "at index: " << i;
-         EXPECT_EQ(i*64+1, ityped.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, naive.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, ltype.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, type.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, lbyte.select(i)) << "at index: " << i;
          EXPECT_EQ(i*64+1, byte.select(i)) << "at index: " << i;
-         EXPECT_EQ(i*64+1, ibyte.select(i)) << "at index: " << i;
-         EXPECT_EQ(i*64+1, compact.select(i)) << "at index: " << i;
-         EXPECT_EQ(i*64+1, shrank.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, lbit.select(i)) << "at index: " << i;
+         EXPECT_EQ(i*64+1, bit.select(i)) << "at index: " << i;
      }
 
      for (size_t i = 0; i < MAX; i++) {
-         simple.update(i, 0);
-         typed.update(i, 0);
-         ityped.update(i, 0);
+         naive.update(i, 0);
+         ltype.update(i, 0);
+         type.update(i, 0);
+         lbyte.update(i, 0);
          byte.update(i, 0);
-         ibyte.update(i, 0);
-         compact.update(i, 0);
-         shrank.update(i, 0);
+         lbit.update(i, 0);
+         bit.update(i, 0);
      }
 
      for (size_t i = 0; i <= 1024; i++) {
-         EXPECT_EQ(0, simple.rank(i)) << "at index: " << i;
-         EXPECT_EQ(0, typed.rank(i)) << "at index: " << i;
-         EXPECT_EQ(0, ityped.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, naive.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, ltype.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, type.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, lbyte.rank(i)) << "at index: " << i;
          EXPECT_EQ(0, byte.rank(i)) << "at index: " << i;
-         EXPECT_EQ(0, ibyte.rank(i)) << "at index: " << i;
-         EXPECT_EQ(0, compact.rank(i)) << "at index: " << i;
-         EXPECT_EQ(0, shrank.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, lbit.rank(i)) << "at index: " << i;
+         EXPECT_EQ(0, bit.rank(i)) << "at index: " << i;
      }
 
 }
