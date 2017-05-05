@@ -92,19 +92,20 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     end = std::chrono::high_resolution_clock::now();
     auto find = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
-    // find
-    begin = std::chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < size; i++)
-        u ^= tree.find(64*size - sequence[i], true);
-    end = std::chrono::high_resolution_clock::now();
-    auto findc = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
-
     // set
     begin = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
         tree.set(order[i], set_updates[i]);
     end = std::chrono::high_resolution_clock::now();
     auto set = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+
+    // find complement
+    begin = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < size; i++)
+        u ^= tree.find(64*size - sequence[i], true);
+    end = std::chrono::high_resolution_clock::now();
+    auto findc = std::chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 

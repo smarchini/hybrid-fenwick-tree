@@ -19,22 +19,22 @@ void fenwick_random_test(std::size_t size)
     }
 
     dyn::SimpleFenwickTree<S> simple(increments, size);
-    //dyn::CompactFenwickTree<S> compact(increments, size);
-    //dyn::ByteFenwickTree<S> byte(increments, size);
-    //dyn::TypedFenwickTree<S> typed(increments, size);
-    //dyn::ShrankFenwickTree<S> shrank(increments, size);
-    //dyn::ITypedFenwickTree<S> ityped(increments, size);
+    dyn::CompactFenwickTree<S> compact(increments, size);
+    dyn::ByteFenwickTree<S> byte(increments, size);
+    dyn::TypedFenwickTree<S> typed(increments, size);
+    dyn::ShrankFenwickTree<S> shrank(increments, size);
+    dyn::ITypedFenwickTree<S> ityped(increments, size);
     dyn::IByteFenwickTree<S> ibyte(increments, size);
 
     // get
     for (size_t i = 0; i < size; i++) {
         std::uint64_t simple_get = simple.get(i);
 
-        //EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
         EXPECT_EQ(simple_get, ibyte.get(i)) << "at index " << i << " template parameter " << S;
     }
 
@@ -42,22 +42,22 @@ void fenwick_random_test(std::size_t size)
     for (std::uint64_t i = 0; i < size; i++) {
         std::uint64_t simple_find = simple.find(i);
 
-        //EXPECT_EQ(simple_find, compact.find(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_find, byte.find(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_find, typed.find(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_find, shrank.find(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_find, ityped.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_find, compact.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_find, byte.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_find, typed.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_find, shrank.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_find, ityped.find(i)) << "at index " << i << " template parameter " << S;
         EXPECT_EQ(simple_find, ibyte.find(i)) << "at index " << i << " template parameter " << S;
     }
 
     // set
     for (size_t i = 0; i < size; i++) {
         simple.set(i, set_updates[i]);
-        //compact.set(i, set_updates[i]);
-        //byte.set(i, set_updates[i]);
-        //typed.set(i, set_updates[i]);
-        //shrank.set(i, set_updates[i]);
-        //ityped.set(i, set_updates[i]);
+        compact.set(i, set_updates[i]);
+        byte.set(i, set_updates[i]);
+        typed.set(i, set_updates[i]);
+        shrank.set(i, set_updates[i]);
+        ityped.set(i, set_updates[i]);
         ibyte.set(i, set_updates[i]);
     }
 
@@ -65,11 +65,11 @@ void fenwick_random_test(std::size_t size)
     for (size_t i = 0; i < size; i++) {
         std::uint64_t simple_get = simple.get(i);
 
-        //EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, compact.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, byte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, typed.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, shrank.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_get, ityped.get(i)) << "at index " << i << " template parameter " << S;
         EXPECT_EQ(simple_get, ibyte.get(i)) << "at index " << i << " template parameter " << S;
     }
 
@@ -77,11 +77,11 @@ void fenwick_random_test(std::size_t size)
     for (std::uint64_t i = 0; i < size; i++) {
         std::uint64_t simple_findcomplement = simple.find(i, true);
 
-        //EXPECT_EQ(simple_findcomplement, compact.find(i, true)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_findcomplement, byte.find(i, true)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_findcomplement, typed.find(i, true)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_findcomplement, shrank.find(i, true)) << "at index " << i << " template parameter " << S;
-        //EXPECT_EQ(simple_findcomplement, ityped.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_findcomplement, compact.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_findcomplement, byte.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_findcomplement, typed.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_findcomplement, shrank.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(simple_findcomplement, ityped.find(i, true)) << "at index " << i << " template parameter " << S;
         EXPECT_EQ(simple_findcomplement, ibyte.find(i, true)) << "at index " << i << " template parameter " << S;
     }
 
@@ -168,8 +168,6 @@ TEST(same_behavior, random_mixed)
     fenwick_random_test<52>(1024-1);
     fenwick_random_test<53>(1024-1);
     fenwick_random_test<54>(1024-1);
-    fenwick_random_test<55>(1024-1); // segmentation fault
-    fenwick_random_test<56>(1024-1); // segmentation fault
 }
 
 #endif // __TEST_FENWICK_SAME_BEHAVIOR_H__

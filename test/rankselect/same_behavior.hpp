@@ -12,11 +12,6 @@ void rankselect_random_test(std::size_t size)
 
     std::uint64_t *updates = new std::uint64_t[size];
     fill_with_random_values(updates, size);
-    for (std::size_t i = 0; i < size; i++) {
-        int inc = updates[i] - bitvect[i];
-        if (inc < 0) inc = -inc;
-        updates[i] = (bitvect[i] + inc) < 64 ? inc : 0;
-    }
 
     dyn::LineRankSelect<dyn::SimpleFenwickTree, S>  line_simple(bitvect, size);
     dyn::LineRankSelect<dyn::TypedFenwickTree, S>   line_typed(bitvect, size);
@@ -119,10 +114,12 @@ void rankselect_random_test(std::size_t size)
         word_ibyte.update(i, updates[i]);
         word_compact.update(i, updates[i]);
         word_shrank.update(i, updates[i]);
+
         line_simple.update(i, updates[i]);
         line_typed.update(i, updates[i]);
         line_ityped.update(i, updates[i]);
         line_byte.update(i, updates[i]);
+        line_ibyte.update(i, updates[i]);
         line_compact.update(i, updates[i]);
         line_shrank.update(i, updates[i]);
     }
@@ -141,7 +138,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.select(i)) << "at index: " << i << " template parameter " << S;
-        //EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.select(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.select(i)) << "at index: " << i << " template parameter " << S;
     }
@@ -160,7 +157,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_typed.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_ityped.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        //EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ibyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_compact.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_shrank.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }

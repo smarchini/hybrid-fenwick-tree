@@ -156,3 +156,4 @@ TEST(ibyte_fenwick_tree, non_complete)
 }
 
 #endif // __TEST_FENWICK_IBYTE_H__
+

@@ -70,10 +70,8 @@ namespace dyn {
 
         virtual void set(size_t idx, int64_t inc)
         {
-            for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
-                auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
-                *compact_element += inc;
-            }
+            for (idx = idx+1; idx <= size; idx += mask_first_set(idx))
+                *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
         }
 
         virtual size_t find(uint64_t val, bool complement=false) const
@@ -104,22 +102,21 @@ namespace dyn {
         }
 
     private:
-        static inline size_t get_bytesize(size_t idx)
+        static inline size_t get_bytesize(size_t n)
         {
-            return (lsb(idx) + LEAF_BITSIZE - 2) / 8 + 1;
+            return (lsb(n) + LEAF_BITSIZE - 1) / 8 + 1;
         }
 
-        inline size_t get_bytepos(size_t n) const
+        static inline size_t get_bytepos(size_t idx)
         {
-            return n
-                + (n >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 24 ? (24 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 40 ? (40 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 48 ? (48 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 56 ? (56 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 64 ? (64 - LEAF_BITSIZE + 1) : 0));
+            return idx
+                + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 24 ? (24 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 40 ? (40 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 48 ? (48 - LEAF_BITSIZE + 1) : 0))
+                + (idx >> (LEAF_BITSIZE <= 56 ? (56 - LEAF_BITSIZE + 1) : 0));
         }
 
     };
