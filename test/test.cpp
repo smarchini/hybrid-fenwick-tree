@@ -15,7 +15,8 @@
 #include "rankselect/word.hpp"
 #include "rankselect/line.hpp"
 
-//#include "rankselect/same_behavior.hpp"
+#include "rankselect/same_behavior.hpp"
+#include "rankselect/like_dynamic.hpp"
 
 int main(int argc, char **argv)
 {

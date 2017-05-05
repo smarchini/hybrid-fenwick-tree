@@ -28,7 +28,7 @@ benchmark/rankselect: bin/benchmark/rankselect/rankselect
 # Test
 bin/test/test: $(INCLUDES) $(TEST_INCLUDES) test/test.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) test/test.cpp -o bin/test/test -lgtest
+	$(CC) $(CFLAGS) $(INCLUDE_DYNAMIC) test/test.cpp -o bin/test/test -lgtest
 
 
 # Benchmark fenwick tree

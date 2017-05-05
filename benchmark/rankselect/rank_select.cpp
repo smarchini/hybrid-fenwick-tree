@@ -28,11 +28,6 @@ template <typename T>
 void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
 
-template<class T>
-T uniform_bits(std::mt19937& g){
-    std::uniform_int_distribution<T> dist(std::numeric_limits<T>::lowest(),std::numeric_limits<T>::max());
-    return dist( g );
-}
 
 int main(int argc, char *argv[])
 {
@@ -77,8 +72,8 @@ int main(int argc, char *argv[])
         select1[i] = select1dist(mte);
 
 
-    //dynamic("DYNAMIC", bitvector, rank, select0, select1, size);
-    
+    dynamic("DYNAMIC", bitvector, rank, select0, select1, size);
+
     internal<WordRankSelect<SimpleFenwickTree>> ("WordRankSelect<SimpleFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<WordRankSelect<TypedFenwickTree>>  ("WordRankSelect<TypedFenwickTree>",   bitvector, rank, select0, select1, size);
     internal<WordRankSelect<ITypedFenwickTree>> ("WordRankSelect<ITypedFenwickTree>",  bitvector, rank, select0, select1, size);
