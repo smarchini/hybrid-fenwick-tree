@@ -75,14 +75,14 @@ void fenwick_random_test(std::size_t size)
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++) {
-        std::uint64_t naive_findcomplement = naive.find(i, true);
+        std::uint64_t naive_findcomplement = naive.find_complement(i);
 
-        EXPECT_EQ(naive_findcomplement, lbit.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, lbyte.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, ltype.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, bit.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, type.find(i, true)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, byte.find(i, true)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, lbit.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, lbyte.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, ltype.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, bit.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, type.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, byte.find_complement(i)) << "at index " << i << " template parameter " << S;
     }
 
     delete[] increments;
@@ -142,6 +142,17 @@ TEST(same_behavior, random_mixed)
     fenwick_random_test<19>(1024-1);
 
     fenwick_random_test<20>(1024-1);
+    fenwick_random_test<21>(1024-1);
+    fenwick_random_test<22>(1024-1);
+    fenwick_random_test<23>(1024-1);
+    fenwick_random_test<24>(1024-1);
+    fenwick_random_test<25>(1024-1);
+    fenwick_random_test<26>(1024-1);
+    fenwick_random_test<27>(1024-1);
+    fenwick_random_test<28>(1024-1);
+    fenwick_random_test<29>(1024-1);
+
+    fenwick_random_test<30>(1024-1);
     fenwick_random_test<31>(1024-1);
     fenwick_random_test<32>(1024-1);
     fenwick_random_test<33>(1024-1);

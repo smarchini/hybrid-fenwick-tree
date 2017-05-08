@@ -98,10 +98,13 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     end = chrono::high_resolution_clock::now();
     auto set = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
-    // find complement
+    for (size_t i = 0; i < size; i++)
+        tree.set(order[i], -set_updates[i]);
+
+    // find complement (after tree.set, so sequence[] is not cached)
     begin = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
-        u ^= tree.find(64*size - sequence[i], true);
+        u ^= tree.find_complement(sequence[i]);
     end = chrono::high_resolution_clock::now();
     auto findc = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 

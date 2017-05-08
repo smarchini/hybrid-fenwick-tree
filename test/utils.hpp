@@ -37,7 +37,7 @@ public:
         dyn::LTypeFenwickTree<7>(sequence, length) {}
     using dyn::LTypeFenwickTree<7>::tree8;
     using dyn::LTypeFenwickTree<7>::tree16;
-    using dyn::LTypeFenwickTree<7>::tree32;
+    //using dyn::LTypeFenwickTree<7>::tree32;
     using dyn::LTypeFenwickTree<7>::tree64;
 };
 

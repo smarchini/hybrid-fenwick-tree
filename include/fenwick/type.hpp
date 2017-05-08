@@ -34,8 +34,7 @@ namespace dyn {
                 const size_t bytepos = get_bytepos(i-1);
 
                 switch (LEAF_BITSIZE + lsb(i)) {
-                case 33 ... 64: *reinterpret_cast<auint64_t*>(&tree[bytepos]) = sequence[i-1]; break;
-                case 17 ... 32: *reinterpret_cast<auint32_t*>(&tree[bytepos]) = sequence[i-1]; break;
+                case 17 ... 64: *reinterpret_cast<auint64_t*>(&tree[bytepos]) = sequence[i-1]; break;
                 case  9 ... 16: *reinterpret_cast<auint16_t*>(&tree[bytepos]) = sequence[i-1]; break;
                 default:        *reinterpret_cast< auint8_t*>(&tree[bytepos]) = sequence[i-1];
                 }
@@ -47,37 +46,21 @@ namespace dyn {
                     const size_t right = get_bytepos(idx - m/2 - 1);
 
                     switch (LEAF_BITSIZE + lsb(idx)) {
-                    case 33 ... 64:
+                    case 17 ... 64:
                         switch (LEAF_BITSIZE + lsb(idx - m/2)) {
-                        case 33 ... 64: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
-                        case 17 ... 32: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint32_t*>(&tree[right]); break;
+                        case 17 ... 64: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
                         case  9 ... 16: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
                         default:        *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                         }
                         break;
-                    case 17 ... 32:
-                        switch (LEAF_BITSIZE + lsb(idx - m/2)) {
-                        case 33 ... 64: *reinterpret_cast<auint32_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
-                        case 17 ... 32: *reinterpret_cast<auint32_t*>(&tree[left]) += *reinterpret_cast<auint32_t*>(&tree[right]); break;
-                        case  9 ... 16: *reinterpret_cast<auint32_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
-                        default:        *reinterpret_cast<auint32_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
-                        }
-                        break;
                     case  9 ... 16:
                         switch (LEAF_BITSIZE + lsb(idx - m/2)) {
-                        case 33 ... 64: *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
-                        case 17 ... 32: *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast<auint32_t*>(&tree[right]); break;
                         case  9 ... 16: *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
                         default:        *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                         }
                         break;
                     default:
-                        switch (LEAF_BITSIZE + lsb(idx - m/2)) {
-                        case 33 ... 64: *reinterpret_cast<auint8_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
-                        case 17 ... 32: *reinterpret_cast<auint8_t*>(&tree[left]) += *reinterpret_cast<auint32_t*>(&tree[right]); break;
-                        case  9 ... 16: *reinterpret_cast<auint8_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
-                        default:        *reinterpret_cast<auint8_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
-                        }
+                        *reinterpret_cast<auint8_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                     }
                 }
             }
@@ -93,8 +76,7 @@ namespace dyn {
                 const size_t bytepos = get_bytepos(idx-1);
 
                 switch (LEAF_BITSIZE + lsb(idx)) {
-                case 33 ... 64: sum += *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
-                case 17 ... 32: sum += *reinterpret_cast<auint32_t*>(&tree[bytepos]); break;
+                case 17 ... 64: sum += *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
                 case  9 ... 16: sum += *reinterpret_cast<auint16_t*>(&tree[bytepos]); break;
                 default:        sum += *reinterpret_cast< auint8_t*>(&tree[bytepos]);
                 }
@@ -109,15 +91,14 @@ namespace dyn {
                 const size_t bytepos = get_bytepos(idx-1);
 
                 switch (LEAF_BITSIZE + lsb(idx)) {
-                case 33 ... 64: *reinterpret_cast<auint64_t*>(&tree[bytepos]) += inc; break;
-                case 17 ... 32: *reinterpret_cast<auint32_t*>(&tree[bytepos]) += inc; break;
+                case 17 ... 64: *reinterpret_cast<auint64_t*>(&tree[bytepos]) += inc; break;
                 case  9 ... 16: *reinterpret_cast<auint16_t*>(&tree[bytepos]) += inc; break;
                 default:        *reinterpret_cast< auint8_t*>(&tree[bytepos]) += inc;
                 }
             }
         }
 
-        virtual size_t find(uint64_t val, bool complement=false) const
+        virtual size_t find(uint64_t val) const
         {
             size_t node = 0;
 
@@ -129,14 +110,10 @@ namespace dyn {
 
                 uint64_t value;
                 switch (bitlen) {
-                case 33 ... 64: value = *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
-                case 17 ... 32: value = *reinterpret_cast<auint32_t*>(&tree[bytepos]); break;
+                case 17 ... 64: value = *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
                 case  9 ... 16: value = *reinterpret_cast<auint16_t*>(&tree[bytepos]); break;
                 default:        value = *reinterpret_cast< auint8_t*>(&tree[bytepos]);
                 }
-
-                if (complement)
-                    value = (1ULL << (bitlen-1)) - value;
 
                 if (val >= value) {
                     node += m;
@@ -147,6 +124,31 @@ namespace dyn {
             return node - 1;
         }
 
+        virtual size_t find_complement(uint64_t val) const
+        {
+            size_t node = 0;
+
+            for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+                if (node+m-1 >= size) continue;
+
+                const size_t bytepos = get_bytepos(node+m-1);
+                const int bitlen = LEAF_BITSIZE + lsb(node+m);
+
+                uint64_t value = (1ULL << (bitlen-1));
+                switch (bitlen) {
+                case 17 ... 64: value -= *reinterpret_cast<auint64_t*>(&tree[bytepos]); break;
+                case  9 ... 16: value -= *reinterpret_cast<auint16_t*>(&tree[bytepos]); break;
+                default:        value -= *reinterpret_cast< auint8_t*>(&tree[bytepos]);
+                }
+
+                if (val >= value) {
+                    node += m;
+                    val -= value;
+                }
+            }
+
+            return node - 1;
+        }
 
         virtual size_t bit_count() const
         {
@@ -158,9 +160,8 @@ namespace dyn {
         inline size_t get_bytepos(size_t n) const
         {
             return n
-                + (n >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
-                + (n >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 2
-                + (n >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0)) * 4;
+                + (n >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0)) 
+                + (n >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;
         }
 
     };

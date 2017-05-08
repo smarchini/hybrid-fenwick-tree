@@ -104,7 +104,7 @@ namespace dyn {
             }
         }
 
-        virtual size_t find(uint64_t val, bool complement=false) const
+        virtual size_t find(uint64_t val) const
         {
             size_t node = 0, idx = 0;
 
@@ -117,10 +117,8 @@ namespace dyn {
                 idx <<= 1;
 
                 if (bit_pos >= level[height+1]) continue;
-                uint64_t value = (*compact_element >> shift) & mask;
 
-                if (complement)
-                    value = (1ULL << (LEAF_BITSIZE + height - 1)) - value;
+                uint64_t value = (*compact_element >> shift) & mask;
 
                 if (val >= value) {
                     idx++;
@@ -132,6 +130,32 @@ namespace dyn {
             return node <= size ? node-1 : size-1;
         }
 
+        virtual size_t find_complement(uint64_t val) const
+        {
+            size_t node = 0, idx = 0;
+
+            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+                const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
+                const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                const size_t shift = bit_pos & 0b111;
+                const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
+
+                idx <<= 1;
+
+                if (bit_pos >= level[height+1]) continue;
+
+                uint64_t value = (1ULL << (LEAF_BITSIZE + height - 1))
+                    - ((*compact_element >> shift) & mask);
+
+                if (val >= value) {
+                    idx++;
+                    val -= value;
+                    node += 1 << height;
+                }
+            }
+
+            return node <= size ? node-1 : size-1;
+        }
 
         virtual size_t bit_count() const
         {

@@ -74,7 +74,7 @@ namespace dyn {
                 *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
         }
 
-        virtual size_t find(uint64_t val, bool complement=false) const
+        virtual size_t find(uint64_t val) const
         {
             size_t node = 0;
 
@@ -83,8 +83,24 @@ namespace dyn {
 
                 uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)];
 
-                if (complement)
-                    value = (1ULL << (LEAF_BITSIZE + lsb(node+m) - 1)) - value;
+                if (val >= value) {
+                    node += m;
+                    val -= value;
+                }
+            }
+
+            return node - 1;
+        }
+
+        virtual size_t find_complement(uint64_t val) const
+        {
+            size_t node = 0;
+
+            for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+                if (node+m-1 >= size) continue;
+
+                uint64_t value = (1ULL << (LEAF_BITSIZE + lsb(node+m) - 1))
+                    - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)]);
 
                 if (val >= value) {
                     node += m;

@@ -35,25 +35,31 @@ namespace dyn {
         /**
          * find() - Find the closest element less or equal than a given one
          * @val: Value to search
-         * @complement: If true it comput
          *
          * This method finds the maximum index whose the values mantained by the
          * cumulative frequency is less or equal than @val.
          *
-         * If @complement is true, it returns the index whose MAX_VAL minus the
-         * values mantained by the cumulative frequency is less or equal than
-         * @val. MAX_VAL being the maximum value storable in such element.
+         * It returns -1 if such an element doesn't exists.
+         *
+         * Returns: The closest index whose its element is less or equal than
+         * @val or -1ULL if it doesn't exists.
+         */
+        virtual std::size_t find(std::uint64_t val) const = 0;
+
+        /**
+         * find_complement() - Complement of find()
+         * @val: Value to search
+         *
+         * This method finds the maximum index whose the values mantained by the
+         * cumulative frequency is less or equal than MAX_VAL-@val. MAX_VAL
+         * being the maximum value storable in such an element.
          *
          * It returns -1 if such an element doesn't exists.
          *
          * Returns: The closest index whose its element is less or equal than
-         * @val, its complement if @complement is true or -1ULL if it doesn't
-         * exists.
+         * MAX_VAL-@val or -1ULL if it doesn't exists.
          */
-        // TODO: dividere in due funzioni per evitare un if nel codice. Forse la
-        // selectZero più veloce della select in LineRankSelect è dovuta a
-        // questo if.
-        virtual std::size_t find(std::uint64_t val, bool complement=false) const = 0;
+        virtual std::size_t find_complement(std::uint64_t val) const = 0;
 
         /**
          * bit_count() - An estimation of the number of bits used by the tree
