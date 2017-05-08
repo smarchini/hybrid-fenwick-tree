@@ -7,21 +7,16 @@ namespace dyn {
 
     template<typename T>
     class RankSelect {
-    private:
-        T tree;
-        DArray<uint64_t> _bitvector;
-
     public:
         /**
-         * WordRankSelect - Build a dynamic rank&select data structure
+         * RankSelect - Build a dynamic rank&select data structure
          * @bitvector: A bitvector of 64-bit words
          * @length: The length (in words) of the bitvector
          *
-         * If you pass the ownership of @bitvector it will make a shallow copy
-         * (copy the pointer) and if you don't it will make a deep copy (copy
-         * the data) of the bitvector. This data structure works correctly as
-         * long as you don't touch its underlining bitvector, so it prevents you
-         * to do it.
+         * This data structure works correctly as long as you don't touch its
+         * underlining bitvector, so it prevents you to do it: if you pass the
+         * ownership of @bitvector it will make a shallow copy (copy the
+         * pointer), if you don't it will make a deep copy (copy the data).
          */
         RankSelect(uint64_t bitvector[], size_t length);
         RankSelect(DArray<uint64_t> bitvector, size_t length);
@@ -29,7 +24,7 @@ namespace dyn {
         virtual ~RankSelect() = default;
 
         /**
-         * get_bitvector() - Give you the underlining bitvector
+         * bitvector() - Give you the underlining bitvector
          *
          * You can't change the junk inside unless you explicitly cast away the
          * constness, but you're not supposed to do it.
@@ -39,11 +34,11 @@ namespace dyn {
         virtual const uint64_t* bitvector() const;
 
         /**
-         * bitvector_size() - Returns the length of the bitvector
+         * size() - Returns the length of the bitvector
          *
          * Returns: How many elements (words) have the bitvector
          */
-        virtual size_t bitvector_size() const;
+        virtual size_t size() const;
 
         /**
          * rank() - Compute the numbers of ones preceding a specified position
@@ -71,7 +66,7 @@ namespace dyn {
         virtual uint64_t rankZero(size_t pos) const;
 
         /**
-         * rank() - Compute the numbers of zeroes between a given range
+         * rankZero() - Compute the numbers of zeroes between a given range
          * @from: Starting index of the bit vector
          * @from: Ending index of the bit vector
          *
@@ -104,7 +99,7 @@ namespace dyn {
         virtual size_t selectZero(uint64_t rank) const;
 
         /**
-         * updateWord() - replace a word of the given in the bitvector
+         * update() - replace a given word in the bitvector
          * @index: index of the bitvector
          * @word: new value for @bitvector[@index]
          *
@@ -113,7 +108,7 @@ namespace dyn {
         virtual uint64_t update(size_t index, uint64_t word);
 
         /**
-         * bit_count() - An estimation of the size (in bits) of this structure
+         * bit_count() - Compute an estimation of the size (in bits) of this structure
          *
          * Returns: An estimation of the number of bits used by the this structure
          */

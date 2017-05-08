@@ -2,7 +2,6 @@
 #define __RANKSELECT_LINE_H__
 
 #include "rank_select.hpp"
-#include <iostream>
 
 namespace dyn {
 
@@ -43,7 +42,7 @@ namespace dyn {
             return _bitvector.get();
         }
 
-        virtual size_t bitvector_size() const
+        virtual size_t size() const
         {
             return _bitvector.size();
         }

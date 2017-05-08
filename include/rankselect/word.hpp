@@ -42,7 +42,7 @@ namespace dyn {
             return _bitvector.get();
         }
 
-        virtual size_t bitvector_size() const
+        virtual size_t size() const
         {
             return _bitvector.size();
         }
