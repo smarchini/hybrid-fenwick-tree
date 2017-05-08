@@ -162,6 +162,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
 
+    delete[] updates;
     delete[] bitvect;
 }
 

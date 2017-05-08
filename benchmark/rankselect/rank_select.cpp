@@ -140,8 +140,8 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *s
     auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
-	// for(uint64_t i = 0; i < size; ++i)
-	// 	u ^= bv.select(select1[i]);
+	for(uint64_t i = 0; i < size; ++i)
+		u ^= bv.select(select1[i]);
 	end = high_resolution_clock::now();
     auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
@@ -190,8 +190,8 @@ void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *se
     auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
 	begin = high_resolution_clock::now();
-	// for(uint64_t i = 0; i < size; ++i)
-	// 	u ^= bv.select(select1[i], 1);
+	for(uint64_t i = 0; i < size; ++i)
+		u ^= bv.select(select1[i], 1);
 	end = high_resolution_clock::now();
     auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
