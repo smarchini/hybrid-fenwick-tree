@@ -90,41 +90,31 @@ void fenwick_random_test(std::size_t size)
 }
 
 
-TEST(same_behavior, random_small)
+TEST(fenwick_same_behavior, perfect_tree)
 {
+    // small
     fenwick_random_test<64>(2-1);
     fenwick_random_test<64>(4-1);
     fenwick_random_test<64>(8-1);
     fenwick_random_test<64>(16-1);
-    fenwick_random_test<64>(32-1);
-    fenwick_random_test<64>(64-1);
-    fenwick_random_test<64>(128-1);
-    fenwick_random_test<64>(256-1);
-    fenwick_random_test<64>(512-1);
-    fenwick_random_test<64>(1024-1);
-}
 
-TEST(same_behavior, random_big)
-{
-    fenwick_random_test<64>(2*1024-1);
-    fenwick_random_test<64>(4*1024-1);
-    fenwick_random_test<64>(8*1024-1);
-    fenwick_random_test<64>(16*1024-1);
-    fenwick_random_test<64>(32*1024-1);
-    fenwick_random_test<64>(64*1024-1);
-    fenwick_random_test<64>(128*1024-1);
-    fenwick_random_test<64>(256*1024-1);
+    // big
     fenwick_random_test<64>(512*1024-1);
     fenwick_random_test<64>(1024*1024-1);
 }
 
-TEST(same_behavior, partial_tree)
+TEST(fenwick_same_behavior, partial_tree)
 {
-    for (std::size_t i = 1; i < 1000; i++)
+    // small
+    for (std::size_t i = 1; i < 100; i++)
+        fenwick_random_test<64>(i);
+
+    // big
+    for (std::size_t i = 128*1024; i < 128*1024+10; i++)
         fenwick_random_test<64>(i);
 }
 
-TEST(same_behavior, random_mixed)
+TEST(fenwick_same_behavior, different_leafvalue)
 {
     fenwick_random_test<64*10>(1024-1);
     fenwick_random_test<64*20>(1024-1);
@@ -133,6 +123,7 @@ TEST(same_behavior, random_mixed)
     fenwick_random_test<64*50>(1024-1);
 
     fenwick_random_test<64*54>(1024-1);
+    // TODO: provare con altri valori togliendo la static_assert
 }
 
 #endif // __TEST_FENWICK_SAME_BEHAVIOR_H__

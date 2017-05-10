@@ -1,5 +1,6 @@
 CC = g++
-PARAMS = -O3 -march=native -g
+RELEASE = -O3 -march=native
+DEBUG = -g -O0 --coverage -fprofile-dir=coverage
 CFLAGS = -std=c++14 -Wall -Wextra $(PARAMS)
 LFLAGS = -std=c++14 -Wall -Wextra $(PARAMS)
 
@@ -14,9 +15,10 @@ MACRO_CACHESIZE = -DL1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE) -DL2_CACHE
 
 all: test benchmark
 
-# https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options
 test: bin/test/test
 	bin/test/test --gtest_color=yes
+	lcov --capture --directory ./coverage --output-file coverage/lcov.info
+	genhtml coverage/lcov.info --output-directory coverage/html
 
 benchmark: benchmark/fenwick benchmark/rankselect
 
@@ -26,37 +28,39 @@ benchmark/rankselect: bin/benchmark/rankselect/rankselect
 
 
 # Test
+# https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options
 bin/test/test: $(INCLUDES) $(TEST_INCLUDES) test/test.cpp
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_DYNAMIC) test/test.cpp -o bin/test/test -lgtest
+	@mkdir -p $(@D) coverage
+	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDE_DYNAMIC) test/test.cpp -o bin/test/test -lgtest
+	@mv *.gcno coverage/
 
 
 # Benchmark fenwick tree
 bin/benchmark/fenwick/trees: $(INCLUDES) benchmark/fenwick/trees.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/trees.cpp -o bin/benchmark/fenwick/trees
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/trees.cpp -o bin/benchmark/fenwick/trees
 
 bin/benchmark/fenwick/get: $(INCLUDES) benchmark/fenwick/get.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/get.cpp -o bin/benchmark/fenwick/get
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/get.cpp -o bin/benchmark/fenwick/get
 
 bin/benchmark/fenwick/set: $(INCLUDES) benchmark/fenwick/set.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/set.cpp -o bin/benchmark/fenwick/set
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/set.cpp -o bin/benchmark/fenwick/set
 
 bin/benchmark/fenwick/find: $(INCLUDES) benchmark/fenwick/find.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/find.cpp -o bin/benchmark/fenwick/find
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/find.cpp -o bin/benchmark/fenwick/find
 
 
 # Benchmark rank select
 bin/benchmark/rankselect/rankselect: $(INCLUDES) benchmark/rankselect/rank_select.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/rankselect/rank_select.cpp -o bin/benchmark/rankselect/rankselect
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/rankselect/rank_select.cpp -o bin/benchmark/rankselect/rankselect
 
 
 # Other
 .PHONY: clean
 
 clean:
-	rm -rf obj/* bin/*
+	rm -rf obj/* bin/* coverage/* *.gcno

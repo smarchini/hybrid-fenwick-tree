@@ -100,12 +100,12 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, word_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
 
         EXPECT_EQ(res, line_naive.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
-        // EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_ltype.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_type.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbyte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_byte.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
     
 
@@ -146,7 +146,6 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_bit.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
-    /*
     for (size_t i = 0; i < size; i++) {
         auto res = word_naive.selectZero(i);
 
@@ -165,7 +164,6 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
-        */
 
     delete[] updates;
     delete[] bitvect;
@@ -173,19 +171,24 @@ void rankselect_random_test(std::size_t size)
 
 TEST(rankselect_same_behavior, cache_line)
 {
-    for (std::size_t i = 1; i < 10000; i++)
-        rankselect_random_test<3>(i);
+    // small
+    for (std::size_t i = 1; i < 100; i++)
+        rankselect_random_test<8>(i);
+
+    // big
+    for (std::size_t i = 128*1024; i < 128*1024+10; i++)
+        rankselect_random_test<8>(i);
 }
 
 TEST(rankselect_same_behavior, random_mixed)
 {
     rankselect_random_test<1>(1024);
     rankselect_random_test<10>(1024);
-    //rankselect_random_test<20>(1024);
-    //rankselect_random_test<30>(1024);
-    //rankselect_random_test<40>(1024);
+    rankselect_random_test<20>(1024);
+    rankselect_random_test<30>(1024);
+    rankselect_random_test<40>(1024);
 
-    //rankselect_random_test<47>(1024);
+    rankselect_random_test<47>(1024);
     //rankselect_random_test<48>(1024); // SEGMENTATION FAULT
 }
 
