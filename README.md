@@ -19,8 +19,7 @@ some chosen intervals then, the resulting increasing sequence is stored in a
 Fenwick tree.
 
 Such an implementation permits you to compute rank and select in O(log n) time
-and to change a 64-bit word in O(log n) time. Although the bitvector is mutable,
-its length is still a static constraint.
+and to change a 64-bit word in O(log n) time.
 
 We offer two different implementation of such a rank and select data structure.
 One of them take a sample every 64-bits word of the bitvector while the other
@@ -132,8 +131,7 @@ int main()
     using namespace std;
     using namespace dyn;
 
-    constexpr size_t BITSIZE = 7;
-    constexpr size_t MAXVALUE = (1ULL << BITSIZE) - 1; // 2^BITSIZE - 1
+    constexpr size_t MAXVALUE = 64;
     size_t size;
 
     cout << "Length of the sequence: ";
@@ -147,8 +145,8 @@ int main()
     }
 
     // Two different implementation of Fenwick tree data structure
-    LByteFenwickTree<BITSIZE> fen1(sequence, size); // bottom-up level-order layout and byte-aligned
-    BitFenwickTree<BITSIZE> fen2(sequence, size);   // naive layout and bit-aligned
+    LByteFenwickTree<MAXVALUE> fen1(sequence, size); // bottom-up level-order layout and byte-aligned
+    BitFenwickTree<MAXVALUE> fen2(sequence, size);   // naive layout and bit-aligned
 
     // You don't need the sequence anymore
     delete[] sequence;
@@ -181,12 +179,12 @@ TODO
 
 # External dependencies
 - [Google Test](https://github.com/google/googletest) C++ unit testing
-  framework.
+  framework and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
 - [DYNAMIC](https://github.com/xxsds/DYNAMIC) succinct dynamic bitvector
   (already included in the project and only used for testing and benchmark
   purpose).
 
-[rank]: https://goo.gl/WN481H "\text{rank}\_\mathbf{b}(p) = | \{ i < p \ | \ \mathbf{b}\_i = 1 \} |" 
-[select]: https://goo.gl/AaY1S5 "\text{select}\_\mathbf{b}(k) = \max{ \{ p \ | \ \text{rank}\_\mathbf{b}(p) \le k \} }" 
-[rank_select.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/rankselect/rank_select.hpp "rank\_select.hpp" 
-[fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp" 
+[rank]: https://goo.gl/WN481H "\text{rank}\_\mathbf{b}(p) = | \{ i < p \ | \ \mathbf{b}\_i = 1 \} |"
+[select]: https://goo.gl/AaY1S5 "\text{select}\_\mathbf{b}(k) = \max{ \{ p \ | \ \text{rank}\_\mathbf{b}(p) \le k \} }"
+[rank_select.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/rankselect/rank_select.hpp "rank\_select.hpp"
+[fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp"
