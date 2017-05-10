@@ -3,6 +3,7 @@
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
+#include <iostream>
 
 namespace dyn {
 
@@ -14,9 +15,11 @@ namespace dyn {
     * Typical implementation of a FenwickTree data structure as described by the
     * original paper.
     */
-    template<size_t LEAF_BITSIZE>
+    template<size_t LEAF_MAXVAL>
     class NaiveFenwickTree : public FenwickTree
     {
+    public:
+        static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 64, "A leaf should be at most 64 bit long");
 
@@ -84,7 +87,7 @@ namespace dyn {
             for (size_t m = mask_last_set(tree.size()); m != 0; m >>= 1) {
                 if (node+m-1 >= tree.size()) continue;
 
-                uint64_t value = (1ULL << (LEAF_BITSIZE + lsb(m) - 1)) - tree[node+m-1];
+                uint64_t value = (LEAF_MAXVAL << lsb(node+m)) - tree[node+m-1];
 
                 if(val >= value) {
                     node += m;

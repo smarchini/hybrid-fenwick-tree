@@ -23,16 +23,16 @@ int main()
         }
 
         cout << size << ',';
-        cout << bench_set<NaiveFenwickTree<7>> (size, increments, order, value) << ','
+        cout << bench_set<NaiveFenwickTree<64>> (size, increments, order, value) << ','
             // type aligned
-             << bench_set<LTypeFenwickTree<7>>  (size, increments, order, value) << ','
-             << bench_set<TypeFenwickTree<7>> (size, increments, order, value) << ','
+             << bench_set<LTypeFenwickTree<64>>  (size, increments, order, value) << ','
+             << bench_set<TypeFenwickTree<64>> (size, increments, order, value) << ','
             // byte aligned
-             << bench_set<LByteFenwickTree<7>>   (size, increments, order, value) << ','
-             << bench_set<ByteFenwickTree<7>>  (size, increments, order, value) << ','
+             << bench_set<LByteFenwickTree<64>>   (size, increments, order, value) << ','
+             << bench_set<ByteFenwickTree<64>>  (size, increments, order, value) << ','
             // bit aligned
-             << bench_set<LBitFenwickTree<7>>(size, increments, order, value) << ','
-             << bench_set<BitFenwickTree<7>> (size, increments, order, value) << '\n';
+             << bench_set<LBitFenwickTree<64>>(size, increments, order, value) << ','
+             << bench_set<BitFenwickTree<64>> (size, increments, order, value) << '\n';
 
         delete[] increments;
         delete[] order;

@@ -9,9 +9,11 @@ namespace dyn {
    /** TODO: commenti
     * class
     */
-    template<size_t LEAF_BITSIZE>
+    template<size_t LEAF_MAXVAL>
     class BitFenwickTree : public FenwickTree
     {
+    public:
+        static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
 
@@ -126,7 +128,7 @@ namespace dyn {
                 const size_t shift = bit_pos & 0b111;
                 const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
 
-                uint64_t value = (1ULL << (LEAF_BITSIZE + height - 1))
+                uint64_t value = (LEAF_MAXVAL << height)
                     - ((*reinterpret_cast<auint64_t*>(&tree[bit_pos/8]) >> shift) & mask);
 
                 if (val >= value) {

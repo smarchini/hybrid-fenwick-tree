@@ -17,11 +17,6 @@ TEST(rankselect_like_dynamic, random)
 
     std::uint64_t *updates = new std::uint64_t[SIZE];
     fill_with_random_values(updates, SIZE);
-    for (std::size_t i = 0; i < SIZE; i++) {
-        int inc = updates[i] - bitvect[i];
-        if (inc < 0) inc = -inc;
-        updates[i] = (bitvect[i] + inc) < 64 ? inc : 0;
-    }
 
     size_t ones = 0;
     for (size_t i = 0; i < SIZE; i++)
@@ -39,6 +34,9 @@ TEST(rankselect_like_dynamic, random)
 
     for (uint64_t i = 0; i < SIZE; i++)
         EXPECT_EQ(dynamic.rank(i), internal.rank(i)) << "at index: " << i;
+
+    for (uint64_t i = 0; i < SIZE; i++)
+        EXPECT_EQ(dynamic.rank(i, 0), internal.rankZero(i)) << "at index: " << i;
 
     for (uint64_t i = 0; i < ones; i++)
         EXPECT_EQ(dynamic.select(i, 1), internal.select(i)) << "at index: " << i;

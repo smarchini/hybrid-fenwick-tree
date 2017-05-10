@@ -16,16 +16,16 @@ int main()
         random_shuffle(order, order+size);
 
         cout << size << ',';
-        cout << bench_get<NaiveFenwickTree<7>> (size, increments, order) << ','
+        cout << bench_get<NaiveFenwickTree<64>> (size, increments, order) << ','
             // type aligned
-             << bench_get<LTypeFenwickTree<7>>  (size, increments, order) << ','
-             << bench_get<TypeFenwickTree<7>> (size, increments, order) << ','
+             << bench_get<LTypeFenwickTree<64>>  (size, increments, order) << ','
+             << bench_get<TypeFenwickTree<64>> (size, increments, order) << ','
             // byte aligned
-             << bench_get<ByteFenwickTree<7>>   (size, increments, order) << ','
-             << bench_get<ByteFenwickTree<7>>  (size, increments, order) << ','
+             << bench_get<ByteFenwickTree<64>>   (size, increments, order) << ','
+             << bench_get<ByteFenwickTree<64>>  (size, increments, order) << ','
             // bit aligned
-             << bench_get<LBitFenwickTree<7>>(size, increments, order) << ','
-             << bench_get<BitFenwickTree<7>> (size, increments, order) << '\n';
+             << bench_get<LBitFenwickTree<64>>(size, increments, order) << ','
+             << bench_get<BitFenwickTree<64>> (size, increments, order) << '\n';
 
         delete[] increments;
         delete[] order;

@@ -49,13 +49,13 @@ int main(int argc, char **argv)
     inc_to_seq(increments, sequence, size);
     random_shuffle(sequence, sequence+size);
 
-    bench<NaiveFenwickTree<7>>("Naive", size, order, increments, set_updates, sequence);
-    bench<LTypeFenwickTree<7>>("LType", size, order, increments, set_updates, sequence);
-    bench<TypeFenwickTree<7>>("Type", size, order, increments, set_updates, sequence);
-    bench<LByteFenwickTree<7>>("LByte", size, order, increments, set_updates, sequence);
-    bench<ByteFenwickTree<7>>("Byte", size, order, increments, set_updates, sequence);
-    bench<LBitFenwickTree<7>>("LBit", size, order, increments, set_updates, sequence);
-    bench<BitFenwickTree<7>>("Bit", size, order, increments, set_updates, sequence);
+    bench<NaiveFenwickTree<64>>("Naive", size, order, increments, set_updates, sequence);
+    bench<LTypeFenwickTree<64>>("LType", size, order, increments, set_updates, sequence);
+    bench<TypeFenwickTree<64>>("Type", size, order, increments, set_updates, sequence);
+    bench<LByteFenwickTree<64>>("LByte", size, order, increments, set_updates, sequence);
+    bench<ByteFenwickTree<64>>("Byte", size, order, increments, set_updates, sequence);
+    bench<LBitFenwickTree<64>>("LBit", size, order, increments, set_updates, sequence);
+    bench<BitFenwickTree<64>>("Bit", size, order, increments, set_updates, sequence);
 
     delete[] increments;
     delete[] set_updates;

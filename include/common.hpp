@@ -38,6 +38,14 @@ namespace dyn {
                                               0xFFFFFFFFFFFFULL,
                                               0xFFFFFFFFFFFFFFULL,
                                               0xFFFFFFFFFFFFFFFFULL };
+
+    /**
+     * log2() - Compile time log2 roundup
+     */
+    constexpr size_t log2(size_t n)
+    {
+        return ((n<2) ? 1 : 1+log2(n/2));
+    }
 }
 
 #endif // __COMMON_H__

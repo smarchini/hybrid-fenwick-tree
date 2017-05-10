@@ -17,9 +17,11 @@ namespace dyn {
     *
     * In each tree, the data is stored in a bottom-up level-order manner.
     */
-    template<size_t LEAF_BITSIZE>
+    template<size_t LEAF_MAXVAL>
     class LTypeFenwickTree : public FenwickTree
     {
+    public:
+        static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 54, "A leaf should be at most 54 bit long");
 
@@ -154,7 +156,7 @@ namespace dyn {
 
                 idx <<= 1;
 
-                uint64_t value = (1ULL << (LEAF_BITSIZE + height - 1));
+                uint64_t value = LEAF_MAXVAL << height;
                 switch (height+LEAF_BITSIZE) {
                 case 17 ... 64:
                     if (tree_idx >= tree64.size()) continue;

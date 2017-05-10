@@ -8,7 +8,7 @@ namespace dyn {
     template <template<size_t> class T>
     class WordRankSelect {
     private:
-        static constexpr size_t LEAF_BITSIZE = 7;
+        static constexpr size_t LEAF_BITSIZE = 64;
         T<LEAF_BITSIZE> tree;
         DArray<uint64_t> _bitvector;
 
@@ -71,7 +71,7 @@ namespace dyn {
         virtual size_t select(uint64_t rank) const
         {
             const size_t idx = tree.find(rank) + 1;
-            rank -= idx > 0 ? tree.get(idx-1) : 0;
+            rank -= idx != 0 ? tree.get(idx-1) : 0;
 
             if (idx >= _bitvector.size()) return -1ULL;
 
@@ -85,7 +85,7 @@ namespace dyn {
         virtual size_t selectZero(uint64_t rank) const
         {
             const size_t idx = tree.find_complement(rank) + 1;
-            rank -= 64*idx - (idx > 0 ? tree.get(idx-1) : 0);
+            rank -= 64*idx - (idx != 0 ? tree.get(idx-1) : 0);
 
             if (idx >= _bitvector.size()) return -1ULL;
 

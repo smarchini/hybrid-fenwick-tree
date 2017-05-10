@@ -15,9 +15,11 @@ namespace dyn {
     * Each node have the smallest byte-size capable of holding its data. It's the
     * interleaved version of ByteFenwickTree.
     */
-    template<size_t LEAF_BITSIZE>
+    template<size_t LEAF_MAXVAL>
     class ByteFenwickTree : public FenwickTree
     {
+    public:
+        static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
         static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
         static_assert(LEAF_BITSIZE <= 56, "A leaf should be at most 56 bit long");
 
@@ -99,7 +101,7 @@ namespace dyn {
             for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
                 if (node+m-1 >= size) continue;
 
-                uint64_t value = (1ULL << (LEAF_BITSIZE + lsb(node+m) - 1))
+                uint64_t value = (LEAF_MAXVAL << lsb(node+m))
                     - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)]);
 
                 if (val >= value) {

@@ -2,14 +2,15 @@
 #define __RANKSELECT_LINE_H__
 
 #include "rank_select.hpp"
+#include <iostream>
 
 namespace dyn {
 
     template <template<size_t> class T, size_t WORDS>
     class LineRankSelect {
     private:
-        static constexpr size_t LEAF_BITSIZE = 7 + WORDS - 1;
-        T<LEAF_BITSIZE> tree;
+        static constexpr size_t LEAF_MAXVAL = 64 * WORDS;
+        T<LEAF_MAXVAL> tree;
         DArray<uint64_t> _bitvector;
 
     public:
@@ -77,7 +78,7 @@ namespace dyn {
         virtual size_t select(uint64_t rank) const
         {
             const size_t idx = tree.find(rank) + 1;
-            rank -= (idx > 0 ? tree.get(idx-1) : 0);
+            rank -= (idx != 0 ? tree.get(idx-1) : 0);
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
                 if (i >= _bitvector.size()) return -1ULL;
@@ -95,7 +96,7 @@ namespace dyn {
         virtual size_t selectZero(uint64_t rank) const
         {
             const size_t idx = tree.find_complement(rank) + 1;
-            rank -= 64*idx*WORDS - (idx > 0 ? tree.get(idx-1) : 0);
+            rank -= 64*WORDS*idx - (idx != 0 ? tree.get(idx-1) : 0);
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
                 if (i >= _bitvector.size()) return -1ULL;
@@ -127,13 +128,13 @@ namespace dyn {
         }
 
     private:
-        T<LEAF_BITSIZE> build_fenwick(const uint64_t bitvector[], size_t length)
+        T<LEAF_MAXVAL> build_fenwick(const uint64_t bitvector[], size_t length)
         {
             uint64_t *sequence = new uint64_t[length/WORDS + 1]();
             for (size_t i = 0; i < length; i++)
                 sequence[i/WORDS] += popcount(bitvector[i]);
 
-            T<LEAF_BITSIZE> tree(sequence, length/WORDS + 1);
+            T<LEAF_MAXVAL> tree(sequence, length/WORDS + 1);
             delete[] sequence;
             return tree;
         }
