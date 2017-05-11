@@ -23,7 +23,7 @@ namespace dyn {
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
 
     protected:
-        const size_t size;
+        const size_t _size;
         DArray<uint8_t> tree;
         DArray<size_t> level;
 
@@ -36,7 +36,7 @@ namespace dyn {
          * Running time: O(length)
          */
         LByteFenwickTree(uint64_t sequence[], size_t size) :
-            size(size),
+            _size(size),
             level(msb(size) + 2)
         {
             level[0] = 0;
@@ -88,7 +88,7 @@ namespace dyn {
 
         virtual void set(size_t idx, int64_t inc)
         {
-            for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
+            for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
                 const int height = lsb(idx);
                 const size_t level_idx = idx >> (1 + height);
                 const size_t byte_pos = level[height] + get_size(height) * level_idx;
@@ -120,7 +120,7 @@ namespace dyn {
                 }
             }
 
-            return node <= size ? node-1 : size-1;
+            return node <= size() ? node-1 : size()-1;
         }
 
         virtual size_t find_complement(uint64_t val) const
@@ -145,7 +145,12 @@ namespace dyn {
                 }
             }
 
-            return node <= size ? node-1 : size-1;
+            return node <= size() ? node-1 : size()-1;
+        }
+
+        virtual size_t size() const
+        {
+            return _size;
         }
 
         virtual size_t bit_count() const

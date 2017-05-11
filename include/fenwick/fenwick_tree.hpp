@@ -62,6 +62,11 @@ namespace dyn {
         virtual std::size_t find_complement(std::uint64_t val) const = 0;
 
         /**
+         * size() - Returns the length of the sequence
+         */
+        virtual std::size_t size() const = 0;
+
+        /**
          * bit_count() - An estimation of the number of bits used by the tree
          *
          * Returns: An estimation of the size of the tree.

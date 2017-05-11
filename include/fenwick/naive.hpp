@@ -98,6 +98,11 @@ namespace dyn {
             return node - 1;
         }
 
+        virtual size_t size() const
+        {
+            return tree.size();
+        }
+
         virtual size_t bit_count() const
         {
             return sizeof(NaiveFenwickTree<LEAF_BITSIZE>)*8

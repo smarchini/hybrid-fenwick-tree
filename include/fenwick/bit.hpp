@@ -18,7 +18,7 @@ namespace dyn {
         static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
 
     protected:
-        const size_t size;
+        const size_t _size;
         DArray<uint8_t> tree;
 
     public:
@@ -30,7 +30,7 @@ namespace dyn {
          * Running time: O(length)
          */
         BitFenwickTree(uint64_t sequence[], size_t size) :
-            size(size),
+            _size(size),
             tree(get_bitpos(size-1)/8 + (lsb(size)+LEAF_BITSIZE)/8 + 1 + 4)
         {
             for (size_t i = 1; i <= size; i++) {
@@ -84,7 +84,7 @@ namespace dyn {
 
         virtual void set(size_t idx, int64_t inc)
         {
-            for (idx = idx+1; idx <= size; idx += mask_first_set(idx)) {
+            for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
                 const size_t bit_pos = get_bitpos(idx-1);
                 auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
@@ -97,7 +97,7 @@ namespace dyn {
         {
             size_t node = 0;
 
-            for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+            for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
                 if (node+m-1 >= size) continue;
 
                 const size_t bit_pos = get_bitpos(node+m-1);
@@ -120,7 +120,7 @@ namespace dyn {
         {
             size_t node = 0;
 
-            for (size_t m = mask_last_set(size); m != 0; m >>= 1) {
+            for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
                 if (node+m-1 >= size) continue;
 
                 const size_t bit_pos = get_bitpos(node+m-1);
@@ -138,6 +138,11 @@ namespace dyn {
             }
 
             return node - 1;
+        }
+
+        virtual size_t size() const
+        {
+            return _size;
         }
 
         virtual size_t bit_count() const
