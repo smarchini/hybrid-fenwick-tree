@@ -15,6 +15,7 @@
 #include <fenwick/byte.hpp>
 #include <fenwick/lbit.hpp>
 #include <fenwick/bit.hpp>
+#include <fenwick/mixed.hpp>
 
 #include <dynamic.hpp>
 
@@ -27,6 +28,10 @@ using std::chrono::duration;
 template <typename T>
 void internal(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *select0, uint64_t *select1, size_t size);
+
+
+template <size_t N>
+using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 256>;
 
 
 int main(int argc, char *argv[])
@@ -71,7 +76,6 @@ int main(int argc, char *argv[])
     for (size_t i = 0; i < size; i++)
         select1[i] = select1dist(mte);
 
-
     cout << "Bitvector with " << ones << " ones and " << zeroes << " zeroes\n" << endl;
     //dynamic("DYNAMIC", bitvector, rank, select0, select1, size); // temporaneamente disabilitato per velocizzare i benchmark
     //cout << "\n------------------------------\n";
@@ -82,6 +86,7 @@ int main(int argc, char *argv[])
     internal<WordRankSelect<ByteFenwickTree>> ("WordRankSelect<ByteFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<WordRankSelect<LBitFenwickTree>> ("WordRankSelect<LBitFenwickTree>",  bitvector, rank, select0, select1, size);
     internal<WordRankSelect<BitFenwickTree>>  ("WordRankSelect<BitFenwickTree>",   bitvector, rank, select0, select1, size);
+    internal<WordRankSelect<MByteFenwickTree>>("WordRankSelect<MByteFenwickTree>",   bitvector, rank, select0, select1, size);
     cout << "\n------------------------------\n";
     internal<LineRankSelect<NaiveFenwickTree, 8>>("LineRankSelect<NaiveFenwickTree, 8>", bitvector, rank, select0, select1, size);
     internal<LineRankSelect<LTypeFenwickTree, 8>>("LineRankSelect<LTypeFenwickTree, 8>", bitvector, rank, select0, select1, size);

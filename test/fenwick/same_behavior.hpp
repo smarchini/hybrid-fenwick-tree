@@ -6,16 +6,18 @@
 template <std::size_t S>
 void fenwick_random_test(std::size_t size)
 {
+    static std::mt19937 mte;
+    std::uniform_int_distribution<std::uint64_t> dist(0, 64);
+
     std::uint64_t *increments = new std::uint64_t[size];
-    std::uint64_t *set_updates = new std::uint64_t[size];
+    std::int64_t *set_updates = new std::int64_t[size];
 
-    fill_with_random_values(increments, size);
+    for (std::size_t i = 0; i < size; i++)
+        increments[i] = dist(mte);
 
-    fill_with_random_values(set_updates, size);
     for (std::size_t i = 0; i < size; i++) {
-        int inc = set_updates[i] - increments[i];
-        if (inc < 0) inc = -inc;
-        set_updates[i] = (increments[i] + inc) < 64 ? inc : 0;
+        std::uniform_int_distribution<std::int64_t> sdist(0, 64 - increments[i]);
+        set_updates[i] = sdist(mte);
     }
 
     dyn::NaiveFenwickTree<S> naive(increments, size);
@@ -26,63 +28,81 @@ void fenwick_random_test(std::size_t size)
     dyn::TypeFenwickTree<S> type(increments, size);
     dyn::ByteFenwickTree<S> byte(increments, size);
 
+    dyn::MixedFenwickTree<dyn::LByteFenwickTree, dyn::ByteFenwickTree, S, 8> mixed8(increments, size);
+    dyn::MixedFenwickTree<dyn::LByteFenwickTree, dyn::ByteFenwickTree, S, 256> mixed256(increments, size);
+
     // get
     for (size_t i = 0; i < size; i++) {
         std::uint64_t naive_get = naive.get(i);
 
-        EXPECT_EQ(naive_get, lbit.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, lbyte.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, ltype.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, bit.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, type.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, byte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, lbyte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, ltype.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+
+        EXPECT_EQ(naive_get, mixed8.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, mixed256.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // find
     for (std::uint64_t i = 0; i < size; i++) {
         std::uint64_t naive_find = naive.find(i);
 
-        EXPECT_EQ(naive_find, lbit.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_find, lbyte.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_find, ltype.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_find, bit.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_find, type.find(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_find, byte.find(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_find, lbit.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, lbyte.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, ltype.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, bit.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, type.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, byte.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+
+        EXPECT_EQ(naive_find, mixed8.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_find, mixed256.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // set
     for (size_t i = 0; i < size; i++) {
         naive.set(i, set_updates[i]);
-        lbit.set(i, set_updates[i]);
+        lbit.set(i,  set_updates[i]);
         lbyte.set(i, set_updates[i]);
         ltype.set(i, set_updates[i]);
-        bit.set(i, set_updates[i]);
-        type.set(i, set_updates[i]);
-        byte.set(i, set_updates[i]);
+        bit.set(i,   set_updates[i]);
+        type.set(i,  set_updates[i]);
+        byte.set(i,  set_updates[i]);
+
+        mixed8.set(i, set_updates[i]);
+        mixed256.set(i, set_updates[i]);
     }
 
     // get
     for (size_t i = 0; i < size; i++) {
         std::uint64_t naive_get = naive.get(i);
 
-        EXPECT_EQ(naive_get, lbit.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, lbyte.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, ltype.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, bit.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, type.get(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_get, byte.get(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_get, lbit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, lbyte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, ltype.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+
+        EXPECT_EQ(naive_get, mixed8.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_get, mixed256.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++) {
         std::uint64_t naive_findcomplement = naive.find_complement(i);
 
-        EXPECT_EQ(naive_findcomplement, lbit.find_complement(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, lbyte.find_complement(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, ltype.find_complement(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, bit.find_complement(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, type.find_complement(i)) << "at index " << i << " template parameter " << S;
-        EXPECT_EQ(naive_findcomplement, byte.find_complement(i)) << "at index " << i << " template parameter " << S;
+        EXPECT_EQ(naive_findcomplement, lbit.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, lbyte.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, ltype.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, bit.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, type.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, byte.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+
+        EXPECT_EQ(naive_findcomplement, mixed8.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, mixed256.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     delete[] increments;
@@ -92,13 +112,20 @@ void fenwick_random_test(std::size_t size)
 
 TEST(fenwick_same_behavior, perfect_tree)
 {
+    for (size_t i = 0; i < 10000; i++)
+        fenwick_random_test<64>(10);
+
     // small
     fenwick_random_test<64>(2-1);
     fenwick_random_test<64>(4-1);
     fenwick_random_test<64>(8-1);
     fenwick_random_test<64>(16-1);
+    fenwick_random_test<64>(32-1);
+    fenwick_random_test<64>(64-1);
+    fenwick_random_test<64>(128-1);
 
     // big
+    fenwick_random_test<64>(1024-1);
     fenwick_random_test<64>(512*1024-1);
     fenwick_random_test<64>(1024*1024-1);
 }
@@ -106,7 +133,7 @@ TEST(fenwick_same_behavior, perfect_tree)
 TEST(fenwick_same_behavior, partial_tree)
 {
     // small
-    for (std::size_t i = 1; i < 100; i++)
+    for (std::size_t i = 1; i < 1000; i++)
         fenwick_random_test<64>(i);
 
     // big

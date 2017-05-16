@@ -98,7 +98,7 @@ namespace dyn {
             size_t node = 0;
 
             for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
-                if (node+m-1 >= size) continue;
+                if (node+m-1 >= size()) continue;
 
                 const size_t bit_pos = get_bitpos(node+m-1);
                 const int height = lsb(node+m);
@@ -121,7 +121,7 @@ namespace dyn {
             size_t node = 0;
 
             for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
-                if (node+m-1 >= size) continue;
+                if (node+m-1 >= size()) continue;
 
                 const size_t bit_pos = get_bitpos(node+m-1);
                 const int height = lsb(node+m);

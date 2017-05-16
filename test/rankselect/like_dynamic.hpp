@@ -10,13 +10,19 @@ TEST(rankselect_like_dynamic, random)
     using namespace std;
     using namespace dyn;
 
+    static std::mt19937 mte;
+
     constexpr size_t SIZE = 1000;
 
     std::uint64_t *bitvect = new std::uint64_t[SIZE];
-    fill_with_random_values(bitvect, SIZE);
-
     std::uint64_t *updates = new std::uint64_t[SIZE];
-    fill_with_random_values(updates, SIZE);
+
+    std::uniform_int_distribution<std::uint64_t> dist(0, -1ULL);
+    for (size_t i = 0; i < SIZE; i++) {
+        bitvect[i] = dist(mte);
+        updates[i] = dist(mte);
+    }
+
 
     size_t ones = 0;
     for (size_t i = 0; i < SIZE; i++)

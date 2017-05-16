@@ -8,11 +8,16 @@ void rankselect_random_test(std::size_t size)
 {
     using namespace dyn;
 
-    std::uint64_t *bitvect = new std::uint64_t[size];
-    fill_with_random_values(bitvect, size);
+    static std::mt19937 mte;
+    std::uniform_int_distribution<std::uint64_t> dist(0, -1ULL);
 
+    std::uint64_t *bitvect = new std::uint64_t[size];
     std::uint64_t *updates = new std::uint64_t[size];
-    fill_with_random_values(updates, size);
+
+    for (std::size_t i = 0; i < size; i++) {
+        bitvect[i] = dist(mte);
+        updates[i] = dist(mte);
+    }
 
     WordRankSelect<NaiveFenwickTree> word_naive(bitvect, size);
     WordRankSelect<LTypeFenwickTree> word_ltype(bitvect, size);

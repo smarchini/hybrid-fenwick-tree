@@ -128,7 +128,7 @@ namespace dyn {
         }
 
     private:
-        T<LEAF_MAXVAL> build_fenwick(const uint64_t bitvector[], size_t length)
+        static T<LEAF_MAXVAL> build_fenwick(const uint64_t bitvector[], size_t length)
         {
             uint64_t *sequence = new uint64_t[length/WORDS + 1]();
             for (size_t i = 0; i < length; i++)

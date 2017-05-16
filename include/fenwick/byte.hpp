@@ -81,7 +81,7 @@ namespace dyn {
             size_t node = 0;
 
             for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
-                if (node+m-1 >= size) continue;
+                if (node+m-1 >= size()) continue;
 
                 uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)];
 
@@ -99,7 +99,7 @@ namespace dyn {
             size_t node = 0;
 
             for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
-                if (node+m-1 >= size) continue;
+                if (node+m-1 >= size()) continue;
 
                 uint64_t value = (LEAF_MAXVAL << lsb(node+m))
                     - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)]);

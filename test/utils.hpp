@@ -16,6 +16,7 @@
 #include "../include/fenwick/lbyte.hpp"
 #include "../include/fenwick/bit.hpp"
 #include "../include/fenwick/lbit.hpp"
+#include "../include/fenwick/mixed.hpp"
 
 #include "../include/rankselect/rank_select.hpp"
 #include "../include/rankselect/word.hpp"
@@ -37,7 +38,6 @@ public:
         dyn::LTypeFenwickTree<64>(sequence, length) {}
     using dyn::LTypeFenwickTree<64>::tree8;
     using dyn::LTypeFenwickTree<64>::tree16;
-    //using dyn::LTypeFenwickTree<64>::tree32;
     using dyn::LTypeFenwickTree<64>::tree64;
 };
 
@@ -102,16 +102,6 @@ std::string tree_tostring(std::uint8_t *tree, std::size_t length) {
         bit_tree += std::bitset<8>(tree[i/8]).to_string();
 
     return bit_tree.substr(bit_tree.length() - length);
-}
-
-void fill_with_random_values(std::uint64_t array[], std::size_t size)
-{
-    static std::mt19937 mte;
-
-    std::uniform_int_distribution<std::uint64_t> dist(1, 60); // 0, 64
-
-    for (std::size_t i = 0; i < size; i++)
-        array[i] = dist(mte);
 }
 
 #endif // __TEST_UTILS_H__

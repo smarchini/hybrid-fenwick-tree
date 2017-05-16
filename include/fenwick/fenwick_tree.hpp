@@ -24,7 +24,7 @@ namespace dyn {
         /**
          * set() - Increment one element of the cumulative frequency
          * @idx: The index (starting from 0) of the element you want to update
-         * @inc: Increment relative to the previous current value
+         * @inc: Increment relative to the current value
          *
          * This method update the current instance, it picks the (@idx+1)th
          * element of the cumulative frequency and change its value to
