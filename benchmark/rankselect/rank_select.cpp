@@ -31,7 +31,7 @@ void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank, uint64_t *se
 
 
 template <size_t N>
-using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 256>;
+using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 16386>;
 
 
 int main(int argc, char *argv[])

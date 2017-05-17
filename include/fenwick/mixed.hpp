@@ -61,29 +61,23 @@ namespace dyn {
             }
         }
 
-        // TODO: devo eliminare la chiamata alla get, è lenta. Possibile
-        // soluzione: overload sulla find, una accetta int* e l'altra accetta
-        // int e richiama la precedente. Se funziona, è possibile ottimizzare
-        // anche la select.
-        virtual size_t find(uint64_t val) const
+        using FenwickTree::find;
+        virtual size_t find(uint64_t *val) const
         {
             size_t top = 0;
-            if (top_tree.size() != 0) {
+            if (top_tree.size() != 0)
                 top = top_tree.find(val) + 1;
-                val -= top != 0 ? top_tree.get(top-1) : 0; 
-            }
 
             size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find(val) : -1;
             return top*BOTTOM_ELEMENTS + bottom;
         }
 
-        virtual size_t find_complement(uint64_t val) const
+        using FenwickTree::find_complement;
+        virtual size_t find_complement(uint64_t *val) const
         {
             size_t top = 0;
-            if (top_tree.size() != 0) {
+            if (top_tree.size() != 0)
                 top = top_tree.find_complement(val) + 1;
-                if (top != 0 ) val -= LEAF_MAXVAL*BOTTOM_ELEMENTS*top - top_tree.get(top-1);
-            }
 
             size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find_complement(val) : -1;
             return top*BOTTOM_ELEMENTS + bottom;

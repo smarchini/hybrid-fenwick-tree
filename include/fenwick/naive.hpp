@@ -62,7 +62,8 @@ namespace dyn {
                 tree[idx-1] += inc;
         }
 
-        virtual size_t find(uint64_t val) const
+        using FenwickTree::find;
+        virtual size_t find(uint64_t *val) const
         {
             size_t node = 0;
 
@@ -71,16 +72,17 @@ namespace dyn {
 
                 uint64_t value = tree[node+m-1];
 
-                if(val >= value) {
+                if(*val >= value) {
                     node += m;
-                    val -= value;
+                    *val -= value;
                 }
             }
 
             return node - 1;
         }
 
-        virtual size_t find_complement(uint64_t val) const
+        using FenwickTree::find_complement;
+        virtual size_t find_complement(uint64_t *val) const
         {
             size_t node = 0;
 
@@ -89,9 +91,9 @@ namespace dyn {
 
                 uint64_t value = (LEAF_MAXVAL << lsb(node+m)) - tree[node+m-1];
 
-                if(val >= value) {
+                if(*val >= value) {
                     node += m;
-                    val -= value;
+                    *val -= value;
                 }
             }
 

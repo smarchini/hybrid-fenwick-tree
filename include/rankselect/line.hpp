@@ -77,8 +77,7 @@ namespace dyn {
 
         virtual size_t select(uint64_t rank) const
         {
-            const size_t idx = tree.find(rank) + 1;
-            rank -= (idx != 0 ? tree.get(idx-1) : 0);
+            const size_t idx = tree.find(&rank) + 1;
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
                 if (i >= _bitvector.size()) return -1ULL;
@@ -95,8 +94,7 @@ namespace dyn {
 
         virtual size_t selectZero(uint64_t rank) const
         {
-            const size_t idx = tree.find_complement(rank) + 1;
-            rank -= 64*WORDS*idx - (idx != 0 ? tree.get(idx-1) : 0);
+            const size_t idx = tree.find_complement(&rank) + 1;
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
                 if (i >= _bitvector.size()) return -1ULL;
