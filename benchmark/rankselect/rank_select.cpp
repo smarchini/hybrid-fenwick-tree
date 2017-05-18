@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    ;
     size_t size, queries;
     if (!(istringstream(argv[1]) >> size) || !(istringstream(argv[2]) >> queries)) {
         cerr << "Invalid parameters\n";
