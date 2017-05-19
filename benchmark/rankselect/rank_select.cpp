@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    uniform_int_distribution<uint64_t> dist(0, -1ULL);
+    uniform_int_distribution<uint64_t> dist(0, UINT64_MAX);
     uint64_t *bitvector = new uint64_t[size];
     for (size_t i = 0; i < size; i++)
         bitvector[i] = dist(mte);

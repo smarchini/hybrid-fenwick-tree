@@ -76,7 +76,7 @@ public:
     }
 
     void datainit(mt19937 &mte) {
-        uniform_int_distribution<uint64_t> bvdist(0, -1ULL);
+        uniform_int_distribution<uint64_t> bvdist(0, UINT64_MAX);
         uniform_int_distribution<size_t> idxdist(0, size-1);
 
         for (size_t i = 0; i < size; i++) {
@@ -147,7 +147,7 @@ public:
         cout << "update... " << flush;
         begin = high_resolution_clock::now();
         for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.update(updateidx[i], updateval[i]); 
+            u ^= bv.update(updateidx[i], updateval[i]);
         end = high_resolution_clock::now();
         auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
         fupdate << to_string(update * c);

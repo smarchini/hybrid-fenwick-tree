@@ -82,7 +82,7 @@ namespace dyn {
          * specified number of ones.
          *
          * Returns: the greatest position that is preceded by @rank ones or
-         * -1ULL if there isn't one
+         * SIZE_MAX if there isn't one
          */
         virtual size_t select(uint64_t rank) const;
 
@@ -94,7 +94,7 @@ namespace dyn {
          * specified number of zeroes.
          *
          * Returns: The greatest position that is preceded by @rank zeroes or
-         * -1ULL if there isn't one
+         * SIZE_MAX if there isn't one
          */
         virtual size_t selectZero(uint64_t rank) const;
 

@@ -37,14 +37,14 @@ namespace dyn {
          * @val: Value to search
          *
          * This method finds the maximum index whose the values mantained by the
-         * cumulative frequency is less or equal than @val. It returns -1 if
-         * such an element doesn't exists.
+         * cumulative frequency is less or equal than @val. It returns SIZE_MAX
+         * if such an element doesn't exists.
          *
          * If @val is a reference it gives you the distance of such an element,
          * that is: @val - FenwickTree::get(FenwickTree::find(val))
          *
          * Returns: The closest index whose its element is less or equal than
-         * @val or -1ULL if it doesn't exists.
+         * @val or SIZE_MAX if it doesn't exists.
          */
         virtual std::size_t find(std::uint64_t *val) const = 0;
         std::size_t find(std::uint64_t val) const {
@@ -62,7 +62,7 @@ namespace dyn {
          * It returns -1 if such an element doesn't exists.
          *
          * Returns: The closest index whose its element is less or equal than
-         * MAX_VAL-@val or -1ULL if it doesn't exists.
+         * MAX_VAL-@val or SIZE_MAX if it doesn't exists.
          */
         virtual std::size_t find_complement(std::uint64_t *val) const = 0;
         std::size_t find_complement(std::uint64_t val) const {

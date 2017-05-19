@@ -103,7 +103,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t elem_size = get_size(height);
                 const size_t byte_pos = level[height] + elem_size * idx;
 
@@ -129,7 +129,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t elem_size = get_size(height);
                 const size_t byte_pos = level[height] + elem_size * idx;
 

@@ -111,7 +111,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
                 const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
                 const size_t shift = bit_pos & 0b111;
@@ -138,7 +138,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
                 const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
                 const size_t shift = bit_pos & 0b111;

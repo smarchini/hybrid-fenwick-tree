@@ -120,7 +120,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t tree_idx = level[height] + idx;
 
                 idx <<= 1;
@@ -153,7 +153,7 @@ namespace dyn {
         {
             size_t node = 0, idx = 0;
 
-            for (size_t height = level.size() - 2; height != -1ULL; height--) {
+            for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
                 const size_t tree_idx = level[height] + idx;
 
                 idx <<= 1;

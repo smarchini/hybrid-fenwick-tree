@@ -80,7 +80,7 @@ namespace dyn {
             const size_t idx = tree.find(&rank) + 1;
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
-                if (i >= _bitvector.size()) return -1ULL;
+                if (i >= _bitvector.size()) return SIZE_MAX;
 
                 const uint64_t rank_chunk = popcount(_bitvector[i]);
                 if (rank < rank_chunk)
@@ -89,7 +89,7 @@ namespace dyn {
                     rank -= rank_chunk;
             }
 
-            return -1ULL;
+            return SIZE_MAX;
         }
 
         virtual size_t selectZero(uint64_t rank) const
@@ -97,7 +97,7 @@ namespace dyn {
             const size_t idx = tree.find_complement(&rank) + 1;
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
-                if (i >= _bitvector.size()) return -1ULL;
+                if (i >= _bitvector.size()) return SIZE_MAX;
 
                 const uint64_t rank_chunk = popcount(~_bitvector[i]);
                 if (rank < rank_chunk)
@@ -106,7 +106,7 @@ namespace dyn {
                     rank -= rank_chunk;
             }
 
-            return -1ULL;
+            return SIZE_MAX;
         }
 
         virtual uint64_t update(size_t index, uint64_t word)

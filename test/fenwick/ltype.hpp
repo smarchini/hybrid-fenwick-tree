@@ -40,7 +40,7 @@ TEST(ltype_fenwick_tree, increments_by_one)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(-1ULL, t.find_complement(i)) << "at index " << i;
+        EXPECT_EQ(SIZE_MAX, t.find_complement(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq1[k-1]; i < 64*(k+1)-seq1[k]; i++)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;
@@ -99,7 +99,7 @@ TEST(ltype_fenwick_tree, increasing_increments)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(-1ULL, t.find_complement(i)) << "at index " << i;
+        EXPECT_EQ(SIZE_MAX, t.find_complement(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq2[k-1]; i < 64*(k+1)-seq2[k]; i++)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;
@@ -158,7 +158,7 @@ TEST(ltype_fenwick_tree, non_complete)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(-1ULL, t.find_complement(i)) << "at index " << i;
+        EXPECT_EQ(SIZE_MAX, t.find_complement(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 20; k++) {
         for (std::uint64_t i = 64*k-seq3[k-1]; i < 64*(k+1)-seq3[k]; i++)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;

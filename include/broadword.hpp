@@ -168,7 +168,7 @@ namespace dyn {
      */
     inline uint64_t compact_bitmask(size_t count, size_t pos)
     {
-        return (-(count != 0ULL)) & (-1ULL >> (64 - count)) << pos;
+        return (-(count != 0ULL)) & (UINT64_MAX >> (64 - count)) << pos;
     }
 
 

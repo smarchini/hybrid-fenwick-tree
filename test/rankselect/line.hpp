@@ -6,8 +6,8 @@
 TEST(line_rank_select, all_ones_1024)
 {
     constexpr size_t MAX = 16;
-    std::uint64_t bitvect[MAX] = { -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL,
-                                   -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL, -1ULL };
+    std::uint64_t bitvect[MAX] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
+                                   UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 
     dyn::LineRankSelect<dyn::NaiveFenwickTree, 8> naive(bitvect, MAX);
     dyn::LineRankSelect<dyn::LTypeFenwickTree, 8> ltype(bitvect, MAX);
@@ -49,13 +49,13 @@ TEST(line_rank_select, all_ones_1024)
     }
 
     for (size_t i = 0; i < 10; i++) {
-        EXPECT_EQ(-1ULL, naive.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ltype.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, type.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, lbyte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, byte.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, lbit.selectZero(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, bit.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, naive.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, ltype.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, type.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, lbyte.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, byte.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, lbit.selectZero(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, bit.selectZero(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < MAX; i++) {
@@ -79,13 +79,13 @@ TEST(line_rank_select, all_ones_1024)
     }
 
     for (size_t i = 0; i < MAX; i++) {
-        naive.update(i, -1ULL);
-        ltype.update(i, -1ULL);
-        type.update(i, -1ULL);
-        lbyte.update(i, -1ULL);
-        byte.update(i, -1ULL);
-        lbit.update(i, -1ULL);
-        bit.update(i, -1ULL);
+        naive.update(i, UINT64_MAX);
+        ltype.update(i, UINT64_MAX);
+        type.update(i, UINT64_MAX);
+        lbyte.update(i, UINT64_MAX);
+        byte.update(i, UINT64_MAX);
+        lbit.update(i, UINT64_MAX);
+        bit.update(i, UINT64_MAX);
     }
 
     for (size_t i = 0; i <= 1024; i++) {
@@ -135,13 +135,13 @@ TEST(line_rank_select, all_zeroes_1024)
     }
 
     for (size_t i = 0; i < 1024; i++) {
-        EXPECT_EQ(-1ULL, naive.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, ltype.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, type.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, lbyte.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, byte.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, lbit.select(i)) << "at index: " << i;
-        EXPECT_EQ(-1ULL, bit.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, naive.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, ltype.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, type.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, lbyte.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, byte.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, lbit.select(i)) << "at index: " << i;
+        EXPECT_EQ(SIZE_MAX, bit.select(i)) << "at index: " << i;
     }
 
     for (size_t i = 0; i < 1024; i++) {

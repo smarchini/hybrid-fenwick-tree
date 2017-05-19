@@ -17,7 +17,7 @@ TEST(rankselect_like_dynamic, random)
     std::uint64_t *bitvect = new std::uint64_t[SIZE];
     std::uint64_t *updates = new std::uint64_t[SIZE];
 
-    std::uniform_int_distribution<std::uint64_t> dist(0, -1ULL);
+    std::uniform_int_distribution<std::uint64_t> dist(0, UINT64_MAX);
     for (size_t i = 0; i < SIZE; i++) {
         bitvect[i] = dist(mte);
         updates[i] = dist(mte);

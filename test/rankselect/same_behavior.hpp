@@ -9,7 +9,7 @@ void rankselect_random_test(std::size_t size)
     using namespace dyn;
 
     static std::mt19937 mte;
-    std::uniform_int_distribution<std::uint64_t> dist(0, -1ULL);
+    std::uniform_int_distribution<std::uint64_t> dist(0, UINT64_MAX);
 
     std::uint64_t *bitvect = new std::uint64_t[size];
     std::uint64_t *updates = new std::uint64_t[size];
@@ -93,7 +93,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_bit.select(i)) << "at index: " << i << " template parameter " << S;
     }
 
-    
+
     for (size_t i = 0; i < size; i++) {
         auto res = word_naive.selectZero(i);
 
@@ -112,7 +112,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, line_lbit.selectZero(i)) << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, line_bit.selectZero(i)) << "at index: " << i << " template parameter " << S;
     }
-    
+
 
     for (size_t i = 0; i < size; i++) {
         word_naive.update(i, updates[i]);
