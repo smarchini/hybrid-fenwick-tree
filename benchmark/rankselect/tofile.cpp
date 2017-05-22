@@ -24,6 +24,11 @@ using namespace std;
 using namespace dyn;
 using namespace std::chrono;
 
+
+template <size_t N>
+using LByteTypeFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 10>;
+
+
 class Benchmark {
 private:
     string path;
@@ -190,15 +195,17 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    bench.filesinit("Naive1,Type1,LType1,Byte1,LByte1,Bit1,LBit1");
+    bench.filesinit("Naive1,Type1,LType1,Byte1,LByte1,Bit1,LBit1,LByteType1");
 
-    cout << "Naive1(" << size << ", " << queries << "): "; bench.run<WordRankSelect<NaiveFenwickTree>>(); bench.separator();
-    cout << "Type1(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<TypeFenwickTree>>();  bench.separator();
-    cout << "LType1(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LTypeFenwickTree>>(); bench.separator();
-    cout << "Byte1(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<ByteFenwickTree>>();  bench.separator();
-    cout << "LByte1(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LByteFenwickTree>>(); bench.separator();
-    cout << "Bit1(" << size << ", " << queries << "):   "; bench.run<WordRankSelect<BitFenwickTree>>();   bench.separator();
-    cout << "LBit1(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LBitFenwickTree>>();  bench.separator("\n");
+    cout << "Naive1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<NaiveFenwickTree>>();      bench.separator();
+    cout << "Type1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<TypeFenwickTree>>();       bench.separator();
+    cout << "LType1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<LTypeFenwickTree>>();      bench.separator();
+    cout << "Byte1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<ByteFenwickTree>>();       bench.separator();
+    cout << "LByte1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<LByteFenwickTree>>();      bench.separator();
+    cout << "Bit1(" << size << ", " << queries << "):        "; bench.run<WordRankSelect<BitFenwickTree>>();        bench.separator();
+    cout << "LBit1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<LBitFenwickTree>>();       bench.separator();
+    cout << "LByteType1(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LByteTypeFenwickTree>>();  bench.separator("\n");
+
 
     return 0;
 }

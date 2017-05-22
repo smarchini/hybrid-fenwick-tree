@@ -8,9 +8,12 @@
 
 namespace dyn {
 
-    template <template<size_t> class BOTTOM_TREE, template<size_t> class TOP_TREE, size_t LEAF_MAXVAL, size_t BOTTOM_ELEMENTS>
+    template <template<size_t> class TOP_TREE, template<size_t> class BOTTOM_TREE, size_t LEAF_MAXVAL, size_t BOTTOM_HEIGHT>
     class MixedFenwickTree : public FenwickTree
     {
+    private:
+        static constexpr size_t BOTTOM_ELEMENTS = 1ULL << BOTTOM_HEIGHT;
+
     protected:
         const size_t _size;
         std::vector<BOTTOM_TREE<LEAF_MAXVAL>> bottom_trees;
@@ -95,7 +98,7 @@ namespace dyn {
                 size += t.bit_count();
 
             return size
-                + sizeof(MixedFenwickTree<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_ELEMENTS>)
+                + sizeof(MixedFenwickTree<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_HEIGHT>)
                 + top_tree.bit_count();
         }
 
@@ -108,7 +111,6 @@ namespace dyn {
             for (size_t i = 1; i <= length; i++)
                 subseq[i-1] = sequence[i * BOTTOM_ELEMENTS - 1];
 
-            // TODO: assicurarsi che tutti i Fenwick si comportino bene con length=0 (eg. Bit da problemi)
             TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> tree(subseq, length);
             delete[] subseq;
             return tree;

@@ -9,6 +9,7 @@
 #include "fenwick/lbyte.hpp"
 #include "fenwick/bit.hpp"
 #include "fenwick/lbit.hpp"
+#include "fenwick/mixed.hpp"
 
 #include "fenwick/same_behavior.hpp"
 

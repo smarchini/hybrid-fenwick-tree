@@ -30,7 +30,7 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *rank1, uint64_t *select0, uint64_t *select1, size_t size, size_t queries);
 
 template <size_t N>
-using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 16386>;
+using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 12>;
 
 int main(int argc, char *argv[])
 {

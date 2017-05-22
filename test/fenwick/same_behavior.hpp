@@ -28,9 +28,6 @@ void fenwick_random_test(std::size_t size)
     dyn::TypeFenwickTree<S> type(increments, size);
     dyn::ByteFenwickTree<S> byte(increments, size);
 
-    dyn::MixedFenwickTree<dyn::LByteFenwickTree, dyn::ByteFenwickTree, S, 8> mixed8(increments, size);
-    dyn::MixedFenwickTree<dyn::LByteFenwickTree, dyn::ByteFenwickTree, S, 256> mixed256(increments, size);
-
     // get
     for (size_t i = 0; i < size; i++) {
         std::uint64_t naive_get = naive.get(i);
@@ -41,10 +38,7 @@ void fenwick_random_test(std::size_t size)
         EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-
-        EXPECT_EQ(naive_get, mixed8.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, mixed256.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-    }
+   }
 
     // find
     for (std::uint64_t i = 0; i < size; i++) {
@@ -56,9 +50,6 @@ void fenwick_random_test(std::size_t size)
         EXPECT_EQ(naive_find, bit.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_find, type.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_find, byte.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-
-        EXPECT_EQ(naive_find, mixed8.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_find, mixed256.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // set
@@ -70,9 +61,6 @@ void fenwick_random_test(std::size_t size)
         bit.set(i,   set_updates[i]);
         type.set(i,  set_updates[i]);
         byte.set(i,  set_updates[i]);
-
-        mixed8.set(i, set_updates[i]);
-        mixed256.set(i, set_updates[i]);
     }
 
     // get
@@ -85,9 +73,6 @@ void fenwick_random_test(std::size_t size)
         EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-
-        EXPECT_EQ(naive_get, mixed8.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, mixed256.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // find complement
@@ -100,9 +85,6 @@ void fenwick_random_test(std::size_t size)
         EXPECT_EQ(naive_findcomplement, bit.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_findcomplement, type.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
         EXPECT_EQ(naive_findcomplement, byte.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-
-        EXPECT_EQ(naive_findcomplement, mixed8.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, mixed256.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     delete[] increments;
