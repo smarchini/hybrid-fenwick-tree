@@ -16,7 +16,7 @@ FENBENCH_PATH = benchout/fenwick/$(shell date +"%Y%m%d-%H%M%S")/
 RANSELBENCH_PATH = benchout/rankselect/$(shell date +"%Y%m%d-%H%M%S")/
 
 FENBENCH_VALS = 10000 100000 1000000 10000000 10000000
-RANSELBENCH_VALS = 10000 100000 1000000 10000000 10000000
+RANSELBENCH_VALS = 10000 100000 1000000 10000000 10000000 100000000 1000000000 2000000000 3000000000 4000000000 5000000000 6000000000 7000000000 8000000000 9000000000 10000000000
 
 
 all: test benchmark
@@ -37,16 +37,18 @@ fenbench: benchmark/fenwick
 
 ranselbench: benchmark/rankselect
 	@mkdir -p $(RANSELBENCH_PATH)
-	for size in $(RANSELBENCH_VALS); do \
-		echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000"; \
-		bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000; \
+	for (( m = 1; m < 10; m++ )); do \
+		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
+			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000"; \
+			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000; \
+		done; \
 	done
 
 
 # Benchmark
 benchmark: benchmark/fenwick benchmark/rankselect
 
-benchmark/fenwick: bin/benchmark/fenwick/trees bin/benchmark/fenwick/get bin/benchmark/fenwick/set bin/benchmark/fenwick/find bin/benchmark/fenwick/tofile
+benchmark/fenwick: bin/benchmark/fenwick/trees bin/benchmark/fenwick/tofile
 
 benchmark/rankselect: bin/benchmark/rankselect/rankselect bin/benchmark/rankselect/tofile
 
@@ -67,18 +69,6 @@ bin/benchmark/fenwick/trees: $(INCLUDES) benchmark/fenwick/trees.cpp
 bin/benchmark/fenwick/tofile: $(INCLUDES) benchmark/fenwick/tofile.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/tofile.cpp -o bin/benchmark/fenwick/tofile
-
-bin/benchmark/fenwick/get: $(INCLUDES) benchmark/fenwick/get.cpp
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/get.cpp -o bin/benchmark/fenwick/get
-
-bin/benchmark/fenwick/set: $(INCLUDES) benchmark/fenwick/set.cpp
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/set.cpp -o bin/benchmark/fenwick/set
-
-bin/benchmark/fenwick/find: $(INCLUDES) benchmark/fenwick/find.cpp
-	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/find.cpp -o bin/benchmark/fenwick/find
 
 
 # Benchmark rank select
