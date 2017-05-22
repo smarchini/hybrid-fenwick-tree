@@ -31,7 +31,7 @@ namespace dyn {
          */
         BitFenwickTree(uint64_t sequence[], size_t size) :
             _size(size),
-            tree(get_bitpos(size-1)/8 + (lsb(size)+LEAF_BITSIZE)/8 + 1 + 4)
+            tree(get_bitpos(size)/8 + 4) // +4 to prevent segfault the last element
         {
             for (size_t i = 1; i <= size; i++) {
                 const size_t bitpos = get_bitpos(i-1);

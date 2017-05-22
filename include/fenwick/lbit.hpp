@@ -38,14 +38,14 @@ namespace dyn {
          */
         LBitFenwickTree(uint64_t sequence[], size_t size) :
             _size(size),
-            level(msb(size) + 2)
+            level(size != 0 ? msb(size)+2 : 1)
         {
             level[0] = 0;
             for (size_t i = 1; i < level.size(); i++)
                 level[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level[i-1];
 
             const size_t levels = level.size() - 1;
-            tree = DArray<uint8_t>((level[levels]-1) / 8 + 1 + 4); // +4 to prevent segfault on the last element
+            tree = DArray<uint8_t>(level[levels] / 8 + 4); // +4 to prevent segfault on the last element
 
             for (size_t l = 0; l < levels; l++) {
                 for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
