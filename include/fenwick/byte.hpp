@@ -136,12 +136,7 @@ namespace dyn {
         {
             return idx
                 + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 24 ? (24 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 32 ? (32 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 40 ? (40 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 48 ? (48 - LEAF_BITSIZE + 1) : 0))
-                + (idx >> (LEAF_BITSIZE <= 56 ? (56 - LEAF_BITSIZE + 1) : 0));
+                + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;
         }
 
     };
