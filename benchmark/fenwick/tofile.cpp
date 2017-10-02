@@ -20,6 +20,14 @@ using namespace std;
 using namespace dyn;
 using namespace std::chrono;
 
+
+template <size_t N> using LByteByte14 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LByteBit14  = MixedFenwickTree<LByteFenwickTree, BitFenwickTree,  N, 14>;
+template <size_t N> using LBitByte14  = MixedFenwickTree<LBitFenwickTree,  ByteFenwickTree, N, 14>;
+template <size_t N> using LBitBit14   = MixedFenwickTree<LBitFenwickTree,  BitFenwickTree,  N, 14>;
+template <size_t N> using LTypeByte14 = MixedFenwickTree<LTypeFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LTypeBit14  = MixedFenwickTree<LTypeFenwickTree, BitFenwickTree,  N, 14>;
+
 class Benchmark {
 private:
     string path;
@@ -72,18 +80,18 @@ public:
         for (size_t i = 0; i < size; i++)
             sequence[i] = distval(mte);
 
+        uint64_t max = 0;
+        for (size_t i = 0; i < size; i++)
+            max += sequence[i];
+
+        uniform_int_distribution<uint64_t> distfind(0, max);
+
         for (size_t i = 0; i < queries; i++) {
             setidx[i] = distidx(mte);
             setval[i] = distval(mte);
             getidx[i] = distidx(mte);
-
-            findval[0] = sequence[0];
-            for (size_t j = distidx(mte); j != 0; j--)
-                findval[i] += sequence[j];
-
-            findcval[0] = sequence[0];
-            for (size_t j = distidx(mte); j != 0; j--)
-                findcval[i] += sequence[j];
+            findval[i] = distfind(mte);
+            findcval[i] = distfind(mte);
         }
     }
 
@@ -168,15 +176,36 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    bench.filesinit("Naive,Type,LType,Byte,LByte,Bit,LBit");
 
-    cout << "Naive(" << size << ", " << queries << "): "; bench.run<NaiveFenwickTree<64>>(); bench.separator();
-    cout << "Type(" << size << ", " << queries << "):  "; bench.run<TypeFenwickTree<64>>();  bench.separator();
-    cout << "LType(" << size << ", " << queries << "): "; bench.run<LTypeFenwickTree<64>>(); bench.separator();
-    cout << "Byte(" << size << ", " << queries << "):  "; bench.run<ByteFenwickTree<64>>();  bench.separator();
-    cout << "LByte(" << size << ", " << queries << "): "; bench.run<LByteFenwickTree<64>>(); bench.separator();
-    cout << "Bit(" << size << ", " << queries << "):   "; bench.run<BitFenwickTree<64>>();   bench.separator();
-    cout << "LBit(" << size << ", " << queries << "):  "; bench.run<LBitFenwickTree<64>>();  bench.separator("\n");
+    //bench.filesinit("Naive,Type,LType,Byte,LByte,Bit,LBit,LByteByte14");
+    //cout << "Naive(" << size << ", " << queries << "):       "; bench.run<NaiveFenwickTree<64>>(); bench.separator();
+    //cout << "Type(" << size << ", " << queries << "):        "; bench.run<TypeFenwickTree<64>>();  bench.separator();
+    //cout << "LType(" << size << ", " << queries << "):       "; bench.run<LTypeFenwickTree<64>>(); bench.separator();
+    //cout << "Byte(" << size << ", " << queries << "):        "; bench.run<ByteFenwickTree<64>>();  bench.separator();
+    //cout << "LByte(" << size << ", " << queries << "):       "; bench.run<LByteFenwickTree<64>>(); bench.separator();
+    //cout << "Bit(" << size << ", " << queries << "):         "; bench.run<BitFenwickTree<64>>();   bench.separator();
+    //cout << "LBit(" << size << ", " << queries << "):        "; bench.run<LBitFenwickTree<64>>();  bench.separator();
+    //cout << "LByteByte14(" << size << ", " << queries << "): "; bench.run<LByteByte14<64>>();      bench.separator("\n");
+
+
+    //bench.filesinit("LByteByte10,LByteByte12,LByteByte14,LByteByte16,LByteByte18,LByteByte20");
+    //cout << "LByteByte10(" << size << ", " << queries << "): "; bench.run<LByteByte10<64>>();        bench.separator();
+    //cout << "LByteByte12(" << size << ", " << queries << "): "; bench.run<LByteByte12<64>>();        bench.separator();
+    //cout << "LByteByte14(" << size << ", " << queries << "): "; bench.run<LByteByte14<64>>();        bench.separator();
+    //cout << "LByteByte16(" << size << ", " << queries << "): "; bench.run<LByteByte16<64>>();        bench.separator();
+    //cout << "LByteByte18(" << size << ", " << queries << "): "; bench.run<LByteByte18<64>>();        bench.separator();
+    //cout << "LByteByte20(" << size << ", " << queries << "): "; bench.run<LByteByte20<64>>();        bench.separator("\n");
+
+
+    bench.filesinit("LByteByte14,LByteBit14,LBitByte14,LBitBit14,LTypeByte14,LTypeBit14");
+    cout << "LByteByte14(" << size << ", " << queries << "): "; bench.run<LByteByte14<64>>(); bench.separator();
+    cout << "LByteBit14(" << size << ", " << queries << "):  "; bench.run<LByteBit14<64>>();  bench.separator();
+    cout << "LBitByte14(" << size << ", " << queries << "):  "; bench.run<LBitByte14<64>>();  bench.separator();
+    cout << "LBitBit14(" << size << ", " << queries << "):   "; bench.run<LBitBit14<64>>();   bench.separator();
+    cout << "LTypeByte14(" << size << ", " << queries << "): "; bench.run<LTypeByte14<64>>(); bench.separator();
+    cout << "LTypeBit14(" << size << ", " << queries << "):  "; bench.run<LTypeBit14<64>>();  bench.separator("\n");
+
+
 
     return 0;
 }

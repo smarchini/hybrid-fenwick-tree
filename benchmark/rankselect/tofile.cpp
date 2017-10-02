@@ -25,8 +25,23 @@ using namespace dyn;
 using namespace std::chrono;
 
 
-template <size_t N>
-using LByteTypeFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 10>;
+//template <size_t N> using LByteByte14 = MixedFenwickTree<LTypeFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LByteByte16 = MixedFenwickTree<LTypeFenwickTree, ByteFenwickTree, N, 16>;
+
+//template <size_t N> using LTypeBit = MixedFenwickTree<LTypeFenwickTree, BitFenwickTree, N, 12>;
+//template <size_t N> using LByteBit = MixedFenwickTree<LTypeFenwickTree, BitFenwickTree, N, 12>;
+//template <size_t N> using LBitBit  = MixedFenwickTree<LBitFenwickTree,  BitFenwickTree, N, 12>;
+
+
+//template <size_t N> using LByteTypeFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 12>;
+//template <size_t N> using LTypeNaiveFenwickTree = MixedFenwickTree<LTypeFenwickTree, NaiveFenwickTree, N, 12>;
+
+//template <size_t N> using LByteByteFenwickTree5  = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N,  5>;
+//template <size_t N> using LByteByteFenwickTree8  = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N,  8>;
+//template <size_t N> using LByteByteFenwickTree10 = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N, 10>;
+//template <size_t N> using LByteByteFenwickTree12 = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N, 12>;
+//template <size_t N> using LByteByteFenwickTree15 = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N, 15>;
+//template <size_t N> using LByteByteFenwickTree20 = MixedFenwickTree<LByteFenwickTree, NaiveFenwickTree, N, 20>;
 
 
 class Benchmark {
@@ -176,7 +191,7 @@ private:
             file << text << endl;
         }
 
-        file << size << ",";
+        file << size*64 << ",";
     }
 };
 
@@ -195,16 +210,34 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    bench.filesinit("Naive1,Type1,LType1,Byte1,LByte1,Bit1,LBit1,LByteType1");
+    //bench.filesinit("LTypeByte,LByteByte,LBitByte,LTypeBit,LByteBit,LBitBit");
 
-    cout << "Naive1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<NaiveFenwickTree>>();      bench.separator();
-    cout << "Type1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<TypeFenwickTree>>();       bench.separator();
-    cout << "LType1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<LTypeFenwickTree>>();      bench.separator();
-    cout << "Byte1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<ByteFenwickTree>>();       bench.separator();
-    cout << "LByte1(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<LByteFenwickTree>>();      bench.separator();
-    cout << "Bit1(" << size << ", " << queries << "):        "; bench.run<WordRankSelect<BitFenwickTree>>();        bench.separator();
-    cout << "LBit1(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<LBitFenwickTree>>();       bench.separator();
-    cout << "LByteType1(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LByteTypeFenwickTree>>();  bench.separator("\n");
+    //cout << "LTypeByte(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LTypeByte>>(); bench.separator();
+    //cout << "LByteByte(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LByteByte>>(); bench.separator();
+    //cout << "LBitByte(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LBitByte>>();  bench.separator();
+    //cout << "LTypeBit(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LTypeBit>>();  bench.separator();
+    //cout << "LByteBit(" << size << ", " << queries << "):  "; bench.run<WordRankSelect<LByteBit>>();  bench.separator();
+    //cout << "LBitBit(" << size << ", " << queries << "):   "; bench.run<WordRankSelect<LBitBit>>();   bench.separator("\n");
+
+    bench.filesinit("LByteByte16,LByteByte16(2),LByteByte16(4),LByteByte16(8),LByteByte16(16),LByteByte16(32)");
+    cout << "LByteByte16(" << size << ", " << queries << "):     "; bench.run<WordRankSelect<LByteByte16    >>();  bench.separator();
+    cout << "LByteByte16(2)(" << size << ", " << queries << "):  "; bench.run<LineRankSelect<LByteByte16,  2>>();  bench.separator();
+    cout << "LByteByte16(4)(" << size << ", " << queries << "):  "; bench.run<LineRankSelect<LByteByte16,  4>>();  bench.separator();
+    cout << "LByteByte16(8)(" << size << ", " << queries << "):  "; bench.run<LineRankSelect<LByteByte16,  8>>();  bench.separator();
+    cout << "LByteByte16(16)(" << size << ", " << queries << "): "; bench.run<LineRankSelect<LByteByte16, 16>>();  bench.separator();
+    cout << "LByteByte16(32)(" << size << ", " << queries << "): "; bench.run<LineRankSelect<LByteByte16, 32>>();  bench.separator("\n");
+
+    //bench.filesinit("Naive,Type,LType,Byte,LByte,LByteByte14,LByteByte16");
+
+    //cout << "Naive(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<NaiveFenwickTree>>(); bench.separator();
+    //cout << "Type(" << size << ", " << queries << "):      "; bench.run<WordRankSelect<TypeFenwickTree>>();  bench.separator();
+    //cout << "LType(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<LTypeFenwickTree>>(); bench.separator();
+    //cout << "Byte(" << size << ", " << queries << "):        "; bench.run<WordRankSelect<ByteFenwickTree>>();  bench.separator();
+    //cout << "LByte(" << size << ", " << queries << "):       "; bench.run<WordRankSelect<LByteFenwickTree>>(); bench.separator();
+    //cout << "Bit(" << size << ", " << queries << "):         "; bench.run<WordRankSelect<BitFenwickTree>>();   bench.separator();
+    //cout << "LBit(" << size << ", " << queries << "):        "; bench.run<WordRankSelect<LBitFenwickTree>>();  bench.separator();
+    //cout << "LByteByte14(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LByteByte14>>();      bench.separator();
+    //cout << "LByteByte16(" << size << ", " << queries << "): "; bench.run<WordRankSelect<LByteByte16>>();      bench.separator("\n");
 
 
     return 0;

@@ -1,7 +1,7 @@
 import sys, csv
 import matplotlib.pyplot as plt
 
-def plot(infile, graphtype='linear'):
+def plot(infile, graphtype='semilog'):
     with open(infile, "r") as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         elements = [ r for r in reader ]
