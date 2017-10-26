@@ -22,6 +22,13 @@ using namespace dyn;
 using namespace std::chrono;
 
 
+template <size_t N> using LByteByte14 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LByteBit14  = MixedFenwickTree<LByteFenwickTree, BitFenwickTree,  N, 14>;
+template <size_t N> using LBitByte14  = MixedFenwickTree<LBitFenwickTree,  ByteFenwickTree, N, 14>;
+template <size_t N> using LBitBit14   = MixedFenwickTree<LBitFenwickTree,  BitFenwickTree,  N, 14>;
+template <size_t N> using LTypeByte14 = MixedFenwickTree<LTypeFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LTypeBit14  = MixedFenwickTree<LTypeFenwickTree, BitFenwickTree,  N, 14>;
+
 class Benchmark {
 private:
     string path;

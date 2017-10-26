@@ -237,7 +237,7 @@ private:
             file << text << endl;
         }
 
-        file << size << ",";
+        file << size*64 << ",";
     }
 };
 
@@ -256,19 +256,6 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-
-    //bench.filesinit("Naive32,Type32,LType32,Byte32,LByte32,Bit32,LBit32,LByteType32,LTypeNaive32");
-    //cout << "Naive1(" << size << ", " << queries << "):      "; bench.run<LineRankSelect<NaiveFenwickTree, 32>>();      bench.separator();
-    //cout << "Type1(" << size << ", " << queries << "):       "; bench.run<LineRankSelect<TypeFenwickTree,  32>>();      bench.separator();
-    //cout << "LType1(" << size << ", " << queries << "):      "; bench.run<LineRankSelect<LTypeFenwickTree, 32>>();      bench.separator();
-    //cout << "Byte1(" << size << ", " << queries << "):       "; bench.run<LineRankSelect<ByteFenwickTree,  32>>();      bench.separator();
-    //cout << "LByte1(" << size << ", " << queries << "):      "; bench.run<LineRankSelect<LByteFenwickTree, 32>>();      bench.separator();
-    //cout << "Bit1(" << size << ", " << queries << "):        "; bench.run<LineRankSelect<BitFenwickTree,   32>>();      bench.separator();
-    //cout << "LBit1(" << size << ", " << queries << "):       "; bench.run<LineRankSelect<LBitFenwickTree,  32>>();      bench.separator();
-    //cout << "LByteType1(" << size << ", " << queries << "):  "; bench.run<LineRankSelect<LByteTypeFenwickTree,  32>>(); bench.separator();
-    //cout << "LTypeNaive1(" << size << ", " << queries << "): "; bench.run<LineRankSelect<LTypeNaiveFenwickTree, 32>>(); bench.separator("\n");
-
-
     bench.filesinit("Fenw,LFenw,Byte,LByte,Bit,LBit,LFenwFenw16,LByteByte16,LBitBit16,Fenw(16),LFenw(16),Byte(16),LByte(16),Bit(16),LBit(16),LFenwFenw16(16),LByteByte16(16),LBitBit16(16),Fenw(32),LFenw(32),Byte(32),LByte(32),Bit(32),LBit(32),LFenwFenw16(32),LByteByte16(32),LBitBit16(32),Fenw(64),LFenw(64),Byte(64),LByte(64),Bit(64),LBit(64),LFenwFenw16(64),LByteByte16(64),LBitBit16(64)");
 
     cout << "Fenw:            "; bench.run<WordRankSelect<NaiveFenwickTree>>();      bench.separator();

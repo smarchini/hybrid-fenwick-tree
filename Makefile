@@ -18,7 +18,6 @@ RANSELBENCH_PATH = benchout/rankselect/$(shell date +"%Y%m%d-%H%M%S")/
 FENBENCH_VALS = 10000 100000 1000000 10000000 10000000
 RANSELBENCH_VALS = 10000 100000 1000000 10000000 10000000 100000000 1000000000 2000000000 3000000000 4000000000 5000000000 6000000000 7000000000 8000000000 9000000000 10000000000
 
-
 all: test benchmark
 
 test: bin/test/test
@@ -46,14 +45,6 @@ ranselbench: benchmark/rankselect
 			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000; \
 		done; \
 	done
-
-# @mkdir -p $(RANSELBENCH_PATH)
-# for (( m = 1; m < 10; m++ )); do \
-# 	for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
-# 		echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000"; \
-# 		bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000; \
-# 	done; \
-# done
 
 
 # Benchmark
