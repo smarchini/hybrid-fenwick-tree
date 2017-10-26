@@ -53,30 +53,31 @@ int main(int argc, char *argv[])
     for (size_t i = 0; i < size; i++)
         bitvector[i] = dist(mte);
 
-    uint64_t ones = 0;
-    for (size_t i = 0; i < size; i++)
-        ones += popcount(bitvector[i]);
+    // uint64_t ones = 0;
+    // for (size_t i = 0; i < size; i++)
+    //     ones += popcount(bitvector[i]);
 
-    uint64_t zeroes = 64*size - ones;
+    // uint64_t zeroes = 64*size - ones;
 
-    uniform_int_distribution<uint64_t> rankdist(0, 64*size);
-    uint64_t *rank0 = new uint64_t[queries], *rank1 = new uint64_t[queries];
-    for (size_t i = 0; i < queries; i++) {
-        rank0[i] = rankdist(mte);
-        rank1[i] = rankdist(mte);
-    }
+    uint64_t *rank0, *rank1, *select0, *select1;
+    // uniform_int_distribution<uint64_t> rankdist(0, 64*size);
+    // uint64_t *rank0 = new uint64_t[queries], *rank1 = new uint64_t[queries];
+    // for (size_t i = 0; i < queries; i++) {
+    //     rank0[i] = rankdist(mte);
+    //     rank1[i] = rankdist(mte);
+    // }
 
-    uniform_int_distribution<uint64_t> select0dist(0, zeroes-1);
-    uint64_t *select0 = new uint64_t[queries];
-    for (size_t i = 0; i < queries; i++)
-        select0[i] = select0dist(mte);
+    // uniform_int_distribution<uint64_t> select0dist(0, zeroes-1);
+    // uint64_t *select0 = new uint64_t[queries];
+    // for (size_t i = 0; i < queries; i++)
+    //     select0[i] = select0dist(mte);
 
-    uniform_int_distribution<uint64_t> select1dist(0, ones-1);
-    uint64_t *select1 = new uint64_t[queries];
-    for (size_t i = 0; i < queries; i++)
-        select1[i] = select1dist(mte);
+    // uniform_int_distribution<uint64_t> select1dist(0, ones-1);
+    // uint64_t *select1 = new uint64_t[queries];
+    // for (size_t i = 0; i < queries; i++)
+    //     select1[i] = select1dist(mte);
 
-    cout << "Bitvector with " << ones << " ones and " << zeroes << " zeroes\n" << endl;
+    //cout << "Bitvector with " << ones << " ones and " << zeroes << " zeroes\n" << endl;
     //dynamic("DYNAMIC", bitvector, rank0, rank1, select0, select1, size); // temporaneamente disabilitato per velocizzare i benchmark
     //cout << "\n------------------------------\n";
     internal<WordRankSelect<NaiveFenwickTree>>("WordRankSelect<NaiveFenwickTree>", bitvector, rank0, rank1, select0, select1, size, queries);
@@ -128,45 +129,45 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *
     high_resolution_clock::time_point begin, end;
     uint64_t u = 0;
 
-	begin = high_resolution_clock::now();
-	T bv(bitvector, size);
-	end = high_resolution_clock::now();
-	auto insert = duration_cast<chrono::nanoseconds>(end-begin).count();
+    begin = high_resolution_clock::now();
+    T bv(bitvector, size);
+    end = high_resolution_clock::now();
+    auto insert = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.rankZero(rank0[i]);
-	end = high_resolution_clock::now();
-    auto ran0 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.rankZero(rank0[i]);
+    // end = high_resolution_clock::now();
+    // auto ran0 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.selectZero(select0[i]);
-	end = high_resolution_clock::now();
-    auto sel0 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.selectZero(select0[i]);
+    // end = high_resolution_clock::now();
+    // auto sel0 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.rank(rank1[i]);
-	end = high_resolution_clock::now();
-    auto ran1 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.rank(rank1[i]);
+    // end = high_resolution_clock::now();
+    // auto ran1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.select(select1[i]);
-	end = high_resolution_clock::now();
-    auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.select(select1[i]);
+    // end = high_resolution_clock::now();
+    // auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 
     const double c = 1. / queries;
     cout << "\n" << name << ": " << bv.bit_count() / (double)size << " b/item\n";
-	cout << "build: " << fixed << setw(12) << insert / (double)size << " ns/item\n";
-	cout << "rank0: " << fixed << setw(12) << ran0 * c << " ns/item\n";
-	cout << "rank1: " << fixed << setw(12) << ran1 * c << " ns/item\n";
-	cout << "sel0:  " << fixed << setw(12) << sel0 * c << " ns/item\n";
-	cout << "sel1:  " << fixed << setw(12) << sel1 * c << " ns/item\n";
+    // cout << "build: " << fixed << setw(12) << insert / (double)size << " ns/item\n";
+    // cout << "rank0: " << fixed << setw(12) << ran0 * c << " ns/item\n";
+    // cout << "rank1: " << fixed << setw(12) << ran1 * c << " ns/item\n";
+    // cout << "sel0:  " << fixed << setw(12) << sel0 * c << " ns/item\n";
+    // cout << "sel1:  " << fixed << setw(12) << sel1 * c << " ns/item\n";
 }
 
 
@@ -176,48 +177,48 @@ void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *r
     uint64_t u = 0;
 
     cout << "Construction... " << flush;
-	begin = high_resolution_clock::now();
-	suc_bv bv;
-	for (uint64_t i = 0; i < size; ++i) {
+    begin = high_resolution_clock::now();
+    suc_bv bv;
+    for (uint64_t i = 0; i < size; ++i) {
         for (uint64_t j = 0; j < 64; ++j)
             bv.insert(64*i + j, bitvector[i] & (1ULL << j));
     }
-	end = high_resolution_clock::now();
+    end = high_resolution_clock::now();
     cout << "finished.\n" << flush;
 
-	auto insert = duration_cast<chrono::nanoseconds>(end-begin).count();
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.rank(rank0[i], 0);
-	end = high_resolution_clock::now();
-    auto ran0 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // auto insert = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.rank(rank0[i], 0);
+    // end = high_resolution_clock::now();
+    // auto ran0 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.select(select0[i], 0);
-	end = high_resolution_clock::now();
-    auto sel0 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.select(select0[i], 0);
+    // end = high_resolution_clock::now();
+    // auto sel0 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.rank(rank1[i], 1);
-	end = high_resolution_clock::now();
-    auto ran1 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.rank(rank1[i], 1);
+    // end = high_resolution_clock::now();
+    // auto ran1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
-	begin = high_resolution_clock::now();
-	for(uint64_t i = 0; i < queries; ++i)
-		u ^= bv.select(select1[i], 1);
-	end = high_resolution_clock::now();
-    auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = high_resolution_clock::now();
+    // for(uint64_t i = 0; i < queries; ++i)
+    //     u ^= bv.select(select1[i], 1);
+    // end = high_resolution_clock::now();
+    // auto sel1 = duration_cast<chrono::nanoseconds>(end-begin).count();
 
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 
     const double c = 1. / queries;
     cout << "\n" << name << ": " << bv.bit_size() / (double)size << " b/item\n";
-	cout << "build: " << fixed << setw(12) << insert * c << " ns/item\n";
-	cout << "rank0: " << fixed << setw(12) << ran0 * c << " ns/item\n";
-	cout << "rank1: " << fixed << setw(12) << ran1 * c << " ns/item\n";
-	cout << "sel0:  " << fixed << setw(12) << sel0 * c << " ns/item\n";
-	cout << "sel1:  " << fixed << setw(12) << sel1 * c << " ns/item\n";
+    // cout << "build: " << fixed << setw(12) << insert * c << " ns/item\n";
+    // cout << "rank0: " << fixed << setw(12) << ran0 * c << " ns/item\n";
+    // cout << "rank1: " << fixed << setw(12) << ran1 * c << " ns/item\n";
+    // cout << "sel0:  " << fixed << setw(12) << sel0 * c << " ns/item\n";
+    // cout << "sel1:  " << fixed << setw(12) << sel1 * c << " ns/item\n";
 }

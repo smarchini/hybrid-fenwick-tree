@@ -61,7 +61,6 @@ namespace dyn {
 
         virtual uint64_t rank(size_t from, size_t to) const
         {
-            // TODO: ottimizzabile?
             return rank(to) - rank(from);
         }
 

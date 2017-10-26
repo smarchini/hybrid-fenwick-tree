@@ -10,6 +10,7 @@
 
 #include "../include/fenwick/fenwick_tree.hpp"
 #include "../include/fenwick/naive.hpp"
+#include "../include/fenwick/lnaive.hpp"
 #include "../include/fenwick/type.hpp"
 #include "../include/fenwick/ltype.hpp"
 #include "../include/fenwick/byte.hpp"

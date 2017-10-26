@@ -3,12 +3,11 @@
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace dyn {
 
    /**
-    * class NaiveFenwickTree - Naive implementation of a Fenwick Tree.
+    * class NaiveFenwickTree - Typical implementation of a Fenwick Tree.
     * @tree: Fenwick Tree data.
     * @size: Number of elements.
     *

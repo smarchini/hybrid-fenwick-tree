@@ -3,21 +3,17 @@
 #include "broadword.hpp"
 
 #include "fenwick/naive.hpp"
-#include "fenwick/type.hpp"
-#include "fenwick/ltype.hpp"
-#include "fenwick/byte.hpp"
-#include "fenwick/lbyte.hpp"
+// TODO: test approfondito per lnaive
 #include "fenwick/bit.hpp"
 #include "fenwick/lbit.hpp"
+#include "fenwick/byte.hpp"
+#include "fenwick/lbyte.hpp"
+#include "fenwick/type.hpp"
+#include "fenwick/ltype.hpp"
 #include "fenwick/mixed.hpp"
 
-#include "fenwick/same_behavior.hpp"
-
-#include "rankselect/word.hpp"
-#include "rankselect/line.hpp"
-
-#include "rankselect/same_behavior.hpp"
-#include "rankselect/like_dynamic.hpp"
+#include "fenwicktree.hpp"
+#include "rankselect.hpp"
 
 int main(int argc, char **argv)
 {

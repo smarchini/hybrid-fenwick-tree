@@ -29,20 +29,31 @@ test: bin/test/test
 
 # Run
 fenbench: benchmark/fenwick
+fenbench: benchmark/fenwick
 	@mkdir -p $(FENBENCH_PATH)
-	for size in $(FENBENCH_VALS); do \
-		echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000"; \
-		bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000; \
+	for (( m = 1; m < 10; m++ )); do \
+		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
+			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000"; \
+			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000; \
+		done; \
 	done
 
 ranselbench: benchmark/rankselect
 	@mkdir -p $(RANSELBENCH_PATH)
 	for (( m = 1; m < 10; m++ )); do \
-		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
+		for (( size = 7*10**m; size < 10**(m+1); size += 10**m )); do \
 			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000"; \
 			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000; \
 		done; \
 	done
+
+# @mkdir -p $(RANSELBENCH_PATH)
+# for (( m = 1; m < 10; m++ )); do \
+# 	for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
+# 		echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000"; \
+# 		bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000; \
+# 	done; \
+# done
 
 
 # Benchmark
@@ -78,7 +89,7 @@ bin/benchmark/rankselect/rankselect: $(INCLUDES) benchmark/rankselect/rank_selec
 
 bin/benchmark/rankselect/tofile: $(INCLUDES) benchmark/rankselect/tofile.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/rankselect/tofile.cpp -o bin/benchmark/rankselect/tofile
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) $(MACRO_CACHESIZE) benchmark/rankselect/tofile.cpp -o bin/benchmark/rankselect/tofile
 
 
 # Other
