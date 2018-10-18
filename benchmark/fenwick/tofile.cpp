@@ -21,223 +21,139 @@ using namespace std;
 using namespace dyn;
 using namespace std::chrono;
 
+template <size_t N> using LNaiveNaive12 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 12>;
+template <size_t N> using LByteByte12 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 12>;
+template <size_t N> using LBitBit12 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 12>;
+template <size_t N> using LNaiveByte12 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 12>;
+template <size_t N> using LNaiveBit12 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 12>;
+template <size_t N> using LByteBit12 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 12>;
 
+template <size_t N> using LNaiveNaive14 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 14>;
 template <size_t N> using LByteByte14 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 14>;
-template <size_t N> using LByteBit14  = MixedFenwickTree<LByteFenwickTree, BitFenwickTree,  N, 14>;
-template <size_t N> using LBitByte14  = MixedFenwickTree<LBitFenwickTree,  ByteFenwickTree, N, 14>;
-template <size_t N> using LBitBit14   = MixedFenwickTree<LBitFenwickTree,  BitFenwickTree,  N, 14>;
-template <size_t N> using LTypeByte14 = MixedFenwickTree<LTypeFenwickTree, ByteFenwickTree, N, 14>;
-template <size_t N> using LTypeBit14  = MixedFenwickTree<LTypeFenwickTree, BitFenwickTree,  N, 14>;
+template <size_t N> using LBitBit14 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 14>;
+template <size_t N> using LNaiveByte14 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 14>;
+template <size_t N> using LNaiveBit14 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 14>;
+template <size_t N> using LByteBit14 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 14>;
 
-class Benchmark {
+template <size_t N> using LNaiveNaive16 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 16>;
+template <size_t N> using LByteByte16 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 16>;
+template <size_t N> using LBitBit16 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 16>;
+template <size_t N> using LNaiveByte16 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 16>;
+template <size_t N> using LNaiveBit16 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 16>;
+template <size_t N> using LByteBit16 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 16>;
+
+template <size_t N> using LNaiveNaive18 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 18>;
+template <size_t N> using LByteByte18 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 18>;
+template <size_t N> using LBitBit18 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 18>;
+template <size_t N> using LNaiveByte18 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 18>;
+template <size_t N> using LNaiveBit18 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 18>;
+template <size_t N> using LByteBit18 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 18>;
+
+template <size_t N> using LNaiveNaive20 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 20>;
+template <size_t N> using LByteByte20 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 20>;
+template <size_t N> using LBitBit20 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 20>;
+template <size_t N> using LNaiveByte20 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 20>;
+template <size_t N> using LNaiveBit20 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 20>;
+template <size_t N> using LByteBit20 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 20>;
+
+
+template <size_t LEAF_MAXVAL> class Benchmark {
 private:
     string path;
     size_t size, queries;
 
-    uint64_t ones = 0, zeroes = 0;
+    mt19937 mte;
+    unique_ptr<uint64_t[]> sequence = make_unique<uint64_t[]>(size);
+    uniform_int_distribution<uint64_t> seqdist, cumseqdist;
+    uniform_int_distribution<size_t> idxdist;
 
-    unique_ptr<size_t[]> updateidx = make_unique<size_t[]>(queries),
-        rank0 = make_unique<size_t[]>(queries),
-        rank1 = make_unique<size_t[]>(queries);
+    ofstream fbuild, fget, fset, ffind, ffindc, fbitspace;
 
-    unique_ptr<uint64_t[]> bitvector = make_unique<uint64_t[]>(size),
-        select0    = make_unique<uint64_t[]>(queries),
-        select1    = make_unique<uint64_t[]>(queries);
-        //updateval  = make_unique<uint64_t[]>(queries);
-
-    ofstream fbuild, frank0, frank1, fselect0, fselect1, fupdate, fbitspace;
-
-public:
+  public:
     Benchmark(string path, size_t size, size_t queries) :
         path(path),
         size(size),
         queries(queries) {}
 
-    ~Benchmark() {
-        fbuild.close();
-        frank0.close();
-        frank1.close();
-        fselect0.close();
-        fselect1.close();
-        fupdate.close();
-        fbitspace.close();
-    }
-
     void filesinit(string order) {
-        finit(fbuild,   "build.csv",     "Elements," + order);
-        finit(frank0,   "rank0.csv",     "Elements," + order);
-        finit(frank1,   "rank1.csv",     "Elements," + order);
-        finit(fselect0, "select0.csv",   "Elements," + order);
-        finit(fselect1, "select1.csv",   "Elements," + order);
-        finit(fupdate,  "update.csv",    "Elements," + order);
-        finit(fbitspace, "bitspace.csv", "Elements," + order);
+      finit(fbuild, "build.csv", "Elements," + order);
+      finit(fget, "get.csv", "Elements," + order);
+      finit(fset, "set.csv", "Elements," + order);
+      finit(ffind, "find.csv", "Elements," + order);
+      finit(ffindc, "findc.csv", "Elements," + order);
+      finit(fbitspace, "bitspace.csv", "Elements," + order);
     }
 
     void separator(string sep = ",") {
         fbuild << sep;
-        frank0 << sep;
-        frank1 << sep;
-        fselect0 << sep;
-        fselect1 << sep;
-        fupdate << sep;
+        fget << sep;
+        fset << sep;
+        ffind << sep;
+        ffindc << sep;
         fbitspace << sep;
     }
 
-    void datainit(mt19937 &mte) {
-        uniform_int_distribution<uint64_t> bvdist(0, UINT64_MAX);
-        uniform_int_distribution<size_t> idxdist(0, size-1);
+    void datainit(mt19937 &engine) {
+      mte = engine;
+      seqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL);
+      idxdist = uniform_int_distribution<size_t>(0, size - 1);
+      cumseqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL*size);
 
-        for (size_t i = 0; i < size; i++) {
-            bitvector[i] = bvdist(mte);
-            ones += popcount(bitvector[i]);
-        }
-
-        zeroes = 64*size - ones;
-
-        uniform_int_distribution<uint64_t> sel0dist(0, zeroes-1);
-        uniform_int_distribution<uint64_t> sel1dist(0, ones-1);
-
-        for (size_t i = 0; i < queries; i++) {
-            rank0[i] = idxdist(mte);
-            rank1[i] = idxdist(mte);
-            select0[i] = sel0dist(mte);
-            select1[i] = sel1dist(mte);
-            //updateval[i] = bvdist(mte);
-            updateidx[i] = idxdist(mte);
-        }
+      for (size_t i = 0; i < size; i++)
+        sequence[i] = seqdist(mte);
     }
 
-    template<typename T>
-    void run() {
-        const double c = 1. / queries;
-        high_resolution_clock::time_point begin, end;
-        uint64_t u = 0;
+    template <template <size_t> class T> void run() {
+      const double c = 1. / queries;
+      high_resolution_clock::time_point begin, end;
+      uint64_t u = 0;
 
-        cout << "Constructor... " << flush;
-        begin = high_resolution_clock::now();
-        T bv(bitvector.get(), size);
-        end = high_resolution_clock::now();
-        auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fbuild << to_string(build / (double)size);
+      cout << "Constructor... " << flush;
+      begin = high_resolution_clock::now();
+      T<LEAF_MAXVAL> tree(sequence.get(), size);
+      end = high_resolution_clock::now();
+      auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
+      fbuild << to_string(build / (double)size);
 
-        cout << "rank0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.rankZero(rank0[i]);
-        end = high_resolution_clock::now();
-        auto rank0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank0 << to_string(rank0 * c);
+      cout << "get... " << flush;
+      begin = high_resolution_clock::now();
+      for (uint64_t i = 0; i < queries; ++i)
+        u ^= tree.get(idxdist(mte));
+      end = high_resolution_clock::now();
+      auto get = duration_cast<chrono::nanoseconds>(end - begin).count();
+      fget << to_string(get * c);
 
-        cout << "select0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.selectZero(select0[i]);
-        end = high_resolution_clock::now();
-        auto select0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect0 << to_string(select0 * c);
+      cout << "set... " << flush;
+      begin = high_resolution_clock::now();
+      for (uint64_t i = 0; i < queries; ++i) {
+        size_t idx = idxdist(mte);
+        tree.set(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
+      }
+      end = high_resolution_clock::now();
+      auto set = duration_cast<chrono::nanoseconds>(end - begin).count();
+      fset << to_string(set * c);
 
-        cout << "rank1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.rank(rank1[i]);
-        end = high_resolution_clock::now();
-        auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank1 << to_string(rank1 * c);
-        cout << "select1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.select(select1[i]);
-        end = high_resolution_clock::now();
-        auto select1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect1 << to_string(select1 * c);
+      cout << "find... " << flush;
+      begin = high_resolution_clock::now();
+      for (uint64_t i = 0; i < queries; ++i)
+        u ^= tree.find(cumseqdist(mte));
+      end = high_resolution_clock::now();
+      auto find = duration_cast<chrono::nanoseconds>(end - begin).count();
+      ffind << to_string(find * c);
 
-        cout << "update... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i) {
-            size_t index = updateidx[i] / 64;
-            uint64_t value = bv.bitvector()[index] ^ (1 << (updateidx[i] % 64));
-            u ^= bv.update(index, value);
-        }
-        end = high_resolution_clock::now();
-        auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fupdate << to_string(update * c);
+      cout << "findc... " << flush;
+      begin = high_resolution_clock::now();
+      for (uint64_t i = 0; i < queries; ++i)
+        u ^= tree.find_complement(cumseqdist(mte));
+      end = high_resolution_clock::now();
+      auto findc = duration_cast<chrono::nanoseconds>(end - begin).count();
+      ffindc << to_string(findc * c);
 
-        //cout << "update... " << flush;
-        //begin = high_resolution_clock::now();
-        //for(uint64_t i = 0; i < queries; ++i)
-        //    u ^= bv.update(updateidx[i], updateval[i]);
-        //end = high_resolution_clock::now();
-        //auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
-        //fupdate << to_string(update * c);
-        //cout << "done.  " << endl;
+      cout << "bitspace... " << flush;
+      fbitspace << to_string(tree.bit_count() / (size * 64.));
+      cout << "done.  " << endl;
 
-        cout << "bitspace... " << flush;
-        fbitspace << to_string(bv.bit_count() / (size * 64.));
-        cout << "done.  " << endl;
-
-        const volatile uint64_t __attribute__((unused)) unused = u;
-    }
-
-    void run_dynamic() {
-        suc_bv dynamic;
-
-        const double c = 1. / queries;
-        high_resolution_clock::time_point begin, end;
-        uint64_t u = 0;
-
-        cout << "Constructor... " << flush;
-        begin = high_resolution_clock::now();
-        for (uint64_t i = 0; i < size; ++i) {
-            for (uint64_t j = 0; j < 64; ++j)
-                dynamic.insert(64*i + j, bitvector.get()[i] & (1ULL << j));
-        }
-        end = high_resolution_clock::now();
-        auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fbuild << to_string(build / (double)size);
-
-        cout << "rank0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.rank0(rank0[i]);
-        end = high_resolution_clock::now();
-        auto rank0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank0 << to_string(rank0 * c);
-
-        cout << "select0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.select0(select0[i]);
-        end = high_resolution_clock::now();
-        auto select0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect0 << to_string(select0 * c);
-
-        cout << "rank1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.rank1(rank1[i]);
-        end = high_resolution_clock::now();
-        auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank1 << to_string(rank1 * c);
-
-        cout << "select1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.select1(select1[i]);
-        end = high_resolution_clock::now();
-        auto select1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect1 << to_string(select1 * c);
-
-        cout << "update... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            dynamic.set(updateidx[i], !dynamic.at(updateidx[i]));
-        end = high_resolution_clock::now();
-        auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fupdate << to_string(update * c);
-
-        cout << "bitspace... " << flush;
-        fbitspace << to_string(dynamic.bit_size() / (size * 64.));
-        cout << "done.  " << endl;
+      const volatile uint64_t __attribute__((unused)) unused = u;
     }
 
 private:
@@ -269,19 +185,59 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    Benchmark bench(argv[1], size, queries);
+    constexpr size_t LEAF_MAXVAL = 64;
+
+    Benchmark<LEAF_MAXVAL> bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    bench.filesinit("Naive,LNaive,Type,LType,Byte,LByte,Bit,LBit");
+    bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
+                    "fixed[$12$]fixed,byte[$12$]byte,bit[$12$]bit,fixed[$12$]byte,fixed[$12$]bit,byte[$12$]bit,"
+                    "fixed[$14$]fixed,byte[$14$]byte,bit[$14$]bit,fixed[$14$]byte,fixed[$14$]bit,byte[$14$]bit,"
+                    "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
+                    "fixed[$18$]fixed,byte[$18$]byte,bit[$18$]bit,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]bit,"
+                    "fixed[$20$]fixed,byte[$20$]byte,bit[$20$]bit,fixed[$20$]byte,fixed[$20$]bit,byte[$20$]bit");
 
-    cout << "Naive(" << size << ", " << queries << "):  "; bench.run<NaiveFenwickTree<64>>();  bench.separator();
-    cout << "LNaive(" << size << ", " << queries << "): "; bench.run<LNaiveFenwickTree<64>>(); bench.separator();
-    cout << "Type(" << size << ", " << queries << "):   "; bench.run<TypeFenwickTree<64>>();   bench.separator();
-    cout << "LType(" << size << ", " << queries << "):  "; bench.run<LTypeFenwickTree<64>>();  bench.separator();
-    cout << "Byte(" << size << ", " << queries << "):   "; bench.run<ByteFenwickTree<64>>();   bench.separator();
-    cout << "LByte(" << size << ", " << queries << "):  "; bench.run<LByteFenwickTree<64>>();  bench.separator();
-    cout << "Bit(" << size << ", " << queries << "):    "; bench.run<BitFenwickTree<64>>();    bench.separator();
-    cout << "LBit(" << size << ", " << queries << "):   "; bench.run<LBitFenwickTree<64>>();   bench.separator("\n");
+    cout << "fixed[F](" << size << ", " << queries << "):       "; bench.run<NaiveFenwickTree>(); bench.separator();
+    cout << "fixed[l](" << size << ", " << queries << "):       "; bench.run<LNaiveFenwickTree>(); bench.separator();
+    cout << "byte[F](" << size << ", " << queries << "):        "; bench.run<ByteFenwickTree>(); bench.separator();
+    cout << "byte[l](" << size << ", " << queries << "):        "; bench.run<LByteFenwickTree>(); bench.separator();
+    cout << "bit[F](" << size << ", " << queries << "):         "; bench.run<BitFenwickTree>(); bench.separator();
+    cout << "bit[l](" << size << ", " << queries << "):         "; bench.run<LBitFenwickTree>(); bench.separator();
+
+    cout << "fixed[12]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive12>(); bench.separator();
+    cout << "byte[12]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte12>(); bench.separator();
+    cout << "bit[12]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit12>(); bench.separator();
+    cout << "fixed[12]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte12>(); bench.separator();
+    cout << "fixed[12]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit12>(); bench.separator();
+    cout << "byte[12]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit12>(); bench.separator();
+
+    cout << "fixed[14]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive14>(); bench.separator();
+    cout << "byte[14]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte14>(); bench.separator();
+    cout << "bit[14]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit14>(); bench.separator();
+    cout << "fixed[14]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte14>(); bench.separator();
+    cout << "fixed[14]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit14>(); bench.separator();
+    cout << "byte[14]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit14>(); bench.separator();
+
+    cout << "fixed[16]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive16>(); bench.separator();
+    cout << "byte[16]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte16>(); bench.separator();
+    cout << "bit[16]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit16>(); bench.separator();
+    cout << "fixed[16]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte16>(); bench.separator();
+    cout << "fixed[16]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit16>(); bench.separator();
+    cout << "byte[16]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit16>(); bench.separator();
+
+    cout << "fixed[18]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive18>(); bench.separator();
+    cout << "byte[18]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte18>(); bench.separator();
+    cout << "bit[18]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit18>(); bench.separator();
+    cout << "fixed[18]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte18>(); bench.separator();
+    cout << "fixed[18]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit18>(); bench.separator();
+    cout << "byte[18]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit18>(); bench.separator();
+
+    cout << "fixed[20]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive20>(); bench.separator();
+    cout << "byte[20]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte20>(); bench.separator();
+    cout << "bit[20]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit20>(); bench.separator();
+    cout << "fixed[20]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte20>(); bench.separator();
+    cout << "fixed[20]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit20>(); bench.separator();
+    cout << "byte[20]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit20>(); bench.separator("\n");
 
     return 0;
 }

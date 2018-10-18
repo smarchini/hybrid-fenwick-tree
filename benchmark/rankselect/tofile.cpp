@@ -10,25 +10,30 @@
 #include <rankselect/word.hpp>
 #include <rankselect/line.hpp>
 
-#include <fenwick/fenwick_tree.hpp>
-#include <fenwick/naive.hpp>
-#include <fenwick/lnaive.hpp>
-#include <fenwick/type.hpp>
-#include <fenwick/ltype.hpp>
-#include <fenwick/byte.hpp>
-#include <fenwick/lbyte.hpp>
 #include <fenwick/bit.hpp>
+#include <fenwick/byte.hpp>
+#include <fenwick/fenwick_tree.hpp>
 #include <fenwick/lbit.hpp>
-#include <fenwick/mixed.hpp>#include <dynamic.hpp>
+#include <fenwick/lbyte.hpp>
+#include <fenwick/lnaive.hpp>
+#include <fenwick/ltype.hpp>
+#include <fenwick/mixed.hpp>
+#include <fenwick/naive.hpp>
+#include <fenwick/type.hpp>
+
+#include <dynamic.hpp>
 
 using namespace std;
 using namespace dyn;
 using namespace std::chrono;
 
-
 template <size_t N> using LNaiveNaive16 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 16>;
 template <size_t N> using LByteByte16 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 16>;
 template <size_t N> using LBitBit16 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 16>;
+template <size_t N> using LNaiveByte16 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 16>;
+template <size_t N> using LNaiveBit16 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 16>;
+template <size_t N> using LByteBit16 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 16>;
+
 
 class Benchmark {
 private:
@@ -42,8 +47,6 @@ private:
     uniform_int_distribution<uint64_t> bvdist, sel0dist, sel1dist;
     uniform_int_distribution<size_t> idxdist, bitdist;
 
-
-
     ofstream fbuild, frank0, frank1, fselect0, fselect1, fupdate, fbitspace;
 
 public:
@@ -51,16 +54,6 @@ public:
         path(path),
         size(size),
         queries(queries) {}
-
-    ~Benchmark() {
-        fbuild.close();
-        frank0.close();
-        frank1.close();
-        fselect0.close();
-        fselect1.close();
-        fupdate.close();
-        fbitspace.close();
-    }
 
     void filesinit(string order) {
         finit(fbuild,    "build.csv",    "Elements," + order);
@@ -256,7 +249,24 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    bench.filesinit("Fenw,LFenw,Byte,LByte,Bit,LBit,LFenwFenw16,LByteByte16,LBitBit16,Fenw(16),LFenw(16),Byte(16),LByte(16),Bit(16),LBit(16),LFenwFenw16(16),LByteByte16(16),LBitBit16(16),Fenw(32),LFenw(32),Byte(32),LByte(32),Bit(32),LBit(32),LFenwFenw16(32),LByteByte16(32),LBitBit16(32),Fenw(64),LFenw(64),Byte(64),LByte(64),Bit(64),LBit(64),LFenwFenw16(64),LByteByte16(64),LBitBit16(64)");
+    //bench.filesinit("Fenw,LFenw,Byte,LByte,Bit,LBit,LFenwFenw16,LByteByte16,LBitBit16,Fenw(16),LFenw(16),Byte(16),LByte(16),Bit(16),LBit(16),LFenwFenw16(16),LByteByte16(16),LBitBit16(16),Fenw(32),LFenw(32),Byte(32),LByte(32),Bit(32),LBit(32),LFenwFenw16(32),LByteByte16(32),LBitBit16(32),Fenw(64),LFenw(64),Byte(64),LByte(64),Bit(64),LBit(64),LFenwFenw16(64),LByteByte16(64),LBitBit16(64)");
+
+     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
+                     "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
+                     "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
+                     "fixed[$20$]fixed,byte[$20$]byte,bit[$20$]bit,fixed[$20$]byte,fixed[$20$]bit,byte[$20$]bit,"
+                     "fixed[F]_16,fixed[$\\ell$]_16,byte[F]_16,byte[$\\ell$]_16,bit[F]_16,bit[$\\ell$]_16,"
+                     "fixed[$16$]fixed_16,byte[$16$]byte_16,bit[$16$]bit_16,fixed[$16$]byte_16,fixed[$16$]bit_16,byte[$16$]bit_16,"
+                     "fixed[$16$]fixed_16,byte[$16$]byte_16,bit[$16$]bit_16,fixed[$16$]byte_16,fixed[$16$]bit_16,byte[$16$]bit_16,"
+                     "fixed[$20$]fixed_16,byte[$20$]byte_16,bit[$20$]bit_16,fixed[$20$]byte_16,fixed[$20$]bit_16,byte[$20$]bit_16,"
+                     "fixed[F]_32,fixed[$\\ell$]_32,byte[F]_32,byte[$\\ell$]_32,bit[F]_32,bit[$\\ell$]_32,"
+                     "fixed[$16$]fixed_32,byte[$16$]byte_32,bit[$16$]bit_32,fixed[$16$]byte_32,fixed[$16$]bit_32,byte[$16$]bit_32,"
+                     "fixed[$16$]fixed_32,byte[$16$]byte_32,bit[$16$]bit_32,fixed[$16$]byte_32,fixed[$16$]bit_32,byte[$16$]bit_32,"
+                     "fixed[$20$]fixed_32,byte[$20$]byte_32,bit[$20$]bit_32,fixed[$20$]byte_32,fixed[$20$]bit_32,byte[$20$]bit_32,"
+                     "fixed[F]_64,fixed[$\\ell$]_64,byte[F]_64,byte[$\\ell$]_64,bit[F]_64,bit[$\\ell$]_64,"
+                     "fixed[$16$]fixed_64,byte[$16$]byte_64,bit[$16$]bit_64,fixed[$16$]byte_64,fixed[$16$]bit_64,byte[$16$]bit_64,"
+                     "fixed[$16$]fixed_64,byte[$16$]byte_64,bit[$16$]bit_64,fixed[$16$]byte_64,fixed[$16$]bit_64,byte[$16$]bit_64,"
+                     "fixed[$20$]fixed_64,byte[$20$]byte_64,bit[$20$]bit_64,fixed[$20$]byte_64,fixed[$20$]bit_64,byte[$20$]bit_64");
 
     cout << "Fenw:            "; bench.run<WordRankSelect<NaiveFenwickTree>>();      bench.separator();
     cout << "LFenw:           "; bench.run<WordRankSelect<LNaiveFenwickTree>>();     bench.separator();
@@ -267,37 +277,52 @@ int main(int argc, char *argv[])
     cout << "LFenwFenw16:     "; bench.run<WordRankSelect<LNaiveNaive16>>();         bench.separator();
     cout << "LByteByte16:     "; bench.run<WordRankSelect<LByteByte16>>();           bench.separator();
     cout << "LBitBit16:       "; bench.run<WordRankSelect<LBitBit16>>();             bench.separator();
+    cout << "LByteBit16:      "; bench.run<WordRankSelect<LByteBit16>>();            bench.separator();
+    cout << "LFenwByte16:     "; bench.run<WordRankSelect<LNaiveByte16>>();          bench.separator();
+    cout << "LFenwBit16:      "; bench.run<WordRankSelect<LNaiveBit16>>();           bench.separator();
+    cout << "LByteBit16:      "; bench.run<WordRankSelect<LByteBit16>>();            bench.separator();
 
-    cout << "Fenw(16):        "; bench.run<LineRankSelect<NaiveFenwickTree,  16>>(); bench.separator();
-    cout << "LFenw(16):       "; bench.run<LineRankSelect<LNaiveFenwickTree, 16>>(); bench.separator();
-    cout << "Byte(16):        "; bench.run<LineRankSelect<ByteFenwickTree,   16>>(); bench.separator();
-    cout << "LByte(16):       "; bench.run<LineRankSelect<LByteFenwickTree,  16>>(); bench.separator();
-    cout << "Bit(16):         "; bench.run<LineRankSelect<BitFenwickTree,    16>>(); bench.separator();
-    cout << "LBit(16):        "; bench.run<LineRankSelect<LBitFenwickTree,   16>>(); bench.separator();
-    cout << "LFenwFenw16(16): "; bench.run<LineRankSelect<LNaiveNaive16,     16>>(); bench.separator();
-    cout << "LByteByte16(16): "; bench.run<LineRankSelect<LByteByte16,       16>>(); bench.separator();
-    cout << "LBitBit16(16):   "; bench.run<LineRankSelect<LBitBit16,         16>>(); bench.separator();
+    cout << "Fenw_16:         "; bench.run<LineRankSelect<NaiveFenwickTree, 16>>();      bench.separator();
+    cout << "LFenw_16:        "; bench.run<LineRankSelect<LNaiveFenwickTree, 16>>();     bench.separator();
+    cout << "Byte_16:         "; bench.run<LineRankSelect<ByteFenwickTree, 16>>();       bench.separator();
+    cout << "LByte_16:        "; bench.run<LineRankSelect<LByteFenwickTree, 16>>();      bench.separator();
+    cout << "Bit_16:          "; bench.run<LineRankSelect<BitFenwickTree, 16>>();        bench.separator();
+    cout << "LBit_16:         "; bench.run<LineRankSelect<LBitFenwickTree, 16>>();       bench.separator();
+    cout << "LFenwFenw16_16:  "; bench.run<LineRankSelect<LNaiveNaive16, 16>>();         bench.separator();
+    cout << "LByteByte16_16:  "; bench.run<LineRankSelect<LByteByte16, 16>>();           bench.separator();
+    cout << "LBitBit16_16:    "; bench.run<LineRankSelect<LBitBit16, 16>>();             bench.separator();
+    cout << "LByteBit16_16:   "; bench.run<LineRankSelect<LByteBit16, 16>>();            bench.separator();
+    cout << "LFenwByte16_16:  "; bench.run<LineRankSelect<LNaiveByte16, 16>>();          bench.separator();
+    cout << "LFenwBit16_16:   "; bench.run<LineRankSelect<LNaiveBit16, 16>>();           bench.separator();
+    cout << "LByteBit16_16:   "; bench.run<LineRankSelect<LByteBit16, 16>>();            bench.separator();
 
-    cout << "Fenw(32):        "; bench.run<LineRankSelect<NaiveFenwickTree,  32>>(); bench.separator();
-    cout << "LFenw(32):       "; bench.run<LineRankSelect<LNaiveFenwickTree, 32>>(); bench.separator();
-    cout << "Byte(32):        "; bench.run<LineRankSelect<ByteFenwickTree,   32>>(); bench.separator();
-    cout << "LByte(32):       "; bench.run<LineRankSelect<LByteFenwickTree,  32>>(); bench.separator();
-    cout << "Bit(32):         "; bench.run<LineRankSelect<BitFenwickTree,    32>>(); bench.separator();
-    cout << "LBit(32):        "; bench.run<LineRankSelect<LBitFenwickTree,   32>>(); bench.separator();
-    cout << "LFenwFenw16(32): "; bench.run<LineRankSelect<LNaiveNaive16,     32>>(); bench.separator();
-    cout << "LByteByte16(32): "; bench.run<LineRankSelect<LByteByte16,       32>>(); bench.separator();
-    cout << "LBitBit16(32):   "; bench.run<LineRankSelect<LBitBit16,         32>>(); bench.separator();
+    cout << "Fenw_32:         "; bench.run<LineRankSelect<NaiveFenwickTree, 32>>();      bench.separator();
+    cout << "LFenw_32:        "; bench.run<LineRankSelect<LNaiveFenwickTree, 32>>();     bench.separator();
+    cout << "Byte_32:         "; bench.run<LineRankSelect<ByteFenwickTree, 32>>();       bench.separator();
+    cout << "LByte_32:        "; bench.run<LineRankSelect<LByteFenwickTree, 32>>();      bench.separator();
+    cout << "Bit_32:          "; bench.run<LineRankSelect<BitFenwickTree, 32>>();        bench.separator();
+    cout << "LBit_32:         "; bench.run<LineRankSelect<LBitFenwickTree, 32>>();       bench.separator();
+    cout << "LFenwFenw16_32:  "; bench.run<LineRankSelect<LNaiveNaive16, 32>>();         bench.separator();
+    cout << "LByteByte16_32:  "; bench.run<LineRankSelect<LByteByte16, 32>>();           bench.separator();
+    cout << "LBitBit16_32:    "; bench.run<LineRankSelect<LBitBit16, 32>>();             bench.separator();
+    cout << "LByteBit16_32:   "; bench.run<LineRankSelect<LByteBit16, 32>>();            bench.separator();
+    cout << "LFenwByte16_32:  "; bench.run<LineRankSelect<LNaiveByte16, 32>>();          bench.separator();
+    cout << "LFenwBit16_32:   "; bench.run<LineRankSelect<LNaiveBit16, 32>>();           bench.separator();
+    cout << "LByteBit16_32:   "; bench.run<LineRankSelect<LByteBit16, 32>>();            bench.separator();
 
-    cout << "Fenw(64):        "; bench.run<LineRankSelect<NaiveFenwickTree,  64>>(); bench.separator();
-    cout << "LFenw(64):       "; bench.run<LineRankSelect<LNaiveFenwickTree, 64>>(); bench.separator();
-    cout << "Byte(64):        "; bench.run<LineRankSelect<ByteFenwickTree,   64>>(); bench.separator();
-    cout << "LByte(64):       "; bench.run<LineRankSelect<LByteFenwickTree,  64>>(); bench.separator();
-    cout << "Bit(64):         "; bench.run<LineRankSelect<BitFenwickTree,    64>>(); bench.separator();
-    cout << "LBit(64):        "; bench.run<LineRankSelect<LBitFenwickTree,   64>>(); bench.separator();
-    cout << "LFenwFenw16(64): "; bench.run<LineRankSelect<LNaiveNaive16,     64>>(); bench.separator();
-    cout << "LByteByte16(64): "; bench.run<LineRankSelect<LByteByte16,       64>>(); bench.separator();
-    cout << "LBitBit16(64):   "; bench.run<LineRankSelect<LBitBit16,         64>>(); bench.separator("\n");
-
+    cout << "Fenw_64:         "; bench.run<LineRankSelect<NaiveFenwickTree, 64>>();      bench.separator();
+    cout << "LFenw_64:        "; bench.run<LineRankSelect<LNaiveFenwickTree, 64>>();     bench.separator();
+    cout << "Byte_64:         "; bench.run<LineRankSelect<ByteFenwickTree, 64>>();       bench.separator();
+    cout << "LByte_64:        "; bench.run<LineRankSelect<LByteFenwickTree, 64>>();      bench.separator();
+    cout << "Bit_64:          "; bench.run<LineRankSelect<BitFenwickTree, 64>>();        bench.separator();
+    cout << "LBit_64:         "; bench.run<LineRankSelect<LBitFenwickTree, 64>>();       bench.separator();
+    cout << "LFenwFenw16_64:  "; bench.run<LineRankSelect<LNaiveNaive16, 64>>();         bench.separator();
+    cout << "LByteByte16_64:  "; bench.run<LineRankSelect<LByteByte16, 64>>();           bench.separator();
+    cout << "LBitBit16_64:    "; bench.run<LineRankSelect<LBitBit16, 64>>();             bench.separator();
+    cout << "LByteBit16_64:   "; bench.run<LineRankSelect<LByteBit16, 64>>();            bench.separator();
+    cout << "LFenwByte16_64:  "; bench.run<LineRankSelect<LNaiveByte16, 64>>();          bench.separator();
+    cout << "LFenwBit16_64:   "; bench.run<LineRankSelect<LNaiveBit16, 64>>();           bench.separator();
+    cout << "LByteBit16_64:   "; bench.run<LineRankSelect<LByteBit16, 64>>();            bench.separator("\n");
 
     return 0;
 }

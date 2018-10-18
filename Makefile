@@ -14,6 +14,7 @@ MACRO_CACHESIZE = -DL1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE) -DL2_CACHE
 
 FENBENCH_PATH = benchout/fenwick/$(shell date +"%Y%m%d-%H%M%S")/
 RANSELBENCH_PATH = benchout/rankselect/$(shell date +"%Y%m%d-%H%M%S")/
+KENEMYBENCH_PATH = benchout/kenemy/$(shell date +"%Y%m%d-%H%M%S")/
 
 FENBENCH_VALS = 10000 100000 1000000 10000000 10000000
 RANSELBENCH_VALS = 10000 100000 1000000 10000000 10000000 100000000 1000000000 2000000000 3000000000 4000000000 5000000000 6000000000 7000000000 8000000000 9000000000 10000000000
@@ -28,10 +29,9 @@ test: bin/test/test
 
 # Run
 fenbench: benchmark/fenwick
-fenbench: benchmark/fenwick
 	@mkdir -p $(FENBENCH_PATH)
-	for (( m = 1; m < 10; m++ )); do \
-		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
+	for (( m = 2; m < 10; m++ )); do \
+		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
 			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000"; \
 			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000; \
 		done; \
@@ -46,6 +46,14 @@ ranselbench: benchmark/rankselect
 		done; \
 	done
 
+kenemybench: benchmark/kenemy
+	@mkdir -p $(KENEMYBENCH_PATH)
+	for (( m = 4; m < 10; m++ )); do \
+		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
+			echo "bin/benchmark/kenemy/tofile $(KENEMYBENCH_PATH) $$size"; \
+			bin/benchmark/kenemy/tofile $(KENEMYBENCH_PATH) $$size; \
+		done; \
+	done
 
 # Benchmark
 benchmark: benchmark/fenwick benchmark/rankselect
@@ -54,6 +62,7 @@ benchmark/fenwick: bin/benchmark/fenwick/trees bin/benchmark/fenwick/tofile
 
 benchmark/rankselect: bin/benchmark/rankselect/rankselect bin/benchmark/rankselect/tofile
 
+benchmark/kenemy: bin/benchmark/kenemy/kenemy bin/benchmark/kenemy/tofile
 
 # Test
 # https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options
@@ -72,7 +81,6 @@ bin/benchmark/fenwick/tofile: $(INCLUDES) benchmark/fenwick/tofile.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(MACRO_CACHESIZE) benchmark/fenwick/tofile.cpp -o bin/benchmark/fenwick/tofile
 
-
 # Benchmark rank select
 bin/benchmark/rankselect/rankselect: $(INCLUDES) benchmark/rankselect/rank_select.cpp
 	@mkdir -p $(@D)
@@ -81,6 +89,15 @@ bin/benchmark/rankselect/rankselect: $(INCLUDES) benchmark/rankselect/rank_selec
 bin/benchmark/rankselect/tofile: $(INCLUDES) benchmark/rankselect/tofile.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) $(MACRO_CACHESIZE) benchmark/rankselect/tofile.cpp -o bin/benchmark/rankselect/tofile
+
+# Benchmark kenemy
+bin/benchmark/kenemy/kenemy: $(INCLUDES) benchmark/kenemy/kenemy.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kenemy/kenemy.cpp -o bin/benchmark/kenemy/kenemy
+
+bin/benchmark/kenemy/tofile: $(INCLUDES) benchmark/kenemy/tofile.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kenemy/tofile.cpp -o bin/benchmark/kenemy/tofile
 
 
 # Other

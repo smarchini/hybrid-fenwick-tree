@@ -106,14 +106,12 @@ namespace dyn {
         static TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> build_top(const uint64_t sequence[], size_t size)
         {
             size_t length = size / BOTTOM_ELEMENTS;
-            uint64_t *subseq = new uint64_t[length];
+            std::unique_ptr<uint64_t[]> subseq = std::make_unique<uint64_t[]>(length);
 
             for (size_t i = 1; i <= length; i++)
                 subseq[i-1] = sequence[i * BOTTOM_ELEMENTS - 1];
 
-            TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> tree(subseq, length);
-            delete[] subseq;
-            return tree;
+            return TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS>(subseq.get(), length);
         }
 
     };

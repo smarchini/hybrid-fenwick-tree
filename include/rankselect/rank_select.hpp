@@ -108,6 +108,30 @@ namespace dyn {
         virtual uint64_t update(size_t index, uint64_t word);
 
         /**
+         * set() - set to 1 a given bit in the bitvector
+         * @index: index of a bit in the bitvector
+         *
+         * Returns: The previous value.
+         */
+        virtual void set(size_t index);
+
+        /**
+         * clear() - set to 0 a given bit in the bitvector
+         * @index: index of a bit in the bitvector
+         *
+         * Returns: The previous value.
+         */
+        virtual void clear(size_t index);
+
+        /**
+         * toggle() - change the value of a given bit in the bitvector
+         * @index: index of a bit in the bitvector
+         *
+         * Returns: The previous value.
+         */
+        virtual bool toggle(size_t index);
+
+        /**
          * bit_count() - Compute an estimation of the size (in bits) of this structure
          *
          * Returns: An estimation of the number of bits used by the this structure

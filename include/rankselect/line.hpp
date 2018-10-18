@@ -32,11 +32,9 @@ namespace dyn {
             std::copy_n(bitvector, length, _bitvector.get());
         }
 
-        LineRankSelect(DArray<uint64_t> bitvector, size_t length):
-            tree(build_fenwick(_bitvector.get(), length)),
-            _bitvector(std::move(bitvector))
-        {
-        }
+        LineRankSelect(DArray<uint64_t> bitvector, size_t length)
+            : tree(build_fenwick(bitvector.get(), length)),
+              _bitvector(std::move(bitvector)) {}
 
         virtual const uint64_t* bitvector() const
         {
@@ -115,6 +113,32 @@ namespace dyn {
             tree.set(index / WORDS, popcount(word) - popcount(old));
 
             return old;
+        }
+
+        virtual bool set(size_t index) {
+          const uint64_t old = _bitvector[index / 64];
+          _bitvector[index / 64] |= uint64_t(1) << (index % 64);
+          bool is_changed = _bitvector[index / 64] != old;
+          tree.set(index / (WORDS * 64), is_changed);
+
+          return !is_changed;
+        }
+
+        virtual bool clear(size_t index) {
+          const uint64_t old = _bitvector[index / 64];
+          _bitvector[index / 64] &= ~(uint64_t(1) << (index % 64));
+          bool is_changed = _bitvector[index / 64] != old;
+          tree.set(index / (WORDS * 64), -is_changed);
+
+          return is_changed;
+        }
+
+        virtual bool toggle(size_t index) {
+          const uint64_t old = _bitvector[index / 64];
+          _bitvector[index / 64] ^= uint64_t(1) << (index % 64);
+          tree.set(index / (WORDS * 64), _bitvector[index / 64] > old ? 1 : -1);
+
+          return _bitvector[index / 64] > old ? 0 : 1;
         }
 
         virtual size_t bit_count() const
