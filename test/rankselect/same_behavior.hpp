@@ -6,7 +6,7 @@
 template <std::size_t S>
 void rankselect_random_test(std::size_t size)
 {
-    using namespace dyn;
+    using namespace hft;
 
     static std::mt19937 mte;
     std::uniform_int_distribution<std::uint64_t> dist(0, UINT64_MAX);

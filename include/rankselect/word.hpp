@@ -3,7 +3,7 @@
 
 #include "rank_select.hpp"
 
-namespace dyn {
+namespace hft {
 
     template <template<size_t> class T>
     class WordRankSelect {

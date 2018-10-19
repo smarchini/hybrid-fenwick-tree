@@ -3,85 +3,87 @@
 
 #include "../common.hpp"
 
-namespace dyn {
+namespace hft {
+    namespace fenwick {
 
-    class FenwickTree
-    {
-    public:
-        virtual ~FenwickTree() = default;
+        class FenwickTree
+        {
+        public:
+            virtual ~FenwickTree() = default;
 
-        /**
-         * prefix() - Retrieve the (@idx+1)th element of the cumulative frequency
-         * @idx: Index of the element, starting from 0
-         *
-         * This method returns the (@idx+1)th element of the cumulative
-         * frequency mantained by the current instance.
-         *
-         * Returns: The (@idx+1)th element of the cumulative frequency
-         */
-        virtual std::uint64_t prefix(std::size_t idx) const = 0;
+            /**
+             * prefix() - Retrieve the (@idx+1)th element of the cumulative frequency
+             * @idx: Index of the element, starting from 0
+             *
+             * This method returns the (@idx+1)th element of the cumulative
+             * frequency mantained by the current instance.
+             *
+             * Returns: The (@idx+1)th element of the cumulative frequency
+             */
+            virtual std::uint64_t prefix(std::size_t idx) const = 0;
 
-        /**
-         * add() - Increment one element of the cumulative frequency
-         * @idx: The index (starting from 0) of the element you want to update
-         * @inc: Increment relative to the current value
-         *
-         * This method update the current instance, it picks the (@idx+1)th
-         * element of the cumulative frequency and change its value to
-         * @val+@inc.
-         */
-        virtual void add(std::size_t idx, std::int64_t inc) = 0;
+            /**
+             * add() - Increment one element of the cumulative frequency
+             * @idx: The index (starting from 0) of the element you want to update
+             * @inc: Increment relative to the current value
+             *
+             * This method update the current instance, it picks the (@idx+1)th
+             * element of the cumulative frequency and change its value to
+             * @val+@inc.
+             */
+            virtual void add(std::size_t idx, std::int64_t inc) = 0;
 
-        /**
-         * find() - Find the closest element less or equal than a given one
-         * @val: Value to search
-         *
-         * This method finds the maximum index whose the values mantained by the
-         * cumulative frequency is less or equal than @val. It returns SIZE_MAX
-         * if such an element doesn't exists.
-         *
-         * If @val is a reference it gives you the distance of such an element,
-         * that is: @val - FenwickTree::prefix(FenwickTree::find(val))
-         *
-         * Returns: The closest index whose its element is less or equal than
-         * @val or SIZE_MAX if it doesn't exists.
-         */
-        virtual std::size_t find(std::uint64_t *val) const = 0;
-        std::size_t find(std::uint64_t val) const {
-            return find(&val);
-        }
+            /**
+             * find() - Find the closest element less or equal than a given one
+             * @val: Value to search
+             *
+             * This method finds the maximum index whose the values mantained by the
+             * cumulative frequency is less or equal than @val. It returns SIZE_MAX
+             * if such an element doesn't exists.
+             *
+             * If @val is a reference it gives you the distance of such an element,
+             * that is: @val - FenwickTree::prefix(FenwickTree::find(val))
+             *
+             * Returns: The closest index whose its element is less or equal than
+             * @val or SIZE_MAX if it doesn't exists.
+             */
+            virtual std::size_t find(std::uint64_t *val) const = 0;
+            std::size_t find(std::uint64_t val) const {
+                return find(&val);
+            }
 
-        /**
-         * compfind() - Complement of find()
-         * @val: Value to search
-         *
-         * This method finds the maximum index whose the values mantained by the
-         * cumulative frequency is less or equal than MAX_VAL-@val. MAX_VAL
-         * being the maximum value storable in such an element.
-         *
-         * It returns -1 if such an element doesn't exists.
-         *
-         * Returns: The closest index whose its element is less or equal than
-         * MAX_VAL-@val or SIZE_MAX if it doesn't exists.
-         */
-        virtual std::size_t compfind(std::uint64_t *val) const = 0;
-        std::size_t compfind(std::uint64_t val) const {
-            return compfind(&val);
-        }
+            /**
+             * compfind() - Complement of find()
+             * @val: Value to search
+             *
+             * This method finds the maximum index whose the values mantained by the
+             * cumulative frequency is less or equal than MAX_VAL-@val. MAX_VAL
+             * being the maximum value storable in such an element.
+             *
+             * It returns -1 if such an element doesn't exists.
+             *
+             * Returns: The closest index whose its element is less or equal than
+             * MAX_VAL-@val or SIZE_MAX if it doesn't exists.
+             */
+            virtual std::size_t compfind(std::uint64_t *val) const = 0;
+            std::size_t compfind(std::uint64_t val) const {
+                return compfind(&val);
+            }
 
-        /**
-         * size() - Returns the length of the sequence
-         */
-        virtual std::size_t size() const = 0;
+            /**
+             * size() - Returns the length of the sequence
+             */
+            virtual std::size_t size() const = 0;
 
-        /**
-         * bit_count() - An estimation of the number of bits used by the tree
-         *
-         * Returns: An estimation of the size of the tree.
-         */
-        virtual std::size_t bit_count() const = 0;
-    };
+            /**
+             * bit_count() - An estimation of the number of bits used by the tree
+             *
+             * Returns: An estimation of the size of the tree.
+             */
+            virtual std::size_t bit_count() const = 0;
+        };
 
+    }
 }
 
 #endif // __FENWICK_TREE_H__

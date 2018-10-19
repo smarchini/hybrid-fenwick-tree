@@ -4,7 +4,7 @@
 #include "rank_select.hpp"
 #include <iostream>
 
-namespace dyn {
+namespace hft {
 
     template <template<size_t> class T, size_t WORDS>
     class LineRankSelect {

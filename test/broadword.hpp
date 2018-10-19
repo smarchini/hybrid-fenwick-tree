@@ -45,7 +45,7 @@ static std::uint64_t special_cases[] = {
 
 TEST(broadword, drop_first_set)
 {
-    using namespace dyn;
+    using namespace hft;
     std::uint64_t tests_solutions[] = {
         0b1111010100101011010101110101011010100111010000000000000000000000ULL,
         0b0111011100011111000011000111000100110110101001011110000000000000ULL,
@@ -78,7 +78,7 @@ TEST(broadword, drop_first_set)
 
 TEST(broadword, mask_first_set)
 {
-    using namespace dyn;
+    using namespace hft;
     std::uint64_t tests_solutions[] = {
         0b0000000000000000000000000000000000000000000001000000000000000000ULL,
         0b0000000000000000000000000000000000000000000000000000100000000000ULL,
@@ -111,7 +111,7 @@ TEST(broadword, mask_first_set)
 
 TEST(broadword, mask_last_set)
 {
-    using namespace dyn;
+    using namespace hft;
     std::uint64_t tests_solutions[] = {
         0b1000000000000000000000000000000000000000000000000000000000000000ULL,
         0b0100000000000000000000000000000000000000000000000000000000000000ULL,
@@ -145,7 +145,7 @@ TEST(broadword, mask_last_set)
 
 TEST(broadword, lsb)
 {
-    using namespace dyn;
+    using namespace hft;
     std::uint64_t tests_solutions[] = { 18, 11, 45, 59, 50, 29, 26, 4, 36, 28 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
@@ -160,7 +160,7 @@ TEST(broadword, lsb)
 
 TEST(broadword, msb)
 {
-    using namespace dyn;
+    using namespace hft;
     std::uint64_t tests_solutions[] = { 63, 62, 63, 63, 61, 61, 61, 62, 63, 63 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
@@ -181,7 +181,7 @@ TEST(broadword, msb)
 
 TEST(broadword, compact_bitmask)
 {
-    using namespace dyn;
+    using namespace hft;
     constexpr std::size_t LEN = 10;
     std::size_t count[] = {  64, 63, 62, 61, 60, 59, 58, 57, 56, 55 };
     std::size_t start[] = {   0,  0,  0,  1,  1,  2,  2,  3,  3,  4 };

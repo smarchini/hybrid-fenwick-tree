@@ -4,7 +4,7 @@
 #include "common.hpp"
 #include <x86intrin.h>
 
-namespace dyn {
+namespace hft {
 
     constexpr uint8_t kSelectInByte[2048] = {
         8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0,

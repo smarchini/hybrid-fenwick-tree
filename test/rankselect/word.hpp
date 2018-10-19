@@ -9,14 +9,14 @@ TEST(word_rank_select, all_ones_1024)
     std::uint64_t bitvect[MAX] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
                                    UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 
-    dyn::WordRankSelect<dyn::FixedF> naive(bitvect, MAX);
-    dyn::WordRankSelect<dyn::FixedL> lnaive(bitvect, MAX);
-    dyn::WordRankSelect<dyn::BitF> bit(bitvect, MAX);
-    dyn::WordRankSelect<dyn::BitL> lbit(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteF> byte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteL> lbyte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypeF> type(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypeL> ltype(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::FixedF> naive(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::FixedL> lnaive(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::BitF> bit(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::BitL> lbit(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::ByteF> byte(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::ByteL> lbyte(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::TypeF> type(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::TypeL> ltype(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(i, naive.rank(i)) << "at index: " << i;
@@ -115,14 +115,14 @@ TEST(word_rank_select, all_zeroes_1024)
     std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                    0, 0, 0, 0, 0, 0, 0, 0 };
 
-    dyn::WordRankSelect<dyn::FixedF> naive(bitvect, MAX);
-    dyn::WordRankSelect<dyn::FixedL> lnaive(bitvect, MAX);
-    dyn::WordRankSelect<dyn::BitF> bit(bitvect, MAX);
-    dyn::WordRankSelect<dyn::BitL> lbit(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteF> byte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::ByteL> lbyte(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypeF> type(bitvect, MAX);
-    dyn::WordRankSelect<dyn::TypeL> ltype(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::FixedF> naive(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::FixedL> lnaive(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::BitF> bit(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::BitL> lbit(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::ByteF> byte(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::ByteL> lbyte(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::TypeF> type(bitvect, MAX);
+    dyn::WordRankSelect<hft::fenwick::TypeL> ltype(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(0, naive.rank(i)) << "at index: " << i;

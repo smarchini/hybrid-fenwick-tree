@@ -8,7 +8,7 @@
 TEST(rankselect_like_dynamic, random)
 {
     using namespace std;
-    using namespace dyn;
+    using namespace hft;
 
     static std::mt19937 mte;
 

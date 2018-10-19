@@ -20,7 +20,7 @@ void fenwick_random_test(std::size_t size)
         add_updates[i] = sdist(mte);
     }
 
-    dyn::FixedF<64> naive(increments, size);
+    hft::fenwick::FixedF<64> naive(increments, size);
     T mixed(increments, size);
 
     // prefix
@@ -52,7 +52,7 @@ void fenwick_random_test(std::size_t size)
 
 TEST(fenwick_mixed, naive)
 {
-    using namespace dyn;
+    using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
         fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
@@ -64,7 +64,7 @@ TEST(fenwick_mixed, naive)
 
 TEST(fenwick_mixed, type)
 {
-    using namespace dyn;
+    using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
         fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
@@ -84,7 +84,7 @@ TEST(fenwick_mixed, type)
 
 TEST(fenwick_mixed, byte)
 {
-    using namespace dyn;
+    using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
         fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
@@ -103,7 +103,7 @@ TEST(fenwick_mixed, byte)
 
 TEST(fenwick_mixed, bit)
 {
-    using namespace dyn;
+    using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
         fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);

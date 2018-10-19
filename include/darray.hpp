@@ -4,7 +4,7 @@
 #include <memory>
 #include <algorithm>
 
-namespace dyn {
+namespace hft {
 
     /**
      * class DArray - Deep-copyable & dinamically-allocated fixed-sized array

@@ -14,7 +14,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
 int main(int argc, char **argv)
 {
     using namespace std;
-    using namespace dyn;
+    using namespace hft;
 
     if (argc < 2) {
         cerr << "Not enough parameters\n";

@@ -7,7 +7,7 @@
 
 TEST(rankselect, all_ones)
 {
-    using namespace dyn;
+    using namespace hft;
     constexpr size_t ELEMS = 16;
     constexpr size_t BITELEMS = ELEMS*64;
     uint64_t bitvect[ELEMS] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
@@ -16,17 +16,17 @@ TEST(rankselect, all_ones)
                                 UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 
     // naive
-    WordRankSelect<FixedF>  naive(bitvect, ELEMS);
-    WordRankSelect<FixedL> lnaive(bitvect, ELEMS);
+    WordRankSelect<fenwick::FixedF>  naive(bitvect, ELEMS);
+    WordRankSelect<fenwick::FixedL> lnaive(bitvect, ELEMS);
     // bit
-    WordRankSelect<BitF>    bit(bitvect, ELEMS);
-    WordRankSelect<BitL>   lbit(bitvect, ELEMS);
+    WordRankSelect<fenwick::BitF>    bit(bitvect, ELEMS);
+    WordRankSelect<fenwick::BitL>   lbit(bitvect, ELEMS);
     // byte
-    WordRankSelect<ByteF>   byte(bitvect, ELEMS);
-    WordRankSelect<ByteL>  lbyte(bitvect, ELEMS);
+    WordRankSelect<fenwick::ByteF>   byte(bitvect, ELEMS);
+    WordRankSelect<fenwick::ByteL>  lbyte(bitvect, ELEMS);
     // type
-    WordRankSelect<TypeF>   type(bitvect, ELEMS);
-    WordRankSelect<TypeL>  ltype(bitvect, ELEMS);
+    WordRankSelect<fenwick::TypeF>   type(bitvect, ELEMS);
+    WordRankSelect<fenwick::TypeL>  ltype(bitvect, ELEMS);
 
     // rank
     for (size_t i = 0; i <= BITELEMS; i++) {
@@ -128,7 +128,7 @@ TEST(rankselect, all_ones)
 
 TEST(rankselect, all_zeroes)
 {
-    using namespace dyn;
+    using namespace hft;
     constexpr size_t ELEMS = 16;
     constexpr size_t BITELEMS = ELEMS*64;
     uint64_t bitvect[ELEMS] = { 0, 0, 0, 0,
@@ -137,17 +137,17 @@ TEST(rankselect, all_zeroes)
                                 0, 0, 0, 0 };
 
     // naive
-    WordRankSelect<FixedF>  naive(bitvect, ELEMS);
-    WordRankSelect<FixedL> lnaive(bitvect, ELEMS);
+    WordRankSelect<fenwick::FixedF>  naive(bitvect, ELEMS);
+    WordRankSelect<fenwick::FixedL> lnaive(bitvect, ELEMS);
     // bit
-    WordRankSelect<BitF>    bit(bitvect, ELEMS);
-    WordRankSelect<BitL>   lbit(bitvect, ELEMS);
+    WordRankSelect<fenwick::BitF>    bit(bitvect, ELEMS);
+    WordRankSelect<fenwick::BitL>   lbit(bitvect, ELEMS);
     // byte
-    WordRankSelect<ByteF>   byte(bitvect, ELEMS);
-    WordRankSelect<ByteL>  lbyte(bitvect, ELEMS);
+    WordRankSelect<fenwick::ByteF>   byte(bitvect, ELEMS);
+    WordRankSelect<fenwick::ByteL>  lbyte(bitvect, ELEMS);
     // type
-    WordRankSelect<TypeF>   type(bitvect, ELEMS);
-    WordRankSelect<TypeL>  ltype(bitvect, ELEMS);
+    WordRankSelect<fenwick::TypeF>   type(bitvect, ELEMS);
+    WordRankSelect<fenwick::TypeL>  ltype(bitvect, ELEMS);
 
     // rank
     for (size_t i = 0; i <= BITELEMS; i++) {
@@ -251,7 +251,7 @@ TEST(rankselect, all_zeroes)
 template <std::size_t S>
 void rankselect_random_test(std::size_t size)
 {
-    using namespace dyn;
+    using namespace hft;
 
     static std::mt19937 mte;
     std::uniform_int_distribution<std::uint64_t> dist(0, UINT64_MAX);
@@ -266,24 +266,24 @@ void rankselect_random_test(std::size_t size)
 
 
     // word
-    WordRankSelect<FixedF>   naive(bitvect, size);
-    WordRankSelect<FixedL> lnaive(bitvect, size);
-    WordRankSelect<BitF>       bit(bitvect, size);
-    WordRankSelect<BitL>     lbit(bitvect, size);
-    WordRankSelect<ByteF>     byte(bitvect, size);
-    WordRankSelect<ByteL>   lbyte(bitvect, size);
-    WordRankSelect<TypeF>     type(bitvect, size);
-    WordRankSelect<TypeL>   ltype(bitvect, size);
+    WordRankSelect<fenwick::FixedF>   naive(bitvect, size);
+    WordRankSelect<fenwick::FixedL> lnaive(bitvect, size);
+    WordRankSelect<fenwick::BitF>       bit(bitvect, size);
+    WordRankSelect<fenwick::BitL>     lbit(bitvect, size);
+    WordRankSelect<fenwick::ByteF>     byte(bitvect, size);
+    WordRankSelect<fenwick::ByteL>   lbyte(bitvect, size);
+    WordRankSelect<fenwick::TypeF>     type(bitvect, size);
+    WordRankSelect<fenwick::TypeL>   ltype(bitvect, size);
 
     // line
-    LineRankSelect<FixedF,  S>  naiveS(bitvect, size);
-    LineRankSelect<FixedL, S> lnaiveS(bitvect, size);
-    LineRankSelect<BitF,    S>    bitS(bitvect, size);
-    LineRankSelect<BitL,   S>   lbitS(bitvect, size);
-    LineRankSelect<ByteF,   S>   byteS(bitvect, size);
-    LineRankSelect<ByteL,  S>  lbyteS(bitvect, size);
-    LineRankSelect<TypeF,   S>   typeS(bitvect, size);
-    LineRankSelect<TypeL,  S>  ltypeS(bitvect, size);
+    LineRankSelect<fenwick::FixedF,  S>  naiveS(bitvect, size);
+    LineRankSelect<fenwick::FixedL, S> lnaiveS(bitvect, size);
+    LineRankSelect<fenwick::BitF,    S>    bitS(bitvect, size);
+    LineRankSelect<fenwick::BitL,   S>   lbitS(bitvect, size);
+    LineRankSelect<fenwick::ByteF,   S>   byteS(bitvect, size);
+    LineRankSelect<fenwick::ByteL,  S>  lbyteS(bitvect, size);
+    LineRankSelect<fenwick::TypeF,   S>   typeS(bitvect, size);
+    LineRankSelect<fenwick::TypeL,  S>  ltypeS(bitvect, size);
 
 
     // rank
@@ -472,7 +472,7 @@ TEST(rankselect, same_behavior_wordsize)
 TEST(rankselect, like_dynamic)
 {
     using namespace std;
-    using namespace dyn;
+    using namespace hft;
 
     static std::mt19937 mte;
 
@@ -493,9 +493,9 @@ TEST(rankselect, like_dynamic)
 
     size_t zeroes = 64*SIZE - ones;
 
-    WordRankSelect<FixedF> internal(bitvect, SIZE);
+    WordRankSelect<fenwick::FixedF> internal(bitvect, SIZE);
 
-    suc_bv dynamic;
+    dyn::suc_bv dynamic;
 	for (uint64_t i = 0; i < SIZE; ++i) {
         for (uint64_t j = 0; j < 64; ++j)
             dynamic.insert(64*i + j, bitvect[i] & (1ULL << j));

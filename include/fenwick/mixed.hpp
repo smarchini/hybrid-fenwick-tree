@@ -6,116 +6,118 @@
 #include <vector>
 #include <iostream>
 
-namespace dyn {
+namespace hft {
+    namespace fenwick {
 
-    template <template<size_t> class TOP_TREE, template<size_t> class BOTTOM_TREE, size_t LEAF_MAXVAL, size_t BOTTOM_HEIGHT>
-    class MixedFenwickTree : public FenwickTree
-    {
-    private:
-        static constexpr size_t BOTTOM_ELEMENTS = 1ULL << BOTTOM_HEIGHT;
-
-    protected:
-        const size_t _size;
-        std::vector<BOTTOM_TREE<LEAF_MAXVAL>> bottom_trees;
-        TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> top_tree;
-
-    public:
-        MixedFenwickTree(uint64_t sequence[], size_t size) :
-            _size(size),
-            top_tree(build_top(sequence, size))
+        template <template<size_t> class TOP_TREE, template<size_t> class BOTTOM_TREE, size_t LEAF_MAXVAL, size_t BOTTOM_HEIGHT>
+        class MixedFenwickTree : public FenwickTree
         {
-            // bottom
-            for (size_t i = 0; i < top_tree.size() + 1; i++) {
-                size_t length = BOTTOM_ELEMENTS*i + BOTTOM_ELEMENTS-1 <= size ? BOTTOM_ELEMENTS-1 : size % BOTTOM_ELEMENTS;
-                bottom_trees.push_back(BOTTOM_TREE<LEAF_MAXVAL>(sequence + BOTTOM_ELEMENTS*i, length));
+        private:
+            static constexpr size_t BOTTOM_ELEMENTS = 1ULL << BOTTOM_HEIGHT;
+
+        protected:
+            const size_t _size;
+            std::vector<BOTTOM_TREE<LEAF_MAXVAL>> bottom_trees;
+            TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> top_tree;
+
+        public:
+            MixedFenwickTree(uint64_t sequence[], size_t size) :
+                _size(size),
+                top_tree(build_top(sequence, size))
+            {
+                // bottom
+                for (size_t i = 0; i < top_tree.size() + 1; i++) {
+                    size_t length = BOTTOM_ELEMENTS*i + BOTTOM_ELEMENTS-1 <= size ? BOTTOM_ELEMENTS-1 : size % BOTTOM_ELEMENTS;
+                    bottom_trees.push_back(BOTTOM_TREE<LEAF_MAXVAL>(sequence + BOTTOM_ELEMENTS*i, length));
+                }
+
+                // top
+                for (size_t i = 0; i < top_tree.size(); i++)
+                    top_tree.add(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
             }
 
-            // top
-            for (size_t i = 0; i < top_tree.size(); i++)
-                top_tree.add(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
-        }
+            virtual uint64_t prefix(size_t idx) const
+            {
+                size_t top = (idx+1) / BOTTOM_ELEMENTS;
+                size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
 
-        virtual uint64_t prefix(size_t idx) const
-        {
-            size_t top = (idx+1) / BOTTOM_ELEMENTS;
-            size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
+                if (top == 0 || top_tree.size() == 0)
+                    return bottom_trees[0].prefix(bottom-1);
 
-            if (top == 0 || top_tree.size() == 0)
-                return bottom_trees[0].prefix(bottom-1);
-
-            return top_tree.prefix(top-1)
-                + (bottom != 0 ? bottom_trees[top].prefix(bottom-1) : 0);
-        }
-
-        virtual void add(size_t idx, int64_t inc)
-        {
-            size_t top = (idx+1) / BOTTOM_ELEMENTS;
-            size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
-
-            if (bottom == 0) {
-                top_tree.add(top-1, inc);
+                return top_tree.prefix(top-1)
+                    + (bottom != 0 ? bottom_trees[top].prefix(bottom-1) : 0);
             }
-            else if (top_tree.size() == 0) {
-                bottom_trees[top].add(bottom-1, inc);
+
+            virtual void add(size_t idx, int64_t inc)
+            {
+                size_t top = (idx+1) / BOTTOM_ELEMENTS;
+                size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
+
+                if (bottom == 0) {
+                    top_tree.add(top-1, inc);
+                }
+                else if (top_tree.size() == 0) {
+                    bottom_trees[top].add(bottom-1, inc);
+                }
+                else {
+                    top_tree.add(top, inc);
+                    bottom_trees[top].add(bottom-1, inc);
+                }
             }
-            else {
-                top_tree.add(top, inc);
-                bottom_trees[top].add(bottom-1, inc);
+
+            using FenwickTree::find;
+            virtual size_t find(uint64_t *val) const
+            {
+                size_t top = 0;
+                if (top_tree.size() != 0)
+                    top = top_tree.find(val) + 1;
+
+                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find(val) : -1;
+                return top*BOTTOM_ELEMENTS + bottom;
             }
-        }
 
-        using FenwickTree::find;
-        virtual size_t find(uint64_t *val) const
-        {
-            size_t top = 0;
-            if (top_tree.size() != 0)
-                top = top_tree.find(val) + 1;
+            using FenwickTree::compfind;
+            virtual size_t compfind(uint64_t *val) const
+            {
+                size_t top = 0;
+                if (top_tree.size() != 0)
+                    top = top_tree.compfind(val) + 1;
 
-            size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find(val) : -1;
-            return top*BOTTOM_ELEMENTS + bottom;
-        }
+                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].compfind(val) : -1;
+                return top*BOTTOM_ELEMENTS + bottom;
+            }
 
-        using FenwickTree::compfind;
-        virtual size_t compfind(uint64_t *val) const
-        {
-            size_t top = 0;
-            if (top_tree.size() != 0)
-                top = top_tree.compfind(val) + 1;
+            virtual size_t size() const
+            {
+                return _size;
+            }
 
-            size_t bottom = top < bottom_trees.size() ? bottom_trees[top].compfind(val) : -1;
-            return top*BOTTOM_ELEMENTS + bottom;
-        }
+            virtual size_t bit_count() const
+            {
+                size_t size = 0;
+                for (auto &t : bottom_trees)
+                    size += t.bit_count();
 
-        virtual size_t size() const
-        {
-            return _size;
-        }
+                return size
+                    + sizeof(MixedFenwickTree<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_HEIGHT>)
+                    + top_tree.bit_count();
+            }
 
-        virtual size_t bit_count() const
-        {
-            size_t size = 0;
-            for (auto &t : bottom_trees)
-                size += t.bit_count();
+        private:
+            static TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> build_top(const uint64_t sequence[], size_t size)
+            {
+                size_t length = size / BOTTOM_ELEMENTS;
+                std::unique_ptr<uint64_t[]> subseq = std::make_unique<uint64_t[]>(length);
 
-            return size
-                + sizeof(MixedFenwickTree<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_HEIGHT>)
-                + top_tree.bit_count();
-        }
+                for (size_t i = 1; i <= length; i++)
+                    subseq[i-1] = sequence[i * BOTTOM_ELEMENTS - 1];
 
-    private:
-        static TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> build_top(const uint64_t sequence[], size_t size)
-        {
-            size_t length = size / BOTTOM_ELEMENTS;
-            std::unique_ptr<uint64_t[]> subseq = std::make_unique<uint64_t[]>(length);
+                return TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS>(subseq.get(), length);
+            }
 
-            for (size_t i = 1; i <= length; i++)
-                subseq[i-1] = sequence[i * BOTTOM_ELEMENTS - 1];
+        };
 
-            return TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS>(subseq.get(), length);
-        }
-
-    };
-
+    }
 }
 
 #endif // __FENWICK_MIXED_H__

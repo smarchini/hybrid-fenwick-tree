@@ -21,7 +21,7 @@
 #include <dynamic.hpp>
 
 using namespace std;
-using namespace dyn;
+using namespace hft;
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;

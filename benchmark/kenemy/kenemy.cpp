@@ -24,7 +24,7 @@
 #include <dynamic.hpp>
 
 using namespace std;
-using namespace dyn;
+using namespace hft;
 using namespace std::chrono;
 
 

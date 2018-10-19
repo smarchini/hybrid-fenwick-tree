@@ -26,55 +26,55 @@
 
 // Exposed classes
 // -----------------------------------------------------------------------------
-class FixedF_Test : public dyn::FixedF<64> {
+class FixedF_Test : public hft::fenwick::FixedF<64> {
 public:
     FixedF_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::FixedF<64>(sequence, length) {}
-    using dyn::FixedF<64>::tree;
+        hft::fenwick::FixedF<64>(sequence, length) {}
+    using hft::fenwick::FixedF<64>::tree;
 };
 
-class TypeL_Test : public dyn::TypeL<64> {
+class TypeL_Test : public hft::fenwick::TypeL<64> {
 public:
     TypeL_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::TypeL<64>(sequence, length) {}
-    using dyn::TypeL<64>::tree8;
-    using dyn::TypeL<64>::tree16;
-    using dyn::TypeL<64>::tree64;
+        hft::fenwick::TypeL<64>(sequence, length) {}
+    using hft::fenwick::TypeL<64>::tree8;
+    using hft::fenwick::TypeL<64>::tree16;
+    using hft::fenwick::TypeL<64>::tree64;
 };
 
-class TypeF_Test : public dyn::TypeF<64> {
+class TypeF_Test : public hft::fenwick::TypeF<64> {
 public:
     TypeF_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::TypeF<64>(sequence, length) {}
-    using dyn::TypeF<64>::tree;
+        hft::fenwick::TypeF<64>(sequence, length) {}
+    using hft::fenwick::TypeF<64>::tree;
 };
 
-class ByteL_Test : public dyn::ByteL<64> {
+class ByteL_Test : public hft::fenwick::ByteL<64> {
 public:
     ByteL_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::ByteL<64>(sequence, length) {}
-    using dyn::ByteL<64>::tree;
+        hft::fenwick::ByteL<64>(sequence, length) {}
+    using hft::fenwick::ByteL<64>::tree;
 };
 
-class ByteF_Test : public dyn::ByteF<64> {
+class ByteF_Test : public hft::fenwick::ByteF<64> {
 public:
     ByteF_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::ByteF<64>(sequence, length) {}
-    using dyn::ByteF<64>::tree;
+        hft::fenwick::ByteF<64>(sequence, length) {}
+    using hft::fenwick::ByteF<64>::tree;
 };
 
-class BitL_Test : public dyn::BitL<64> {
+class BitL_Test : public hft::fenwick::BitL<64> {
 public:
     BitL_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::BitL<64>(sequence, length) {}
-    using dyn::BitL<64>::tree;
+        hft::fenwick::BitL<64>(sequence, length) {}
+    using hft::fenwick::BitL<64>::tree;
 };
 
-class BitF_Test : public dyn::BitF<64> {
+class BitF_Test : public hft::fenwick::BitF<64> {
 public:
     BitF_Test(std::uint64_t sequence[], std::size_t length) :
-        dyn::BitF<64>(sequence, length) {}
-    using dyn::BitF<64>::tree;
+        hft::fenwick::BitF<64>(sequence, length) {}
+    using hft::fenwick::BitF<64>::tree;
 };
 
 

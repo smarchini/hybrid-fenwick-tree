@@ -24,7 +24,7 @@
 #include <dynamic.hpp>
 
 using namespace std;
-using namespace dyn;
+using namespace hft;
 using namespace std::chrono;
 
 template <size_t N> using LNaiveNaive16 = MixedFenwickTree<FixedL, FixedF, N, 16>;

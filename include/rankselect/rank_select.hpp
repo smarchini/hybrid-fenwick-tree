@@ -3,7 +3,7 @@
 
 #include "../common.hpp"
 
-namespace dyn {
+namespace hft {
 
     template<typename T>
     class RankSelect {

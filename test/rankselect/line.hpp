@@ -9,13 +9,13 @@ TEST(line_rank_select, all_ones_1024)
     std::uint64_t bitvect[MAX] = { UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX,
                                    UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX };
 
-    dyn::LineRankSelect<dyn::FixedF, 8> naive(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypeL, 8> ltype(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypeF, 8> type(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ByteL, 8> lbyte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ByteF, 8> byte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::BitL, 8> lbit(bitvect, MAX);
-    dyn::LineRankSelect<dyn::BitF, 8> bit(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::FixedF, 8> naive(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::TypeL, 8> ltype(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::TypeF, 8> type(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::ByteL, 8> lbyte(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::ByteF, 8> byte(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::BitL, 8> lbit(bitvect, MAX);
+    dyn::LineRankSelect<hft::fenwick::BitF, 8> bit(bitvect, MAX);
 
 
     for (size_t i = 0; i <= 1024; i++) {
@@ -106,13 +106,13 @@ TEST(line_rank_select, all_zeroes_1024)
     std::uint64_t bitvect[MAX] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                    0, 0, 0, 0, 0, 0, 0, 0 };
 
-    dyn::LineRankSelect<dyn::FixedF, 2> naive(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypeL, 2> ltype(bitvect, MAX);
-    dyn::LineRankSelect<dyn::TypeF, 2> type(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ByteL, 2> lbyte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::ByteF, 2> byte(bitvect, MAX);
-    dyn::LineRankSelect<dyn::BitL, 2> lbit(bitvect, MAX);
-    dyn::LineRankSelect<dyn::BitF, 2> bit(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::FixedF, 2> naive(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::TypeL, 2> ltype(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::TypeF, 2> type(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::ByteL, 2> lbyte(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::ByteF, 2> byte(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::BitL, 2> lbit(bitvect, MAX);
+    dyn::LineRankSelect<htf::fenwick::BitF, 2> bit(bitvect, MAX);
 
     for (size_t i = 0; i <= 1024; i++) {
         EXPECT_EQ(0, naive.rank(i)) << "at index: " << i;

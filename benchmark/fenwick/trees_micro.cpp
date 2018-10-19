@@ -13,18 +13,19 @@ uint64_t* random_array(size_t size);
 
 int main()
 {
-    // TODO: output comodo da parsare (generazione grafico automatica in python)
+    using namespace hft;
+
     for (size_t i = 2; i < L2_CACHE_SIZE; i <<= 1) {
         uint64_t *increments = random_array(i-1);
 
         cout << i << " Elements\n";
-        microbench<dyn::FixedF>("FixedF", i-1, increments);
-        microbench<dyn::TypeL>("TypeL", i-1, increments);
-        microbench<dyn::TypeF>("TypeF", i-1, increments);
-        microbench<dyn::ByteL>("ByteL", i-1, increments);
-        microbench<dyn::ByteF>("ByteF", i-1, increments);
-        microbench<dyn::BitL>("BitL", i-1, increments);
-        microbench<dyn::BitF>("BitF", i-1, increments);
+        microbench<fenwick::FixedF>("FixedF", i-1, increments);
+        microbench<fenwick::TypeL>("TypeL", i-1, increments);
+        microbench<fenwick::TypeF>("TypeF", i-1, increments);
+        microbench<fenwick::ByteL>("ByteL", i-1, increments);
+        microbench<fenwick::ByteF>("ByteF", i-1, increments);
+        microbench<fenwick::BitL>("BitL", i-1, increments);
+        microbench<fenwick::BitF>("BitF", i-1, increments);
         cout << "------------------------------------------------------------\n\n";
 
         delete[] increments;

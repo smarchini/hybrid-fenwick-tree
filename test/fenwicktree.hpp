@@ -20,14 +20,14 @@ void fenwick_random_test(std::size_t size)
         add_updates[i] = sdist(mte);
     }
 
-    dyn::FixedF<S> naive(increments, size);
-    dyn::FixedF<S> lnaive(increments, size);
-    dyn::BitF<S> bit(increments, size);
-    dyn::BitL<S> lbit(increments, size);
-    dyn::ByteL<S> lbyte(increments, size);
-    dyn::ByteF<S> byte(increments, size);
-    dyn::TypeF<S> type(increments, size);
-    dyn::TypeL<S> ltype(increments, size);
+    hft::fenwick::FixedF<S> naive(increments, size);
+    hft::fenwick::FixedF<S> lnaive(increments, size);
+    hft::fenwick::BitF<S> bit(increments, size);
+    hft::fenwick::BitL<S> lbit(increments, size);
+    hft::fenwick::ByteL<S> lbyte(increments, size);
+    hft::fenwick::ByteF<S> byte(increments, size);
+    hft::fenwick::TypeF<S> type(increments, size);
+    hft::fenwick::TypeL<S> ltype(increments, size);
 
     // prefix
     for (size_t i = 0; i < size; i++) {

@@ -6,7 +6,7 @@
 #include "broadword.hpp"
 #include "darray.hpp"
 
-namespace dyn {
+namespace hft {
     using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
     /**
