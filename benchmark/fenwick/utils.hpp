@@ -29,7 +29,7 @@
 template<typename T> T* random_array(size_t size);
 void inc_to_seq(std::uint64_t *inc, std::uint64_t *seq, std::size_t size);
 template<typename T> double bench_prefix(std::size_t size, std::uint64_t increments[], std::uint64_t order[]);
-template<typename T> double bench_set(std::size_t size, std::uint64_t increments[], std::uint64_t order[], std::int64_t values[]);
+template<typename T> double bench_add(std::size_t size, std::uint64_t increments[], std::uint64_t order[], std::int64_t values[]);
 template<typename T> double bench_find(std::size_t size, std::uint64_t increments[], std::uint64_t elements[]);
 
 
@@ -87,7 +87,7 @@ double bench_prefix(std::size_t size, std::uint64_t increments[], std::uint64_t 
 }
 
 template<typename T>
-double bench_set(std::size_t size, std::uint64_t increments[], std::uint64_t order[], std::int64_t values[])
+double bench_add(std::size_t size, std::uint64_t increments[], std::uint64_t order[], std::int64_t values[])
 {
     using namespace std;
 
@@ -95,12 +95,12 @@ double bench_set(std::size_t size, std::uint64_t increments[], std::uint64_t ord
 
     auto begin = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
-        tree.set(order[i], values[i]);
+        tree.add(order[i], values[i]);
     auto end = chrono::high_resolution_clock::now();
-    auto set = chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
+    auto add = chrono::duration_cast<std::chrono::nanoseconds>(end-begin).count();
 
     const double c = 1. / size;
-    return set * c;
+    return add * c;
 }
 
 template<typename T>

@@ -164,11 +164,11 @@ int main()
 
     cout << "\nIncrease the first value of fen1: ";
     cin >> inc;
-    fen1.set(0, inc);
+    fen1.add(0, inc);
 
     cout << "Increase the last value of fen2: ";
     cin >> inc;
-    fen2.set(size-1, inc);
+    fen2.add(size-1, inc);
 
     cout << "\nfen1.find(100) = " << fen1.find(100) << "\n";
     cout << "fen2.find(100) = " << fen2.find(100) << "\n\n";

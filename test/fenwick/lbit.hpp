@@ -37,9 +37,9 @@ TEST(lbit_fenwick_tree, increments_by_one)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;
     }
 
-    // set
+    // add
     for (size_t i = 0; i < 15; i++)
-        t.set(i, i);
+        t.add(i, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
@@ -87,9 +87,9 @@ TEST(lbit_fenwick_tree, increasing_increments)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;
     }
 
-    // set
+    // add
     for (size_t i = 0; i < 15; i++)
-        t.set(i, i);
+        t.add(i, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
@@ -137,9 +137,9 @@ TEST(lbit_fenwick_tree, non_complete)
             EXPECT_EQ(k-1, t.find_complement(i)) << "at index " << i;
     }
 
-    // set
+    // add
     for (size_t i = 0; i < 20; i++)
-        t.set(i, i);
+        t.add(i, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 20; i++) {

@@ -54,7 +54,7 @@ namespace dyn {
             return sum;
         }
 
-        virtual void set(size_t idx, int64_t inc)
+        virtual void add(size_t idx, int64_t inc)
         {
             const size_t size = tree.size();
             for (idx = idx+1; idx <= size; idx += mask_first_set(idx))

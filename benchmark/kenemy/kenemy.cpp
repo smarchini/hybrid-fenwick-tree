@@ -66,7 +66,7 @@ size_t vigna_ktsl(uint64_t *sigmainv, uint64_t *rho, size_t len)
     {
         size_t p = sigmainv[ rho[i] ];
         d += b.rankZero(p);
-        b.set(p);
+        b.add(p);
     }
 
     return d;

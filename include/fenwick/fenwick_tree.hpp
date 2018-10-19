@@ -22,7 +22,7 @@ namespace dyn {
         virtual std::uint64_t prefix(std::size_t idx) const = 0;
 
         /**
-         * set() - Increment one element of the cumulative frequency
+         * add() - Increment one element of the cumulative frequency
          * @idx: The index (starting from 0) of the element you want to update
          * @inc: Increment relative to the current value
          *
@@ -30,7 +30,7 @@ namespace dyn {
          * element of the cumulative frequency and change its value to
          * @val+@inc.
          */
-        virtual void set(std::size_t idx, std::int64_t inc) = 0;
+        virtual void add(std::size_t idx, std::int64_t inc) = 0;
 
         /**
          * find() - Find the closest element less or equal than a given one

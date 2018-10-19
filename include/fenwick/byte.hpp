@@ -70,7 +70,7 @@ namespace dyn {
             return sum;
         }
 
-        virtual void set(size_t idx, int64_t inc)
+        virtual void add(size_t idx, int64_t inc)
         {
             for (idx = idx+1; idx <= size(); idx += mask_first_set(idx))
                 *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;

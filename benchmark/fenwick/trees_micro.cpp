@@ -60,8 +60,8 @@ void microbench(const char* name, size_t size, uint64_t *increments)
     uniform_int_distribution<size_t> index(0, size-1);
     uniform_int_distribution<uint64_t> value(0, 64*size);
 
-    size_t prefix_idx = index(mte), set_idx = index(mte);
-    uint64_t find_val = value(mte), set_val = value(mte);
+    size_t prefix_idx = index(mte), add_idx = index(mte);
+    uint64_t find_val = value(mte), add_val = value(mte);
 
     // constructor
     begin = chrono::high_resolution_clock::now();
@@ -83,12 +83,12 @@ void microbench(const char* name, size_t size, uint64_t *increments)
     end = chrono::high_resolution_clock::now();
     auto find = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
-    // set
+    // add
     begin = chrono::high_resolution_clock::now();
     for (size_t i = multiplier; i != 0; i--)
-        tree.set(set_idx, set_val * (i % 2? 1 : -1));
+        tree.add(add_idx, add_val * (i % 2? 1 : -1));
     end = chrono::high_resolution_clock::now();
-    auto set = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
+    auto add = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
     const volatile uint64_t __attribute__((unused)) unused = u;
 
@@ -96,6 +96,6 @@ void microbench(const char* name, size_t size, uint64_t *increments)
     cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
     cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
     cout << "prefix:   " << fixed << setw(12) << prefix * c << " ns/item\n";
-    cout << "set:   " << fixed << setw(12) << set * c << " ns/item\n";
+    cout << "add:   " << fixed << setw(12) << add * c << " ns/item\n";
     cout << "find:  " << fixed << setw(12) << find * c << " ns/item\n";
 }

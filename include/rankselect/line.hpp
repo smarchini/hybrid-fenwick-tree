@@ -110,7 +110,7 @@ namespace dyn {
         {
             const uint64_t old = _bitvector[index];
             _bitvector[index] = word;
-            tree.set(index / WORDS, popcount(word) - popcount(old));
+            tree.add(index / WORDS, popcount(word) - popcount(old));
 
             return old;
         }
@@ -119,7 +119,7 @@ namespace dyn {
           const uint64_t old = _bitvector[index / 64];
           _bitvector[index / 64] |= uint64_t(1) << (index % 64);
           bool is_changed = _bitvector[index / 64] != old;
-          tree.set(index / (WORDS * 64), is_changed);
+          tree.add(index / (WORDS * 64), is_changed);
 
           return !is_changed;
         }
@@ -128,7 +128,7 @@ namespace dyn {
           const uint64_t old = _bitvector[index / 64];
           _bitvector[index / 64] &= ~(uint64_t(1) << (index % 64));
           bool is_changed = _bitvector[index / 64] != old;
-          tree.set(index / (WORDS * 64), -is_changed);
+          tree.add(index / (WORDS * 64), -is_changed);
 
           return is_changed;
         }
@@ -136,7 +136,7 @@ namespace dyn {
         virtual bool toggle(size_t index) {
           const uint64_t old = _bitvector[index / 64];
           _bitvector[index / 64] ^= uint64_t(1) << (index % 64);
-          tree.set(index / (WORDS * 64), _bitvector[index / 64] > old ? 1 : -1);
+          tree.add(index / (WORDS * 64), _bitvector[index / 64] > old ? 1 : -1);
 
           return _bitvector[index / 64] > old ? 0 : 1;
         }

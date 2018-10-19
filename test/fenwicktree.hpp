@@ -10,14 +10,14 @@ void fenwick_random_test(std::size_t size)
     std::uniform_int_distribution<std::uint64_t> dist(0, 64);
 
     std::uint64_t *increments = new std::uint64_t[size];
-    std::int64_t *set_updates = new std::int64_t[size];
+    std::int64_t *add_updates = new std::int64_t[size];
 
     for (std::size_t i = 0; i < size; i++)
         increments[i] = dist(mte);
 
     for (std::size_t i = 0; i < size; i++) {
         std::uniform_int_distribution<std::int64_t> sdist(0, 64 - increments[i]);
-        set_updates[i] = sdist(mte);
+        add_updates[i] = sdist(mte);
     }
 
     dyn::FixedF<S> naive(increments, size);
@@ -55,16 +55,16 @@ void fenwick_random_test(std::size_t size)
         EXPECT_EQ(naive_find, ltype.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
-    // set
+    // add
     for (size_t i = 0; i < size; i++) {
-        naive.set(i, set_updates[i]);
-        lnaive.set(i, set_updates[i]);
-        bit.set(i,   set_updates[i]);
-        lbit.set(i,  set_updates[i]);
-        byte.set(i,  set_updates[i]);
-        lbyte.set(i, set_updates[i]);
-        type.set(i,  set_updates[i]);
-        ltype.set(i, set_updates[i]);
+        naive.add(i, add_updates[i]);
+        lnaive.add(i, add_updates[i]);
+        bit.add(i,   add_updates[i]);
+        lbit.add(i,  add_updates[i]);
+        byte.add(i,  add_updates[i]);
+        lbyte.add(i, add_updates[i]);
+        type.add(i,  add_updates[i]);
+        ltype.add(i, add_updates[i]);
     }
 
     // prefix
@@ -94,7 +94,7 @@ void fenwick_random_test(std::size_t size)
     }
 
     delete[] increments;
-    delete[] set_updates;
+    delete[] add_updates;
 }
 
 

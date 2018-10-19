@@ -32,7 +32,7 @@ namespace dyn {
 
             // top
             for (size_t i = 0; i < top_tree.size(); i++)
-                top_tree.set(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
+                top_tree.add(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
         }
 
         virtual uint64_t prefix(size_t idx) const
@@ -47,20 +47,20 @@ namespace dyn {
                 + (bottom != 0 ? bottom_trees[top].prefix(bottom-1) : 0);
         }
 
-        virtual void set(size_t idx, int64_t inc)
+        virtual void add(size_t idx, int64_t inc)
         {
             size_t top = (idx+1) / BOTTOM_ELEMENTS;
             size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
 
             if (bottom == 0) {
-                top_tree.set(top-1, inc);
+                top_tree.add(top-1, inc);
             }
             else if (top_tree.size() == 0) {
-                bottom_trees[top].set(bottom-1, inc);
+                bottom_trees[top].add(bottom-1, inc);
             }
             else {
-                top_tree.set(top, inc);
-                bottom_trees[top].set(bottom-1, inc);
+                top_tree.add(top, inc);
+                bottom_trees[top].add(bottom-1, inc);
             }
         }
 

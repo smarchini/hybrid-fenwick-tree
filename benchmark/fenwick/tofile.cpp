@@ -67,7 +67,7 @@ private:
     uniform_int_distribution<uint64_t> seqdist, cumseqdist;
     uniform_int_distribution<size_t> idxdist;
 
-    ofstream fbuild, fprefix, fset, ffind, ffindc, fbitspace;
+    ofstream fbuild, fprefix, fadd, ffind, ffindc, fbitspace;
 
   public:
     Benchmark(string path, size_t size, size_t queries) :
@@ -78,7 +78,7 @@ private:
     void filesinit(string order) {
       finit(fbuild, "build.csv", "Elements," + order);
       finit(fprefix, "prefix.csv", "Elements," + order);
-      finit(fset, "set.csv", "Elements," + order);
+      finit(fadd, "add.csv", "Elements," + order);
       finit(ffind, "find.csv", "Elements," + order);
       finit(ffindc, "findc.csv", "Elements," + order);
       finit(fbitspace, "bitspace.csv", "Elements," + order);
@@ -87,7 +87,7 @@ private:
     void separator(string sep = ",") {
         fbuild << sep;
         fprefix << sep;
-        fset << sep;
+        fadd << sep;
         ffind << sep;
         ffindc << sep;
         fbitspace << sep;
@@ -123,15 +123,15 @@ private:
       auto prefix = duration_cast<chrono::nanoseconds>(end - begin).count();
       fprefix << to_string(prefix * c);
 
-      cout << "set... " << flush;
+      cout << "add... " << flush;
       begin = high_resolution_clock::now();
       for (uint64_t i = 0; i < queries; ++i) {
         size_t idx = idxdist(mte);
-        tree.set(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
+        tree.add(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
       }
       end = high_resolution_clock::now();
-      auto set = duration_cast<chrono::nanoseconds>(end - begin).count();
-      fset << to_string(set * c);
+      auto add = duration_cast<chrono::nanoseconds>(end - begin).count();
+      fadd << to_string(add * c);
 
       cout << "find... " << flush;
       begin = high_resolution_clock::now();
