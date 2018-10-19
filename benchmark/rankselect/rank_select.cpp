@@ -22,6 +22,8 @@
 
 using namespace std;
 using namespace hft;
+using namespace hft::fenwick;
+using namespace hft::ranking;
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
@@ -31,7 +33,7 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *rank1, uint64_t *select0, uint64_t *select1, size_t size, size_t queries);
 
 template <size_t N>
-using MByteF = MixedFenwickTree<ByteL, TypeF, N, 12>;
+using MByteF = Hybrid<ByteL, TypeF, N, 12>;
 
 int main(int argc, char *argv[])
 {
@@ -182,7 +184,7 @@ void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *r
 
     cout << "Construction... " << flush;
     begin = high_resolution_clock::now();
-    suc_bv bv;
+    dyn::suc_bv bv;
     for (uint64_t i = 0; i < size; ++i) {
         for (uint64_t j = 0; j < 64; ++j)
             bv.insert(64*i + j, bitvector[i] & (1ULL << j));

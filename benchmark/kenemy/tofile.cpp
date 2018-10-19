@@ -25,6 +25,8 @@
 
 using namespace std;
 using namespace hft;
+using namespace hft::ranking;
+using namespace hft::fenwick;
 using namespace std::chrono;
 
 bool is_fileempty(ifstream file) {
@@ -77,7 +79,7 @@ size_t vigna_ktsl_prezza(uint64_t *sigmainv, uint64_t *rho, size_t len)
 {
     size_t d = 0;
 
-    suc_bv b;
+    dyn::suc_bv b;
     for (size_t i = 0; i < len; i++)
         b.push_back(0);
 
@@ -91,7 +93,7 @@ size_t vigna_ktsl_prezza(uint64_t *sigmainv, uint64_t *rho, size_t len)
     return d;
 }
 
-size_t vigna_ktsl_prezza(suc_bv &b, uint64_t *sigmainv, uint64_t *rho, size_t len)
+size_t vigna_ktsl_prezza(dyn::suc_bv &b, uint64_t *sigmainv, uint64_t *rho, size_t len)
 {
     size_t d = 0;
 
@@ -122,7 +124,7 @@ size_t vigna_linearsearch(uint64_t *sigmainv, uint64_t *rho, size_t len) {
     for (size_t i = 0; i < len; i++)
     {
         size_t p = sigmainv[ rho[i] ];
-        d += linear_rankZero(bv.prefix(), p);
+        d += linear_rankZero(bv.get(), p);
         bv[p / 64] |= (1ULL << (p%64));
     }
 
@@ -172,100 +174,100 @@ int main(int argc, char *argv[])
 
     cout << "fixed[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Word<FixedF>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Word<FixedF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Word<ByteF>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Word<ByteF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Word<BitF>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Word<BitF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<FixedF, 2>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<FixedF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<ByteF, 2>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<ByteF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<BitF, 2>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<BitF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<FixedF, 4>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<FixedF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<ByteF, 4>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<ByteF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<BitF, 4>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<BitF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<FixedF, 8>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<FixedF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<ByteF, 8>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<ByteF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<BitF, 8>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<BitF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<FixedF, 12>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<FixedF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<ByteF, 12>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<ByteF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<Stride<BitF, 12>>(sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl<Stride<BitF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
 /*  if (len < 60000000) {
     cout << "prezza preinit... " << flush;
-    suc_bv prezzabv;
+    dyn::suc_bv prezzabv;
     for (size_t i = 0; i < len; i++) prezzabv.push_back(0);
     begin = high_resolution_clock::now();
-    vigna_ktsl_prezza(prezzabv, sigmainv.prefix(), rho.prefix(), len);
+    vigna_ktsl_prezza(prezzabv, sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
     } else {
@@ -276,7 +278,7 @@ int main(int argc, char *argv[])
     if (len < 40000000) {
         cout << "prezza... " << flush;
         begin = high_resolution_clock::now();
-        vigna_ktsl_prezza(sigmainv.prefix(), rho.prefix(), len);
+        vigna_ktsl_prezza(sigmainv.get(), rho.get(), len);
         end = high_resolution_clock::now();
         file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
     } else {
@@ -287,7 +289,7 @@ int main(int argc, char *argv[])
     if (len < 10000000) {
         cout << "linear... " << flush;
         begin = high_resolution_clock::now();
-        vigna_linearsearch(sigmainv.prefix(), rho.prefix(), len);
+        vigna_linearsearch(sigmainv.get(), rho.get(), len);
         end = high_resolution_clock::now();
         file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
     } else {
@@ -298,7 +300,7 @@ int main(int argc, char *argv[])
     if (len < 800000) {
         cout << "bubble... " << flush;
         begin = high_resolution_clock::now();
-        diligent_bubblesort(sigma.prefix(), rho.prefix(), len);
+        diligent_bubblesort(sigma.get(), rho.get(), len);
         end = high_resolution_clock::now();
         file << duration_cast<chrono::nanoseconds>(end-begin).count() << "\n";
     } else {

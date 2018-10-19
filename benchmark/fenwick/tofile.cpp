@@ -18,43 +18,43 @@
 #include <fenwick/mixed.hpp>
 
 using namespace std;
-using namespace hft;
+using namespace hft::fenwick;
 using namespace std::chrono;
 
-template <size_t N> using LNaiveNaive12 = MixedFenwickTree<FixedL, FixedF, N, 12>;
-template <size_t N> using LByteByte12 = MixedFenwickTree<ByteL, ByteF, N, 12>;
-template <size_t N> using LBitBit12 = MixedFenwickTree<BitL, BitF, N, 12>;
-template <size_t N> using LNaiveByte12 = MixedFenwickTree<FixedL, ByteF, N, 12>;
-template <size_t N> using LNaiveBit12 = MixedFenwickTree<FixedL, BitF, N, 12>;
-template <size_t N> using LByteBit12 = MixedFenwickTree<ByteL, BitF, N, 12>;
+template <size_t N> using LNaiveNaive12 = Hybrid<FixedL, FixedF, N, 12>;
+template <size_t N> using LByteByte12 = Hybrid<ByteL, ByteF, N, 12>;
+template <size_t N> using LBitBit12 = Hybrid<BitL, BitF, N, 12>;
+template <size_t N> using LNaiveByte12 = Hybrid<FixedL, ByteF, N, 12>;
+template <size_t N> using LNaiveBit12 = Hybrid<FixedL, BitF, N, 12>;
+template <size_t N> using LByteBit12 = Hybrid<ByteL, BitF, N, 12>;
 
-template <size_t N> using LNaiveNaive14 = MixedFenwickTree<FixedL, FixedF, N, 14>;
-template <size_t N> using LByteByte14 = MixedFenwickTree<ByteL, ByteF, N, 14>;
-template <size_t N> using LBitBit14 = MixedFenwickTree<BitL, BitF, N, 14>;
-template <size_t N> using LNaiveByte14 = MixedFenwickTree<FixedL, ByteF, N, 14>;
-template <size_t N> using LNaiveBit14 = MixedFenwickTree<FixedL, BitF, N, 14>;
-template <size_t N> using LByteBit14 = MixedFenwickTree<ByteL, BitF, N, 14>;
+template <size_t N> using LNaiveNaive14 = Hybrid<FixedL, FixedF, N, 14>;
+template <size_t N> using LByteByte14 = Hybrid<ByteL, ByteF, N, 14>;
+template <size_t N> using LBitBit14 = Hybrid<BitL, BitF, N, 14>;
+template <size_t N> using LNaiveByte14 = Hybrid<FixedL, ByteF, N, 14>;
+template <size_t N> using LNaiveBit14 = Hybrid<FixedL, BitF, N, 14>;
+template <size_t N> using LByteBit14 = Hybrid<ByteL, BitF, N, 14>;
 
-template <size_t N> using LNaiveNaive16 = MixedFenwickTree<FixedL, FixedF, N, 16>;
-template <size_t N> using LByteByte16 = MixedFenwickTree<ByteL, ByteF, N, 16>;
-template <size_t N> using LBitBit16 = MixedFenwickTree<BitL, BitF, N, 16>;
-template <size_t N> using LNaiveByte16 = MixedFenwickTree<FixedL, ByteF, N, 16>;
-template <size_t N> using LNaiveBit16 = MixedFenwickTree<FixedL, BitF, N, 16>;
-template <size_t N> using LByteBit16 = MixedFenwickTree<ByteL, BitF, N, 16>;
+template <size_t N> using LNaiveNaive16 = Hybrid<FixedL, FixedF, N, 16>;
+template <size_t N> using LByteByte16 = Hybrid<ByteL, ByteF, N, 16>;
+template <size_t N> using LBitBit16 = Hybrid<BitL, BitF, N, 16>;
+template <size_t N> using LNaiveByte16 = Hybrid<FixedL, ByteF, N, 16>;
+template <size_t N> using LNaiveBit16 = Hybrid<FixedL, BitF, N, 16>;
+template <size_t N> using LByteBit16 = Hybrid<ByteL, BitF, N, 16>;
 
-template <size_t N> using LNaiveNaive18 = MixedFenwickTree<FixedL, FixedF, N, 18>;
-template <size_t N> using LByteByte18 = MixedFenwickTree<ByteL, ByteF, N, 18>;
-template <size_t N> using LBitBit18 = MixedFenwickTree<BitL, BitF, N, 18>;
-template <size_t N> using LNaiveByte18 = MixedFenwickTree<FixedL, ByteF, N, 18>;
-template <size_t N> using LNaiveBit18 = MixedFenwickTree<FixedL, BitF, N, 18>;
-template <size_t N> using LByteBit18 = MixedFenwickTree<ByteL, BitF, N, 18>;
+template <size_t N> using LNaiveNaive18 = Hybrid<FixedL, FixedF, N, 18>;
+template <size_t N> using LByteByte18 = Hybrid<ByteL, ByteF, N, 18>;
+template <size_t N> using LBitBit18 = Hybrid<BitL, BitF, N, 18>;
+template <size_t N> using LNaiveByte18 = Hybrid<FixedL, ByteF, N, 18>;
+template <size_t N> using LNaiveBit18 = Hybrid<FixedL, BitF, N, 18>;
+template <size_t N> using LByteBit18 = Hybrid<ByteL, BitF, N, 18>;
 
-template <size_t N> using LNaiveNaive20 = MixedFenwickTree<FixedL, FixedF, N, 20>;
-template <size_t N> using LByteByte20 = MixedFenwickTree<ByteL, ByteF, N, 20>;
-template <size_t N> using LBitBit20 = MixedFenwickTree<BitL, BitF, N, 20>;
-template <size_t N> using LNaiveByte20 = MixedFenwickTree<FixedL, ByteF, N, 20>;
-template <size_t N> using LNaiveBit20 = MixedFenwickTree<FixedL, BitF, N, 20>;
-template <size_t N> using LByteBit20 = MixedFenwickTree<ByteL, BitF, N, 20>;
+template <size_t N> using LNaiveNaive20 = Hybrid<FixedL, FixedF, N, 20>;
+template <size_t N> using LByteByte20 = Hybrid<ByteL, ByteF, N, 20>;
+template <size_t N> using LBitBit20 = Hybrid<BitL, BitF, N, 20>;
+template <size_t N> using LNaiveByte20 = Hybrid<FixedL, ByteF, N, 20>;
+template <size_t N> using LNaiveBit20 = Hybrid<FixedL, BitF, N, 20>;
+template <size_t N> using LByteBit20 = Hybrid<ByteL, BitF, N, 20>;
 
 
 template <size_t LEAF_MAXVAL> class Benchmark {
@@ -110,7 +110,7 @@ private:
 
       cout << "Constructor... " << flush;
       begin = high_resolution_clock::now();
-      T<LEAF_MAXVAL> tree(sequence.prefix(), size);
+      T<LEAF_MAXVAL> tree(sequence.get(), size);
       end = high_resolution_clock::now();
       auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
       fbuild << to_string(build / (double)size);

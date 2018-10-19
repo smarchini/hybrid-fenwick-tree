@@ -10,7 +10,7 @@ namespace hft {
     namespace fenwick {
 
         template <template<size_t> class TOP_TREE, template<size_t> class BOTTOM_TREE, size_t LEAF_MAXVAL, size_t BOTTOM_HEIGHT>
-        class MixedFenwickTree : public FenwickTree
+        class Hybrid : public FenwickTree
         {
         private:
             static constexpr size_t BOTTOM_ELEMENTS = 1ULL << BOTTOM_HEIGHT;
@@ -21,7 +21,7 @@ namespace hft {
             TOP_TREE<LEAF_MAXVAL*BOTTOM_ELEMENTS> top_tree;
 
         public:
-            MixedFenwickTree(uint64_t sequence[], size_t size) :
+            Hybrid(uint64_t sequence[], size_t size) :
                 _size(size),
                 top_tree(build_top(sequence, size))
             {
@@ -99,7 +99,7 @@ namespace hft {
                     size += t.bit_count();
 
                 return size
-                    + sizeof(MixedFenwickTree<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_HEIGHT>)
+                    + sizeof(Hybrid<BOTTOM_TREE, TOP_TREE, LEAF_MAXVAL, BOTTOM_HEIGHT>)
                     + top_tree.bit_count();
             }
 

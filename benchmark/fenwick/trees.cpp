@@ -6,15 +6,13 @@
 
 #include "utils.hpp"
 
-using namespace std;
-
 template<typename T>
 void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t add_updates[], uint64_t sequence[]);
 
 int main(int argc, char **argv)
 {
     using namespace std;
-    using namespace hft;
+    using namespace hft::fenwick;
 
     if (argc < 2) {
         cerr << "Not enough parameters\n";
@@ -68,6 +66,7 @@ int main(int argc, char **argv)
 template<typename T>
 void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[], uint64_t add_updates[], uint64_t sequence[])
 {
+    using namespace std;
     chrono::high_resolution_clock::time_point begin, end;
     uint64_t u = 0;
 
@@ -113,7 +112,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
 
     const double c = 1. / size;
     cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
-    cout << "build: " << fixed << addw(12) << constructor * c << " ns/item\n";
+    cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
     cout << "prefix:   " << fixed << setw(12) << prefix * c << " ns/item\n";
     cout << "set:   " << fixed << setw(12) << add * c << " ns/item\n";
     cout << "find:  " << fixed << setw(12) << find * c << " ns/item\n";

@@ -55,11 +55,11 @@ TEST(fenwick_mixed, naive)
     using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
 }
 
 TEST(fenwick_mixed, type)
@@ -67,18 +67,18 @@ TEST(fenwick_mixed, type)
     using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeL, TypeF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeL, TypeF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeL, TypeF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeF, TypeL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeF, TypeL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<TypeF, TypeL, 64, 11>>(i);
 
 }
 
@@ -87,18 +87,18 @@ TEST(fenwick_mixed, byte)
     using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteL, ByteF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteL, ByteF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteL, ByteF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteF, ByteL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteF, ByteL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<ByteF, ByteL, 64, 11>>(i);
 }
 
 TEST(fenwick_mixed, bit)
@@ -106,18 +106,18 @@ TEST(fenwick_mixed, bit)
     using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitL, BitF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitL, BitF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitL, BitF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitF, BitL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitF, BitL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
+        fenwick_random_test<Hybrid<BitF, BitL, 64, 11>>(i);
 }
 
 

@@ -25,14 +25,16 @@
 
 using namespace std;
 using namespace hft;
+using namespace hft::fenwick;
+using namespace hft::ranking;
 using namespace std::chrono;
 
-template <size_t N> using LNaiveNaive16 = MixedFenwickTree<FixedL, FixedF, N, 16>;
-template <size_t N> using LByteByte16 = MixedFenwickTree<ByteL, ByteF, N, 16>;
-template <size_t N> using LBitBit16 = MixedFenwickTree<BitL, BitF, N, 16>;
-template <size_t N> using LNaiveByte16 = MixedFenwickTree<FixedL, ByteF, N, 16>;
-template <size_t N> using LNaiveBit16 = MixedFenwickTree<FixedL, BitF, N, 16>;
-template <size_t N> using LByteBit16 = MixedFenwickTree<ByteL, BitF, N, 16>;
+template <size_t N> using LNaiveNaive16 = Hybrid<FixedL, FixedF, N, 16>;
+template <size_t N> using LByteByte16 = Hybrid<ByteL, ByteF, N, 16>;
+template <size_t N> using LBitBit16 = Hybrid<BitL, BitF, N, 16>;
+template <size_t N> using LNaiveByte16 = Hybrid<FixedL, ByteF, N, 16>;
+template <size_t N> using LNaiveBit16 = Hybrid<FixedL, BitF, N, 16>;
+template <size_t N> using LByteBit16 = Hybrid<ByteL, BitF, N, 16>;
 
 
 class Benchmark {
@@ -100,7 +102,7 @@ public:
 
         cout << "Constructor... " << flush;
         begin = high_resolution_clock::now();
-        T bv(bitvector.prefix(), size);
+        T bv(bitvector.get(), size);
         end = high_resolution_clock::now();
         auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
         fbuild << to_string(build / (double)size);
@@ -166,7 +168,7 @@ public:
 //        begin = high_resolution_clock::now();
 //        for (uint64_t i = 0; i < size; ++i) {
 //            for (uint64_t j = 0; j < 64; ++j)
-//                dynamic.insert(64*i + j, bitvector.prefix()[i] & (1ULL << j));
+//                dynamic.insert(64*i + j, bitvector.get()[i] & (1ULL << j));
 //        }
 //        end = high_resolution_clock::now();
 //        auto build = duration_cast<chrono::nanoseconds>(end-begin).count();

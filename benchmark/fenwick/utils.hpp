@@ -1,18 +1,6 @@
 #ifndef __BENCHMARK_UTILS_H__
 #define __BENCHMARK_UTILS_H__
 
-#ifndef L1_CACHE_SIZE
-#error "L1_CACHE_SIZE is undefined"
-#endif
-
-#ifndef L2_CACHE_SIZE
-#error "L2_CACHE_SIZE is undefined"
-#endif
-
-#ifndef L3_CACHE_SIZE
-#error "L3_CACHE_SIZE is undefined"
-#endif
-
 #include <chrono>
 #include <algorithm>
 #include <random>
