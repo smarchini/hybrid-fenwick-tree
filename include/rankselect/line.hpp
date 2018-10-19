@@ -49,7 +49,7 @@ namespace dyn {
         virtual uint64_t rank(size_t pos) const
         {
             size_t idx = pos/(64*WORDS);
-            uint64_t value = idx ? tree.get(idx-1) : 0;
+            uint64_t value = idx ? tree.prefix(idx-1) : 0;
 
             for (size_t i = idx*WORDS; i < pos/64; i++)
                 value += popcount(_bitvector[i]);

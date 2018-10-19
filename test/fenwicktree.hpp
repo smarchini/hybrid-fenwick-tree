@@ -29,17 +29,17 @@ void fenwick_random_test(std::size_t size)
     dyn::TypeF<S> type(increments, size);
     dyn::TypeL<S> ltype(increments, size);
 
-    // get
+    // prefix
     for (size_t i = 0; i < size; i++) {
-        std::uint64_t naive_get = naive.get(i);
+        std::uint64_t naive_prefix = naive.prefix(i);
 
-        EXPECT_EQ(naive_get, lnaive.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, lbit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, lbyte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, ltype.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lnaive.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, bit.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lbit.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, byte.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lbyte.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, type.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, ltype.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
    }
 
     // find
@@ -67,17 +67,17 @@ void fenwick_random_test(std::size_t size)
         ltype.set(i, set_updates[i]);
     }
 
-    // get
+    // prefix
     for (size_t i = 0; i < size; i++) {
-        std::uint64_t naive_get = naive.get(i);
+        std::uint64_t naive_prefix = naive.prefix(i);
 
-        EXPECT_EQ(naive_get, lnaive.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, bit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, lbit.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, byte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, lbyte.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, type.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_get, ltype.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lnaive.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, bit.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lbit.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, byte.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, lbyte.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, type.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_prefix, ltype.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     // find complement

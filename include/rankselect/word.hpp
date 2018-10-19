@@ -47,7 +47,7 @@ namespace dyn {
 
         virtual uint64_t rank(size_t pos) const
         {
-            return ((pos/64) ? tree.get(pos/64 - 1) : 0)
+            return ((pos/64) ? tree.prefix(pos/64 - 1) : 0)
                 + popcount(_bitvector[pos/64] & compact_bitmask(pos % 64, 0));
         }
 

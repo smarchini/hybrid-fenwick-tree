@@ -23,9 +23,9 @@ void fenwick_random_test(std::size_t size)
     dyn::FixedF<64> naive(increments, size);
     T mixed(increments, size);
 
-    // get
+    // prefix
     for (size_t i = 0; i < size; i++)
-        EXPECT_EQ(naive.get(i), mixed.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
+        EXPECT_EQ(naive.prefix(i), mixed.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
 
     // find
     for (std::uint64_t i = 0; i < size; i++)
@@ -37,9 +37,9 @@ void fenwick_random_test(std::size_t size)
         mixed.set(i, set_updates[i]);
     }
 
-    // get
+    // prefix
     for (size_t i = 0; i < size; i++)
-        EXPECT_EQ(naive.get(i), mixed.get(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
+        EXPECT_EQ(naive.prefix(i), mixed.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++)

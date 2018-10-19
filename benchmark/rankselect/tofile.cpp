@@ -100,7 +100,7 @@ public:
 
         cout << "Constructor... " << flush;
         begin = high_resolution_clock::now();
-        T bv(bitvector.get(), size);
+        T bv(bitvector.prefix(), size);
         end = high_resolution_clock::now();
         auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
         fbuild << to_string(build / (double)size);
@@ -166,7 +166,7 @@ public:
 //        begin = high_resolution_clock::now();
 //        for (uint64_t i = 0; i < size; ++i) {
 //            for (uint64_t j = 0; j < 64; ++j)
-//                dynamic.insert(64*i + j, bitvector.get()[i] & (1ULL << j));
+//                dynamic.insert(64*i + j, bitvector.prefix()[i] & (1ULL << j));
 //        }
 //        end = high_resolution_clock::now();
 //        auto build = duration_cast<chrono::nanoseconds>(end-begin).count();

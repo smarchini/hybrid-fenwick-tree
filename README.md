@@ -174,8 +174,8 @@ int main()
     cout << "fen2.find(100) = " << fen2.find(100) << "\n\n";
 
     for (size_t i = 0; i < size; i++) {
-        cout << "fen1: " << i+1 << "^ element of the sequence: " << fen1.get(i) << "\n";
-        cout << "fen2: " << i+1 << "^ element of the sequence:" << fen2.get(i) << "\n\n";
+        cout << "fen1: " << i+1 << "^ element of the sequence: " << fen1.prefix(i) << "\n";
+        cout << "fen2: " << i+1 << "^ element of the sequence:" << fen2.prefix(i) << "\n\n";
     }
 
     return 0;

@@ -67,7 +67,7 @@ namespace dyn {
             }
         }
 
-        virtual uint64_t get(size_t idx) const
+        virtual uint64_t prefix(size_t idx) const
         {
             uint64_t sum = 0;
             size_t index = 0;

@@ -1,5 +1,5 @@
-#example: python pretty_print.py <(../bin/benchmark/get)
-#example: ./bin/benchmark/get > get.csv & python ./utils/pretty_print.py get.csv
+#example: python pretty_print.py <(../bin/benchmark/prefix)
+#example: ./bin/benchmark/prefix > prefix.csv & python ./utils/pretty_print.py prefix.csv
 import sys, csv
 
 def prettyprint(filename):

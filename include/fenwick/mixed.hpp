@@ -32,19 +32,19 @@ namespace dyn {
 
             // top
             for (size_t i = 0; i < top_tree.size(); i++)
-                top_tree.set(i, bottom_trees[i].get(bottom_trees[i].size()-1));
+                top_tree.set(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
         }
 
-        virtual uint64_t get(size_t idx) const
+        virtual uint64_t prefix(size_t idx) const
         {
             size_t top = (idx+1) / BOTTOM_ELEMENTS;
             size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
 
             if (top == 0 || top_tree.size() == 0)
-                return bottom_trees[0].get(bottom-1);
+                return bottom_trees[0].prefix(bottom-1);
 
-            return top_tree.get(top-1)
-                + (bottom != 0 ? bottom_trees[top].get(bottom-1) : 0);
+            return top_tree.prefix(top-1)
+                + (bottom != 0 ? bottom_trees[top].prefix(bottom-1) : 0);
         }
 
         virtual void set(size_t idx, int64_t inc)

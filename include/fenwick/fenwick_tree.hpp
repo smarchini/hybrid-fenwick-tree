@@ -11,7 +11,7 @@ namespace dyn {
         virtual ~FenwickTree() = default;
 
         /**
-         * get() - Retrieve the (@idx+1)th element of the cumulative frequency
+         * prefix() - Retrieve the (@idx+1)th element of the cumulative frequency
          * @idx: Index of the element, starting from 0
          *
          * This method returns the (@idx+1)th element of the cumulative
@@ -19,7 +19,7 @@ namespace dyn {
          *
          * Returns: The (@idx+1)th element of the cumulative frequency
          */
-        virtual std::uint64_t get(std::size_t idx) const = 0;
+        virtual std::uint64_t prefix(std::size_t idx) const = 0;
 
         /**
          * set() - Increment one element of the cumulative frequency
@@ -41,7 +41,7 @@ namespace dyn {
          * if such an element doesn't exists.
          *
          * If @val is a reference it gives you the distance of such an element,
-         * that is: @val - FenwickTree::get(FenwickTree::find(val))
+         * that is: @val - FenwickTree::prefix(FenwickTree::find(val))
          *
          * Returns: The closest index whose its element is less or equal than
          * @val or SIZE_MAX if it doesn't exists.

@@ -67,7 +67,7 @@ private:
     uniform_int_distribution<uint64_t> seqdist, cumseqdist;
     uniform_int_distribution<size_t> idxdist;
 
-    ofstream fbuild, fget, fset, ffind, ffindc, fbitspace;
+    ofstream fbuild, fprefix, fset, ffind, ffindc, fbitspace;
 
   public:
     Benchmark(string path, size_t size, size_t queries) :
@@ -77,7 +77,7 @@ private:
 
     void filesinit(string order) {
       finit(fbuild, "build.csv", "Elements," + order);
-      finit(fget, "get.csv", "Elements," + order);
+      finit(fprefix, "prefix.csv", "Elements," + order);
       finit(fset, "set.csv", "Elements," + order);
       finit(ffind, "find.csv", "Elements," + order);
       finit(ffindc, "findc.csv", "Elements," + order);
@@ -86,7 +86,7 @@ private:
 
     void separator(string sep = ",") {
         fbuild << sep;
-        fget << sep;
+        fprefix << sep;
         fset << sep;
         ffind << sep;
         ffindc << sep;
@@ -110,18 +110,18 @@ private:
 
       cout << "Constructor... " << flush;
       begin = high_resolution_clock::now();
-      T<LEAF_MAXVAL> tree(sequence.get(), size);
+      T<LEAF_MAXVAL> tree(sequence.prefix(), size);
       end = high_resolution_clock::now();
       auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
       fbuild << to_string(build / (double)size);
 
-      cout << "get... " << flush;
+      cout << "prefix... " << flush;
       begin = high_resolution_clock::now();
       for (uint64_t i = 0; i < queries; ++i)
-        u ^= tree.get(idxdist(mte));
+        u ^= tree.prefix(idxdist(mte));
       end = high_resolution_clock::now();
-      auto get = duration_cast<chrono::nanoseconds>(end - begin).count();
-      fget << to_string(get * c);
+      auto prefix = duration_cast<chrono::nanoseconds>(end - begin).count();
+      fprefix << to_string(prefix * c);
 
       cout << "set... " << flush;
       begin = high_resolution_clock::now();

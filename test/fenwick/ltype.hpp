@@ -28,9 +28,9 @@ TEST(ltype_fenwick_tree, increments_by_one)
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
 
-    // get
+    // prefix
     for (size_t i = 0; i < 15; i++)
-        EXPECT_EQ(seq1[i], t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq1[i], t.prefix(i)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 15; i++)
@@ -53,7 +53,7 @@ TEST(ltype_fenwick_tree, increments_by_one)
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(seq1[i]+sum, t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq1[i]+sum, t.prefix(i)) << "at index " << i;
     }
 
     // find
@@ -87,9 +87,9 @@ TEST(ltype_fenwick_tree, increasing_increments)
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
 
-    // get
+    // prefix
     for (size_t i = 0; i < 15; i++)
-        EXPECT_EQ(seq2[i], t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq2[i], t.prefix(i)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 15; i++)
@@ -112,7 +112,7 @@ TEST(ltype_fenwick_tree, increasing_increments)
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(seq2[i]+sum, t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq2[i]+sum, t.prefix(i)) << "at index " << i;
     }
 
     // find
@@ -146,9 +146,9 @@ TEST(ltype_fenwick_tree, non_complete)
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);
 
-    // get
+    // prefix
     for (size_t i = 0; i < 20; i++)
-        EXPECT_EQ(seq3[i], t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq3[i], t.prefix(i)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 20; i++)
@@ -171,7 +171,7 @@ TEST(ltype_fenwick_tree, non_complete)
     size_t sum = 0;
     for (size_t i = 0; i < 20; i++) {
         sum += i;
-        EXPECT_EQ(seq3[i]+sum, t.get(i)) << "at index " << i;
+        EXPECT_EQ(seq3[i]+sum, t.prefix(i)) << "at index " << i;
     }
 
     // find

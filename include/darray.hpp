@@ -34,7 +34,7 @@ namespace dyn {
             _size(oth._size),
             buffer(std::make_unique<T[]>(oth._size))
         {
-            copy_n(oth.buffer.get(), _size, buffer.get());
+            copy_n(oth.buffer.prefix(), _size, buffer.prefix());
         }
 
         // move & deep-copy assignment (copy&swap idiom)
@@ -56,7 +56,7 @@ namespace dyn {
         }
 
         // data access capabilities
-        inline T* get() const { return buffer.get(); }
+        inline T*  get() const { return buffer.get(); }
         inline T& operator[](size_t i) const { return buffer[i]; };
         inline size_t size() const { return _size; }
 
