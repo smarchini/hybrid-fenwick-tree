@@ -144,7 +144,7 @@ private:
       cout << "findc... " << flush;
       begin = high_resolution_clock::now();
       for (uint64_t i = 0; i < queries; ++i)
-        u ^= tree.find_complement(cumseqdist(mte));
+        u ^= tree.compfind(cumseqdist(mte));
       end = high_resolution_clock::now();
       auto findc = duration_cast<chrono::nanoseconds>(end - begin).count();
       ffindc << to_string(findc * c);

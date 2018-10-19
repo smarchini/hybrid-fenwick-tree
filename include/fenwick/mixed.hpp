@@ -75,14 +75,14 @@ namespace dyn {
             return top*BOTTOM_ELEMENTS + bottom;
         }
 
-        using FenwickTree::find_complement;
-        virtual size_t find_complement(uint64_t *val) const
+        using FenwickTree::compfind;
+        virtual size_t compfind(uint64_t *val) const
         {
             size_t top = 0;
             if (top_tree.size() != 0)
-                top = top_tree.find_complement(val) + 1;
+                top = top_tree.compfind(val) + 1;
 
-            size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find_complement(val) : -1;
+            size_t bottom = top < bottom_trees.size() ? bottom_trees[top].compfind(val) : -1;
             return top*BOTTOM_ELEMENTS + bottom;
         }
 

@@ -104,7 +104,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     // find complement (after tree.add, so sequence[] is not cached)
     begin = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < size; i++)
-        u ^= tree.find_complement(sequence[i]);
+        u ^= tree.compfind(sequence[i]);
     end = chrono::high_resolution_clock::now();
     auto findc = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 

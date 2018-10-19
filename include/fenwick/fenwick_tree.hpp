@@ -52,7 +52,7 @@ namespace dyn {
         }
 
         /**
-         * find_complement() - Complement of find()
+         * compfind() - Complement of find()
          * @val: Value to search
          *
          * This method finds the maximum index whose the values mantained by the
@@ -64,9 +64,9 @@ namespace dyn {
          * Returns: The closest index whose its element is less or equal than
          * MAX_VAL-@val or SIZE_MAX if it doesn't exists.
          */
-        virtual std::size_t find_complement(std::uint64_t *val) const = 0;
-        std::size_t find_complement(std::uint64_t val) const {
-            return find_complement(&val);
+        virtual std::size_t compfind(std::uint64_t *val) const = 0;
+        std::size_t compfind(std::uint64_t val) const {
+            return compfind(&val);
         }
 
         /**

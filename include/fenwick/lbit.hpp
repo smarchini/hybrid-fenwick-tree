@@ -133,8 +133,8 @@ namespace dyn {
             return node <= size() ? node-1 : size()-1;
         }
 
-        using FenwickTree::find_complement;
-        virtual size_t find_complement(uint64_t *val) const
+        using FenwickTree::compfind;
+        virtual size_t compfind(uint64_t *val) const
         {
             size_t node = 0, idx = 0;
 

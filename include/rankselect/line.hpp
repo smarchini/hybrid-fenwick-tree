@@ -91,7 +91,7 @@ namespace dyn {
 
         virtual size_t selectZero(uint64_t rank) const
         {
-            const size_t idx = tree.find_complement(&rank) + 1;
+            const size_t idx = tree.compfind(&rank) + 1;
 
             for (size_t i = idx*WORDS; i < idx*WORDS+WORDS; i++) {
                 if (i >= _bitvector.size()) return SIZE_MAX;

@@ -82,15 +82,15 @@ void fenwick_random_test(std::size_t size)
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++) {
-        std::uint64_t naive_findcomplement = naive.find_complement(i);
+        std::uint64_t naive_findcomplement = naive.compfind(i);
 
-        EXPECT_EQ(naive_findcomplement, lnaive.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, bit.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, lbit.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, byte.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, lbyte.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, type.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-        EXPECT_EQ(naive_findcomplement, ltype.find_complement(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, lnaive.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, bit.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, lbit.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, byte.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, lbyte.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, type.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+        EXPECT_EQ(naive_findcomplement, ltype.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     }
 
     delete[] increments;
