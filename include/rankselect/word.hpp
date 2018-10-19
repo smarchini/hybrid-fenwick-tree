@@ -7,7 +7,7 @@ namespace hft {
     namespace ranking {
 
         template <template<size_t> class T>
-        class WordRankSelect {
+        class Word {
         private:
             static constexpr size_t LEAF_BITSIZE = 64;
             T<LEAF_BITSIZE> tree;
@@ -15,7 +15,7 @@ namespace hft {
 
         public:
             /**
-             * WordRankSelect - Build a dynamic rank&select data structure
+             * Word - Build a dynamic rank&select data structure
              * @bitvector: A bitvector of 64-bit words
              * @length: The length (in words) of the bitvector
              *
@@ -25,14 +25,14 @@ namespace hft {
              * long as you don't touch its underlining bitvector, so it prevents you
              * to do it.
              */
-            WordRankSelect(uint64_t bitvector[], size_t length):
+            Word(uint64_t bitvector[], size_t length):
                 tree(build_fenwick(bitvector, length)),
                 _bitvector(DArray<uint64_t>(length))
             {
                 std::copy_n(bitvector, length, _bitvector.get());
             }
 
-            WordRankSelect(DArray<uint64_t> bitvector, size_t length)
+            Word(DArray<uint64_t> bitvector, size_t length)
                 : tree(build_fenwick(bitvector.get(), length)),
                   _bitvector(std::move(bitvector)) {}
 
@@ -133,7 +133,7 @@ namespace hft {
 
             virtual size_t bit_count() const
             {
-                return sizeof(WordRankSelect<T>)
+                return sizeof(Word<T>)
                     + _bitvector.bit_count() - sizeof(_bitvector)
                     + tree.bit_count() - sizeof(tree);
             }

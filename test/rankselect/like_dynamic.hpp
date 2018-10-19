@@ -30,7 +30,7 @@ TEST(rankselect_like_dynamic, random)
 
     size_t zeroes = 64*SIZE - ones;
 
-    WordRankSelect<FixedF> internal(bitvect, SIZE);
+    Word<FixedF> internal(bitvect, SIZE);
 
     suc_bv dynamic;
 	for (uint64_t i = 0; i < SIZE; ++i) {

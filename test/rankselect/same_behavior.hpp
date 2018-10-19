@@ -19,21 +19,21 @@ void rankselect_random_test(std::size_t size)
         updates[i] = dist(mte);
     }
 
-    WordRankSelect<FixedF> word_naive(bitvect, size);
-    WordRankSelect<TypeL> word_ltype(bitvect, size);
-    WordRankSelect<TypeF> word_type(bitvect, size);
-    WordRankSelect<ByteL> word_lbyte(bitvect, size);
-    WordRankSelect<ByteF> word_byte(bitvect, size);
-    WordRankSelect<BitL> word_lbit(bitvect, size);
-    WordRankSelect<BitF> word_bit(bitvect, size);
+    ranking::Word<fenwick::FixedF> word_naive(bitvect, size);
+    ranking::Word<fenwick::TypeL> word_ltype(bitvect, size);
+    ranking::Word<fenwick::TypeF> word_type(bitvect, size);
+    ranking::Word<fenwick::ByteL> word_lbyte(bitvect, size);
+    ranking::Word<fenwick::ByteF> word_byte(bitvect, size);
+    ranking::Word<fenwick::BitL> word_lbit(bitvect, size);
+    ranking::Word<fenwick::BitF> word_bit(bitvect, size);
 
-    LineRankSelect<FixedF, S> line_naive(bitvect, size);
-    LineRankSelect<TypeL, S> line_ltype(bitvect, size);
-    LineRankSelect<TypeF, S> line_type(bitvect, size);
-    LineRankSelect<ByteL, S> line_lbyte(bitvect, size);
-    LineRankSelect<ByteF, S> line_byte(bitvect, size);
-    LineRankSelect<BitL, S> line_lbit(bitvect, size);
-    LineRankSelect<BitF, S> line_bit(bitvect, size);
+    ranking::Stride<fenwick::FixedF, S> line_naive(bitvect, size);
+    ranking::Stride<fenwick::TypeL, S> line_ltype(bitvect, size);
+    ranking::Stride<fenwick::TypeF, S> line_type(bitvect, size);
+    ranking::Stride<fenwick::ByteL, S> line_lbyte(bitvect, size);
+    ranking::Stride<fenwick::ByteF, S> line_byte(bitvect, size);
+    ranking::Stride<fenwick::BitL, S> line_lbit(bitvect, size);
+    ranking::Stride<fenwick::BitF, S> line_bit(bitvect, size);
 
     for (size_t i = 0; i < size; i++) {
         auto res = word_naive.rank(i);

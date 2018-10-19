@@ -100,8 +100,8 @@ int main()
     }
 
     // Two different implementation of rank&select data structure
-    WordRankSelect<ByteF> bv1(bitvect, size);   // a sample for each word, maintained into a ByteF
-    LineRankSelect<BitF, 8> bv2(bitvect, size); // a sample every 8 words, maintained into a BitF
+    Word<ByteF> bv1(bitvect, size);   // a sample for each word, maintained into a ByteF
+    Stride<BitF, 8> bv2(bitvect, size); // a sample every 8 words, maintained into a BitF
 
     // You don't need bitvect anymore, it's stored inside the data structure
     delete[] bitvect;
