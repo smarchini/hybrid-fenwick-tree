@@ -8,7 +8,7 @@ extern std::uint64_t inc2[];
 
 TEST(naive_fenwick_tree, increments_by_one)
 {
-    NaiveFenwickTree_Test t(inc1, 15);
+    FixedF_Test t(inc1, 15);
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -52,7 +52,7 @@ TEST(naive_fenwick_tree, increments_by_one)
 
 TEST(naive_fenwick_tree, increasing_increments)
 {
-    NaiveFenwickTree_Test t(inc2, 15);
+    FixedF_Test t(inc2, 15);
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -96,7 +96,7 @@ TEST(naive_fenwick_tree, increasing_increments)
 
 TEST(naive_fenwick_tree, non_complete)
 {
-    NaiveFenwickTree_Test t(inc3, 20);
+    FixedF_Test t(inc3, 20);
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);

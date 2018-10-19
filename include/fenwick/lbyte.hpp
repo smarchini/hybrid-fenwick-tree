@@ -7,7 +7,7 @@
 namespace dyn {
 
    /**
-    * class LByteFenwickTree
+    * class ByteL
     * @tree: LByte indexted Fenwick Tree data.
     * @size: Number of elements in the tree.
     * @level: Lookup table, it store the starting bit-position of each level.
@@ -15,7 +15,7 @@ namespace dyn {
     * The data is stored in a bottom-up level-order manner.
     */
     template<size_t LEAF_MAXVAL>
-    class LByteFenwickTree : public FenwickTree
+    class ByteL : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -29,13 +29,13 @@ namespace dyn {
 
     public:
         /**
-         * LByteFenwickTree - Build a FenwickTree given a sequence of increments.
+         * ByteL - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments.
          * @size: Number of elements stored by the sequence.
          *
          * Running time: O(length)
          */
-        LByteFenwickTree(uint64_t sequence[], size_t size) :
+        ByteL(uint64_t sequence[], size_t size) :
             _size(size),
             level(msb(size) + 2)
         {
@@ -157,7 +157,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(LByteFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(ByteL<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree)
                 + level.bit_count() - sizeof(level);
         }

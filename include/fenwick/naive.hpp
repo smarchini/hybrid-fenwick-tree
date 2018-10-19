@@ -7,7 +7,7 @@
 namespace dyn {
 
    /**
-    * class NaiveFenwickTree - Typical implementation of a Fenwick Tree.
+    * class FixedF - Typical implementation of a Fenwick Tree.
     * @tree: Fenwick Tree data.
     * @size: Number of elements.
     *
@@ -15,7 +15,7 @@ namespace dyn {
     * original paper.
     */
     template<size_t LEAF_MAXVAL>
-    class NaiveFenwickTree : public FenwickTree
+    class FixedF : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -27,13 +27,13 @@ namespace dyn {
 
     public:
         /**
-         * NaiveFenwickTree - Build a FenwickTree given a sequence of increments.
+         * FixedF - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments to compress.
          * @length: Number of elements stored by the sequence.
          *
          * Running time: O(@length)
          */
-        NaiveFenwickTree(uint64_t sequence[], size_t size):
+        FixedF(uint64_t sequence[], size_t size):
             tree(size)
         {
             std::copy_n(sequence, size, tree.get());
@@ -106,7 +106,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(NaiveFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(FixedF<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
     };

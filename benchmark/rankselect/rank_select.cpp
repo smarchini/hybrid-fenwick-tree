@@ -31,7 +31,7 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *
 void dynamic(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *rank1, uint64_t *select0, uint64_t *select1, size_t size, size_t queries);
 
 template <size_t N>
-using MByteFenwickTree = MixedFenwickTree<LByteFenwickTree, TypeFenwickTree, N, 12>;
+using MByteF = MixedFenwickTree<ByteL, TypeF, N, 12>;
 
 int main(int argc, char *argv[])
 {
@@ -80,42 +80,42 @@ int main(int argc, char *argv[])
     cout << "Bitvector with " << ones << " ones and " << zeroes << " zeroes\n" << endl;
     dynamic("DYNAMIC", bitvector, rank0, rank1, select0, select1, size, queries); // temporaneamente disabilitato per velocizzare i benchmark
     cout << "\n------------------------------\n";
-    internal<WordRankSelect<NaiveFenwickTree>> ("WordRankSelect<NaiveFenwickTree>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<LNaiveFenwickTree>>("WordRankSelect<LNaiveFenwickTree>", bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<LTypeFenwickTree>> ("WordRankSelect<LTypeFenwickTree>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<TypeFenwickTree>>  ("WordRankSelect<TypeFenwickTree>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<LByteFenwickTree>> ("WordRankSelect<LByteFenwickTree>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<ByteFenwickTree>>  ("WordRankSelect<ByteFenwickTree>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<LBitFenwickTree>>  ("WordRankSelect<LBitFenwickTree>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<BitFenwickTree>>   ("WordRankSelect<BitFenwickTree>",    bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<WordRankSelect<MByteFenwickTree>> ("WordRankSelect<MByteFenwickTree>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<FixedF>> ("WordRankSelect<FixedF>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<FixedL>>("WordRankSelect<FixedL>", bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<TypeL>> ("WordRankSelect<TypeL>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<TypeF>>  ("WordRankSelect<TypeF>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<ByteL>> ("WordRankSelect<ByteL>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<ByteF>>  ("WordRankSelect<ByteF>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<BitL>>  ("WordRankSelect<BitL>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<BitF>>   ("WordRankSelect<BitF>",    bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<WordRankSelect<MByteF>> ("WordRankSelect<MByteF>",  bitvector, rank0, rank1, select0, select1, size, queries);
     cout << "\n------------------------------\n";
-    internal<LineRankSelect<NaiveFenwickTree,  8>>("LineRankSelect<NaiveFenwickTree, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LNaiveFenwickTree, 8>>("LineRankSelect<LNaiveFenwickTree, 8>", bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LTypeFenwickTree,  8>>("LineRankSelect<LTypeFenwickTree, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<TypeFenwickTree,   8>>("LineRankSelect<TypeFenwickTree, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LByteFenwickTree,  8>>("LineRankSelect<LByteFenwickTree, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<ByteFenwickTree,   8>>("LineRankSelect<ByteFenwickTree, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LBitFenwickTree,   8>>("LineRankSelect<LBitFenwickTree, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<BitFenwickTree,    8>>("LineRankSelect<BitFenwickTree, 8>",    bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedF,  8>>("LineRankSelect<FixedF, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedL, 8>>("LineRankSelect<FixedL, 8>", bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeL,  8>>("LineRankSelect<TypeL, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeF,   8>>("LineRankSelect<TypeF, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteL,  8>>("LineRankSelect<ByteL, 8>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteF,   8>>("LineRankSelect<ByteF, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitL,   8>>("LineRankSelect<BitL, 8>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitF,    8>>("LineRankSelect<BitF, 8>",    bitvector, rank0, rank1, select0, select1, size, queries);
     cout << "\n------------------------------\n";
-    internal<LineRankSelect<NaiveFenwickTree,  32>>("LineRankSelect<NaiveFenwickTree, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LNaiveFenwickTree, 32>>("LineRankSelect<LNaiveFenwickTree, 32>", bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LTypeFenwickTree,  32>>("LineRankSelect<LTypeFenwickTree, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<TypeFenwickTree,   32>>("LineRankSelect<TypeFenwickTree, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LByteFenwickTree,  32>>("LineRankSelect<LByteFenwickTree, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<ByteFenwickTree,   32>>("LineRankSelect<ByteFenwickTree, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LBitFenwickTree,   32>>("LineRankSelect<LBitFenwickTree, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<BitFenwickTree,    32>>("LineRankSelect<BitFenwickTree, 32>",    bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedF,  32>>("LineRankSelect<FixedF, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedL, 32>>("LineRankSelect<FixedL, 32>", bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeL,  32>>("LineRankSelect<TypeL, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeF,   32>>("LineRankSelect<TypeF, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteL,  32>>("LineRankSelect<ByteL, 32>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteF,   32>>("LineRankSelect<ByteF, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitL,   32>>("LineRankSelect<BitL, 32>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitF,    32>>("LineRankSelect<BitF, 32>",    bitvector, rank0, rank1, select0, select1, size, queries);
     cout << "\n------------------------------\n";
-    internal<LineRankSelect<NaiveFenwickTree,  40>>("LineRankSelect<NaiveFenwickTree, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LNaiveFenwickTree, 40>>("LineRankSelect<LNaiveFenwickTree, 40>", bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LTypeFenwickTree,  40>>("LineRankSelect<LTypeFenwickTree, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<TypeFenwickTree,   40>>("LineRankSelect<TypeFenwickTree, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LByteFenwickTree,  40>>("LineRankSelect<LByteFenwickTree, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<ByteFenwickTree,   40>>("LineRankSelect<ByteFenwickTree, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<LBitFenwickTree,   40>>("LineRankSelect<LBitFenwickTree, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
-    internal<LineRankSelect<BitFenwickTree,    40>>("LineRankSelect<BitFenwickTree, 40>",    bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedF,  40>>("LineRankSelect<FixedF, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<FixedL, 40>>("LineRankSelect<FixedL, 40>", bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeL,  40>>("LineRankSelect<TypeL, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<TypeF,   40>>("LineRankSelect<TypeF, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteL,  40>>("LineRankSelect<ByteL, 40>",  bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<ByteF,   40>>("LineRankSelect<ByteF, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitL,   40>>("LineRankSelect<BitL, 40>",   bitvector, rank0, rank1, select0, select1, size, queries);
+    internal<LineRankSelect<BitF,    40>>("LineRankSelect<BitF, 40>",    bitvector, rank0, rank1, select0, select1, size, queries);
 
     delete[] bitvector;
     delete[] rank0;

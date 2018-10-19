@@ -18,13 +18,13 @@ int main()
         uint64_t *increments = random_array(i-1);
 
         cout << i << " Elements\n";
-        microbench<dyn::NaiveFenwickTree>("NaiveFenwickTree", i-1, increments);
-        microbench<dyn::LTypeFenwickTree>("LTypeFenwickTree", i-1, increments);
-        microbench<dyn::TypeFenwickTree>("TypeFenwickTree", i-1, increments);
-        microbench<dyn::LByteFenwickTree>("LByteFenwickTree", i-1, increments);
-        microbench<dyn::ByteFenwickTree>("ByteFenwickTree", i-1, increments);
-        microbench<dyn::LBitFenwickTree>("LBitFenwickTree", i-1, increments);
-        microbench<dyn::BitFenwickTree>("BitFenwickTree", i-1, increments);
+        microbench<dyn::FixedF>("FixedF", i-1, increments);
+        microbench<dyn::TypeL>("TypeL", i-1, increments);
+        microbench<dyn::TypeF>("TypeF", i-1, increments);
+        microbench<dyn::ByteL>("ByteL", i-1, increments);
+        microbench<dyn::ByteF>("ByteF", i-1, increments);
+        microbench<dyn::BitL>("BitL", i-1, increments);
+        microbench<dyn::BitF>("BitF", i-1, increments);
         cout << "------------------------------------------------------------\n\n";
 
         delete[] increments;

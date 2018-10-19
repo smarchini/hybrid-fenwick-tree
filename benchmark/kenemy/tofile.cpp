@@ -172,91 +172,91 @@ int main(int argc, char *argv[])
 
     cout << "fixed[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<WordRankSelect<NaiveFenwickTree>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<WordRankSelect<FixedF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<WordRankSelect<ByteFenwickTree>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<WordRankSelect<ByteF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[1]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<WordRankSelect<BitFenwickTree>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<WordRankSelect<BitF>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<NaiveFenwickTree, 2>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<FixedF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<ByteFenwickTree, 2>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<ByteF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[2]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<BitFenwickTree, 2>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<BitF, 2>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<NaiveFenwickTree, 4>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<FixedF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<ByteFenwickTree, 4>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<ByteF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[4]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<BitFenwickTree, 4>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<BitF, 4>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<NaiveFenwickTree, 8>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<FixedF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<ByteFenwickTree, 8>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<ByteF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[8]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<BitFenwickTree, 8>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<BitF, 8>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "fixed[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<NaiveFenwickTree, 12>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<FixedF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "byte[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<ByteFenwickTree, 12>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<ByteF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 
     cout << "bit[12]... " << flush;
     begin = high_resolution_clock::now();
-    vigna_ktsl<LineRankSelect<BitFenwickTree, 12>>(sigmainv.get(), rho.get(), len);
+    vigna_ktsl<LineRankSelect<BitF, 12>>(sigmainv.get(), rho.get(), len);
     end = high_resolution_clock::now();
     file << duration_cast<chrono::nanoseconds>(end-begin).count() << ",";
 

@@ -7,13 +7,13 @@
 namespace dyn {
 
    /**
-    * class LNaiveFenwickTree - Level-order version of NaiveFenwickTree
+    * class FixedL - Level-order version of FixedF
     * @tree: Fenwick Tree data.
     * @size: Number of elements.
     *
     */
     template<size_t LEAF_MAXVAL>
-    class LNaiveFenwickTree : public FenwickTree
+    class FixedL : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -26,13 +26,13 @@ namespace dyn {
 
     public:
         /**
-         * LNaiveFenwickTree - Build a FenwickTree given a sequence of increments.
+         * FixedL - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments to compress.
          * @length: Number of elements stored by the sequence.
          *
          * Running time: O(@length)
          */
-        LNaiveFenwickTree(uint64_t sequence[], size_t size):
+        FixedL(uint64_t sequence[], size_t size):
             level(msb(size) + 2),
             tree(size)
         {
@@ -133,7 +133,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(LNaiveFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(FixedL<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
     };

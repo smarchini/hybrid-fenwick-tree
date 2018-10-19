@@ -7,16 +7,16 @@
 namespace dyn {
 
     /**
-     * class TypeFenwickTree
+     * class TypeF
      * @tree: Fenwick Tree data.
      * @size: Number of elements in the tree.
      * @level: Lookup table, it store every starting level index.
      *
      * Each node is the smallest datatype capable of holding its data.
-     * Interleaved version of LTypeFenwickTree.
+     * Interleaved version of TypeL.
      */
     template<size_t LEAF_MAXVAL>
-    class TypeFenwickTree : public FenwickTree
+    class TypeF : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -28,7 +28,7 @@ namespace dyn {
         DArray<uint8_t> tree;
 
     public:
-        TypeFenwickTree(uint64_t sequence[], size_t size) :
+        TypeF(uint64_t sequence[], size_t size) :
             _size(size),
             tree(get_bytepos(size))
         {
@@ -162,7 +162,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(TypeFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(TypeF<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
 

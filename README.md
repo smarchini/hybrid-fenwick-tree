@@ -1,3 +1,11 @@
+# Hybrid Compact Fenwick Tree and its applications for dynamic rank and selection
+Different implementation of the [Fenwick
+tree](https://en.wikipedia.org/wiki/Fenwick_tree) data structure that aims to
+improve its performance through cache efficiency and compression.
+
+
+
+
 # Dynamic Rank & Select data structure through Fenwick Tree
 
 This library offers a space and time efficient implementation of dynamic rank
@@ -92,8 +100,8 @@ int main()
     }
 
     // Two different implementation of rank&select data structure
-    WordRankSelect<ByteFenwickTree> bv1(bitvect, size);   // a sample for each word, maintained into a ByteFenwickTree
-    LineRankSelect<BitFenwickTree, 8> bv2(bitvect, size); // a sample every 8 words, maintained into a BitFenwickTree
+    WordRankSelect<ByteF> bv1(bitvect, size);   // a sample for each word, maintained into a ByteF
+    LineRankSelect<BitF, 8> bv2(bitvect, size); // a sample every 8 words, maintained into a BitF
 
     // You don't need bitvect anymore, it's stored inside the data structure
     delete[] bitvect;
@@ -145,8 +153,8 @@ int main()
     }
 
     // Two different implementation of Fenwick tree data structure
-    LByteFenwickTree<MAXVALUE> fen1(sequence, size); // bottom-up level-order layout and byte-aligned
-    BitFenwickTree<MAXVALUE> fen2(sequence, size);   // naive layout and bit-aligned
+    ByteL<MAXVALUE> fen1(sequence, size); // bottom-up level-order layout and byte-aligned
+    BitF<MAXVALUE> fen2(sequence, size);   // naive layout and bit-aligned
 
     // You don't need the sequence anymore
     delete[] sequence;

@@ -10,7 +10,7 @@ namespace dyn {
     * class
     */
     template<size_t LEAF_MAXVAL>
-    class BitFenwickTree : public FenwickTree
+    class BitF : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -23,13 +23,13 @@ namespace dyn {
 
     public:
         /**
-         * BitFenwickTree - Build a FenwickTree given a sequence of increments.
+         * BitF - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments.
          * @size: Number of elements stored by the sequence.
          *
          * Running time: O(length)
          */
-        BitFenwickTree(uint64_t sequence[], size_t size) :
+        BitF(uint64_t sequence[], size_t size) :
             _size(size),
             tree(get_bitpos(size)/8 + 4) // +4 to prevent segfault the last element
         {
@@ -149,7 +149,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(BitFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(BitF<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
 

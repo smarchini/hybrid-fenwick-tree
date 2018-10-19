@@ -20,7 +20,7 @@ void fenwick_random_test(std::size_t size)
         set_updates[i] = sdist(mte);
     }
 
-    dyn::NaiveFenwickTree<64> naive(increments, size);
+    dyn::FixedF<64> naive(increments, size);
     T mixed(increments, size);
 
     // get
@@ -55,11 +55,11 @@ TEST(fenwick_mixed, naive)
     using namespace dyn;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<NaiveFenwickTree, NaiveFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<NaiveFenwickTree, NaiveFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<NaiveFenwickTree, NaiveFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<FixedF, FixedF, 64, 11>>(i);
 }
 
 TEST(fenwick_mixed, type)
@@ -67,18 +67,18 @@ TEST(fenwick_mixed, type)
     using namespace dyn;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<LTypeFenwickTree, TypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<LTypeFenwickTree, TypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<LTypeFenwickTree, TypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeL, TypeF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<TypeFenwickTree, LTypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeFenwickTree, LTypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<TypeFenwickTree, LTypeFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<TypeF, TypeL, 64, 11>>(i);
 
 }
 
@@ -87,18 +87,18 @@ TEST(fenwick_mixed, byte)
     using namespace dyn;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteL, ByteF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<ByteFenwickTree, LByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteFenwickTree, LByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<ByteFenwickTree, LByteFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<ByteF, ByteL, 64, 11>>(i);
 }
 
 TEST(fenwick_mixed, bit)
@@ -106,18 +106,18 @@ TEST(fenwick_mixed, bit)
     using namespace dyn;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<LBitFenwickTree, BitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<LBitFenwickTree, BitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<LBitFenwickTree, BitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitL, BitF, 64, 11>>(i);
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<MixedFenwickTree<BitFenwickTree, LBitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<MixedFenwickTree<BitFenwickTree, LBitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<MixedFenwickTree<BitFenwickTree, LBitFenwickTree, 64, 11>>(i);
+        fenwick_random_test<MixedFenwickTree<BitF, BitL, 64, 11>>(i);
 }
 
 

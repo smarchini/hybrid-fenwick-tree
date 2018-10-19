@@ -7,7 +7,7 @@
 namespace dyn {
 
    /**
-    * class LTypeFenwickTree
+    * class TypeL
     * @tree8-16-32-64: Fenwick Tree data.
     * @size: Number of elements in the tree.
     * @level: Lookup table, it store every starting level index.
@@ -18,7 +18,7 @@ namespace dyn {
     * In each tree, the data is stored in a bottom-up level-order manner.
     */
     template<size_t LEAF_MAXVAL>
-    class LTypeFenwickTree : public FenwickTree
+    class TypeL : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -35,7 +35,7 @@ namespace dyn {
         DArray<size_t> level;
 
     public:
-        LTypeFenwickTree(uint64_t sequence[], size_t size) :
+        TypeL(uint64_t sequence[], size_t size) :
             _size(size),
             level(msb(size) + 2)
         {
@@ -188,7 +188,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(LTypeFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(TypeL<LEAF_BITSIZE>)*8
                 +  tree8.bit_count() - sizeof(tree8)
                 + tree16.bit_count() - sizeof(tree16)
                 + tree64.bit_count() - sizeof(tree64)

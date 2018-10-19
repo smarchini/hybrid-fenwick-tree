@@ -21,40 +21,40 @@ using namespace std;
 using namespace dyn;
 using namespace std::chrono;
 
-template <size_t N> using LNaiveNaive12 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 12>;
-template <size_t N> using LByteByte12 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 12>;
-template <size_t N> using LBitBit12 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 12>;
-template <size_t N> using LNaiveByte12 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 12>;
-template <size_t N> using LNaiveBit12 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 12>;
-template <size_t N> using LByteBit12 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 12>;
+template <size_t N> using LNaiveNaive12 = MixedFenwickTree<FixedL, FixedF, N, 12>;
+template <size_t N> using LByteByte12 = MixedFenwickTree<ByteL, ByteF, N, 12>;
+template <size_t N> using LBitBit12 = MixedFenwickTree<BitL, BitF, N, 12>;
+template <size_t N> using LNaiveByte12 = MixedFenwickTree<FixedL, ByteF, N, 12>;
+template <size_t N> using LNaiveBit12 = MixedFenwickTree<FixedL, BitF, N, 12>;
+template <size_t N> using LByteBit12 = MixedFenwickTree<ByteL, BitF, N, 12>;
 
-template <size_t N> using LNaiveNaive14 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 14>;
-template <size_t N> using LByteByte14 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 14>;
-template <size_t N> using LBitBit14 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 14>;
-template <size_t N> using LNaiveByte14 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 14>;
-template <size_t N> using LNaiveBit14 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 14>;
-template <size_t N> using LByteBit14 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 14>;
+template <size_t N> using LNaiveNaive14 = MixedFenwickTree<FixedL, FixedF, N, 14>;
+template <size_t N> using LByteByte14 = MixedFenwickTree<ByteL, ByteF, N, 14>;
+template <size_t N> using LBitBit14 = MixedFenwickTree<BitL, BitF, N, 14>;
+template <size_t N> using LNaiveByte14 = MixedFenwickTree<FixedL, ByteF, N, 14>;
+template <size_t N> using LNaiveBit14 = MixedFenwickTree<FixedL, BitF, N, 14>;
+template <size_t N> using LByteBit14 = MixedFenwickTree<ByteL, BitF, N, 14>;
 
-template <size_t N> using LNaiveNaive16 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 16>;
-template <size_t N> using LByteByte16 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 16>;
-template <size_t N> using LBitBit16 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 16>;
-template <size_t N> using LNaiveByte16 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 16>;
-template <size_t N> using LNaiveBit16 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 16>;
-template <size_t N> using LByteBit16 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 16>;
+template <size_t N> using LNaiveNaive16 = MixedFenwickTree<FixedL, FixedF, N, 16>;
+template <size_t N> using LByteByte16 = MixedFenwickTree<ByteL, ByteF, N, 16>;
+template <size_t N> using LBitBit16 = MixedFenwickTree<BitL, BitF, N, 16>;
+template <size_t N> using LNaiveByte16 = MixedFenwickTree<FixedL, ByteF, N, 16>;
+template <size_t N> using LNaiveBit16 = MixedFenwickTree<FixedL, BitF, N, 16>;
+template <size_t N> using LByteBit16 = MixedFenwickTree<ByteL, BitF, N, 16>;
 
-template <size_t N> using LNaiveNaive18 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 18>;
-template <size_t N> using LByteByte18 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 18>;
-template <size_t N> using LBitBit18 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 18>;
-template <size_t N> using LNaiveByte18 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 18>;
-template <size_t N> using LNaiveBit18 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 18>;
-template <size_t N> using LByteBit18 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 18>;
+template <size_t N> using LNaiveNaive18 = MixedFenwickTree<FixedL, FixedF, N, 18>;
+template <size_t N> using LByteByte18 = MixedFenwickTree<ByteL, ByteF, N, 18>;
+template <size_t N> using LBitBit18 = MixedFenwickTree<BitL, BitF, N, 18>;
+template <size_t N> using LNaiveByte18 = MixedFenwickTree<FixedL, ByteF, N, 18>;
+template <size_t N> using LNaiveBit18 = MixedFenwickTree<FixedL, BitF, N, 18>;
+template <size_t N> using LByteBit18 = MixedFenwickTree<ByteL, BitF, N, 18>;
 
-template <size_t N> using LNaiveNaive20 = MixedFenwickTree<LNaiveFenwickTree, NaiveFenwickTree, N, 20>;
-template <size_t N> using LByteByte20 = MixedFenwickTree<LByteFenwickTree, ByteFenwickTree, N, 20>;
-template <size_t N> using LBitBit20 = MixedFenwickTree<LBitFenwickTree, BitFenwickTree, N, 20>;
-template <size_t N> using LNaiveByte20 = MixedFenwickTree<LNaiveFenwickTree, ByteFenwickTree, N, 20>;
-template <size_t N> using LNaiveBit20 = MixedFenwickTree<LNaiveFenwickTree, BitFenwickTree, N, 20>;
-template <size_t N> using LByteBit20 = MixedFenwickTree<LByteFenwickTree, BitFenwickTree, N, 20>;
+template <size_t N> using LNaiveNaive20 = MixedFenwickTree<FixedL, FixedF, N, 20>;
+template <size_t N> using LByteByte20 = MixedFenwickTree<ByteL, ByteF, N, 20>;
+template <size_t N> using LBitBit20 = MixedFenwickTree<BitL, BitF, N, 20>;
+template <size_t N> using LNaiveByte20 = MixedFenwickTree<FixedL, ByteF, N, 20>;
+template <size_t N> using LNaiveBit20 = MixedFenwickTree<FixedL, BitF, N, 20>;
+template <size_t N> using LByteBit20 = MixedFenwickTree<ByteL, BitF, N, 20>;
 
 
 template <size_t LEAF_MAXVAL> class Benchmark {
@@ -197,12 +197,12 @@ int main(int argc, char *argv[])
                     "fixed[$18$]fixed,byte[$18$]byte,bit[$18$]bit,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]bit,"
                     "fixed[$20$]fixed,byte[$20$]byte,bit[$20$]bit,fixed[$20$]byte,fixed[$20$]bit,byte[$20$]bit");
 
-    cout << "fixed[F](" << size << ", " << queries << "):       "; bench.run<NaiveFenwickTree>(); bench.separator();
-    cout << "fixed[l](" << size << ", " << queries << "):       "; bench.run<LNaiveFenwickTree>(); bench.separator();
-    cout << "byte[F](" << size << ", " << queries << "):        "; bench.run<ByteFenwickTree>(); bench.separator();
-    cout << "byte[l](" << size << ", " << queries << "):        "; bench.run<LByteFenwickTree>(); bench.separator();
-    cout << "bit[F](" << size << ", " << queries << "):         "; bench.run<BitFenwickTree>(); bench.separator();
-    cout << "bit[l](" << size << ", " << queries << "):         "; bench.run<LBitFenwickTree>(); bench.separator();
+    cout << "fixed[F](" << size << ", " << queries << "):       "; bench.run<FixedF>(); bench.separator();
+    cout << "fixed[l](" << size << ", " << queries << "):       "; bench.run<FixedL>(); bench.separator();
+    cout << "byte[F](" << size << ", " << queries << "):        "; bench.run<ByteF>(); bench.separator();
+    cout << "byte[l](" << size << ", " << queries << "):        "; bench.run<ByteL>(); bench.separator();
+    cout << "bit[F](" << size << ", " << queries << "):         "; bench.run<BitF>(); bench.separator();
+    cout << "bit[l](" << size << ", " << queries << "):         "; bench.run<BitL>(); bench.separator();
 
     cout << "fixed[12]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive12>(); bench.separator();
     cout << "byte[12]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte12>(); bench.separator();

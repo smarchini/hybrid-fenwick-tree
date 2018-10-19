@@ -7,16 +7,16 @@
 namespace dyn {
 
    /**
-    * class ByteFenwickTree
+    * class ByteF
     * @tree: Fenwick Tree data.
     * @size: Number of elements in the tree.
     * @level: Lookup table, it store the starting bit-position of each level.
     *
     * Each node have the smallest byte-size capable of holding its data. It's the
-    * interleaved version of ByteFenwickTree.
+    * interleaved version of ByteF.
     */
     template<size_t LEAF_MAXVAL>
-    class ByteFenwickTree : public FenwickTree
+    class ByteF : public FenwickTree
     {
     public:
         static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
@@ -29,13 +29,13 @@ namespace dyn {
 
     public:
         /**
-         * ByteFenwickTree - Build a FenwickTree given a sequence of increments.
+         * ByteF - Build a FenwickTree given a sequence of increments.
          * @sequence: Sequence of increments.
          * @size: Number of elements stored by the sequence.
          *
          * Running time: O(length)
          */
-        ByteFenwickTree(uint64_t sequence[], size_t size) :
+        ByteF(uint64_t sequence[], size_t size) :
             _size(size),
             tree(get_bytepos(size))
         {
@@ -122,7 +122,7 @@ namespace dyn {
 
         virtual size_t bit_count() const
         {
-            return sizeof(ByteFenwickTree<LEAF_BITSIZE>)*8
+            return sizeof(ByteF<LEAF_BITSIZE>)*8
                 + tree.bit_count() - sizeof(tree);
         }
 

@@ -20,14 +20,14 @@ void fenwick_random_test(std::size_t size)
         set_updates[i] = sdist(mte);
     }
 
-    dyn::NaiveFenwickTree<S> naive(increments, size);
-    dyn::NaiveFenwickTree<S> lnaive(increments, size);
-    dyn::BitFenwickTree<S> bit(increments, size);
-    dyn::LBitFenwickTree<S> lbit(increments, size);
-    dyn::LByteFenwickTree<S> lbyte(increments, size);
-    dyn::ByteFenwickTree<S> byte(increments, size);
-    dyn::TypeFenwickTree<S> type(increments, size);
-    dyn::LTypeFenwickTree<S> ltype(increments, size);
+    dyn::FixedF<S> naive(increments, size);
+    dyn::FixedF<S> lnaive(increments, size);
+    dyn::BitF<S> bit(increments, size);
+    dyn::BitL<S> lbit(increments, size);
+    dyn::ByteL<S> lbyte(increments, size);
+    dyn::ByteF<S> byte(increments, size);
+    dyn::TypeF<S> type(increments, size);
+    dyn::TypeL<S> ltype(increments, size);
 
     // get
     for (size_t i = 0; i < size; i++) {
