@@ -1,5 +1,5 @@
-#ifndef __BENCHMARK_UTILS_H__
-#define __BENCHMARK_UTILS_H__
+#ifndef __BENCHMARK_UTILS_HPP__
+#define __BENCHMARK_UTILS_HPP__
 
 #include <chrono>
 #include <algorithm>
@@ -112,4 +112,4 @@ double bench_find(std::size_t size, std::uint64_t increments[], std::uint64_t el
 }
 
 
-#endif // __BENCHMARK_UTILS_H__
+#endif // __BENCHMARK_UTILS_HPP__

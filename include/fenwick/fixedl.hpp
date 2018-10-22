@@ -1,5 +1,5 @@
-#ifndef __FENWICK_LNAIVE_H__
-#define __FENWICK_LNAIVE_H__
+#ifndef __FENWICK_LNAIVE_HPP__
+#define __FENWICK_LNAIVE_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -34,7 +34,7 @@ namespace hft {
              * Running time: O(@length)
              */
             FixedL(uint64_t sequence[], size_t size):
-                level(msb(size) + 2),
+                level(lambda(size) + 2),
                 tree(size)
             {
                 level[0] = 0;
@@ -62,9 +62,9 @@ namespace hft {
                 size_t index = 0;
 
                 for (idx++; idx != index;) {
-                    index += mask_last_set(idx ^ index);
+                    index += mask_lambda(idx ^ index);
 
-                    const int height = lsb(index);
+                    const int height = rho(index);
                     const size_t level_idx = index >> (1 + height);
                     sum += tree[level[height] + level_idx];
                 }
@@ -74,8 +74,8 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
-                    const int height = lsb(idx);
+                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                    const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     tree[level[height] + level_idx] += inc;
                 }
@@ -142,4 +142,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_LNAIVE_H__
+#endif // __FENWICK_LNAIVE_HPP__

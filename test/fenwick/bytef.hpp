@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_BYTE_H__
-#define __TEST_FENWICK_BYTE_H__
+#ifndef __TEST_FENWICK_BYTE_HPP__
+#define __TEST_FENWICK_BYTE_HPP__
 
 #include "../utils.hpp"
 
@@ -155,4 +155,4 @@ TEST(byte_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_BYTE_H__
+#endif // __TEST_FENWICK_BYTE_HPP__

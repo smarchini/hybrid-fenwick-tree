@@ -1,5 +1,5 @@
-#ifndef __FENWICK_BIT_H__
-#define __FENWICK_BIT_H__
+#ifndef __FENWICK_BIT_HPP__
+#define __FENWICK_BIT_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -38,7 +38,7 @@ namespace hft {
                     const size_t bitpos = get_bitpos(i-1);
                     auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[bitpos/8]);
 
-                    const int bitsize = LEAF_BITSIZE + lsb(i);
+                    const int bitsize = LEAF_BITSIZE + rho(i);
                     const size_t shift = bitpos & 0b111;
                     const uint64_t mask = compact_bitmask(bitsize, shift);
 
@@ -56,7 +56,7 @@ namespace hft {
                         auint64_t * const right_element = reinterpret_cast<auint64_t*>(&tree[right_bitpos/8]);
                         const size_t right_shift = right_bitpos & 0b111;
 
-                        const int right_bitsize = LEAF_BITSIZE + lsb(idx - m/2);
+                        const int right_bitsize = LEAF_BITSIZE + rho(idx - m/2);
                         const uint64_t right_mask = compact_bitmask(right_bitsize, right_shift);
 
                         uint64_t value = (right_mask & *right_element) >> right_shift;
@@ -69,11 +69,11 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
+                for (idx = idx+1; idx != 0; idx = clear_rho(idx)) {
                     const size_t bit_pos = get_bitpos(idx-1);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
-                    const int height = lsb(idx);
+                    const int height = rho(idx);
                     const size_t shift = bit_pos & 0b111;
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
 
@@ -85,7 +85,7 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
+                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
                     const size_t bit_pos = get_bitpos(idx-1);
                     auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
@@ -99,11 +99,11 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
                     const size_t bit_pos = get_bitpos(node+m-1);
-                    const int height = lsb(node+m);
+                    const int height = rho(node+m);
                     const size_t shift = bit_pos & 0b111;
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
 
@@ -123,11 +123,11 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
                     const size_t bit_pos = get_bitpos(node+m-1);
-                    const int height = lsb(node+m);
+                    const int height = rho(node+m);
                     const size_t shift = bit_pos & 0b111;
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
 
@@ -165,4 +165,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_BIT_H__
+#endif // __FENWICK_BIT_HPP__

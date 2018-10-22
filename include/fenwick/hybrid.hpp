@@ -1,5 +1,5 @@
-#ifndef __FENWICK_MIXED_H__
-#define __FENWICK_MIXED_H__
+#ifndef __FENWICK_HYBRID_HPP__
+#define __FENWICK_HYBRID_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -120,4 +120,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_MIXED_H__
+#endif // __FENWICK_HYBRID_HPP__

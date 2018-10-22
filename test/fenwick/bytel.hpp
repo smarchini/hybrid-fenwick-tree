@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_LBYTE_H__
-#define __TEST_FENWICK_LBYTE_H__
+#ifndef __TEST_FENWICK_LBYTE_HPP__
+#define __TEST_FENWICK_LBYTE_HPP__
 
 #include "../utils.hpp"
 
@@ -156,4 +156,4 @@ TEST(lbyte_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_LBYTE_H__
+#endif // __TEST_FENWICK_LBYTE_HPP__

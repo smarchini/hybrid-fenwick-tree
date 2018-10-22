@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_MIXED_H__
-#define __TEST_FENWICK_MIXED_H__
+#ifndef __TEST_FENWICK_HYBRID_HPP__
+#define __TEST_FENWICK_HYBRID_HPP__
 
 #include "../utils.hpp"
 
@@ -121,4 +121,4 @@ TEST(fenwick_mixed, bit)
 }
 
 
-#endif // __TEST_FENWICK_MIXED_H__
+#endif // __TEST_FENWICK_HYBRID_HPP__

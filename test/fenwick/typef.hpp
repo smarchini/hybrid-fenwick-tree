@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_TYPE_H__
-#define __TEST_FENWICK_TYPE_H__
+#ifndef __TEST_FENWICK_TYPE_HPP__
+#define __TEST_FENWICK_TYPE_HPP__
 
 #include "../utils.hpp"
 
@@ -156,4 +156,4 @@ TEST(type_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_TYPE_H__
+#endif // __TEST_FENWICK_TYPE_HPP__

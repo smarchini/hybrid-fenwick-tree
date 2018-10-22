@@ -1,5 +1,5 @@
-#ifndef __DARRAY_H__
-#define __DARRAY_H__
+#ifndef __DARRAY_HPP__
+#define __DARRAY_HPP__
 
 #include <memory>
 #include <algorithm>
@@ -68,4 +68,4 @@ namespace hft {
 
 }
 
-#endif // __DARRAY_H__
+#endif // __DARRAY_HPP__

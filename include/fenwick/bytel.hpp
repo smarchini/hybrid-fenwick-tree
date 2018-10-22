@@ -1,5 +1,5 @@
-#ifndef __FENWICK_LBYTE_H__
-#define __FENWICK_LBYTE_H__
+#ifndef __FENWICK_LBYTE_HPP__
+#define __FENWICK_LBYTE_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -38,7 +38,7 @@ namespace hft {
              */
             ByteL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(msb(size) + 2)
+                level(lambda(size) + 2)
             {
                 level[0] = 0;
                 for (size_t i = 1; i < level.size(); i++)
@@ -74,8 +74,8 @@ namespace hft {
                 size_t index = 0;
 
                 for (idx++; idx != index;) {
-                    index += mask_last_set(idx ^ index);
-                    const int height = lsb(index);
+                    index += mask_lambda(idx ^ index);
+                    const int height = rho(index);
                     const size_t level_idx = index >> (1 + height);
                     const size_t elem_size = get_size(height);
                     const size_t byte_pos = level[height] + elem_size * level_idx;
@@ -89,8 +89,8 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
-                    const int height = lsb(idx);
+                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                    const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     const size_t byte_pos = level[height] + get_size(height) * level_idx;
                     auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[byte_pos]);
@@ -173,4 +173,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_LBYTE_H__
+#endif // __FENWICK_LBYTE_HPP__

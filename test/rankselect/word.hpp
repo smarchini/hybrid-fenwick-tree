@@ -1,5 +1,5 @@
-#ifndef __TEST_RANKSELECT_WORD_H__
-#define __TEST_RANKSELECT_WORD_H__
+#ifndef __TEST_RANKSELECT_WORD_HPP__
+#define __TEST_RANKSELECT_WORD_HPP__
 
 #include "../utils.hpp"
 
@@ -215,4 +215,4 @@ TEST(word_rank_select, all_zeroes_1024)
 
 }
 
-#endif // __TEST_RANKSELECT_WORD_H__
+#endif // __TEST_RANKSELECT_WORD_HPP__

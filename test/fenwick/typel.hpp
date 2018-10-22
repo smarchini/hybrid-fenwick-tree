@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_LTYPE_H__
-#define __TEST_FENWICK_LTYPE_H__
+#ifndef __TEST_FENWICK_LTYPE_HPP__
+#define __TEST_FENWICK_LTYPE_HPP__
 
 #include "../utils.hpp"
 
@@ -182,4 +182,4 @@ TEST(ltype_fenwick_tree, non_complete)
     }
 }
 
-#endif // __TEST_FENWICK_LTYPE_H__
+#endif // __TEST_FENWICK_LTYPE_HPP__

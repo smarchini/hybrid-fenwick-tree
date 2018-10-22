@@ -1,5 +1,5 @@
-#ifndef __FENWICK_TREE_H__
-#define __FENWICK_TREE_H__
+#ifndef __FENWICK_TREE_HPP__
+#define __FENWICK_TREE_HPP__
 
 #include "../common.hpp"
 
@@ -86,4 +86,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_TREE_H__
+#endif // __FENWICK_TREE_HPP__

@@ -1,5 +1,5 @@
-#ifndef __TEST_RANKSELECT_LIKE_DYNAMIC_H__
-#define __TEST_RANKSELECT_LIKE_DYNAMIC_H__
+#ifndef __TEST_RANKSELECT_LIKE_DYNAMIC_HPP__
+#define __TEST_RANKSELECT_LIKE_DYNAMIC_HPP__
 
 #include "../utils.hpp"
 #include <dynamic.hpp>
@@ -55,4 +55,4 @@ TEST(rankselect_like_dynamic, random)
     delete[] bitvect;
 }
 
-#endif // __TEST_RANKSELECT_LIKE_DYNAMIC_H__
+#endif // __TEST_RANKSELECT_LIKE_DYNAMIC_HPP__

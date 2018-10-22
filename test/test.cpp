@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "broadword.hpp"
+#include "common.hpp"
 
 #include "fenwick/fixedf.hpp"
 // TODO: test approfondito per lnaive

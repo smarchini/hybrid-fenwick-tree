@@ -1,5 +1,5 @@
-#ifndef __RANKSELECT_WORD_H__
-#define __RANKSELECT_WORD_H__
+#ifndef __RANKSELECT_WORD_HPP__
+#define __RANKSELECT_WORD_HPP__
 
 #include "rank_select.hpp"
 
@@ -154,4 +154,4 @@ namespace hft {
     }
 }
 
-#endif // __RANKSELECT_WORD_H__
+#endif // __RANKSELECT_WORD_HPP__

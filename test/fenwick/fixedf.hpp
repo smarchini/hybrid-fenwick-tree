@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_NAIVE_H__
-#define __TEST_FENWICK_NAIVE_H__
+#ifndef __TEST_FENWICK_NAIVE_HPP__
+#define __TEST_FENWICK_NAIVE_HPP__
 
 #include "../utils.hpp"
 
@@ -138,4 +138,4 @@ TEST(naive_fenwick_tree, non_complete)
 }
 
 
-#endif // __TEST_FENWICK_NAIVE_H__
+#endif // __TEST_FENWICK_NAIVE_HPP__

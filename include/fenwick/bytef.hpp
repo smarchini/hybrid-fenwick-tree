@@ -1,5 +1,5 @@
-#ifndef __FENWICK_BYTE_H__
-#define __FENWICK_BYTE_H__
+#ifndef __FENWICK_BYTE_HPP__
+#define __FENWICK_BYTE_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -63,7 +63,7 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = drop_first_set(idx)) {
+                for (idx = idx+1; idx != 0; idx = clear_rho(idx)) {
                     const auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
                     sum += *element & BYTE_MASK[get_bytesize(idx)];
                 }
@@ -73,7 +73,7 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_first_set(idx))
+                for (idx = idx+1; idx <= size(); idx += mask_rho(idx))
                     *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
             }
 
@@ -82,7 +82,7 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
                     uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)];
@@ -101,10 +101,10 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
-                    uint64_t value = (LEAF_MAXVAL << lsb(node+m))
+                    uint64_t value = (LEAF_MAXVAL << rho(node+m))
                         - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)]);
 
                     if (*val >= value) {
@@ -130,7 +130,7 @@ namespace hft {
         private:
             static inline size_t get_bytesize(size_t n)
             {
-                return (lsb(n) + LEAF_BITSIZE - 1) / 8 + 1;
+                return (rho(n) + LEAF_BITSIZE - 1) / 8 + 1;
             }
 
             static inline size_t get_bytepos(size_t idx)
@@ -145,4 +145,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_BYTE_H__
+#endif // __FENWICK_BYTE_HPP__

@@ -1,5 +1,5 @@
-#ifndef __TEST_FENWICK_SAME_BEHAVIOR_H__
-#define __TEST_FENWICK_SAME_BEHAVIOR_H__
+#ifndef __TEST_FENWICK_SAME_BEHAVIOR_HPP__
+#define __TEST_FENWICK_SAME_BEHAVIOR_HPP__
 
 #include "utils.hpp"
 
@@ -145,4 +145,4 @@ TEST(fenwicktree, leafmaxval)
     fenwick_random_test<64*1024>(1024-1);
 }
 
-#endif // __TEST_FENWICK_SAME_BEHAVIOR_H__
+#endif // __TEST_FENWICK_SAME_BEHAVIOR_HPP__

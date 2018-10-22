@@ -1,5 +1,5 @@
-#ifndef __TEST_RANKSELECT_SAME_BEHAVIOR_H__
-#define __TEST_RANKSELECT_SAME_BEHAVIOR_H__
+#ifndef __TEST_RANKSELECT_SAME_BEHAVIOR_HPP__
+#define __TEST_RANKSELECT_SAME_BEHAVIOR_HPP__
 
 #include "../utils.hpp"
 
@@ -198,4 +198,4 @@ TEST(rankselect_same_behavior, random_mixed)
 }
 
 
-#endif // __TEST_RANKSELECT_SAME_BEHAVIOR_H__
+#endif // __TEST_RANKSELECT_SAME_BEHAVIOR_HPP__

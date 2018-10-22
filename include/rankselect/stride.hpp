@@ -1,5 +1,5 @@
-#ifndef __RANKSELECT_LINE_H__
-#define __RANKSELECT_LINE_H__
+#ifndef __RANKSELECT_LINE_HPP__
+#define __RANKSELECT_LINE_HPP__
 
 #include "rank_select.hpp"
 #include <iostream>
@@ -165,4 +165,4 @@ namespace hft {
     }
 }
 
-#endif // __RANKSELECT_LINE_H__
+#endif // __RANKSELECT_LINE_HPP__

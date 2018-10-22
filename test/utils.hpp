@@ -1,5 +1,5 @@
-#ifndef __TEST_UTILS_H__
-#define __TEST_UTILS_H__
+#ifndef __TEST_UTILS_HPP__
+#define __TEST_UTILS_HPP__
 
 #include <gtest/gtest.h>
 
@@ -105,4 +105,4 @@ std::string tree_tostring(std::uint8_t *tree, std::size_t length) {
     return bit_tree.substr(bit_tree.length() - length);
 }
 
-#endif // __TEST_UTILS_H__
+#endif // __TEST_UTILS_HPP__

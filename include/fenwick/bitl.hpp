@@ -1,5 +1,5 @@
-#ifndef __FENWICK_LBIT_H__
-#define __FENWICK_LBIT_H__
+#ifndef __FENWICK_LBIT_HPP__
+#define __FENWICK_LBIT_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -39,7 +39,7 @@ namespace hft {
              */
             BitL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(size != 0 ? msb(size)+2 : 1)
+                level(size != 0 ? lambda(size)+2 : 1)
             {
                 level[0] = 0;
                 for (size_t i = 1; i < level.size(); i++)
@@ -80,8 +80,8 @@ namespace hft {
                 size_t index = 0ULL;
 
                 for (idx++; idx != index;) {
-                    index += mask_last_set(idx ^ index);
-                    const int height = lsb(index);
+                    index += mask_lambda(idx ^ index);
+                    const int height = rho(index);
                     const size_t level_idx = index >> (1 + height);
 
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
@@ -97,8 +97,8 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_first_set(idx)) {
-                    const int height = lsb(idx);
+                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                    const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
                     const size_t shift = bit_pos & 0b111;
@@ -177,4 +177,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_LBIT_H__
+#endif // __FENWICK_LBIT_HPP__

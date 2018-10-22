@@ -1,9 +1,9 @@
-#ifndef __TEST_BROADWORD_H__
-#define __TEST_BROADWORD_H__
+#ifndef __TEST_COMMON_HPP__
+#define __TEST_COMMON_HPP__
 
 #include <gtest/gtest.h>
 
-#include "../include/broadword.hpp"
+#include "../include/common.hpp"
 
 /**
  * Some 64 bit random binary sequences for testing purpose. A random binary
@@ -43,7 +43,7 @@ static std::uint64_t special_cases[] = {
 };
 
 
-TEST(broadword, drop_first_set)
+TEST(broadword, clear_rho)
 {
     using namespace hft;
     std::uint64_t tests_solutions[] = {
@@ -60,7 +60,7 @@ TEST(broadword, drop_first_set)
     };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
-        EXPECT_EQ(tests_solutions[i], drop_first_set(tests[i])) << " at index " << i;
+        EXPECT_EQ(tests_solutions[i], clear_rho(tests[i])) << " at index " << i;
 
     std::uint64_t special_cases_solutions[] = {
         0b0000000000000000000000000000000000000000000000000000000000000000ULL,
@@ -72,11 +72,11 @@ TEST(broadword, drop_first_set)
     };
 
     for (std::size_t i = 0; i < SPECIAL_CASES_LENGTH; i++)
-        EXPECT_EQ(special_cases_solutions[i], drop_first_set(special_cases[i])) << " at index " << i;
+        EXPECT_EQ(special_cases_solutions[i], clear_rho(special_cases[i])) << " at index " << i;
 }
 
 
-TEST(broadword, mask_first_set)
+TEST(broadword, mask_rho)
 {
     using namespace hft;
     std::uint64_t tests_solutions[] = {
@@ -93,7 +93,7 @@ TEST(broadword, mask_first_set)
     };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
-        EXPECT_EQ(tests_solutions[i], mask_first_set(tests[i])) << " at index " << i;
+        EXPECT_EQ(tests_solutions[i], mask_rho(tests[i])) << " at index " << i;
 
     std::uint64_t special_cases_solutions[] = {
         0b0000000000000000000000000000000000000000000000000000000000000000ULL,
@@ -105,11 +105,11 @@ TEST(broadword, mask_first_set)
     };
 
     for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++)
-        EXPECT_EQ(special_cases_solutions[i], mask_first_set(special_cases[i])) << " at index " << i;
+        EXPECT_EQ(special_cases_solutions[i], mask_rho(special_cases[i])) << " at index " << i;
 }
 
 
-TEST(broadword, mask_last_set)
+TEST(broadword, mask_lambda)
 {
     using namespace hft;
     std::uint64_t tests_solutions[] = {
@@ -126,7 +126,7 @@ TEST(broadword, mask_last_set)
     };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
-        EXPECT_EQ(tests_solutions[i], mask_last_set(tests[i])) << " at index " << i;
+        EXPECT_EQ(tests_solutions[i], mask_lambda(tests[i])) << " at index " << i;
 
     std::uint64_t special_cases_solutions[] = {
         0b0000000000000000000000000000000000000000000000000000000000000001ULL,
@@ -139,43 +139,43 @@ TEST(broadword, mask_last_set)
 
     // special_cases[0] is undefined
     for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++)
-        EXPECT_EQ(special_cases_solutions[i], mask_last_set(special_cases[i])) << " at index " << i;
+        EXPECT_EQ(special_cases_solutions[i], mask_lambda(special_cases[i])) << " at index " << i;
 }
 
 
-TEST(broadword, lsb)
+TEST(broadword, rho)
 {
     using namespace hft;
     std::uint64_t tests_solutions[] = { 18, 11, 45, 59, 50, 29, 26, 4, 36, 28 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
-        EXPECT_EQ(tests_solutions[i], lsb(tests[i])) << " at index " << i;
+        EXPECT_EQ(tests_solutions[i], rho(tests[i])) << " at index " << i;
 
     std::uint64_t special_cases_solutions[] = { 0, 0, 32, 0, 63, 31 };
 
     for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++) // undefined for i = 0
-        EXPECT_EQ(special_cases_solutions[i], lsb(special_cases[i])) << " at index " << i;
+        EXPECT_EQ(special_cases_solutions[i], rho(special_cases[i])) << " at index " << i;
 }
 
 
-TEST(broadword, msb)
+TEST(broadword, lambda)
 {
     using namespace hft;
     std::uint64_t tests_solutions[] = { 63, 62, 63, 63, 61, 61, 61, 62, 63, 63 };
 
     for (std::size_t i = 0; i < TESTS_LENGTH; i++)
-        EXPECT_EQ(tests_solutions[i], msb(tests[i])) << " at index " << i;
+        EXPECT_EQ(tests_solutions[i], lambda(tests[i])) << " at index " << i;
 
     std::uint64_t special_cases_solutions[] = { 0, 31, 63, 63, 63, 31 };
 
     for (std::size_t i = 1; i < SPECIAL_CASES_LENGTH; i++) // undefined for i = 0
-        EXPECT_EQ(special_cases_solutions[i], msb(special_cases[i])) << " at index " << i;
+        EXPECT_EQ(special_cases_solutions[i], lambda(special_cases[i])) << " at index " << i;
 
     std::uint64_t other_cases[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     std::uint64_t other_cases_solutions[] = { 0, 1, 1, 2, 2, 2, 2, 3, 3 };
 
     for (std::size_t i = 0; i < sizeof(other_cases) / sizeof(std::uint64_t); i++)
-        EXPECT_EQ(other_cases_solutions[i], msb(other_cases[i])) << " at index " << i;
+        EXPECT_EQ(other_cases_solutions[i], lambda(other_cases[i])) << " at index " << i;
 }
 
 
@@ -204,4 +204,4 @@ TEST(broadword, compact_bitmask)
 }
 
 
-#endif // __TEST_BROADWORD_H__
+#endif // __TEST_COMMON_HPP__

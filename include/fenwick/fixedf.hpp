@@ -1,5 +1,5 @@
-#ifndef __FENWICK_NAIVE_H__
-#define __FENWICK_NAIVE_H__
+#ifndef __FENWICK_NAIVE_HPP__
+#define __FENWICK_NAIVE_HPP__
 
 #include "../common.hpp"
 #include "fenwick_tree.hpp"
@@ -49,7 +49,7 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = drop_first_set(idx))
+                for (idx = idx+1; idx != 0; idx = clear_rho(idx))
                     sum += tree[idx - 1];
 
                 return sum;
@@ -58,7 +58,7 @@ namespace hft {
             virtual void add(size_t idx, int64_t inc)
             {
                 const size_t size = tree.size();
-                for (idx = idx+1; idx <= size; idx += mask_first_set(idx))
+                for (idx = idx+1; idx <= size; idx += mask_rho(idx))
                     tree[idx-1] += inc;
             }
 
@@ -67,7 +67,7 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(tree.size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(tree.size()); m != 0; m >>= 1) {
                     if (node+m-1 >= tree.size()) continue;
 
                     uint64_t value = tree[node+m-1];
@@ -86,10 +86,10 @@ namespace hft {
             {
                 size_t node = 0;
 
-                for (size_t m = mask_last_set(tree.size()); m != 0; m >>= 1) {
+                for (size_t m = mask_lambda(tree.size()); m != 0; m >>= 1) {
                     if (node+m-1 >= tree.size()) continue;
 
-                    uint64_t value = (LEAF_MAXVAL << lsb(node+m)) - tree[node+m-1];
+                    uint64_t value = (LEAF_MAXVAL << rho(node+m)) - tree[node+m-1];
 
                     if(*val >= value) {
                         node += m;
@@ -115,4 +115,4 @@ namespace hft {
     }
 }
 
-#endif // __FENWICK_NAIVE_H__
+#endif // __FENWICK_NAIVE_HPP__

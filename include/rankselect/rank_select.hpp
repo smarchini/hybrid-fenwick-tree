@@ -1,5 +1,5 @@
-#ifndef __RANK_SELECT_H__
-#define __RANK_SELECT_H__
+#ifndef __RANK_SELECT_HPP__
+#define __RANK_SELECT_HPP__
 
 #include "../common.hpp"
 
@@ -143,4 +143,4 @@ namespace hft {
     }
 }
 
-#endif // __RANK_SELECT_H__
+#endif // __RANK_SELECT_HPP__
