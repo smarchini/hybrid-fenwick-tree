@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <random>
 
-#include <fenwick/naive.hpp>
-#include <fenwick/ltype.hpp>
-#include <fenwick/type.hpp>
-#include <fenwick/lbyte.hpp>
-#include <fenwick/byte.hpp>
-#include <fenwick/lbit.hpp>
-#include <fenwick/bit.hpp>
+#include <fenwick/fixedf.hpp>
+#include <fenwick/typel.hpp>
+#include <fenwick/typef.hpp>
+#include <fenwick/bytel.hpp>
+#include <fenwick/bytef.hpp>
+#include <fenwick/bitl.hpp>
+#include <fenwick/bitf.hpp>
 
 
 template<typename T> T* random_array(size_t size);

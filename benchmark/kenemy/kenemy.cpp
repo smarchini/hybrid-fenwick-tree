@@ -8,18 +8,18 @@
 
 #include <rankselect/rank_select.hpp>
 #include <rankselect/word.hpp>
-#include <rankselect/line.hpp>
+#include <rankselect/stride.hpp>
 
 #include <fenwick/fenwick_tree.hpp>
-#include <fenwick/naive.hpp>
-#include <fenwick/lnaive.hpp>
-#include <fenwick/type.hpp>
-#include <fenwick/ltype.hpp>
-#include <fenwick/byte.hpp>
-#include <fenwick/lbyte.hpp>
-#include <fenwick/bit.hpp>
-#include <fenwick/lbit.hpp>
-#include <fenwick/mixed.hpp>
+#include <fenwick/fixedf.hpp>
+#include <fenwick/fixedl.hpp>
+#include <fenwick/typef.hpp>
+#include <fenwick/typel.hpp>
+#include <fenwick/bytef.hpp>
+#include <fenwick/bytel.hpp>
+#include <fenwick/bitf.hpp>
+#include <fenwick/bitl.hpp>
+#include <fenwick/hybrid.hpp>
 
 #include <dynamic.hpp>
 

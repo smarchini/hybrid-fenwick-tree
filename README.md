@@ -89,11 +89,11 @@ che be built with `g++ -I/path/to/include example.cpp`.
 Compile it with `g++ -I/path/to/include example.cpp`.
 ``` cpp
 #include <iostream>
-#include <fenwick/naive.hpp>
-#include <fenwick/lbit.hpp>
-#include <fenwick/byte.hpp>
-#include <fenwick/lbyte.hpp>
-#include <fenwick/mixed.hpp>
+#include <fenwick/fixedf.hpp>
+#include <fenwick/bitl.hpp>
+#include <fenwick/bytef.hpp>
+#include <fenwick/bytel.hpp>
+#include <fenwick/hybrid.hpp>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
@@ -133,13 +133,13 @@ int main()
 ``` cpp
 #include <iostream>
 
-#include <fenwick/naive.hpp>
-#include <fenwick/byte.hpp>
-#include <fenwick/lbyte.hpp>
-#include <fenwick/mixed.hpp>
+#include <fenwick/fixedf.hpp>
+#include <fenwick/bytef.hpp>
+#include <fenwick/bytel.hpp>
+#include <fenwick/hybrid.hpp>
 
 #include <rankselect/word.hpp>
-#include <rankselect/line.hpp>
+#include <rankselect/stride.hpp>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
@@ -264,10 +264,10 @@ search paths, then you can use the library as following.
 #include <iostream>
 
 #include <rankselect/word.hpp>
-#include <rankselect/line.hpp>
+#include <rankselect/stride.hpp>
 
-#include <fenwick/byte.hpp>
-#include <fenwick/bit.hpp>
+#include <fenwick/bytef.hpp>
+#include <fenwick/bitf.hpp>
 
 int main()
 {
@@ -318,8 +318,8 @@ int main()
 ``` cpp
 #include <iostream>
 
-#include <fenwick/lbyte.hpp>
-#include <fenwick/bit.hpp>
+#include <fenwick/bytel.hpp>
+#include <fenwick/bitf.hpp>
 
 int main()
 {

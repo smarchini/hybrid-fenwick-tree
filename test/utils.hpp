@@ -9,19 +9,19 @@
 #include "../include/common.hpp"
 
 #include "../include/fenwick/fenwick_tree.hpp"
-#include "../include/fenwick/naive.hpp"
-#include "../include/fenwick/lnaive.hpp"
-#include "../include/fenwick/type.hpp"
-#include "../include/fenwick/ltype.hpp"
-#include "../include/fenwick/byte.hpp"
-#include "../include/fenwick/lbyte.hpp"
-#include "../include/fenwick/bit.hpp"
-#include "../include/fenwick/lbit.hpp"
-#include "../include/fenwick/mixed.hpp"
+#include "../include/fenwick/fixedf.hpp"
+#include "../include/fenwick/fixedl.hpp"
+#include "../include/fenwick/typef.hpp"
+#include "../include/fenwick/typel.hpp"
+#include "../include/fenwick/bytef.hpp"
+#include "../include/fenwick/bytel.hpp"
+#include "../include/fenwick/bitf.hpp"
+#include "../include/fenwick/bitl.hpp"
+#include "../include/fenwick/hybrid.hpp"
 
 #include "../include/rankselect/rank_select.hpp"
 #include "../include/rankselect/word.hpp"
-#include "../include/rankselect/line.hpp"
+#include "../include/rankselect/stride.hpp"
 
 
 // Exposed classes
