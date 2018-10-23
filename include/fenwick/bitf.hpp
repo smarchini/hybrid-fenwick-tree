@@ -7,16 +7,19 @@
 namespace hft {
     namespace fenwick {
 
-        /** TODO: commenti
-         * class
+        /**
+         * class BitF - bit compression and classical node layout.
+         * @sequence: sequence of integers.
+         * @size: number of elements.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
+         *
          */
         template<size_t LEAF_MAXVAL>
         class BitF : public FenwickTree
         {
         public:
             static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-            static_assert(LEAF_BITSIZE <= 55, "A leaf should be at most 55 bit long");
+            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
             const size_t _size;
@@ -69,7 +72,7 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = clear_rho(idx)) {
+                while (idx != 0) {
                     const size_t bit_pos = get_bitpos(idx-1);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
@@ -78,6 +81,7 @@ namespace hft {
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
 
                     sum += (*compact_element & mask) >> shift;
+                    idx = clear_rho(idx);
                 }
 
                 return sum;
@@ -85,12 +89,14 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                while (idx <= size()) {
                     const size_t bit_pos = get_bitpos(idx-1);
                     auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
                     const size_t shift = bit_pos & 0b111;
                     *compact_element += inc << shift;
+
+                    idx += mask_rho(idx);
                 }
             }
 
@@ -115,7 +121,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             using FenwickTree::compfind;
@@ -140,7 +146,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             virtual size_t size() const

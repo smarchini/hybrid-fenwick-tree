@@ -8,23 +8,18 @@ namespace hft {
     namespace fenwick {
 
         /**
-         * class TypeL
-         * @tree8-16-32-64: Fenwick Tree data.
-         * @size: Number of elements in the tree.
-         * @level: Lookup table, it store every starting level index.
+         * class TypeL - closer type compression and level-ordered node layout.
+         * @sequence: sequence of integers.
+         * @size: number of elements.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
          *
-         * Each node is the smallest datatype capable of holding its data. It's supposed
-         * to store increments up to 64.
-         *
-         * In each tree, the data is stored in a bottom-up level-order manner.
          */
         template<size_t LEAF_MAXVAL>
         class TypeL : public FenwickTree
         {
         public:
             static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-            static_assert(LEAF_BITSIZE <= 54, "A leaf should be at most 54 bit long");
+            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
             const size_t _size;
@@ -38,7 +33,7 @@ namespace hft {
         public:
             TypeL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(lambda(size) + 2)
+                level(lambda(size+1) + 2)
             {
                 size_t type_ends[3] = {0};
                 level[0] = 0;
@@ -59,19 +54,18 @@ namespace hft {
                 default:         tree8 = DArray< uint8_t>(type_ends[0]);
                 }
 
-                // C++17 constexpr if
-                if (LEAF_BITSIZE <= 8) {
+                if constexpr (LEAF_BITSIZE <= 8) {
                     fill_tree<uint8_t, LEAF_BITSIZE, 8>(tree8.get(), sequence);
                     fill_tree<uint16_t, 9, 16>(tree16.get(), sequence);
                     fill_tree<uint64_t, 17, 32>(tree64.get(), sequence);
                     fill_tree<uint64_t, 33, 64>(tree64.get(), sequence);
                 }
-                else if (LEAF_BITSIZE <= 16) {
+                else if constexpr (LEAF_BITSIZE <= 16) {
                     fill_tree<uint16_t, LEAF_BITSIZE, 16>(tree16.get(), sequence);
                     fill_tree<uint64_t, 17, 32>(tree64.get(), sequence);
                     fill_tree<uint64_t, 33, 64>(tree64.get(), sequence);
                 }
-                else if (LEAF_BITSIZE <= 32) {
+                else if constexpr (LEAF_BITSIZE <= 32) {
                     fill_tree<uint64_t, LEAF_BITSIZE, 32>(tree64.get(), sequence);
                     fill_tree<uint64_t, 33, 64>(tree64.get(), sequence);
                 }
@@ -85,8 +79,9 @@ namespace hft {
                 uint64_t sum = 0ULL;
                 size_t index = 0ULL;
 
-                for (idx++; idx != index;) {
+                while (idx != index) {
                     index += mask_lambda(idx ^ index);
+
                     const int height = rho(index);
                     const size_t level_idx = index >> (1 + height);
                     const size_t tree_idx = level[height] + level_idx;
@@ -103,7 +98,7 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                while (idx <= size()) {
                     const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     const size_t tree_idx = level[height] + level_idx;
@@ -113,6 +108,8 @@ namespace hft {
                     case  9 ... 16: tree16[tree_idx] += inc; break;
                     default:         tree8[tree_idx] += inc;
                     }
+
+                    idx += mask_rho(idx);
                 }
             }
 
@@ -146,7 +143,8 @@ namespace hft {
                     }
                 }
 
-                return node <= size() ? node-1 : size()-1;
+                // TODO: provare a togliere
+                return node <= size() ? node : size();
             }
 
             using FenwickTree::compfind;
@@ -179,7 +177,8 @@ namespace hft {
                     }
                 }
 
-                return node <= size() ? node-1 : size()-1;
+                // TODO: provare a togliere
+                return node <= size() ? node : size();
             }
 
             virtual size_t size() const

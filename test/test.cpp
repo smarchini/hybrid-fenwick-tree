@@ -3,7 +3,7 @@
 #include "common.hpp"
 
 #include "fenwick/fixedf.hpp"
-// TODO: test approfondito per lnaive
+// TODO: explicit tests for fixedl
 #include "fenwick/bitf.hpp"
 #include "fenwick/bitl.hpp"
 #include "fenwick/bytef.hpp"

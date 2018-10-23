@@ -1,8 +1,8 @@
 CC = g++
 RELEASE = -O3 -march=native
 DEBUG = -g -O0 --coverage -fprofile-dir=coverage
-CFLAGS = -std=c++14 -Wall -Wextra $(PARAMS)
-LFLAGS = -std=c++14 -Wall -Wextra $(PARAMS)
+CFLAGS = -std=c++17 -Wall -Wextra $(PARAMS)
+LFLAGS = -std=c++17 -Wall -Wextra $(PARAMS)
 
 INCLUDES = $(shell find include -name '*.hpp')
 TEST_INCLUDES = $(shell find test -name '*.hpp')

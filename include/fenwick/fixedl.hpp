@@ -8,9 +8,10 @@ namespace hft {
     namespace fenwick {
 
         /**
-         * class FixedL - Level-order version of FixedF
-         * @tree: Fenwick Tree data.
-         * @size: Number of elements.
+         * class FixedL - no compression and level-ordered node layout.
+         * @sequence: sequence of integers.
+         * @size: number of elements.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
          *
          */
         template<size_t LEAF_MAXVAL>
@@ -18,21 +19,13 @@ namespace hft {
         {
         public:
             static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-            static_assert(LEAF_BITSIZE <= 64, "A leaf should be at most 64 bit long");
+            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
             DArray<uint64_t> tree;
             DArray<size_t> level;
 
         public:
-            /**
-             * FixedL - Build a FenwickTree given a sequence of increments.
-             * @sequence: Sequence of increments to compress.
-             * @length: Number of elements stored by the sequence.
-             *
-             * Running time: O(@length)
-             */
             FixedL(uint64_t sequence[], size_t size):
                 level(lambda(size) + 2),
                 tree(size)
@@ -61,7 +54,7 @@ namespace hft {
                 uint64_t sum = 0;
                 size_t index = 0;
 
-                for (idx++; idx != index;) {
+                while (idx != index) {
                     index += mask_lambda(idx ^ index);
 
                     const int height = rho(index);
@@ -74,10 +67,12 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_rho(idx)) {
+                while (idx <= size()) {
                     const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     tree[level[height] + level_idx] += inc;
+
+                    idx += mask_rho(idx);
                 }
             }
 
@@ -101,7 +96,8 @@ namespace hft {
                     }
                 }
 
-                return node <= size() ? node-1 : size()-1;
+                // TODO: provare a togliere
+                return node <= size() ? node : size();
             }
 
             using FenwickTree::compfind;
@@ -124,7 +120,8 @@ namespace hft {
                     }
                 }
 
-                return node <= size() ? node-1 : size()-1;
+                // TODO: provare a togliere
+                return node <= size() ? node : size();
             }
 
             virtual size_t size() const

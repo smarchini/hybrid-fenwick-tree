@@ -8,32 +8,23 @@ namespace hft {
     namespace fenwick {
 
         /**
-         * class FixedF - Typical implementation of a Fenwick Tree.
-         * @tree: Fenwick Tree data.
-         * @size: Number of elements.
+         * class FixedF - no compression and classical node layout.
+         * @sequence: sequence of integers.
+         * @size: number of elements.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
          *
-         * Typical implementation of a FenwickTree data structure as described by the
-         * original paper.
          */
         template<size_t LEAF_MAXVAL>
         class FixedF : public FenwickTree
         {
         public:
             static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-            static_assert(LEAF_BITSIZE <= 64, "A leaf should be at most 64 bit long");
+            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
             DArray<uint64_t> tree;
 
         public:
-            /**
-             * FixedF - Build a FenwickTree given a sequence of increments.
-             * @sequence: Sequence of increments to compress.
-             * @length: Number of elements stored by the sequence.
-             *
-             * Running time: O(@length)
-             */
             FixedF(uint64_t sequence[], size_t size):
                 tree(size)
             {
@@ -49,8 +40,10 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = clear_rho(idx))
+                while (idx != 0) {
                     sum += tree[idx - 1];
+                    idx = clear_rho(idx);
+                }
 
                 return sum;
             }
@@ -58,8 +51,10 @@ namespace hft {
             virtual void add(size_t idx, int64_t inc)
             {
                 const size_t size = tree.size();
-                for (idx = idx+1; idx <= size; idx += mask_rho(idx))
+                while (idx <= size) {
                     tree[idx-1] += inc;
+                    idx += mask_rho(idx);
+                }
             }
 
             using FenwickTree::find;
@@ -78,7 +73,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             using FenwickTree::compfind;
@@ -97,7 +92,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             virtual size_t size() const

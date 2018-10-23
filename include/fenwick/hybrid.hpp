@@ -25,65 +25,52 @@ namespace hft {
                 _size(size),
                 top_tree(build_top(sequence, size))
             {
-                // bottom
                 for (size_t i = 0; i < top_tree.size() + 1; i++) {
                     size_t length = BOTTOM_ELEMENTS*i + BOTTOM_ELEMENTS-1 <= size ? BOTTOM_ELEMENTS-1 : size % BOTTOM_ELEMENTS;
                     bottom_trees.push_back(BOTTOM_TREE<LEAF_MAXVAL>(sequence + BOTTOM_ELEMENTS*i, length));
                 }
 
-                // top
                 for (size_t i = 0; i < top_tree.size(); i++)
-                    top_tree.add(i, bottom_trees[i].prefix(bottom_trees[i].size()-1));
+                    top_tree.add(i+1, bottom_trees[i].prefix(bottom_trees[i].size()));
             }
 
             virtual uint64_t prefix(size_t idx) const
             {
-                size_t top = (idx+1) / BOTTOM_ELEMENTS;
-                size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
+                size_t top = idx / BOTTOM_ELEMENTS;
+                size_t bottom = idx % BOTTOM_ELEMENTS;
 
-                if (top == 0 || top_tree.size() == 0)
-                    return bottom_trees[0].prefix(bottom-1);
-
-                return top_tree.prefix(top-1)
-                    + (bottom != 0 ? bottom_trees[top].prefix(bottom-1) : 0);
+                return top_tree.prefix(top) + bottom_trees[top].prefix(bottom);
             }
 
             virtual void add(size_t idx, int64_t inc)
             {
-                size_t top = (idx+1) / BOTTOM_ELEMENTS;
-                size_t bottom = (idx+1) % BOTTOM_ELEMENTS;
+                size_t top = idx / BOTTOM_ELEMENTS;
+                size_t bottom = idx % BOTTOM_ELEMENTS;
 
                 if (bottom == 0) {
-                    top_tree.add(top-1, inc);
-                }
-                else if (top_tree.size() == 0) {
-                    bottom_trees[top].add(bottom-1, inc);
+                    top_tree.add(top, inc);
                 }
                 else {
-                    top_tree.add(top, inc);
-                    bottom_trees[top].add(bottom-1, inc);
+                    top_tree.add(top+1, inc);
+                    bottom_trees[top].add(bottom, inc);
                 }
             }
 
             using FenwickTree::find;
             virtual size_t find(uint64_t *val) const
             {
-                size_t top = 0;
-                if (top_tree.size() != 0)
-                    top = top_tree.find(val) + 1;
+                size_t top = top_tree.size() != 0 ? top_tree.find(val) : 0;
+                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find(val) : 0;
 
-                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].find(val) : -1;
                 return top*BOTTOM_ELEMENTS + bottom;
             }
 
             using FenwickTree::compfind;
             virtual size_t compfind(uint64_t *val) const
             {
-                size_t top = 0;
-                if (top_tree.size() != 0)
-                    top = top_tree.compfind(val) + 1;
+                size_t top = top_tree.size() != 0 ? top_tree.compfind(val) : 0;
+                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].compfind(val) : 0;
 
-                size_t bottom = top < bottom_trees.size() ? bottom_trees[top].compfind(val) : -1;
                 return top*BOTTOM_ELEMENTS + bottom;
             }
 
@@ -119,5 +106,4 @@ namespace hft {
 
     }
 }
-
 #endif // __FENWICK_HYBRID_HPP__

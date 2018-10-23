@@ -8,34 +8,24 @@ namespace hft {
     namespace fenwick {
 
         /**
-         * class ByteF
-         * @tree: Fenwick Tree data.
-         * @size: Number of elements in the tree.
-         * @level: Lookup table, it store the starting bit-position of each level.
+         * class ByteF - byte compression and classical node layout.
+         * @sequence: sequence of integers.
+         * @size: number of elements.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
          *
-         * Each node have the smallest byte-size capable of holding its data. It's the
-         * interleaved version of ByteF.
          */
         template<size_t LEAF_MAXVAL>
         class ByteF : public FenwickTree
         {
         public:
             static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1, "A leaf should be at least 1 bit long");
-            static_assert(LEAF_BITSIZE <= 56, "A leaf should be at most 56 bit long");
+            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
             const size_t _size;
             DArray<uint8_t> tree;
 
         public:
-            /**
-             * ByteF - Build a FenwickTree given a sequence of increments.
-             * @sequence: Sequence of increments.
-             * @size: Number of elements stored by the sequence.
-             *
-             * Running time: O(length)
-             */
             ByteF(uint64_t sequence[], size_t size) :
                 _size(size),
                 tree(get_bytepos(size))
@@ -63,9 +53,10 @@ namespace hft {
             {
                 uint64_t sum = 0;
 
-                for (idx = idx+1; idx != 0; idx = clear_rho(idx)) {
+                while (idx != 0) {
                     const auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
                     sum += *element & BYTE_MASK[get_bytesize(idx)];
+                    idx = clear_rho(idx);
                 }
 
                 return sum;
@@ -73,8 +64,10 @@ namespace hft {
 
             virtual void add(size_t idx, int64_t inc)
             {
-                for (idx = idx+1; idx <= size(); idx += mask_rho(idx))
+                while (idx <= size()) {
                     *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
+                    idx += mask_rho(idx);
+                }
             }
 
             using FenwickTree::find;
@@ -93,7 +86,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             using FenwickTree::compfind;
@@ -113,7 +106,7 @@ namespace hft {
                     }
                 }
 
-                return node - 1;
+                return node;
             }
 
             virtual size_t size() const
@@ -135,6 +128,7 @@ namespace hft {
 
             static inline size_t get_bytepos(size_t idx)
             {
+                // TODO: aggiungere if constexpr
                 return idx
                     + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
                     + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;

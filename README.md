@@ -183,9 +183,9 @@ int main()
 ```
 
 # TODO
-cambiare i nomi dei file hpp,
 semplificare la roba per gli include,
 implementazione diretta delle formule figlio pirlate al contrario (si può fare? maybe not),
+vedere i TODO lasciati nell'ultimo refactoring
 ricontrollare tutto
 
 

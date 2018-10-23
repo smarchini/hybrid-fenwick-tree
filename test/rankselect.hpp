@@ -266,28 +266,28 @@ void rankselect_random_test(std::size_t size)
 
 
     // word
-    ranking::Word<fenwick::FixedF>   naive(bitvect, size);
+    ranking::Word<fenwick::FixedF>  naive(bitvect, size);
     ranking::Word<fenwick::FixedL> lnaive(bitvect, size);
-    ranking::Word<fenwick::BitF>       bit(bitvect, size);
+    ranking::Word<fenwick::BitF>      bit(bitvect, size);
     ranking::Word<fenwick::BitL>     lbit(bitvect, size);
-    ranking::Word<fenwick::ByteF>     byte(bitvect, size);
+    ranking::Word<fenwick::ByteF>    byte(bitvect, size);
     ranking::Word<fenwick::ByteL>   lbyte(bitvect, size);
-    ranking::Word<fenwick::TypeF>     type(bitvect, size);
+    ranking::Word<fenwick::TypeF>    type(bitvect, size);
     ranking::Word<fenwick::TypeL>   ltype(bitvect, size);
 
     // line
-    ranking::Stride<fenwick::FixedF,  S>  naiveS(bitvect, size);
+    ranking::Stride<fenwick::FixedF, S>  naiveS(bitvect, size);
     ranking::Stride<fenwick::FixedL, S> lnaiveS(bitvect, size);
-    ranking::Stride<fenwick::BitF,    S>    bitS(bitvect, size);
+    ranking::Stride<fenwick::BitF,   S>    bitS(bitvect, size);
     ranking::Stride<fenwick::BitL,   S>   lbitS(bitvect, size);
-    ranking::Stride<fenwick::ByteF,   S>   byteS(bitvect, size);
+    ranking::Stride<fenwick::ByteF,  S>   byteS(bitvect, size);
     ranking::Stride<fenwick::ByteL,  S>  lbyteS(bitvect, size);
-    ranking::Stride<fenwick::TypeF,   S>   typeS(bitvect, size);
+    ranking::Stride<fenwick::TypeF,  S>   typeS(bitvect, size);
     ranking::Stride<fenwick::TypeL,  S>  ltypeS(bitvect, size);
 
 
     // rank
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i <= size; i++) {
         auto res = naive.rank(i);
 
         EXPECT_EQ(res, lnaive.rank(i))  << "at index: " << i << " template parameter " << S;
@@ -309,7 +309,7 @@ void rankselect_random_test(std::size_t size)
     }
 
     // rankZero
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i <= size; i++) {
         auto res = naive.rankZero(i);
 
         EXPECT_EQ(res, lnaive.rankZero(i)) << "at index: " << i << " template parameter " << S;
@@ -438,6 +438,7 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, typeS.selectZero(i))   << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, ltypeS.selectZero(i))  << "at index: " << i << " template parameter " << S;
     }
+
 
     delete[] updates;
     delete[] bitvect;

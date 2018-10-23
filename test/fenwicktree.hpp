@@ -21,16 +21,16 @@ void fenwick_random_test(std::size_t size)
     }
 
     hft::fenwick::FixedF<S> naive(increments, size);
-    hft::fenwick::FixedF<S> lnaive(increments, size);
+    hft::fenwick::FixedL<S> lnaive(increments, size);
     hft::fenwick::BitF<S> bit(increments, size);
     hft::fenwick::BitL<S> lbit(increments, size);
-    hft::fenwick::ByteL<S> lbyte(increments, size);
     hft::fenwick::ByteF<S> byte(increments, size);
+    hft::fenwick::ByteL<S> lbyte(increments, size);
     hft::fenwick::TypeF<S> type(increments, size);
     hft::fenwick::TypeL<S> ltype(increments, size);
 
     // prefix
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i <= size; i++) {
         std::uint64_t naive_prefix = naive.prefix(i);
 
         EXPECT_EQ(naive_prefix, lnaive.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
@@ -43,7 +43,7 @@ void fenwick_random_test(std::size_t size)
    }
 
     // find
-    for (std::uint64_t i = 0; i < size; i++) {
+    for (std::uint64_t i = 0; i <= size; i++) {
         std::uint64_t naive_find = naive.find(i);
 
         EXPECT_EQ(naive_find, lnaive.find(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
@@ -56,19 +56,19 @@ void fenwick_random_test(std::size_t size)
     }
 
     // add
-    for (size_t i = 0; i < size; i++) {
-        naive.add(i, add_updates[i]);
-        lnaive.add(i, add_updates[i]);
-        bit.add(i,   add_updates[i]);
-        lbit.add(i,  add_updates[i]);
-        byte.add(i,  add_updates[i]);
-        lbyte.add(i, add_updates[i]);
-        type.add(i,  add_updates[i]);
-        ltype.add(i, add_updates[i]);
+    for (size_t i = 1; i < size; i++) {
+        naive.add(i+1,  add_updates[i]);
+        lnaive.add(i+1, add_updates[i]);
+        bit.add(i+1,    add_updates[i]);
+        lbit.add(i+1,   add_updates[i]);
+        byte.add(i+1,   add_updates[i]);
+        lbyte.add(i+1,  add_updates[i]);
+        type.add(i+1,   add_updates[i]);
+        ltype.add(i+1,  add_updates[i]);
     }
 
     // prefix
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i <= size; i++) {
         std::uint64_t naive_prefix = naive.prefix(i);
 
         EXPECT_EQ(naive_prefix, lnaive.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
@@ -81,7 +81,7 @@ void fenwick_random_test(std::size_t size)
     }
 
     // find complement
-    for (std::uint64_t i = 0; i < size; i++) {
+    for (std::uint64_t i = 0; i <= size; i++) {
         std::uint64_t naive_findcomplement = naive.compfind(i);
 
         EXPECT_EQ(naive_findcomplement, lnaive.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
@@ -100,9 +100,6 @@ void fenwick_random_test(std::size_t size)
 
 TEST(fenwicktree, perfect_tree)
 {
-    for (size_t i = 0; i < 10000; i++)
-        fenwick_random_test<64>(10);
-
     // small
     fenwick_random_test<64>(2-1);
     fenwick_random_test<64>(4-1);

@@ -48,7 +48,7 @@ namespace hft {
 
             virtual uint64_t rank(size_t pos) const
             {
-                return ((pos/64) ? tree.prefix(pos/64 - 1) : 0)
+                return tree.prefix(pos/64)
                     + popcount(_bitvector[pos/64] & compact_bitmask(pos % 64, 0));
             }
 
@@ -69,7 +69,7 @@ namespace hft {
 
             virtual size_t select(uint64_t rank) const
             {
-                const size_t idx = tree.find(&rank) + 1;
+                const size_t idx = tree.find(&rank);
 
                 if (idx >= _bitvector.size()) return SIZE_MAX;
 
@@ -82,7 +82,7 @@ namespace hft {
 
             virtual size_t selectZero(uint64_t rank) const
             {
-                const size_t idx = tree.compfind(&rank) + 1;
+                const size_t idx = tree.compfind(&rank);
 
                 if (idx >= _bitvector.size()) return SIZE_MAX;
 
@@ -97,36 +97,33 @@ namespace hft {
             {
                 const uint64_t old = _bitvector[index];
                 _bitvector[index] = word;
-                tree.add(index, popcount(word) - popcount(old));
+                tree.add(index+1, popcount(word) - popcount(old));
 
                 return old;
             }
 
-            // TODO: testare
             virtual bool set(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] |= uint64_t(1) << (index % 64);
                 bool is_changed = _bitvector[index / 64] != old;
-                tree.add(index / 64, is_changed);
+                tree.add(index / 64 + 1, is_changed);
 
                 return !is_changed;
             }
 
-            // TODO: testare
             virtual bool clear(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] &= ~(uint64_t(1) << (index % 64));
                 bool is_changed = _bitvector[index / 64] != old;
-                tree.add(index / 64, -is_changed);
+                tree.add(index / 64 + 1, -is_changed);
 
                 return is_changed;
             }
 
-            // TODO: testare
             virtual bool toggle(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] ^= uint64_t(1) << (index % 64);
-                tree.add(index / 64, _bitvector[index / 64] > old ? 1 : -1);
+                tree.add(index / 64 + 1, _bitvector[index / 64] > old ? 1 : -1);
 
                 return _bitvector[index / 64] > old ? 0 : 1;
             }

@@ -23,8 +23,8 @@ void fenwick_random_test(std::size_t size)
     hft::fenwick::FixedF<64> naive(increments, size);
     T mixed(increments, size);
 
-    // prefix
-    for (size_t i = 0; i < size; i++)
+    // // prefix
+    for (size_t i = 1; i <= size; i++)
         EXPECT_EQ(naive.prefix(i), mixed.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
 
     // find
@@ -33,12 +33,12 @@ void fenwick_random_test(std::size_t size)
 
     // add
     for (size_t i = 0; i < size; i++) {
-        naive.add(i, add_updates[i]);
-        mixed.add(i, add_updates[i]);
+        naive.add(i+1, add_updates[i]);
+        mixed.add(i+1, add_updates[i]);
     }
 
-    // prefix
-    for (size_t i = 0; i < size; i++)
+    // // prefix
+    for (size_t i = 1; i <= size; i++)
         EXPECT_EQ(naive.prefix(i), mixed.prefix(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
 
     // find complement

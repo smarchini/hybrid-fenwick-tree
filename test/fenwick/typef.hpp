@@ -22,37 +22,37 @@ TEST(type_fenwick_tree, increments_by_one)
 
     // prefix
     for (size_t i = 0; i < 15; i++)
-        EXPECT_EQ(seq1[i], t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq1[i], t.prefix(i+1)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 15; i++)
-        EXPECT_EQ(i, t.find(seq1[i])) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq1[i])) << "at index " << i;
     for (std::uint64_t i = seq1[14]; i < 100; i++)
-        EXPECT_EQ(14, t.find(i)) << "at index " << i;
+        EXPECT_EQ(15, t.find(i)) << "at index " << i;
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(SIZE_MAX, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq1[k-1]; i < 64*(k+1)-seq1[k]; i++)
-            EXPECT_EQ(k-1, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
     }
 
     // add
     for (size_t i = 0; i < 15; i++)
-        t.add(i, i);
+        t.add(i+1, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(seq1[i]+sum, t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq1[i]+sum, t.prefix(i+1)) << "at index " << i;
     }
 
     // find
     sum = 0;
     for (std::uint64_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(i, t.find(seq1[i]+sum)) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq1[i]+sum)) << "at index " << i;
     }
 }
 
@@ -73,37 +73,37 @@ TEST(type_fenwick_tree, increasing_increments)
 
     // prefix
     for (size_t i = 0; i < 15; i++)
-        EXPECT_EQ(seq2[i], t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq2[i], t.prefix(i+1)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 15; i++)
-        EXPECT_EQ(i, t.find(seq2[i])) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq2[i])) << "at index " << i;
     for (std::uint64_t i = seq2[14]; i < 1000; i++)
-        EXPECT_EQ(14, t.find(i)) << "at index " << i;
+        EXPECT_EQ(15, t.find(i)) << "at index " << i;
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(SIZE_MAX, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq2[k-1]; i < 64*(k+1)-seq2[k]; i++)
-            EXPECT_EQ(k-1, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
     }
 
     // add
     for (size_t i = 0; i < 15; i++)
-        t.add(i, i);
+        t.add(i+1, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(seq2[i]+sum, t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq2[i]+sum, t.prefix(i+1)) << "at index " << i;
     }
 
     // find
     sum = 0;
     for (std::uint64_t i = 0; i < 15; i++) {
         sum += i;
-        EXPECT_EQ(i, t.find(seq2[i]+sum)) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq2[i]+sum)) << "at index " << i;
     }
 }
 
@@ -122,37 +122,37 @@ TEST(type_fenwick_tree, non_complete)
 
     // prefix
     for (size_t i = 0; i < 20; i++)
-        EXPECT_EQ(seq3[i], t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq3[i], t.prefix(i+1)) << "at index " << i;
 
     // find
     for (std::uint64_t i = 0; i < 20; i++)
-        EXPECT_EQ(i, t.find(seq3[i])) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq3[i])) << "at index " << i;
     for (std::uint64_t i = seq3[19]; i < 1000; i++)
-        EXPECT_EQ(19, t.find(i)) << "at index " << i;
+        EXPECT_EQ(20, t.find(i)) << "at index " << i;
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(SIZE_MAX, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 20; k++) {
         for (std::uint64_t i = 64*k-seq3[k-1]; i < 64*(k+1)-seq3[k]; i++)
-            EXPECT_EQ(k-1, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
     }
 
     // add
     for (size_t i = 0; i < 20; i++)
-        t.add(i, i);
+        t.add(i+1, i);
 
     size_t sum = 0;
     for (size_t i = 0; i < 20; i++) {
         sum += i;
-        EXPECT_EQ(seq3[i]+sum, t.prefix(i)) << "at index " << i;
+        EXPECT_EQ(seq3[i]+sum, t.prefix(i+1)) << "at index " << i;
     }
 
     // find
     sum = 0;
     for (std::uint64_t i = 0; i < 20; i++) {
         sum += i;
-        EXPECT_EQ(i, t.find(seq3[i]+sum)) << "at index " << i;
+        EXPECT_EQ(i+1, t.find(seq3[i]+sum)) << "at index " << i;
     }
 }
 

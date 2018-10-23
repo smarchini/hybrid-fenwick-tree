@@ -12,7 +12,8 @@ namespace hft {
             virtual ~FenwickTree() = default;
 
             /**
-             * prefix() - Retrieve the (@idx+1)th element of the cumulative frequency
+             * TODO: sistemare commenti
+             * prefix() - Compute the prefix sum Retrieve the (@idx+1)th element of the cumulative frequency
              * @idx: Index of the element, starting from 0
              *
              * This method returns the (@idx+1)th element of the cumulative
