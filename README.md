@@ -1,7 +1,7 @@
 # Hybrid Compact Fenwick Tree and its applications for dynamic rank and selection
 
 Different implementations of the [Fenwick tree] data structure to aim for a
-better performace through cache efficiency and compression. Those
+better performance through cache efficiency and compression. Those
 implementations are then applied to build an efficient data structure for
 dynamic [rank/select dictionaries].
 
@@ -63,7 +63,7 @@ You can find a brief description of each method in
 
 There are two different implementations:
 - **Word**: the bit vector is divided in words (64-bits);
-- **Stride**: the bitvector is divided in *k* words.
+- **Stride**: the bit vector is divided in *k* words.
 
 **Word** requires a bigger Fenwick tree (you might wanna use a compressed one!)
 and it's good if linear rank and selection searches are slow (i.e. you don't
@@ -81,9 +81,9 @@ Linux computer and GCC 8.2. The concepts behind this library are general, but in
 fact this library uses some compiler-specific directives (i.e. the
 `__attribute__((__may_alias__))`) and built-in functions (i.e.
 `__builtin_popcountll`). For this reason, if you intend to use it in a different
-environment you better check everythings works as expected.
+environment you better check everything works as expected.
 
-The following examples che be built with `g++ -I/path/to/include example.cpp`.
+The following examples can be built with `g++ -I/path/to/include example.cpp`.
 
 ## Fenwick tree
 ``` cpp
@@ -179,7 +179,7 @@ them in the heap. You can use [placement new] or `hft::DArray<T>`.
 `hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
 capabilities and little else. At the moment the data structures in this library
 are dynamic as in *dynamic arrays*: they deal with mutable data of fixed size.
-An implementation with extendibility properties is indeed possibile;
+An implementation with extendibility properties is indeed possible;
 `hft::Darray<T>` was intended to be a temporary solution to simplify the
 performance analysis permit micro-optimizations.
 
