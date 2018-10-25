@@ -6,25 +6,22 @@
 namespace hft {
     namespace ranking {
 
+        /**
+         * Word - Linear search on a single word.
+         * @bitvector: A bitvector of 64-bit words.
+         * @length: The length (in words) of the bitvector.
+         * @T: Underlining Fenwick tree with an ungiven <size_t> bound.
+         *
+         */
         template <template<size_t> class T>
-        class Word {
+        class Word : public RankSelect
+        {
         private:
             static constexpr size_t LEAF_BITSIZE = 64;
             T<LEAF_BITSIZE> tree;
             DArray<uint64_t> _bitvector;
 
         public:
-            /**
-             * Word - Build a dynamic rank&select data structure
-             * @bitvector: A bitvector of 64-bit words
-             * @length: The length (in words) of the bitvector
-             *
-             * If you pass the ownership of @bitvector it will make a shallow copy
-             * (copy the pointer) and if you don't it will make a deep copy (copy
-             * the data) of the bitvector. This data structure works correctly as
-             * long as you don't touch its underlining bitvector, so it prevents you
-             * to do it.
-             */
             Word(uint64_t bitvector[], size_t length):
                 tree(build_fenwick(bitvector, length)),
                 _bitvector(DArray<uint64_t>(length))
@@ -123,9 +120,10 @@ namespace hft {
             virtual bool toggle(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] ^= uint64_t(1) << (index % 64);
-                tree.add(index / 64 + 1, _bitvector[index / 64] > old ? 1 : -1);
+                bool was_set = _bitvector[index / 64] < old;
+                tree.add(index / 64 + 1, was_set ? -1 : 1);
 
-                return _bitvector[index / 64] > old ? 0 : 1;
+                return was_set;
             }
 
             virtual size_t bit_count() const

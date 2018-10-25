@@ -1,10 +1,8 @@
 #ifndef __FENWICK_HYBRID_HPP__
 #define __FENWICK_HYBRID_HPP__
 
-#include "../common.hpp"
 #include "fenwick_tree.hpp"
 #include <vector>
-#include <iostream>
 
 namespace hft {
     namespace fenwick {

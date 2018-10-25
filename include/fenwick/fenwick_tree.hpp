@@ -6,47 +6,52 @@
 namespace hft {
     namespace fenwick {
 
+        /**
+         * FenwickTree - Fenwick Tree data structure interface.
+         * @sequence: An integer vector.
+         * @length: The length (in words) of the sequence.
+         * @LEAF_MAXVAL: maximum value that @sequence can store.
+         *
+         * This data structure indices starts from 1 and ends in @length.
+         *
+         */
         class FenwickTree
         {
         public:
             virtual ~FenwickTree() = default;
 
             /**
-             * TODO: sistemare commenti
-             * prefix() - Compute the prefix sum Retrieve the (@idx+1)th element of the cumulative frequency
-             * @idx: Index of the element, starting from 0
+             * prefix() - Compute the prefix sum.
+             * @idx: Length of the prefix sum.
              *
-             * This method returns the (@idx+1)th element of the cumulative
-             * frequency mantained by the current instance.
+             * Sum the elements in the range (0 .. @idx], returns zero when @idx
+             * is zero.
              *
-             * Returns: The (@idx+1)th element of the cumulative frequency
              */
             virtual std::uint64_t prefix(std::size_t idx) const = 0;
 
             /**
-             * add() - Increment one element of the cumulative frequency
-             * @idx: The index (starting from 0) of the element you want to update
-             * @inc: Increment relative to the current value
+             * add() - Increment an element of the sequence (not the tree).
+             * @idx: Index (starting from 1) of the element.
+             * @inc: Value to sum.
              *
-             * This method update the current instance, it picks the (@idx+1)th
-             * element of the cumulative frequency and change its value to
-             * @val+@inc.
+             * You are allowed to use negative values for the increment, but
+             * keep in mind you should respect the structure boundaries.
+             *
              */
             virtual void add(std::size_t idx, std::int64_t inc) = 0;
 
             /**
-             * find() - Find the closest element less or equal than a given one
-             * @val: Value to search
+             * find() - Search the index of the closest (less or equal than) prefix.
+             * @val: Prefix to search.
              *
-             * This method finds the maximum index whose the values mantained by the
-             * cumulative frequency is less or equal than @val. It returns SIZE_MAX
-             * if such an element doesn't exists.
+             * If @val is an l-value reference its value will be changed with
+             * the distance between the found and the searched prefix (i.e. the
+             * difference between the prefix and @val).
              *
-             * If @val is a reference it gives you the distance of such an element,
-             * that is: @val - FenwickTree::prefix(FenwickTree::find(val))
+             * This method returns zero if such an element doesn't exists (i.e.
+             * there are no prefixes that are greater or equal to @val).
              *
-             * Returns: The closest index whose its element is less or equal than
-             * @val or SIZE_MAX if it doesn't exists.
              */
             virtual std::size_t find(std::uint64_t *val) const = 0;
             std::size_t find(std::uint64_t val) const {
@@ -54,17 +59,15 @@ namespace hft {
             }
 
             /**
-             * compfind() - Complement of find()
-             * @val: Value to search
+             * compfind() - Complement find.
+             * @val: Prefix to search.
              *
-             * This method finds the maximum index whose the values mantained by the
-             * cumulative frequency is less or equal than MAX_VAL-@val. MAX_VAL
-             * being the maximum value storable in such an element.
+             * This method search the index whose its prefix its the closest to
+             * MAXVAL-@val. MAXVAL is the maximum possibile value for such a
+             * prefix (@sequence is therefore bounded).
              *
-             * It returns -1 if such an element doesn't exists.
+             * The same considerations made for FenwickTree::find() holds.
              *
-             * Returns: The closest index whose its element is less or equal than
-             * MAX_VAL-@val or SIZE_MAX if it doesn't exists.
              */
             virtual std::size_t compfind(std::uint64_t *val) const = 0;
             std::size_t compfind(std::uint64_t val) const {
@@ -72,14 +75,14 @@ namespace hft {
             }
 
             /**
-             * size() - Returns the length of the sequence
+             * size() - Returns the length of the sequence.
+             *
              */
             virtual std::size_t size() const = 0;
 
             /**
-             * bit_count() - An estimation of the number of bits used by the tree
+             * bit_count() - Estimation of the size (in bits) of this structure.
              *
-             * Returns: An estimation of the size of the tree.
              */
             virtual std::size_t bit_count() const = 0;
         };

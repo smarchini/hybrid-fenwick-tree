@@ -1,7 +1,6 @@
 #ifndef __FENWICK_LTYPE_HPP__
 #define __FENWICK_LTYPE_HPP__
 
-#include "../common.hpp"
 #include "fenwick_tree.hpp"
 
 namespace hft {
@@ -123,17 +122,17 @@ namespace hft {
 
                     idx <<= 1;
 
-                    uint64_t value;
+                    uint64_t value = 0;
                     switch (height+LEAF_BITSIZE) {
                     case 17 ... 64:
                         if (tree_idx >= tree64.size()) continue;
-                        value = tree64[tree_idx]; break;
+                        value += tree64[tree_idx]; break;
                     case 9 ... 16:
                         if (tree_idx >= tree16.size()) continue;
-                        value = tree16[tree_idx]; break;
+                        value += tree16[tree_idx]; break;
                     default:
                         if (tree_idx >=  tree8.size()) continue;
-                        value =  tree8[tree_idx];
+                        value +=  tree8[tree_idx];
                     }
 
                     if (*val >= value) {
@@ -143,8 +142,7 @@ namespace hft {
                     }
                 }
 
-                // TODO: provare a togliere
-                return node <= size() ? node : size();
+                return min(node, size());
             }
 
             using FenwickTree::compfind;
@@ -177,8 +175,7 @@ namespace hft {
                     }
                 }
 
-                // TODO: provare a togliere
-                return node <= size() ? node : size();
+                return min(node, size());
             }
 
             virtual size_t size() const
@@ -200,7 +197,6 @@ namespace hft {
             inline void fill_tree(T *tree, uint64_t sequence[])
             {
                 const size_t levels = level.size() - 1;
-
                 for (size_t l = start-LEAF_BITSIZE; l < levels && l <= end-LEAF_BITSIZE; l++) {
                     for (size_t node = 1<<l; node <= size(); node += 1 << (l+1)) {
                         size_t sequence_idx = node-1;

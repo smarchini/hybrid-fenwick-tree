@@ -6,138 +6,125 @@
 namespace hft {
     namespace ranking {
 
-        template<typename T>
-        class RankSelect {
+        /**
+         * RankSelect - Dynamic rank & select data structure interface.
+         * @bitvector: A bit vector of 64-bit words.
+         * @length: The length (in words) of the bitvector.
+         * @T: Underlining Fenwick tree of an ungiven <size_t> bound.
+         *
+         * This data structure indices starts from 0 and ends in @length-1.
+         *
+         */
+        class RankSelect
+        {
         public:
-            /**
-             * RankSelect - Build a dynamic rank&select data structure
-             * @bitvector: A bitvector of 64-bit words
-             * @length: The length (in words) of the bitvector
-             *
-             * This data structure works correctly as long as you don't touch its
-             * underlining bitvector, so it prevents you to do it: if you pass the
-             * ownership of @bitvector it will make a shallow copy (copy the
-             * pointer), if you don't it will make a deep copy (copy the data).
-             */
-            RankSelect(uint64_t bitvector[], size_t length);
-            RankSelect(DArray<uint64_t> bitvector, size_t length);
-
             virtual ~RankSelect() = default;
 
             /**
-             * bitvector() - Give you the underlining bitvector
+             * bitvector() - Returns the bit vector.
              *
-             * You can't change the junk inside unless you explicitly cast away the
-             * constness, but you're not supposed to do it.
+             * It's a constant, so you can't change the junk inside unless you
+             * explicitly cast away the constness (at your own risk).
              *
-             * Returns: The underlining bitvector
              */
-            virtual const uint64_t* bitvector() const;
+            virtual const uint64_t* bitvector() const = 0;
 
             /**
-             * size() - Returns the length of the bitvector
+             * size() - length (in word) of the bitvector.
              *
-             * Returns: How many elements (words) have the bitvector
              */
-            virtual size_t size() const;
+            virtual size_t size() const = 0;
 
             /**
-             * rank() - Compute the numbers of ones preceding a specified position
-             * @pos: An index of the bit vector
+             * rank() - Numbers of 1-bits preceding a specified position.
+             * @pos: An index of the bit vector.
              *
-             * Returns: How many ones there are before the index @pos
              */
-            virtual uint64_t rank(size_t pos) const;
+            virtual uint64_t rank(size_t pos) const = 0;
 
             /**
-             * rank() - Compute the numbers of ones between a given range
-             * @from: Starting index of the bit vector
-             * @from: Ending index of the bit vector
+             * rank() - Numbers of 1-bits between a given range.
+             * @from: Starting index of the bit vector.
+             * @to: Ending index of the bit vector.
              *
-             * Returns: how many ones there are between @from and @to
              */
-            virtual uint64_t rank(size_t from, size_t to) const;
+            virtual uint64_t rank(size_t from, size_t to) const = 0;
 
             /**
-             * rankZero() - Compute the numbers of zeroes preceding a specified position
-             * @pos: an index of the bit vector
+             * rankZero() - Numbers of 0-bits preceding a specified position.
+             * @pos: An index of the bit vector.
              *
-             * Returns: how many zeroes there are before @pos and @to
              */
-            virtual uint64_t rankZero(size_t pos) const;
+            virtual uint64_t rankZero(size_t pos) const = 0;
 
             /**
-             * rankZero() - Compute the numbers of zeroes between a given range
-             * @from: Starting index of the bit vector
-             * @from: Ending index of the bit vector
+             * rankZero() - Number of 0-bits between a given range.
+             * @from: Starting index of the bit vector.
+             * @to: Ending index of the bit vector.
              *
-             * Returns: How many zeroes there are between @from and @to
              */
-            virtual uint64_t rankZero(size_t from, size_t to) const;
+            virtual uint64_t rankZero(size_t from, size_t to) const = 0;
 
             /**
-             * select() - Compute the index position of the bit of given rank
-             * @rank: Number of ones
+             * select() - Index of the 1-bit with a given rank.
+             * @rank: Number of 1-bits before the returned index.
              *
-             * This method returns the greatest position that is preceded by the
-             * specified number of ones.
+             * This method returns SIZE_MAX if no such an index exists.
              *
-             * Returns: the greatest position that is preceded by @rank ones or
-             * SIZE_MAX if there isn't one
              */
-            virtual size_t select(uint64_t rank) const;
+            virtual size_t select(uint64_t rank) const = 0;
 
             /**
-             * selectZero() - Compute the index position of the bit of given zero rank
-             * @rank: Number of zeroes
+             * selectZero() - Index of the 0-bit with a given rank.
+             * @rank: Number of 0-bits before the returned index.
              *
-             * This method returns the greatest position that is preceded by the
-             * specified number of zeroes.
+             * This method returns SIZE_MAX if no sucn an index exists.
              *
-             * Returns: The greatest position that is preceded by @rank zeroes or
-             * SIZE_MAX if there isn't one
              */
-            virtual size_t selectZero(uint64_t rank) const;
+            virtual size_t selectZero(uint64_t rank) const = 0;
 
             /**
-             * update() - replace a given word in the bitvector
-             * @index: index of the bitvector
+             * update() - Replace a given word in the bitvector.
+             * @index: index (in words) in the bitvector.
              * @word: new value for @bitvector[@index]
              *
-             * Returns: The replaced value.
+             * This method returns the replaced word.
+             *
              */
-            virtual uint64_t update(size_t index, uint64_t word);
+            virtual uint64_t update(size_t index, uint64_t word) = 0;
 
             /**
-             * set() - set to 1 a given bit in the bitvector
-             * @index: index of a bit in the bitvector
+             * set() - Set (set to 1) a given bit in the bitvector.
+             * @index: Index (in bits) in the bitvector.
              *
-             * Returns: The previous value.
+             * This method returns the previous value of such a bit.
+             *
              */
-            virtual void set(size_t index);
+            virtual bool set(size_t index) = 0;
 
             /**
-             * clear() - set to 0 a given bit in the bitvector
-             * @index: index of a bit in the bitvector
+             * clear() - Clear (set to 0) a given bit in the bitvector.
+             * @index: Index (in bits) in the bitvector.
              *
-             * Returns: The previous value.
+             * This method returns the previous value of such a bit.
+             *
              */
-            virtual void clear(size_t index);
+            virtual bool clear(size_t index) = 0;
 
             /**
-             * toggle() - change the value of a given bit in the bitvector
-             * @index: index of a bit in the bitvector
+             * toggle() - Change the value of a given bit in the bitvector.
+             * @index: Index (in bits) in the bitvector.
              *
-             * Returns: The previous value.
+             * This method returns the previous value of such a bit.
+             *
              */
-            virtual bool toggle(size_t index);
+            virtual bool toggle(size_t index) = 0;
 
             /**
-             * bit_count() - Compute an estimation of the size (in bits) of this structure
+             * bit_count() - Estimation of the size (in bits) of this structure.
              *
-             * Returns: An estimation of the number of bits used by the this structure
              */
-            virtual size_t bit_count() const;
+            virtual size_t bit_count() const = 0;
         };
 
     }

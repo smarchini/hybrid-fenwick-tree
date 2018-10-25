@@ -1,31 +1,28 @@
-#ifndef __RANKSELECT_LINE_HPP__
-#define __RANKSELECT_LINE_HPP__
+#ifndef __RANKSELECT_STRIDE_HPP__
+#define __RANKSELECT_STRIDE_HPP__
 
 #include "rank_select.hpp"
-#include <iostream>
 
 namespace hft {
     namespace ranking {
 
+        /**
+         * Stride - Linear search on many words.
+         * @bitvector: A bitvector of 64-bit words.
+         * @length: The length (in words) of the bitvector.
+         * @T: Underlining Fenwick tree with an ungiven <size_t> bound.
+         * @WORDS: Length (in words) of the linear search stride.
+         *
+         */
         template <template<size_t> class T, size_t WORDS>
-        class Stride {
+        class Stride : public RankSelect
+        {
         private:
             static constexpr size_t LEAF_MAXVAL = 64 * WORDS;
             T<LEAF_MAXVAL> tree;
             DArray<uint64_t> _bitvector;
 
         public:
-            /**
-             * Stride - Build a dynamic rank&select data structure
-             * @bitvector: A bitvector of 64-bit words
-             * @length: The length (in words) of the bitvector
-             *
-             * If you pass the ownership of @bitvector it will make a shallow copy
-             * (copy the pointer) and if you don't it will make a deep copy (copy
-             * the data) of the bitvector. This data structure works correctly as
-             * long as you don't touch its underlining bitvector, so it prevents you
-             * to do it.
-             */
             Stride(uint64_t bitvector[], size_t length):
                 tree(build_fenwick(bitvector, length)),
                 _bitvector(DArray<uint64_t>(length))
@@ -165,4 +162,4 @@ namespace hft {
     }
 }
 
-#endif // __RANKSELECT_LINE_HPP__
+#endif // __RANKSELECT_STRIDE_HPP__

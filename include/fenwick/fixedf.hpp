@@ -1,7 +1,6 @@
 #ifndef __FENWICK_NAIVE_HPP__
 #define __FENWICK_NAIVE_HPP__
 
-#include "../common.hpp"
 #include "fenwick_tree.hpp"
 
 namespace hft {

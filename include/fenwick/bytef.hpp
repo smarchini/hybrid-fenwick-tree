@@ -1,7 +1,6 @@
 #ifndef __FENWICK_BYTE_HPP__
 #define __FENWICK_BYTE_HPP__
 
-#include "../common.hpp"
 #include "fenwick_tree.hpp"
 
 namespace hft {
@@ -128,7 +127,7 @@ namespace hft {
 
             static inline size_t get_bytepos(size_t idx)
             {
-                // TODO: aggiungere if constexpr
+                // TODO: if constexpr
                 return idx
                     + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
                     + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;

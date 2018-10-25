@@ -1,5 +1,5 @@
-#ifndef __TEST_RANKSELECT_LINE_HPP__
-#define __TEST_RANKSELECT_LINE_HPP__
+#ifndef __TEST_RANKSELECT_STRIDE_HPP__
+#define __TEST_RANKSELECT_STRIDE_HPP__
 
 #include "../utils.hpp"
 
@@ -198,4 +198,4 @@ TEST(line_rank_select, all_zeroes_1024)
 
 }
 
-#endif // __TEST_RANKSELECT_LINE_HPP__
+#endif // __TEST_RANKSELECT_STRIDE_HPP__

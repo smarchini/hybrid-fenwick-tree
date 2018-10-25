@@ -3,10 +3,12 @@
 
 #include <cstdint>
 #include <x86intrin.h>
+#include <algorithm>
 #include "darray.hpp"
 
 namespace hft {
 
+    using std::min;
     using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
     /**

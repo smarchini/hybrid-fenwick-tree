@@ -1,15 +1,14 @@
 # Hybrid Compact Fenwick Tree and its applications for dynamic rank and selection
 
-Different implementations of the [Fenwick
-tree](https://en.wikipedia.org/wiki/Fenwick_tree) data structure to aim for a
+Different implementations of the [Fenwick tree] data structure to aim for a
 better performace through cache efficiency and compression. Those
 implementations are then applied to build an efficient data structure for
-dynamic [rank/select
-dictionaries](https://en.wikipedia.org/wiki/Succinct_data_structure#Succinct_dictionaries).
+dynamic [rank/select dictionaries].
 
 # The Fenwick tree data structure
 
-You can find a brief description of each method in `include/fenwick/fenwick_tree.hpp` (link).
+You can find a brief description of each method in
+`include/fenwick/fenwick_tree.hpp` ([fenwick_tree.hpp]).
 
 
 There are two different node layouts:
@@ -60,7 +59,7 @@ one defined above, so you will need to specify the template parameter **B**
 # The dynamic rank & select data structure
 
 You can find a brief description of each method in
-`include/ranking/ranking.hpp`.
+`include/rankselect/rank_select.hpp` ([rank_select.hpp]).
 
 There are two different implementations:
 - **Word**: the bit vector is divided in words (64-bits);
@@ -72,7 +71,7 @@ have some low-level assembly instructions to help you); while **Stride** takes a
 template parameter *k* and performs linear searches on *k* words with a much
 smaller underlining Fenwick tree. You probably need **Stride**.
 
-Both these implementations relies on the Fenwick tree of your choice and they
+Both these implementations relies on a Fenwick tree (of your choice) and they
 are available under the `hft::ranking` namespace.
 
 # Usage and examples
@@ -81,19 +80,16 @@ All you need is the `include` directory. This library is tested with a x86_64
 Linux computer and GCC 8.2. The concepts behind this library are general, but in
 fact this library uses some compiler-specific directives (i.e. the
 `__attribute__((__may_alias__))`) and built-in functions (i.e.
-`__builtin_popcountll`). Although it might works, it's functionality is NOT
-tested with different compilers and operating systems. The following examples
-che be built with `g++ -I/path/to/include example.cpp`.
+`__builtin_popcountll`). For this reason, if you intend to use it in a different
+environment you better check everythings works as expected.
+
+The following examples che be built with `g++ -I/path/to/include example.cpp`.
 
 ## Fenwick tree
 Compile it with `g++ -I/path/to/include example.cpp`.
 ``` cpp
 #include <iostream>
-#include <fenwick/fixedf.hpp>
-#include <fenwick/bitl.hpp>
-#include <fenwick/bytef.hpp>
-#include <fenwick/bytel.hpp>
-#include <fenwick/hybrid.hpp>
+#include <fenwick.hpp>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
@@ -132,14 +128,8 @@ int main()
 ## Rank and selection
 ``` cpp
 #include <iostream>
-
-#include <fenwick/fixedf.hpp>
-#include <fenwick/bytef.hpp>
-#include <fenwick/bytel.hpp>
-#include <fenwick/hybrid.hpp>
-
-#include <rankselect/word.hpp>
-#include <rankselect/stride.hpp>
+#include <fenwick.hpp>
+#include <rankselect.hpp>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
@@ -182,11 +172,13 @@ int main()
 }
 ```
 
+### Additional notes
+As you see, the bit vector is an array of `uint64_t`, so we can use some
+built-in functions with no issues. If you need bigger vectors you might want
+them in the heap. You can use [placement new].
+
 # TODO
-semplificare la roba per gli include,
-implementazione diretta delle formule figlio pirlate al contrario (si può fare? maybe not),
-vedere i TODO lasciati nell'ultimo refactoring
-ricontrollare tutto
+implementazione diretta delle formule figlio pirlate al contrario (si può fare in top-down? maybe not)
 
 
 
@@ -379,7 +371,8 @@ TODO
   (already included in the project and only used for testing and benchmark
   purpose).
 
-[rank]: https://goo.gl/WN481H "\text{rank}\_\mathbf{b}(p) = | \{ i < p \ | \ \mathbf{b}\_i = 1 \} |"
-[select]: https://goo.gl/AaY1S5 "\text{select}\_\mathbf{b}(k) = \max{ \{ p \ | \ \text{rank}\_\mathbf{b}(p) \le k \} }"
+[rank/select dictionaries]: https://en.wikipedia.org/wiki/Succinct_data_structure#Succinct_dictionaries "rank/select dictionaries"
+[Fenwick tree]: https://en.wikipedia.org/wiki/Fenwick_tree "Fenwick tree"
 [rank_select.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/rankselect/rank_select.hpp "rank\_select.hpp"
 [fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp"
+[placement new] https://en.cppreference.com/w/cpp/language/new#Placement_new "placement new"

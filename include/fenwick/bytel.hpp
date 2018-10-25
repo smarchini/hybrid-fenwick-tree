@@ -1,9 +1,7 @@
 #ifndef __FENWICK_LBYTE_HPP__
 #define __FENWICK_LBYTE_HPP__
 
-#include "../common.hpp"
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace hft {
     namespace fenwick {
@@ -116,8 +114,7 @@ namespace hft {
                     }
                 }
 
-                // TODO: provare a togliere
-                return node <= size() ? node : size();
+                return min(node, size());
             }
 
             using FenwickTree::compfind;
@@ -143,8 +140,7 @@ namespace hft {
                     }
                 }
 
-                // TODO: provare a togliere
-                return node <= size() ? node : size();
+                return min(node, size());
             }
 
             virtual size_t size() const
