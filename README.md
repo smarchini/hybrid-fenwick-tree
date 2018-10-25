@@ -157,11 +157,11 @@ int main()
     ranking::Word<fenwick::ByteF> bv1(bitvector, SIZE); // ByteF and stride of 1 word
     ranking::Stride<MyHybrid, 8> bv2(bitvector, SIZE);  // MyHybrid and stride of 8 words
 
-    // Each tree does a different thing
+    // We change the internal bit vector of those structures
     bv1.toggle(600); bv1.toggle(200); bv1.toggle(100);
     bv2.update(5, 0b1111111111111111111111111111111111111111111111111111111111111111);
 
-    // Printing the prefix sum in 8
+    // Printing rank of 100 and selection of 300
     std::cout << "bv1.rank(100) = " << bv1.rank(100) << "\n"; // 48
     std::cout << "bv2.rank(100) = " << bv2.rank(100) << "\n"; // 48
     std::cout << "bv1.select(100) = " << bv1.select(300) << "\n"; // 573
