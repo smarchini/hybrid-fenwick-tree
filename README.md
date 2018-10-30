@@ -184,10 +184,10 @@ An implementation with extendibility properties is indeed possible;
 performance analysis permit micro-optimizations.
 
 # TODO
-- implementazione diretta delle formule parent pirlate al contrario (si può fare in top-down con child? mhh...)
-- mini file per confrontare le diverse formule parent/child per prefix: diretto, classico + conversione e inverso (usato attualmente)
+- usare relazione parent classica nei level order
+- provare mini-benchmark formule prefix con vecchie versioni di gcc (sospetto che il parent al contrario fosse un *problema* di gcc 6.3.x)
 - licenza
-- rieseguire i benchmarks (vedere largepages)
+- rieseguire i benchmarks (vedere largepages) + Prezza
 
 [rank/select dictionaries]: https://en.wikipedia.org/wiki/Succinct_data_structure#Succinct_dictionaries "rank/select dictionaries"
 [Fenwick tree]: https://en.wikipedia.org/wiki/Fenwick_tree "Fenwick tree"
