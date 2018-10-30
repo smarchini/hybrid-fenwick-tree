@@ -4,7 +4,7 @@
 #include <chrono>
 #include <random>
 #include <iomanip>
-#include <fenwick.hpp>
+//#include <fenwick.hpp>
 
 
 inline int lambda(uint64_t word) { return 63 - __builtin_clzll(word); }
