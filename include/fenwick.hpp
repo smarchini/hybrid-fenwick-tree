@@ -1,5 +1,8 @@
 #include "fenwick/fenwick_tree.hpp"
 
+#include "fenwick/fixedf.hpp"
+#include "fenwick/fixedl.hpp"
+
 #include "fenwick/typef.hpp"
 #include "fenwick/typel.hpp"
 
