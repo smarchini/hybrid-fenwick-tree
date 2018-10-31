@@ -32,8 +32,8 @@ fenbench: benchmark/fenwick
 	@mkdir -p $(FENBENCH_PATH)
 	for (( m = 2; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
-			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000"; \
-			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000; \
+			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 10000000"; \
+			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 10000000; \ #1000000
 		done; \
 	done
 
@@ -41,8 +41,8 @@ ranselbench: benchmark/rankselect
 	@mkdir -p $(RANSELBENCH_PATH)
 	for (( m = 1; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
-			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000"; \
-			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000; \
+			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 100000000"; \
+			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000; \
 		done; \
 	done
 

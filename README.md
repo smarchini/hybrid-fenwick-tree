@@ -24,10 +24,10 @@ There also is an experimental **Type** compression strategy, you probably don't
 wanna use it.
 
 The Fenwick tree is born as a data structure to maintain the cumulative
-frequency of a dynamic vector. Those implementations requires you to specify a
-bound **B**, that is the maximum value your vector might hold. It might bothers
-you now, but later on you will see that this value will be transparently used by
-the dynamic rank and select data structure.
+frequency of a dynamic vector. Those implementations requires you to specify an
+additional bound **B**, that is the maximum value your vector can hold. It may
+annoys you now, but later on you will see that this value will be transparently
+used by the dynamic rank and select data structure.
 
 The naming scheme used to represent a fenwick tree is given by its compression
 followed by its node layout; so `FixedF` is the name of the non-compressed
@@ -46,14 +46,17 @@ building an hybird Fenwick tree, always remember:
 - if you wanna use two different types of compression, choose an *higher* level
   of compression for the *Bottom*.
 
+You can still do any combination you like; anyways, those are intended to be
+guidelines for sane choices.
+
 You also need to specify a parameter **c** (the *cut point*) to identify how
 many levels you want for the *Bottom* tree; for big trees a value between 14 and
 18 should be good.
 
-Here's how you can define an hybrid tree: `template <size_t B> using
-MyHybirdTree = Hybrid<ByteL, ByteF, B, 16>;`. This tree behave like any other
-one defined above, so you will need to specify the template parameter **B**
-(it's *bound*) when you are gonna use it.
+You can define an hybrid tree as: `template <size_t B> using MyHybirdTree =
+Hybrid<ByteL, ByteF, B, 16>;`. This tree behave like any other one defined
+above, so you will need to specify the template parameter **B** (the *bound*)
+when you are gonna use it.
 
 
 # The dynamic rank & select data structure
@@ -76,8 +79,8 @@ are available under the `hft::ranking` namespace.
 
 # Usage and examples
 
-All you need is the `include` directory. This library is tested with a x86_64
-Linux computer and GCC 8.2. The concepts behind this library are general, but in
+All you need is the `include` directory. This library is tested on a x86_64
+Linux computer with GCC 8.2. The concepts behind this library are general, but in
 fact this library uses some compiler-specific directives (i.e. the
 `__attribute__((__may_alias__))`) and built-in functions (i.e.
 `__builtin_popcountll`). For this reason, if you intend to use it in a different
@@ -108,7 +111,7 @@ int main()
     // Definition three different fenwick trees on the same sequence
     fenwick::FixedF<BOUND> fen1(sequence, SIZE);  // no compression, classical layout
     fenwick::BitL<BOUND> fen2(sequence, SIZE);    // high compression, level-ordered layout
-    MyHybird<BOUND> fen3(sequence, SIZE);     // the hybrid Fenwick tree defined above
+    MyHybird<BOUND> fen3(sequence, SIZE);         // the hybrid Fenwick tree defined above
 
     // Each tree does a different thing
     fen1.add(0, 50);
@@ -177,9 +180,9 @@ built-in functions with no issues. If you need bigger vectors you might want
 them in the heap. You can use [placement new] or `hft::DArray<T>`.
 
 `hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
-capabilities and little else. At the moment the data structures in this library
-are dynamic as in *dynamic arrays*: they deal with mutable data of fixed size.
-An implementation with extendibility properties is indeed possible and
+capabilities and a little else. At the moment the data structures in this
+library are dynamic as in *dynamic arrays*: they deal with mutable data of fixed
+size. An implementation with extendibility properties is indeed possible and
 `hft::Darray<T>` was intended to be a temporary solution to simplify performance
 analysis and micro-optimizations.
 
