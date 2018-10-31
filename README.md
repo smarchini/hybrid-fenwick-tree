@@ -20,7 +20,7 @@ And there are some different types of compression:
 - **Byte**: medium compression;
 - **Bit**: highest compression, aimed for huge trees.
 
-There also is an experimental ***Type** compression strategy, you probably don't
+There also is an experimental **Type** compression strategy, you probably don't
 wanna use it.
 
 The Fenwick tree is born as a data structure to maintain the cumulative
@@ -179,13 +179,12 @@ them in the heap. You can use [placement new] or `hft::DArray<T>`.
 `hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
 capabilities and little else. At the moment the data structures in this library
 are dynamic as in *dynamic arrays*: they deal with mutable data of fixed size.
-An implementation with extendibility properties is indeed possible;
-`hft::Darray<T>` was intended to be a temporary solution to simplify the
-performance analysis permit micro-optimizations.
+An implementation with extendibility properties is indeed possible and
+`hft::Darray<T>` was intended to be a temporary solution to simplify performance
+analysis and micro-optimizations.
 
 # TODO
-- usare relazione parent classica nei level order
-- provare mini-benchmark formule prefix con vecchie versioni di gcc (sospetto che il parent al contrario fosse un *problema* di gcc 6.3.x)
+- hybrid ha ancora senso? rieseguire i benchmarks, provare anche sul pc vecchio
 - licenza
 - rieseguire i benchmarks (vedere largepages) + Prezza
 
