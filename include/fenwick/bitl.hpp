@@ -65,21 +65,18 @@ namespace hft {
 
             virtual uint64_t prefix(size_t idx) const
             {
-                uint64_t sum = 0ULL;
-                size_t index = 0ULL;
+                uint64_t sum = 0;
 
-                while (idx != index) {
-                    index += mask_lambda(idx ^ index);
-
-                    const int height = rho(index);
-                    const size_t level_idx = index >> (1 + height);
-
+                while (idx != 0) {
+                    const int height = rho(idx);
+                    const size_t level_idx = idx >> (1 + height);
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
                     const size_t shift = bit_pos & 0b111;
                     const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
                     sum += (*compact_element & mask) >> shift;
+
+                    idx = clear_rho(idx);
                 }
 
                 return sum;

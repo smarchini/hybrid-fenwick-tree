@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 
     uint64_t *order = new uint64_t[size];
     for (size_t i = 0; i < size; i++)
-        order[i] = i;
+        order[i] = i+1;
     random_shuffle(order, order+size);
 
     uint64_t *increments = new uint64_t[size];
@@ -47,13 +47,14 @@ int main(int argc, char **argv)
     inc_to_seq(increments, sequence, size);
     random_shuffle(sequence, sequence+size);
 
-    bench<FixedF<64>>("Naive", size, order, increments, add_updates, sequence);
-    bench<TypeL<64>>("LType", size, order, increments, add_updates, sequence);
-    bench<TypeF<64>>("Type", size, order, increments, add_updates, sequence);
-    bench<ByteL<64>>("LByte", size, order, increments, add_updates, sequence);
-    bench<ByteF<64>>("Byte", size, order, increments, add_updates, sequence);
-    bench<BitL<64>>("LBit", size, order, increments, add_updates, sequence);
-    bench<BitF<64>>("Bit", size, order, increments, add_updates, sequence);
+    bench<FixedF<64>>("FixedF", size, order, increments, add_updates, sequence);
+    bench<FixedL<64>>("FixedL", size, order, increments, add_updates, sequence);
+    bench<TypeF<64>>("TypeF", size, order, increments, add_updates, sequence);
+    bench<TypeL<64>>("TypeL", size, order, increments, add_updates, sequence);
+    bench<ByteF<64>>("ByteF", size, order, increments, add_updates, sequence);
+    bench<ByteL<64>>("ByteL", size, order, increments, add_updates, sequence);
+    bench<BitF<64>>("BitF", size, order, increments, add_updates, sequence);
+    bench<BitL<64>>("BitL", size, order, increments, add_updates, sequence);
 
     delete[] increments;
     delete[] add_updates;
@@ -113,7 +114,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     const double c = 1. / size;
     cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
     cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
-    cout << "prefix:   " << fixed << setw(12) << prefix * c << " ns/item\n";
+    cout << "prefix:" << fixed << setw(12) << prefix * c << " ns/item\n";
     cout << "set:   " << fixed << setw(12) << add * c << " ns/item\n";
     cout << "find:  " << fixed << setw(12) << find * c << " ns/item\n";
     cout << "findc: " << fixed << setw(12) << findc * c << " ns/item\n";

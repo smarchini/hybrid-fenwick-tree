@@ -6,6 +6,7 @@
 #include <random>
 
 #include <fenwick/fixedf.hpp>
+#include <fenwick/fixedl.hpp>
 #include <fenwick/typel.hpp>
 #include <fenwick/typef.hpp>
 #include <fenwick/bytel.hpp>

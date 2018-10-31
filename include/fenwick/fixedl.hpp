@@ -51,14 +51,13 @@ namespace hft {
             virtual uint64_t prefix(size_t idx) const
             {
                 uint64_t sum = 0;
-                size_t index = 0;
 
-                while (idx != index) {
-                    index += mask_lambda(idx ^ index);
-
-                    const int height = rho(index);
-                    const size_t level_idx = index >> (1 + height);
+                while (idx != 0) {
+                    const int height = rho(idx);
+                    const size_t level_idx = idx >> (1 + height);
                     sum += tree[level[height] + level_idx];
+
+                    idx = clear_rho(idx);
                 }
 
                 return sum;
