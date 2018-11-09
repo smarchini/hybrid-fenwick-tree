@@ -177,7 +177,8 @@ int main()
 ## Additional notes
 As you see, the bit vector is an array of `uint64_t`, so we can use some
 built-in functions with no issues. If you need bigger vectors you might want
-them in the heap. You can use [placement new] or `hft::DArray<T>`.
+them in the heap. You can do it your own way (i.e. with [placement new]) or use
+`hft::DArray<T>`.
 
 `hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
 capabilities and a little else. At the moment the data structures in this
