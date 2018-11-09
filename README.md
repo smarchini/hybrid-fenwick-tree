@@ -46,8 +46,8 @@ building an hybird Fenwick tree, always remember:
 - if you wanna use two different types of compression, choose an *higher* level
   of compression for the *Bottom*.
 
-You can still do any combination you like; anyways, those are intended to be
-guidelines for sane choices.
+You can still combine them as you like; anyways, those are supposed to be sane
+guidelines you'd be better follow in order to make good choices.
 
 You also need to specify a parameter **c** (the *cut point*) to identify how
 many levels you want for the *Bottom* tree; for big trees a value between 14 and
@@ -68,11 +68,11 @@ There are two different implementations:
 - **Word**: the bit vector is divided in words (64-bits);
 - **Stride**: the bit vector is divided in *k* words.
 
-**Word** requires a bigger Fenwick tree (you might wanna use a compressed one!)
-and it's good if linear rank and selection searches are slow (i.e. you don't
-have some low-level assembly instructions to help you); while **Stride** takes a
-template parameter *k* and performs linear searches on *k* words with a much
-smaller underlining Fenwick tree. You probably need **Stride**.
+**Word** requires a bigger Fenwick tree (using a compressed one might be a good
+choice) and it's good if linear rank and selection searches are slow (i.e. you
+don't have some low-level assembly instructions to help you); while **Stride**
+takes a template parameter *k* and performs linear searches on *k* words with a
+much smaller underlining Fenwick tree. You probably need **Stride**.
 
 Both these implementations relies on a Fenwick tree (of your choice) and they
 are available under the `hft::ranking` namespace.
@@ -176,9 +176,9 @@ int main()
 
 ## Additional notes
 As you see, the bit vector is an array of `uint64_t`, so we can use some
-built-in functions with no issues. If you need bigger vectors you might want
-them in the heap. You can do it your own way (i.e. with [placement new]) or use
-`hft::DArray<T>`.
+built-in functions with no issues. If you need bigger vectors you may want them
+in the heap memory. You can do it your own way (i.e. with [placement new]) or
+use `hft::DArray<T>`.
 
 `hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
 capabilities and a little else. At the moment the data structures in this
@@ -188,7 +188,7 @@ size. An implementation with extendibility properties is indeed possible and
 analysis and micro-optimizations.
 
 # TODO
-- hybrid ha ancora senso? rieseguire i benchmarks, provare anche sul pc vecchio
+- hybrid è ancora meglio? rieseguire i benchmarks, provare anche sul pc vecchio
 - licenza
 - rieseguire i benchmarks (vedere largepages) + Prezza
 

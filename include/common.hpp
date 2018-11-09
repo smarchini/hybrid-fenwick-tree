@@ -12,16 +12,17 @@ namespace hft {
     using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
     /**
-     * auint64_t - Aliased uint64_t
+     * Aliased unsigned integers
      *
      * Strict aliasing rule: it's illegal to access the same memory location
      * with data of different types. If you have two pointers T* and a U*, the
      * compiler can assume they are not pointingthe same data. Accessing such a
      * data invokes undefined behavior.
      *
-     * GCC __may_alias__ attribute is basically the opposite of the C keywoard
-     * 'restrict', it prevents the compiler to makes such assumptions. With this
-     * type is now valid to access aliased data.
+     * GCC __may_alias__ attribute is basically the opposite of the C 'restrict'
+     * keywoard, it prevents the compiler to makes such assumptions. With this
+     * types is now valid to access aliased data.
+     *
      */
     using auint64_t = std::uint64_t __attribute__((__may_alias__));
     using auint32_t = std::uint32_t __attribute__((__may_alias__));
@@ -29,7 +30,8 @@ namespace hft {
     using  auint8_t =  std::uint8_t __attribute__((__may_alias__));
 
     /**
-     * Bitmask array used in ByteL and ByteF
+     * Bitmask array used in fenwick::ByteL and fenwick::ByteF
+     *
      */
     static constexpr uint64_t BYTE_MASK[] = { 0x0ULL,
                                               0xFFULL,
@@ -42,7 +44,8 @@ namespace hft {
                                               0xFFFFFFFFFFFFFFFFULL };
 
     /**
-     * log2() - Compile time log2 roundup
+     * log2() - Static (i.e. computed at compile time) log2 roundup
+     *
      */
     constexpr size_t log2(size_t n)
     {
@@ -50,6 +53,10 @@ namespace hft {
     }
 
 
+    /**
+     * Required for select64
+     *
+     */
     constexpr uint8_t kSelectInByte[2048] = {
         8, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0,
         1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0,
@@ -133,25 +140,15 @@ namespace hft {
     };
 
     /**
-     * clear_rho - Set to 0 the least significant one in a word.
+     * rho - Find the index of the least significant 1-bit in a word.
      * @word: Binary word.
      *
-     * Return: @word with its least significant one setted to zero.
-     */
-    inline uint64_t clear_rho(uint64_t word)
-    {
-        return word & (word - 1ULL);
-    }
-
-    /**
-     * rho - Find the index of the first bit set in a word.
-     * @word: Binary word.
+     * The Knuth's ruler function returns the number of trailing 0-bits in @word
+     * starting from the least significant bit position; so, it returns 0 when
+     * @word is 2^0 and it returns 63 when @word is 2^63.
      *
-     * This function returns the number of trailing 0-bits in @word, starting at
-     * the least significant bit position. If @word is 2^0 it returns 0 and if
-     * if @word is 2^63 it returns 63. If @word is 0 the result is undefined.
+     * Its behavior in zero is undefined.
      *
-     * Return: The index of the first set bit in @word.
      */
     inline int rho(uint64_t word)
     {
@@ -159,14 +156,13 @@ namespace hft {
     }
 
     /**
-     * lambda - Find the index of the last bit set in a word.
+     * lambda - Find the index of the most significant 1-bit in a word.
      * @word: Binary word.
      *
-     * This fucntion returns the number of bits before the most significat 1-bit
-     * in @word. If @word is 2^0 it returns 0 and if if @word is 2^63 it returns
-     * 63. If @word is 0 the result is undefined.
+     * The Knuth's lambda function is the dual of the rho function.
      *
-     * Return: The index of the last set bit in @word.
+     * Its behavior in zero is undefined.
+     *
      */
     inline int lambda(uint64_t word)
     {
@@ -174,11 +170,21 @@ namespace hft {
     }
 
     /**
-     * mask_rho - Given a word, mask its least significant bit out.
+     * clear_rho - Set to 0 the least significant 1-bit in a word.
      * @word: Binary word.
      *
-     * Return: @word with anything but its least significant one setted to zero.
-     * Same as 2^rho(word) for any @word != 0.
+     */
+    inline uint64_t clear_rho(uint64_t word)
+    {
+        return word & (word - 1ULL);
+    }
+
+    /**
+     * mask_rho - Bitmask where only the least significant 1-bit is set.
+     * @word: Binary word.
+     *
+     * Compute 2^rho(word) for any @word that is not zero.
+     *
      */
     inline uint64_t mask_rho(uint64_t word)
     {
@@ -186,13 +192,11 @@ namespace hft {
     }
 
     /**
-     * mask_lambda - Given a word, mask its most significant bit out.
+     * mask_lambda - Bitmask where only the most significant 1-bit is set.
      * @word: Binary word.
      *
-     * Undefined behavior if @word is 0.
+     * Undefined behavior when @word is zero.
      *
-     * Return: @word with anything but its most significant one setted to zero,
-     * undefined behavior if @word is 0.
      */
     inline uint64_t mask_lambda(uint64_t word)
     {
@@ -204,18 +208,21 @@ namespace hft {
      * @count: Quantity of set bit.
      * @pos: Starting position.
      *
-     * This fucntion returns a bitmask with @count set bits. The least significant
-     * set start from @pos. If @pos == 0 you have @count one bits starting from the
-     * least significant bit.
+     * This fucntion returns a bitmask with @count 1-bits: every bit from @pos
+     * to @pos+@count is set to one. If @pos is zero the bitmask has its @count
+     * least significant bits setted to one.
      *
-     * Return: A bitmask with @count 1-bit starting from @pos
      */
     inline uint64_t compact_bitmask(size_t count, size_t pos)
     {
         return (-(count != 0ULL)) & (UINT64_MAX >> (64 - count)) << pos;
     }
 
-
+    /**
+     * popcount - Count the number of 1-bits in a word.
+     * @word: Binary word.
+     *
+     */
     inline int popcount(uint64_t word)
     {
         return __builtin_popcountll(word);
@@ -223,12 +230,12 @@ namespace hft {
 
 
     /**
-     * select64 - Returns the position of the k-th 1 in the 64-bit word x.
+     * select64 - Returns the index of the k-th 1-bit in the 64-bit word x.
      * @x: 64-bit word.
-     * @k: 0-based rank, so k=0 returns the position of the first 1.
+     * @k: 0-based rank (@k = 0 returns the position of the first 1-bit).
      *
      * Uses the broadword selection algorithm by Vigna [1], improved by Gog and
-     * Petri [2] and Vigna [3]. Implementation from Facebook's folly [4].
+     * Petri [2] and Vigna [3]. Implementation taken from Folly [4].
      *
      * [1] Sebastiano Vigna. Broadword Implementation of Rank/Select Queries.
      *     WEA, 2008
@@ -238,9 +245,8 @@ namespace hft {
      *
      * [3] Sebastiano Vigna. MG4J 5.2.1. http://mg4j.di.unimi.it/
      *
-     * [4] Folly: https://github.com/facebook/folly
+     * [4] Facebook Folly library: https://github.com/facebook/folly
      *
-     * Returns: the position of the k-th 1 in the 64-bit word x.
      */
     inline uint64_t select64(uint64_t x, uint64_t k)
     {
