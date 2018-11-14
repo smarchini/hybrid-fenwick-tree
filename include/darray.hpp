@@ -48,13 +48,13 @@ namespace hft {
         }
 
         // move constructor
-        DArray(DArray&& oth):
-            _size(std::move(oth._size)),
-            space(std::move(oth.space)),
-            buffer(std::move(oth.buffer)) { }
+        DArray(DArray<T>&& oth):
+            _size(std::exchange(oth._size, 0)),
+            space(std::exchange(oth.space, 0)),
+            buffer(std::exchange(oth.buffer, nullptr)) { }
 
         // move assignment (copy&swap idiom)
-        DArray<T>& operator=(DArray<T> oth)
+        DArray<T>& operator=(DArray<T> &&oth)
         {
             swap(*this, oth);
             return *this;
@@ -63,8 +63,10 @@ namespace hft {
         // destructor
         ~DArray<T>()
         {
-            int result = munmap(buffer, space);
-            assert(result == 0);
+            if (buffer) {
+                int result = munmap(buffer, space);
+                assert(result == 0);
+            }
         }
 
         // swap
@@ -78,11 +80,7 @@ namespace hft {
 
         // data access capabilities
         inline T*  get() const { return buffer; }
-        inline T& operator[](size_t i) const {
-            std::cout << "(space = " << space << ") buffer[" << i << "] = " << std::flush;
-            std::cout << (int)buffer[i] << std::endl;
-            return buffer[i];
-        };
+        inline T& operator[](size_t i) const { return buffer[i];};
         inline size_t size() const { return _size; }
 
         size_t bit_count() const
