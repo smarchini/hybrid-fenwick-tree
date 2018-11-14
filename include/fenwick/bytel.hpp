@@ -35,7 +35,7 @@ namespace hft {
                 for (size_t i = 1; i < levels; i++)
                     level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1];
 
-                tree = DArray<uint8_t>(level[levels] + 3); // +3 to prevent segfault on the last element
+                tree = DArray<uint8_t>(level[levels-1] + 3); // +3 to prevent segfault on the last element
 
                 for (size_t l = 0; l < levels - 1; l++) {
                     for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {

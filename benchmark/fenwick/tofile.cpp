@@ -97,7 +97,7 @@ private:
     void datainit(mt19937 &engine) {
       mte = engine;
       seqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL);
-      idxdist = uniform_int_distribution<size_t>(0, size - 1);
+      idxdist = uniform_int_distribution<size_t>(1, size);
       cumseqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL*size);
 
       for (size_t i = 0; i < size; i++)

@@ -7,7 +7,6 @@
 #include <assert.h>
 
 #include "common.hpp"
-#include <iostream>
 
 // TODO: echo 0 | sudo tee /proc/sys/vm/nr_hugepages
 // TODO: watch -n 0.1 cat /sys/devices/system/node/node*/meminfo
@@ -80,12 +79,12 @@ namespace hft {
 
         // data access capabilities
         inline T*  get() const { return buffer; }
-        inline T& operator[](size_t i) const { return buffer[i];};
+        inline T& operator[](size_t i) const { return buffer[i]; };
         inline size_t size() const { return _size; }
 
         size_t bit_count() const
         {
-            return sizeof(DArray<T>)*8 + sizeof(T)*_size*8;
+            return sizeof(DArray<T>)*8 + sizeof(T) * space * 8;
         }
     };
 

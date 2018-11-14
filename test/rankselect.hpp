@@ -402,10 +402,10 @@ void rankselect_random_test(std::size_t size)
         EXPECT_EQ(res, lnaive.select(i))  << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, bit.select(i))     << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, lbit.select(i))    << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, type.select(i))    << "at index: " << i << " template parameter " << S;
-        EXPECT_EQ(res, ltype.select(i))   << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, byte.select(i))    << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, lbyte.select(i))   << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, type.select(i))    << "at index: " << i << " template parameter " << S;
+        EXPECT_EQ(res, ltype.select(i))   << "at index: " << i << " template parameter " << S;
 
         EXPECT_EQ(res, naiveS.select(i))  << "at index: " << i << " template parameter " << S;
         EXPECT_EQ(res, lnaiveS.select(i)) << "at index: " << i << " template parameter " << S;
