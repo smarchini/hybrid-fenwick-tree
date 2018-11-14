@@ -3,61 +3,86 @@
 
 #include <memory>
 #include <algorithm>
+#include <sys/mman.h>
+#include <assert.h>
 
+#include "common.hpp"
+#include <iostream>
+
+// TODO: echo 0 | sudo tee /proc/sys/vm/nr_hugepages
+// TODO: watch -n 0.1 cat /sys/devices/system/node/node*/meminfo
 namespace hft {
 
     /**
-     * class DArray - Deep-copyable & dinamically-allocated fixed-sized array
+     * class DArray - Dinamically-allocated fixed-sized array
      *
-     * This class provide deep copy capabilities to std::unique_ptr<T[]>
+     * This class is a wrapper for mmap to take advantage of hugepages [1].
+     *
+     * [1] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+     *
      */
     template <typename T>
     class DArray
     {
+    public:
+        static constexpr size_t PAGESIZE = 2048*1024; // 2MB hugepages
+        static constexpr int PROTECTION = PROT_READ | PROT_WRITE;
+        static constexpr int FLAGS = MAP_HUGETLB | MAP_PRIVATE | MAP_ANONYMOUS;
+
     private:
-        size_t _size = 0;
-        std::unique_ptr<T[]> buffer;
+        size_t _size;
+        size_t space; // it should to be a multiple of PAGESIZE
+        T* buffer = nullptr;
 
     public:
         // constructors
-        DArray() = default;
-        explicit DArray(size_t size):
+        DArray<T>() : DArray<T>(0) { };
+        explicit DArray<T>(size_t size):
             _size(size),
-            buffer(std::make_unique<T[]>(size))
-        {}
-
-        // move constructor
-        DArray(DArray&& oth) = default;
-
-        // deep-copy constructor
-        DArray(const DArray& oth):
-            _size(oth._size),
-            buffer(std::make_unique<T[]>(oth._size))
+            space(mround(PAGESIZE, (size > 0 ? size : 1) * sizeof(T)))
         {
-            copy_n(oth.buffer.prefix(), _size, buffer.prefix());
+            void *result = mmap(nullptr, space, PROTECTION, FLAGS, -1, 0);
+            assert(result != MAP_FAILED);
+            madvise(result, space, MADV_HUGEPAGE); // TODO: provare con MADV_RANDOM
+            buffer = static_cast<T*>(result);
         }
 
-        // move & deep-copy assignment (copy&swap idiom)
-        DArray& operator=(DArray oth)
+        // move constructor
+        DArray(DArray&& oth):
+            _size(std::move(oth._size)),
+            space(std::move(oth.space)),
+            buffer(std::move(oth.buffer)) { }
+
+        // move assignment (copy&swap idiom)
+        DArray<T>& operator=(DArray<T> oth)
         {
             swap(*this, oth);
             return *this;
         }
 
         // destructor
-        ~DArray() = default;
+        ~DArray<T>()
+        {
+            int result = munmap(buffer, space);
+            assert(result == 0);
+        }
 
         // swap
-        friend void swap(DArray& first, DArray& second) noexcept
+        friend void swap(DArray<T>& first, DArray<T>& second) noexcept
         {
             using std::swap;
-            swap(first._size  , second._size);
+            swap(first._size, second._size);
+            swap(first.space, second.space);
             swap(first.buffer, second.buffer);
         }
 
         // data access capabilities
-        inline T*  get() const { return buffer.get(); }
-        inline T& operator[](size_t i) const { return buffer[i]; };
+        inline T*  get() const { return buffer; }
+        inline T& operator[](size_t i) const {
+            std::cout << "(space = " << space << ") buffer[" << i << "] = " << std::flush;
+            std::cout << (int)buffer[i] << std::endl;
+            return buffer[i];
+        };
         inline size_t size() const { return _size; }
 
         size_t bit_count() const

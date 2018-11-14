@@ -21,23 +21,23 @@ namespace hft {
             static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
-            const size_t _size;
+            const size_t _size, levels;
             DArray<uint8_t> tree;
-            DArray<size_t> level;
+            unique_ptr<size_t[]> level;
 
         public:
             ByteL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(lambda(size+1)+2)
+                levels(lambda(size+1)+2),
+                level(make_unique<size_t[]>(levels))
             {
                 level[0] = 0;
-                for (size_t i = 1; i < level.size(); i++)
+                for (size_t i = 1; i < levels; i++)
                     level[i] = ((size + (1<<(i-1))) / (1<<i)) * get_size(i-1) + level[i-1];
 
-                const size_t levels = level.size() - 1;
                 tree = DArray<uint8_t>(level[levels] + 3); // +3 to prevent segfault on the last element
 
-                for (size_t l = 0; l < levels; l++) {
+                for (size_t l = 0; l < levels - 1; l++) {
                     for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
                         const size_t curr_byte_pos = level[l] + get_size(l) * (node >> (l+1));
                         auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_byte_pos]);
@@ -94,7 +94,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t elem_size = get_size(height);
                     const size_t byte_pos = level[height] + elem_size * idx;
 
@@ -120,7 +120,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t elem_size = get_size(height);
                     const size_t byte_pos = level[height] + elem_size * idx;
 
@@ -150,7 +150,7 @@ namespace hft {
             {
                 return sizeof(ByteL<LEAF_BITSIZE>)*8
                     + tree.bit_count() - sizeof(tree)
-                    + level.bit_count() - sizeof(level);
+                    + levels * sizeof(size_t) * 8;
             }
 
         private:

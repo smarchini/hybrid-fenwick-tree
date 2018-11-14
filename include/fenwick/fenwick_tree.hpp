@@ -2,6 +2,7 @@
 #define __FENWICK_TREE_HPP__
 
 #include "../common.hpp"
+#include "../darray.hpp"
 
 namespace hft {
     namespace fenwick {

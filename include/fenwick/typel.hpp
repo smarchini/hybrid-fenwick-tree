@@ -21,24 +21,25 @@ namespace hft {
             static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
-            const size_t _size;
+            const size_t _size, levels;
 
-            DArray<uint8_t >  tree8;
-            DArray<uint16_t> tree16;
-            DArray<uint64_t> tree64;
+            DArray<uint8_t >  tree8{0};
+            DArray<uint16_t> tree16{0};
+            DArray<uint64_t> tree64{0};
 
-            DArray<size_t> level;
+            unique_ptr<size_t[]> level;
 
         public:
             TypeL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(lambda(size+1) + 2)
+                levels(lambda(size+1)+2),
+                level(make_unique<size_t[]>(levels))
             {
                 size_t type_ends[3] = {0};
                 level[0] = 0;
 
                 size_t j = (LEAF_BITSIZE <= 8) ? 0 : (LEAF_BITSIZE <= 16) ? 1 : 2;
-                for (size_t i = 1; i < level.size(); i++) {
+                for (size_t i = 1; i < levels; i++) {
                     type_ends[j] = level[i] = (size + (1<<(i-1))) / (1<<i) + level[i-1];
 
                     if (i-1 == 8-LEAF_BITSIZE || i-1 == 16-LEAF_BITSIZE) {
@@ -47,7 +48,7 @@ namespace hft {
                     }
                 }
 
-                switch (level.size() + LEAF_BITSIZE - 1) {
+                switch (levels + LEAF_BITSIZE - 1) {
                 case 17 ... 64: tree64 = DArray<uint64_t>(type_ends[2]);
                 case  9 ... 16: tree16 = DArray<uint16_t>(type_ends[1]);
                 default:         tree8 = DArray< uint8_t>(type_ends[0]);
@@ -116,7 +117,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t tree_idx = level[height] + idx;
 
                     idx <<= 1;
@@ -149,7 +150,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t tree_idx = level[height] + idx;
 
                     idx <<= 1;
@@ -188,15 +189,14 @@ namespace hft {
                     +  tree8.bit_count() - sizeof(tree8)
                     + tree16.bit_count() - sizeof(tree16)
                     + tree64.bit_count() - sizeof(tree64)
-                    + level.bit_count() - sizeof(level);
+                    + levels * sizeof(size_t) * 8;
             }
 
         private:
             template <typename T, size_t start, size_t end>
             inline void fill_tree(T *tree, uint64_t sequence[])
             {
-                const size_t levels = level.size() - 1;
-                for (size_t l = start-LEAF_BITSIZE; l < levels && l <= end-LEAF_BITSIZE; l++) {
+                for (size_t l = start-LEAF_BITSIZE; l < levels - 1 && l <= end-LEAF_BITSIZE; l++) {
                     for (size_t node = 1<<l; node <= size(); node += 1 << (l+1)) {
                         size_t sequence_idx = node-1;
                         T value = sequence[sequence_idx];

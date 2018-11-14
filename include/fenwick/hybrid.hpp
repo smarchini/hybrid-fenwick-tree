@@ -104,4 +104,5 @@ namespace hft {
 
     }
 }
+
 #endif // __FENWICK_HYBRID_HPP__

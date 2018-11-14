@@ -21,23 +21,23 @@ namespace hft {
             static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
-            const size_t _size;
+            const size_t _size, levels;
             DArray<uint8_t> tree;
-            DArray<size_t> level;
+            unique_ptr<size_t[]> level;
 
         public:
             BitL(uint64_t sequence[], size_t size) :
                 _size(size),
-                level(size != 0 ? lambda(size+1)+2 : 1)
+                levels(lambda(size+1)+2),
+                level(make_unique<size_t[]>(levels))
             {
                 level[0] = 0;
-                for (size_t i = 1; i < level.size(); i++)
+                for (size_t i = 1; i < levels; i++)
                     level[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level[i-1];
 
-                const size_t levels = level.size() - 1;
                 tree = DArray<uint8_t>(level[levels] / 8 + 4); // +4 to prevent segfault on the last element
 
-                for (size_t l = 0; l < levels; l++) {
+                for (size_t l = 0; l < levels - 1; l++) {
                     for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
                         const size_t curr_bit_pos = level[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
                         const size_t curr_shift = curr_bit_pos & 0b111;
@@ -102,7 +102,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
                     const size_t shift = bit_pos & 0b111;
@@ -129,7 +129,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
                     const size_t shift = bit_pos & 0b111;
@@ -160,7 +160,7 @@ namespace hft {
             {
                 return sizeof(BitL<LEAF_BITSIZE>)*8
                     + tree.bit_count() - sizeof(tree)
-                    + level.bit_count() - sizeof(level);
+                    + levels * sizeof(size_t) * 8;
             }
         };
 

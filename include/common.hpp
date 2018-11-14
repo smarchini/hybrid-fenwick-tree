@@ -4,11 +4,12 @@
 #include <cstdint>
 #include <x86intrin.h>
 #include <algorithm>
-#include "darray.hpp"
+#include <memory>
 
 namespace hft {
 
     using std::min;
+    using std::unique_ptr; using std::make_unique;
     using std::size_t; using std::uint64_t; using std::uint32_t; using std::uint16_t; using std::uint8_t;
 
     /**
@@ -228,6 +229,16 @@ namespace hft {
         return __builtin_popcountll(word);
     }
 
+    /**
+     * mround - Returns a number rounded to the desired power of two multiple.
+     * @number: value to round up.
+     * @multiple: power of two to which you want to round @number
+     *
+     */
+    inline uint64_t mround(uint64_t number, uint64_t multiple)
+    {
+        return ((number-1) | (multiple-1)) + 1;
+    }
 
     /**
      * select64 - Returns the index of the k-th 1-bit in the 64-bit word x.
