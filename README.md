@@ -58,7 +58,6 @@ Hybrid<ByteL, ByteF, B, 16>;`. This tree behave like any other one defined
 above, so you will need to specify the template parameter **B** (the *bound*)
 when you are gonna use it.
 
-
 # The dynamic rank & select data structure
 
 You can find a brief description of each method in
@@ -131,6 +130,7 @@ int main()
 ```
 
 ## Rank and selection
+
 ``` cpp
 #include <iostream>
 #include <fenwick.hpp>
@@ -177,23 +177,24 @@ int main()
 }
 ```
 
+## Huge TLB pages
+
+A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
+Linux's 2MB huge TLB pages capabilities, otherwise it is a wrapper for
+`std::uniqueptr<T[]>`. To use uuge pages should first (manually) enable them in
+your operating system. For more information refer to [hugetlbpage] on the Linux
+kernel documentation.
+
 ## Additional notes
+
 As you see, the bit vector is an array of `uint64_t`, so we can use some
 built-in functions with no issues. If you need bigger vectors you may want them
 in the heap memory. You can do it your own way (i.e. with [placement new]) or
-you can use `hft::DArray<T>`.
+you can use `hft::DArray<T>` and permit them to use huge pages.
 
 At the moment the data structures in this library are dynamic as in *dynamic
 arrays*: they deal with mutable data of fixed size; even if an implementation
 with extendibility properties is indeed possible.
-
-
-## Huge TLB pages
-A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
-Linux's 2MB huge TLB pages capabilities. This feature should be first (manually)
-enabled in your operating system. For more information refer to [hugetlbpage] on
-the Linux kernel documentation.
-
 
 # TODO
 - License
