@@ -90,6 +90,9 @@ The following examples can be built with `g++ -I/path/to/include example.cpp`.
 
 ## Fenwick tree
 ``` cpp
+// uncomment the line below if you want to use HugeTLB
+// #define HFT_USE_HUGETLB
+
 #include <iostream>
 #include <fenwick.hpp>
 
@@ -178,22 +181,27 @@ int main()
 As you see, the bit vector is an array of `uint64_t`, so we can use some
 built-in functions with no issues. If you need bigger vectors you may want them
 in the heap memory. You can do it your own way (i.e. with [placement new]) or
-use `hft::DArray<T>`.
+you can use `hft::DArray<T>`.
 
-`hft::Darray<T>` is a wrapper for `std::unique_ptr<T[]>` with deep copy
-capabilities and a little else. At the moment the data structures in this
-library are dynamic as in *dynamic arrays*: they deal with mutable data of fixed
-size. An implementation with extendibility properties is indeed possible and
-`hft::Darray<T>` was intended to be a temporary solution to simplify performance
-analysis and micro-optimizations.
+At the moment the data structures in this library are dynamic as in *dynamic
+arrays*: they deal with mutable data of fixed size; even if an implementation
+with extendibility properties is indeed possible.
+
+
+## Huge TLB pages
+A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
+Linux's 2MB huge TLB pages capabilities. This feature should be first (manually)
+enabled in your operating system. For more information refer to [hugetlbpage] on
+the Linux kernel documentation.
+
 
 # TODO
-- hybrid è ancora meglio? rieseguire i benchmarks, provare anche sul pc vecchio
-- licenza
-- rieseguire i benchmarks (vedere largepages) + Prezza
+- License
+
 
 [rank/select dictionaries]: https://en.wikipedia.org/wiki/Succinct_data_structure#Succinct_dictionaries "rank/select dictionaries"
 [Fenwick tree]: https://en.wikipedia.org/wiki/Fenwick_tree "Fenwick tree"
 [rank_select.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/rankselect/rank_select.hpp "rank\_select.hpp"
 [fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp"
 [placement new]: https://en.cppreference.com/w/cpp/language/new#Placement_new "placement new"
+[hugetlbpage]: https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt

@@ -7,9 +7,8 @@
 namespace hft {
 
     /**
-     * class DArray - Deep-copyable & dinamically-allocated fixed-sized array
+     * class DArray - Dinamically-allocated fixed-sized array
      *
-     * This class provide deep copy capabilities to std::unique_ptr<T[]>
      */
     template <typename T>
     class DArray
