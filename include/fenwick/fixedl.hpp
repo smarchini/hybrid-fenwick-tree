@@ -21,20 +21,21 @@ namespace hft {
             static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
         protected:
+            const size_t levels;
             DArray<uint64_t> tree;
-            DArray<size_t> level;
+            unique_ptr<size_t[]> level;
 
         public:
             FixedL(uint64_t sequence[], size_t size):
-                level(lambda(size) + 2),
-                tree(size)
+                levels(lambda(size+1)+2),
+                tree(size),
+                level(make_unique<size_t[]>(levels))
             {
                 level[0] = 0;
-                for (size_t i = 1; i < level.size(); i++)
+                for (size_t i = 1; i < levels; i++)
                     level[i] = ((size + (1<<(i-1))) / (1<<i)) + level[i-1];
 
-                const size_t levels = level.size() - 1;
-                for (size_t l = 0; l < levels; l++) {
+                for (size_t l = 0; l < levels - 1; l++) {
                     for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
                         size_t sequence_idx = node-1;
                         uint64_t value = sequence[sequence_idx];
@@ -79,7 +80,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t pos = level[height] + idx;
 
                     idx <<= 1;
@@ -102,7 +103,7 @@ namespace hft {
             {
                 size_t node = 0, idx = 0;
 
-                for (size_t height = level.size() - 2; height != SIZE_MAX; height--) {
+                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t pos = level[height] + idx;
 
                     idx <<= 1;
@@ -128,7 +129,8 @@ namespace hft {
             virtual size_t bit_count() const
             {
                 return sizeof(FixedL<LEAF_BITSIZE>)*8
-                    + tree.bit_count() - sizeof(tree);
+                    + tree.bit_count() - sizeof(tree)
+                    + levels * sizeof(size_t) * 8;
             }
         };
 

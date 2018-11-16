@@ -1,4 +1,4 @@
-#ifndef HFT_USE_HUGETLB
+#ifdef HFT_USE_HUGETLB
 #include "darray/linuxhugetlb.h"
 #else
 #include "darray/uniqueptr.hpp"

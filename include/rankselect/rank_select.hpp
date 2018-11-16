@@ -2,6 +2,7 @@
 #define __RANK_SELECT_HPP__
 
 #include "../common.hpp"
+#include "../darray.hpp"
 
 namespace hft {
     namespace ranking {

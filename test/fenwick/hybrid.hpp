@@ -55,11 +55,18 @@ TEST(fenwick_mixed, naive)
     using namespace hft::fenwick;
 
     for (std::size_t i = 1; i < 10; i++)
-        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedL, FixedF, 64, 11>>(i);
     for (std::size_t i = 1000; i < 1010; i++)
-        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedL, FixedF, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
-        fenwick_random_test<Hybrid<FixedF, FixedF, 64, 11>>(i);
+        fenwick_random_test<Hybrid<FixedL, FixedF, 64, 11>>(i);
+
+    for (std::size_t i = 1; i < 10; i++)
+        fenwick_random_test<Hybrid<FixedF, FixedL, 64, 11>>(i);
+    for (std::size_t i = 1000; i < 1010; i++)
+        fenwick_random_test<Hybrid<FixedF, FixedL, 64, 11>>(i);
+    for (std::size_t i = 100000; i < 100010; i++)
+        fenwick_random_test<Hybrid<FixedF, FixedL, 64, 11>>(i);
 }
 
 TEST(fenwick_mixed, type)
@@ -79,7 +86,6 @@ TEST(fenwick_mixed, type)
         fenwick_random_test<Hybrid<TypeF, TypeL, 64, 11>>(i);
     for (std::size_t i = 100000; i < 100010; i++)
         fenwick_random_test<Hybrid<TypeF, TypeL, 64, 11>>(i);
-
 }
 
 TEST(fenwick_mixed, byte)
