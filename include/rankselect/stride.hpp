@@ -52,7 +52,7 @@ namespace hft {
                 for (size_t i = idx*WORDS; i < pos/64; i++)
                     value += popcount(_bitvector[i]);
 
-                return value + popcount(_bitvector[pos/64] & compact_bitmask(pos%64, 0));
+                return value + popcount(_bitvector[pos/64] & ((1ULL << (pos % 64)) - 1));
             }
 
             virtual uint64_t rank(size_t from, size_t to) const

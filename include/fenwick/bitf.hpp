@@ -2,6 +2,7 @@
 #define __FENWICK_BIT_HPP__
 
 #include "fenwick_tree.hpp"
+#include <iostream>
 
 namespace hft {
     namespace fenwick {
@@ -75,11 +76,7 @@ namespace hft {
                     const size_t bit_pos = get_bitpos(idx-1);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
-                    const int height = rho(idx);
-                    const size_t shift = bit_pos & 0b111;
-                    const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, shift);
-
-                    sum += (*compact_element & mask) >> shift;
+                    sum += bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + rho(idx));
                     idx = clear_rho(idx);
                 }
 
@@ -108,11 +105,8 @@ namespace hft {
                     if (node+m-1 >= size()) continue;
 
                     const size_t bit_pos = get_bitpos(node+m-1);
-                    const int height = rho(node+m);
-                    const size_t shift = bit_pos & 0b111;
-                    const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
-
-                    uint64_t value = (*reinterpret_cast<auint64_t*>(&tree[bit_pos/8]) >> shift) & mask;
+                    const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    uint64_t value = bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + rho(node+m));
 
                     if (*val >= value) {
                         node += m;
@@ -131,13 +125,10 @@ namespace hft {
                 for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
-                    const size_t bit_pos = get_bitpos(node+m-1);
                     const int height = rho(node+m);
-                    const size_t shift = bit_pos & 0b111;
-                    const uint64_t mask = compact_bitmask(LEAF_BITSIZE+height, 0);
-
-                    uint64_t value = (LEAF_MAXVAL << height)
-                        - ((*reinterpret_cast<auint64_t*>(&tree[bit_pos/8]) >> shift) & mask);
+                    const size_t bit_pos = get_bitpos(node+m-1);
+                    const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    uint64_t value = (LEAF_MAXVAL << height) - bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
 
                     if (*val >= value) {
                         node += m;

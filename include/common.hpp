@@ -219,6 +219,21 @@ namespace hft {
     }
 
     /**
+     * bitextract - Extract consecutives bits in a word.
+     * @word: Binary word.
+     * @from: starting index (up to 63)
+     * @to: ending index (up to 63)
+     *
+     * Extracts from @word the bits in the range [@from, @to) and returns them
+     * in the least significant bits of the result.
+     *
+     */
+    inline uint64_t bitextract(uint64_t word, uint from, uint to)
+    {
+        return __builtin_ia32_bextr_u64(word, (from & 0xff) | ((to & 0xff) << 8));
+    }
+
+    /**
      * popcount - Count the number of 1-bits in a word.
      * @word: Binary word.
      *

@@ -46,7 +46,7 @@ namespace hft {
             virtual uint64_t rank(size_t pos) const
             {
                 return tree.prefix(pos/64)
-                    + popcount(_bitvector[pos/64] & compact_bitmask(pos % 64, 0));
+                    + popcount(_bitvector[pos/64] & ((1ULL << (pos % 64)) - 1));
             }
 
             virtual uint64_t rank(size_t from, size_t to) const
