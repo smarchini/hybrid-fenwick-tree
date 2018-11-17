@@ -1,0 +1,35 @@
+\documentclass{article}
+
+\usepackage[paperwidth=30cm, paperheight=25cm, left=5mm, top=5mm, bottom=5mm, right=5mm, margin=5mm]{geometry}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section*{Fenwick Tree: No HugeTLB}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/fenwick_nohugetlb/prefix}
+\includegraphics[width=.49\textwidth]{img/fenwick_nohugetlb/add}
+\includegraphics[width=.49\textwidth]{img/fenwick_nohugetlb/find}
+\includegraphics[width=.49\textwidth]{img/fenwick_nohugetlb/findc}
+\end{center}
+
+\section*{Fenwick Tree: HugeTLB}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_nornd/prefix}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_nornd/add}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_nornd/find}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_nornd/findc}
+\end{center}
+
+\section*{Fenwick Tree: HugeTLB with MADV RANDOM}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_rnd/prefix}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_rnd/add}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_rnd/find}
+\includegraphics[width=.49\textwidth]{img/fenwick_hugetlb_rnd/findc}
+\end{center}
+
+\end{document}
