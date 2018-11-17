@@ -27,6 +27,7 @@ namespace hft {
         static constexpr size_t PAGESIZE = 2048*1024; // 2MB hugepages
         static constexpr int PROTECTION = PROT_READ | PROT_WRITE;
         static constexpr int FLAGS = MAP_HUGETLB | MAP_PRIVATE | MAP_ANONYMOUS;
+        static constexpr int ADVICE = MADV_HUGEPAGE; // TODO: provare con MADV_RANDOM
 
     private:
         size_t _size;
@@ -42,7 +43,7 @@ namespace hft {
         {
             void *result = mmap(nullptr, space, PROTECTION, FLAGS, -1, 0);
             assert(result != MAP_FAILED);
-            madvise(result, space, MADV_HUGEPAGE); // TODO: provare con MADV_RANDOM
+            madvise(result, space, ADVICE);
             buffer = static_cast<T*>(result);
         }
 
