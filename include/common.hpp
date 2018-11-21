@@ -263,7 +263,7 @@ namespace hft {
      */
     inline size_t updroot(size_t j, size_t n)
     {
-        return n & (SIZE_MAX << lambda(j ^ n));
+        return n & (SIZE_MAX << lambda((j ^ n) | mask_rho(j)));
     }
 
     /**

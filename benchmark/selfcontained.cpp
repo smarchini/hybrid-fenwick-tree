@@ -21,6 +21,7 @@
 #include <chrono>
 #include <random>
 #include <iomanip>
+#include <climits>
 
 // common.hpp functions
 inline int lambda(uint64_t word) { return 63 ^ __builtin_clzll(word); }
@@ -28,7 +29,7 @@ inline int rho(uint64_t word) { return __builtin_ctzll(word); }
 inline uint64_t mask_rho(uint64_t word) { return word & (-word); }
 inline uint64_t mask_lambda(uint64_t word) { return 0x8000000000000000 >> __builtin_clzll(word); }
 inline uint64_t clear_rho(uint64_t word) { return word & (word - 1ULL); }
-inline size_t updroot(size_t j, size_t n) { return n & (SIZE_MAX << lambda(j ^ n)); }
+inline size_t updroot(size_t j, size_t n) { return n & (-1ULL << lambda((j ^ n) | mask_rho(j))); }
 
 
 class FenwickL
@@ -103,16 +104,18 @@ public:
 
     uint64_t level_prefix(size_t idx) const
     {
-        uint64_t sum = 0;
-        int height = rho(idx);
+        if (idx == 0) return 0; // ugly
+
+        size_t height = rho(idx); // undefined behavior in zero
         size_t level_idx = idx >> (1 + height);
+        uint64_t sum = tree[level[height] + level_idx];
 
-        while (level_idx > 0 && level_idx < level[height+1]) {
-            sum += tree[level[height] + level_idx];
-
+        while (0 < level_idx && level_idx < level[height+1]) {
             const int next = rho(level_idx) + 1;
             height += next;
             level_idx >>= next;
+
+            sum += tree[level[height] + level_idx];
         }
 
         return sum;
@@ -123,7 +126,6 @@ public:
         while (idx <= size) {
             const int height = rho(idx);
             const size_t level_idx = idx >> (1 + height);
-            std::cout << "idx = " << level[height] + level_idx << "\n";
             tree[level[height] + level_idx] += inc;
             idx += mask_rho(idx);
         }
@@ -134,18 +136,15 @@ public:
         size_t negindex = -updroot(idx, size);
         const size_t negidx = -idx;
 
-        // ERROR: do nothing if negindex = 0
         while (negindex != negidx) {
             const int height = rho(-negindex);
             const size_t level_idx = (-negindex) >> (1 + height);
-            std::cout << "index = " << level[height] + level_idx << "\n";
             tree[level[height] + level_idx] += inc;
             negindex ^= 1ULL << lambda(negindex ^ negidx);
         }
 
         const int height = rho(idx);
         const size_t level_idx = idx >> (1 + height);
-        std::cout << "index = " << level[height] + level_idx << "\n";
         tree[level[height] + level_idx] += inc;
     }
 
@@ -249,18 +248,44 @@ int main(int argc, char *argv[])
     FenwickF fenF(sequence.get(), SIZE);
     FenwickL fenL(sequence.get(), SIZE);
 
-    size_t pippo = idxdist(mte);
-    cout << "pippo = " << pippo << "\n";
-    //fenF.bottomup_add(pippo, 0);
-    //fenF.topdown_add(pippo, 0);
-    fenL.bottomup_add(pippo, 0);
-    fenL.topdown_add(pippo, 0);
-
     uint64_t tmp = 0;
     high_resolution_clock::time_point begin, end;
 
     // repeat the benchmark few times to see if the results are consistent
     for (size_t i = 0; i < 3; i++) {
+        cout << "fenF bottomup_add... " << flush;
+        begin = high_resolution_clock::now();
+        for (size_t i = 0; i < QUERIES; ++i)
+            fenF.bottomup_add(idxdist(mte), 0);
+        end = high_resolution_clock::now();
+        auto fenf_bottomup_add = duration_cast<nanoseconds>(end-begin).count();
+        cout << fenf_bottomup_add * C << " ns\n";
+
+        cout << "fenF topdown_add... " << flush;
+        begin = high_resolution_clock::now();
+        for (size_t i = 0; i < QUERIES; ++i)
+            fenF.topdown_add(idxdist(mte), 0);
+        end = high_resolution_clock::now();
+        auto fenf_topdown_add = duration_cast<nanoseconds>(end-begin).count();
+        cout << fenf_topdown_add * C << " ns\n";
+
+        cout << "fenL bottomup_add... " << flush;
+        begin = high_resolution_clock::now();
+        for (size_t i = 0; i < QUERIES; ++i)
+            fenL.bottomup_add(idxdist(mte), 0);
+        end = high_resolution_clock::now();
+        auto fenl_bottomup_add = duration_cast<nanoseconds>(end-begin).count();
+        cout << fenl_bottomup_add * C << " ns\n";
+
+        cout << "fenL topdown_add... " << flush;
+        begin = high_resolution_clock::now();
+        for (size_t i = 0; i < QUERIES; ++i)
+            fenL.topdown_add(idxdist(mte), 0);
+        end = high_resolution_clock::now();
+        auto fenl_topdown_add = duration_cast<nanoseconds>(end-begin).count();
+        cout << fenl_topdown_add * C << " ns\n";
+
+
         cout << "fenF bottomup_prefix... " << flush;
         begin = high_resolution_clock::now();
         for (size_t i = 0; i < QUERIES; ++i)
