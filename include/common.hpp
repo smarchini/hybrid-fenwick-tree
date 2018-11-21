@@ -167,7 +167,7 @@ namespace hft {
      */
     inline int lambda(uint64_t word)
     {
-        return 63 - __builtin_clzll(word);
+        return 63 ^ __builtin_clzll(word);
     }
 
     /**
@@ -222,8 +222,8 @@ namespace hft {
     /**
      * bitextract - Extract consecutives bits in a word.
      * @word: Binary word.
-     * @from: starting index (up to 63)
-     * @to: ending index (up to 63)
+     * @from: Starting index (up to 63).
+     * @to: Ending index (up to 63).
      *
      * Extracts from @word the bits in the range [@from, @to) and returns them
      * in the least significant bits of the result.
@@ -246,13 +246,24 @@ namespace hft {
 
     /**
      * mround - Returns a number rounded to the desired power of two multiple.
-     * @number: value to round up.
-     * @multiple: power of two to which you want to round @number
+     * @number: Value to round up.
+     * @multiple: Power of two to which you want to round @number.
      *
      */
     inline uint64_t mround(uint64_t number, uint64_t multiple)
     {
         return ((number-1) | (multiple-1)) + 1;
+    }
+
+    /**
+     * updroot - Grandest grandparent parent of a node in the update tree.
+     * @j: Index of a node.
+     * @n: Size of the Fenwick tree.
+     *
+     */
+    inline size_t updroot(size_t j, size_t n)
+    {
+        return n & (SIZE_MAX << lambda(j ^ n));
     }
 
     /**
