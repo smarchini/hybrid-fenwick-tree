@@ -177,27 +177,28 @@ int main()
 }
 ```
 
+### Additional notes
+
+As you see, bit vectors are implemented as a contiguous chuck of `uint64_t` so
+we can use fast compiler built-in functions with no issues. If you need bigger
+vectors you may want them in the heap memory. You can do it your own way (e.g.
+with [placement new]) or you can use `hft::DArray<T>`; it can be handy if you
+want to try huge pages.
+
 ## Huge TLB pages
 
 A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
 Linux's 2MB huge TLB pages capabilities, otherwise it is a wrapper for
-`std::uniqueptr<T[]>`. To use uuge pages should first (manually) enable them in
-your operating system. For more information refer to [hugetlbpage] on the Linux
-kernel documentation.
-
-## Additional notes
-
-As you see, the bit vector is an array of `uint64_t`, so we can use some
-built-in functions with no issues. If you need bigger vectors you may want them
-in the heap memory. You can do it your own way (i.e. with [placement new]) or
-you can use `hft::DArray<T>` and permit them to use huge pages.
+`std::uniqueptr<T[]>`. To use huge pages you should first (manually) enable them
+in your operating system. For more information refer to [hugetlbpage] on the
+Linux kernel documentation.
 
 At the moment the data structures in this library are dynamic as in *dynamic
-arrays*: they deal with mutable data of fixed size; even if an implementation
+arrays*: they deal with mutable data of fixed size. Although, an implementation
 with extendibility properties is indeed possible.
 
 # TODO
-- License
+- Choose a license
 
 
 [rank/select dictionaries]: https://en.wikipedia.org/wiki/Succinct_data_structure#Succinct_dictionaries "rank/select dictionaries"

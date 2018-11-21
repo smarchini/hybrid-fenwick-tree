@@ -1,3 +1,5 @@
+#define HFT_USE_HUGETLB
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>

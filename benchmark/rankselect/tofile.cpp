@@ -257,24 +257,17 @@ int main(int argc, char *argv[])
     Benchmark bench(argv[1], size, queries);
 
     bench.datainit(mte);
-    //bench.filesinit("Fenw,LFenw,Byte,LByte,Bit,LBit,LFenwFenw16,LByteByte16,LBitBit16,Fenw(16),LFenw(16),Byte(16),LByte(16),Bit(16),LBit(16),LFenwFenw16(16),LByteByte16(16),LBitBit16(16),Fenw(32),LFenw(32),Byte(32),LByte(32),Bit(32),LBit(32),LFenwFenw16(32),LByteByte16(32),LBitBit16(32),Fenw(64),LFenw(64),Byte(64),LByte(64),Bit(64),LBit(64),LFenwFenw16(64),LByteByte16(64),LBitBit16(64),Prezza");
 
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
                     "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
-                    "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
-                    "fixed[$20$]fixed,byte[$20$]byte,bit[$20$]bit,fixed[$20$]byte,fixed[$20$]bit,byte[$20$]bit,"
-                    "fixed[F]_16,fixed[$\\ell$]_16,byte[F]_16,byte[$\\ell$]_16,bit[F]_16,bit[$\\ell$]_16,"
-                    "fixed[$16$]fixed_16,byte[$16$]byte_16,bit[$16$]bit_16,fixed[$16$]byte_16,fixed[$16$]bit_16,byte[$16$]bit_16,"
-                    "fixed[$16$]fixed_16,byte[$16$]byte_16,bit[$16$]bit_16,fixed[$16$]byte_16,fixed[$16$]bit_16,byte[$16$]bit_16,"
-                    "fixed[$20$]fixed_16,byte[$20$]byte_16,bit[$20$]bit_16,fixed[$20$]byte_16,fixed[$20$]bit_16,byte[$20$]bit_16,"
-                    "fixed[F]_32,fixed[$\\ell$]_32,byte[F]_32,byte[$\\ell$]_32,bit[F]_32,bit[$\\ell$]_32,"
-                    "fixed[$16$]fixed_32,byte[$16$]byte_32,bit[$16$]bit_32,fixed[$16$]byte_32,fixed[$16$]bit_32,byte[$16$]bit_32,"
-                    "fixed[$16$]fixed_32,byte[$16$]byte_32,bit[$16$]bit_32,fixed[$16$]byte_32,fixed[$16$]bit_32,byte[$16$]bit_32,"
-                    "fixed[$20$]fixed_32,byte[$20$]byte_32,bit[$20$]bit_32,fixed[$20$]byte_32,fixed[$20$]bit_32,byte[$20$]bit_32,"
-                    "fixed[F]_64,fixed[$\\ell$]_64,byte[F]_64,byte[$\\ell$]_64,bit[F]_64,bit[$\\ell$]_64,"
-                    "fixed[$16$]fixed_64,byte[$16$]byte_64,bit[$16$]bit_64,fixed[$16$]byte_64,fixed[$16$]bit_64,byte[$16$]bit_64,"
-                    "fixed[$16$]fixed_64,byte[$16$]byte_64,bit[$16$]bit_64,fixed[$16$]byte_64,fixed[$16$]bit_64,byte[$16$]bit_64,"
-                    "fixed[$20$]fixed_64,byte[$20$]byte_64,bit[$20$]bit_64,fixed[$20$]byte_64,fixed[$20$]bit_64,byte[$20$]bit_64,Prezza");
+                    "fixed[F]86,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,"
+                    "fixed[$16$]fixed8,byte[$16$]byte8,bit[$16$]bit8,fixed[$16$]byte8,fixed[$16$]bit8,byte[$16$]bit8,"
+                    "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,"
+                    "fixed[$16$]fixed16,byte[$16$]byte16,bit[$16$]bit16,fixed[$16$]byte16,fixed[$16$]bit16,byte[$16$]bit16,"
+                    "fixed[F]32,fixed[$\\ell$]32,byte[F]32,byte[$\\ell$]32,bit[F]32,bit[$\\ell$]32,"
+                    "fixed[$16$]fixed32,byte[$16$]byte32,bit[$16$]bit32,fixed[$16$]byte32,fixed[$16$]bit32,byte[$16$]bit32,"
+                    "fixed[F]64,fixed[$\\ell$]64,byte[F]64,byte[$\\ell$]64,bit[F]64,bit[$\\ell$]64,"
+                    "fixed[$16$]fixed64,byte[$16$]byte64,bit[$16$]bit64,fixed[$16$]byte64,fixed[$16$]bit64,byte[$16$]bit64"); //,Prezza
 
     cout << "Fenw:            "; bench.run<Word<FixedF>>();              bench.separator();
     cout << "LFenw:           "; bench.run<Word<FixedL>>();              bench.separator();
@@ -282,57 +275,66 @@ int main(int argc, char *argv[])
     cout << "LByte:           "; bench.run<Word<ByteL>>();               bench.separator();
     cout << "Bit:             "; bench.run<Word<BitF>>();                bench.separator();
     cout << "LBit:            "; bench.run<Word<BitL>>();                bench.separator();
-    cout << "LFenwFenw16:     "; bench.run<Word<LNaiveNaive16>>();       bench.separator();
-    cout << "LByteByte16:     "; bench.run<Word<LByteByte16>>();         bench.separator();
-    cout << "LBitBit16:       "; bench.run<Word<LBitBit16>>();           bench.separator();
-    cout << "LByteBit16:      "; bench.run<Word<LByteBit16>>();          bench.separator();
-    cout << "LFenwByte16:     "; bench.run<Word<LNaiveByte16>>();        bench.separator();
-    cout << "LFenwBit16:      "; bench.run<Word<LNaiveBit16>>();         bench.separator();
-    cout << "LByteBit16:      "; bench.run<Word<LByteBit16>>();          bench.separator();
+    cout << "LFenw[16]Fenw:   "; bench.run<Word<LNaiveNaive16>>();       bench.separator();
+    cout << "LByte[16]Byte:   "; bench.run<Word<LByteByte16>>();         bench.separator();
+    cout << "LBit[16]Bit:     "; bench.run<Word<LBitBit16>>();           bench.separator();
+    cout << "LFenw[16]Byte:   "; bench.run<Word<LNaiveByte16>>();        bench.separator();
+    cout << "LFenw[16]Bit:    "; bench.run<Word<LNaiveBit16>>();         bench.separator();
+    cout << "LByte[16]Bit:    "; bench.run<Word<LByteBit16>>();          bench.separator();
 
-    cout << "Fenw_16:         "; bench.run<Stride<FixedF, 16>>();        bench.separator();
-    cout << "LFenw_16:        "; bench.run<Stride<FixedL, 16>>();        bench.separator();
-    cout << "Byte_16:         "; bench.run<Stride<ByteF, 16>>();         bench.separator();
-    cout << "LByte_16:        "; bench.run<Stride<ByteL, 16>>();         bench.separator();
-    cout << "Bit_16:          "; bench.run<Stride<BitF, 16>>();          bench.separator();
-    cout << "LBit_16:         "; bench.run<Stride<BitL, 16>>();          bench.separator();
-    cout << "LFenwFenw16_16:  "; bench.run<Stride<LNaiveNaive16, 16>>(); bench.separator();
-    cout << "LByteByte16_16:  "; bench.run<Stride<LByteByte16, 16>>();   bench.separator();
-    cout << "LBitBit16_16:    "; bench.run<Stride<LBitBit16, 16>>();     bench.separator();
-    cout << "LByteBit16_16:   "; bench.run<Stride<LByteBit16, 16>>();    bench.separator();
-    cout << "LFenwByte16_16:  "; bench.run<Stride<LNaiveByte16, 16>>();  bench.separator();
-    cout << "LFenwBit16_16:   "; bench.run<Stride<LNaiveBit16, 16>>();   bench.separator();
-    cout << "LByteBit16_16:   "; bench.run<Stride<LByteBit16, 16>>();    bench.separator();
+    cout << "Fenw8:           "; bench.run<Stride<FixedF, 8>>();         bench.separator();
+    cout << "LFenw8:          "; bench.run<Stride<FixedL, 8>>();         bench.separator();
+    cout << "Byte8:           "; bench.run<Stride<ByteF, 8>>();          bench.separator();
+    cout << "LByte8:          "; bench.run<Stride<ByteL, 8>>();          bench.separator();
+    cout << "Bit8:            "; bench.run<Stride<BitF, 8>>();           bench.separator();
+    cout << "LBit8:           "; bench.run<Stride<BitL, 8>>();           bench.separator();
+    cout << "LFenw[16]Fenw8:  "; bench.run<Stride<LNaiveNaive16, 8>>();  bench.separator();
+    cout << "LByte[16]Byte8:  "; bench.run<Stride<LByteByte16, 8>>();    bench.separator();
+    cout << "LBit[16]Bit8:    "; bench.run<Stride<LBitBit16, 8>>();      bench.separator();
+    cout << "LFenw[16]Byte8:  "; bench.run<Stride<LNaiveByte16, 8>>();   bench.separator();
+    cout << "LFenw[16]Bit8:   "; bench.run<Stride<LNaiveBit16, 8>>();    bench.separator();
+    cout << "LByte[16]Bit8:   "; bench.run<Stride<LByteBit16, 8>>();     bench.separator();
 
-    cout << "Fenw_32:         "; bench.run<Stride<FixedF, 32>>();        bench.separator();
-    cout << "LFenw_32:        "; bench.run<Stride<FixedL, 32>>();        bench.separator();
-    cout << "Byte_32:         "; bench.run<Stride<ByteF, 32>>();         bench.separator();
-    cout << "LByte_32:        "; bench.run<Stride<ByteL, 32>>();         bench.separator();
-    cout << "Bit_32:          "; bench.run<Stride<BitF, 32>>();          bench.separator();
-    cout << "LBit_32:         "; bench.run<Stride<BitL, 32>>();          bench.separator();
-    cout << "LFenwFenw16_32:  "; bench.run<Stride<LNaiveNaive16, 32>>(); bench.separator();
-    cout << "LByteByte16_32:  "; bench.run<Stride<LByteByte16, 32>>();   bench.separator();
-    cout << "LBitBit16_32:    "; bench.run<Stride<LBitBit16, 32>>();     bench.separator();
-    cout << "LByteBit16_32:   "; bench.run<Stride<LByteBit16, 32>>();    bench.separator();
-    cout << "LFenwByte16_32:  "; bench.run<Stride<LNaiveByte16, 32>>();  bench.separator();
-    cout << "LFenwBit16_32:   "; bench.run<Stride<LNaiveBit16, 32>>();   bench.separator();
-    cout << "LByteBit16_32:   "; bench.run<Stride<LByteBit16, 32>>();    bench.separator();
+    cout << "Fenw16:          "; bench.run<Stride<FixedF, 16>>();        bench.separator();
+    cout << "LFenw16:         "; bench.run<Stride<FixedL, 16>>();        bench.separator();
+    cout << "Byte16:          "; bench.run<Stride<ByteF, 16>>();         bench.separator();
+    cout << "LByte16:         "; bench.run<Stride<ByteL, 16>>();         bench.separator();
+    cout << "Bit16:           "; bench.run<Stride<BitF, 16>>();          bench.separator();
+    cout << "LBit16:          "; bench.run<Stride<BitL, 16>>();          bench.separator();
+    cout << "LFenw[16]Fenw16: "; bench.run<Stride<LNaiveNaive16, 16>>(); bench.separator();
+    cout << "LByte[16]Byte16: "; bench.run<Stride<LByteByte16, 16>>();   bench.separator();
+    cout << "LBit[16]Bit16:   "; bench.run<Stride<LBitBit16, 16>>();     bench.separator();
+    cout << "LFenw[16]Byte16: "; bench.run<Stride<LNaiveByte16, 16>>();  bench.separator();
+    cout << "LFenw[16]Bit16:  "; bench.run<Stride<LNaiveBit16, 16>>();   bench.separator();
+    cout << "LByte[16]Bit16:  "; bench.run<Stride<LByteBit16, 16>>();    bench.separator();
 
-    cout << "Fenw_64:         "; bench.run<Stride<FixedF, 64>>();        bench.separator();
-    cout << "LFenw_64:        "; bench.run<Stride<FixedL, 64>>();        bench.separator();
-    cout << "Byte_64:         "; bench.run<Stride<ByteF, 64>>();         bench.separator();
-    cout << "LByte_64:        "; bench.run<Stride<ByteL, 64>>();         bench.separator();
-    cout << "Bit_64:          "; bench.run<Stride<BitF, 64>>();          bench.separator();
-    cout << "LBit_64:         "; bench.run<Stride<BitL, 64>>();          bench.separator();
-    cout << "LFenwFenw16_64:  "; bench.run<Stride<LNaiveNaive16, 64>>(); bench.separator();
-    cout << "LByteByte16_64:  "; bench.run<Stride<LByteByte16, 64>>();   bench.separator();
-    cout << "LBitBit16_64:    "; bench.run<Stride<LBitBit16, 64>>();     bench.separator();
-    cout << "LByteBit16_64:   "; bench.run<Stride<LByteBit16, 64>>();    bench.separator();
-    cout << "LFenwByte16_64:  "; bench.run<Stride<LNaiveByte16, 64>>();  bench.separator();
-    cout << "LFenwBit16_64:   "; bench.run<Stride<LNaiveBit16, 64>>();   bench.separator();
-    cout << "LByteBit16_64:   "; bench.run<Stride<LByteBit16, 64>>();    bench.separator();
+    cout << "Fenw32:          "; bench.run<Stride<FixedF, 32>>();        bench.separator();
+    cout << "LFenw32:         "; bench.run<Stride<FixedL, 32>>();        bench.separator();
+    cout << "Byte32:          "; bench.run<Stride<ByteF, 32>>();         bench.separator();
+    cout << "LByte32:         "; bench.run<Stride<ByteL, 32>>();         bench.separator();
+    cout << "Bit32:           "; bench.run<Stride<BitF, 32>>();          bench.separator();
+    cout << "LBit32:          "; bench.run<Stride<BitL, 32>>();          bench.separator();
+    cout << "LFenw[16]Fenw32: "; bench.run<Stride<LNaiveNaive16, 32>>(); bench.separator();
+    cout << "LByte[16]Byte32: "; bench.run<Stride<LByteByte16, 32>>();   bench.separator();
+    cout << "LBit[16]Bit32:   "; bench.run<Stride<LBitBit16, 32>>();     bench.separator();
+    cout << "LFenw[16]Byte32: "; bench.run<Stride<LNaiveByte16, 32>>();  bench.separator();
+    cout << "LFenw[16]Bit32:  "; bench.run<Stride<LNaiveBit16, 32>>();   bench.separator();
+    cout << "LByte[16]Bit32:  "; bench.run<Stride<LByteBit16, 32>>();    bench.separator();
 
-    cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
+    cout << "Fenw64:          "; bench.run<Stride<FixedF, 64>>();        bench.separator();
+    cout << "LFenw64:         "; bench.run<Stride<FixedL, 64>>();        bench.separator();
+    cout << "Byte64:          "; bench.run<Stride<ByteF, 64>>();         bench.separator();
+    cout << "LByte64:         "; bench.run<Stride<ByteL, 64>>();         bench.separator();
+    cout << "Bit64:           "; bench.run<Stride<BitF, 64>>();          bench.separator();
+    cout << "LBit64:          "; bench.run<Stride<BitL, 64>>();          bench.separator();
+    cout << "LFenw[16]Fenw64: "; bench.run<Stride<LNaiveNaive16, 64>>(); bench.separator();
+    cout << "LByte[16]Byte64: "; bench.run<Stride<LByteByte16, 64>>();   bench.separator();
+    cout << "LBit[16]Bit64:   "; bench.run<Stride<LBitBit16, 64>>();     bench.separator();
+    cout << "LFenw[16]Byte64: "; bench.run<Stride<LNaiveByte16, 64>>();  bench.separator();
+    cout << "LFenw[16]Bit64:  "; bench.run<Stride<LNaiveBit16, 64>>();   bench.separator();
+    cout << "LByte[16]Bit64:  "; bench.run<Stride<LByteBit16, 64>>();    bench.separator("\n");
+
+    //cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
 
 
     return 0;

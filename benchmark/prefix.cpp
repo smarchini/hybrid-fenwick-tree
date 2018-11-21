@@ -1,17 +1,32 @@
+/*
+ * Self contained file (i.e. it does only #include the STL) to check the
+ * differences between top-down and bottom-up (update and interrogation) tree
+ * traversal.
+ *
+ * For the level ordered tree (FenwickL) we have:
+ *     topdown_function(j): from the "root" to the j (convert every time);
+ *     bottomup_function(j): from j to the "root" (convert every time);
+ *     level_function(j): from j to the "root" (direct formulae).
+ *
+ * For the classical tree (FenwickF) we only have topdown_function and
+ * fenwick_function.
+ *
+ */
+
 #include <iostream>
 #include <memory>
 #include <algorithm>
 #include <chrono>
 #include <random>
 #include <iomanip>
-//#include <fenwick.hpp>
 
-
-inline int lambda(uint64_t word) { return 63 - __builtin_clzll(word); }
+// common.hpp functions
+inline int lambda(uint64_t word) { return 63 ^ __builtin_clzll(word); }
 inline int rho(uint64_t word) { return __builtin_ctzll(word); }
 inline uint64_t mask_rho(uint64_t word) { return word & (-word); }
 inline uint64_t mask_lambda(uint64_t word) { return 0x8000000000000000 >> __builtin_clzll(word); }
 inline uint64_t clear_rho(uint64_t word) { return word & (word - 1ULL); }
+inline size_t updroot(size_t j, size_t n) { return n & (SIZE_MAX << lambda(j ^ n)); }
 
 
 class FenwickL
@@ -53,14 +68,13 @@ public:
         }
     }
 
-    // top-down: from the "root" to idx
-    uint64_t reversed_prefix(size_t idx) const
+    uint64_t topdown_prefix(size_t idx) const
     {
         uint64_t sum = 0;
         size_t index = 0;
 
         while (idx != index) {
-            index += mask_lambda(idx ^ index);
+            index ^= mask_lambda(idx ^ index);
 
             const int height = rho(index);
             const size_t level_idx = index >> (1 + height);
@@ -70,8 +84,7 @@ public:
         return sum;
     }
 
-    // bottom-up: classical parent relationship and conversion
-    uint64_t fenwick_prefix(size_t idx) const
+    uint64_t bottomup_prefix(size_t idx) const
     {
         uint64_t sum = 0;
 
@@ -86,14 +99,13 @@ public:
         return sum;
     }
 
-    // bottom-up: level-order parent formulae
     uint64_t level_prefix(size_t idx) const
     {
         uint64_t sum = 0;
         int height = rho(idx);
         size_t level_idx = idx >> (1 + height);
 
-        while (level_idx < level[height+1] && height < levels) {
+        while (level_idx > 0 && level_idx < level[height+1]) {
             sum += tree[level[height] + level_idx];
 
             const int next = rho(level_idx) + 1;
@@ -102,6 +114,37 @@ public:
         }
 
         return sum;
+    }
+
+    void bottomup_add(size_t idx, int64_t inc)
+    {
+        while (idx <= size) {
+            const int height = rho(idx);
+            const size_t level_idx = idx >> (1 + height);
+            std::cout << "idx = " << level[height] + level_idx << "\n";
+            tree[level[height] + level_idx] += inc;
+            idx += mask_rho(idx);
+        }
+    }
+
+    void topdown_add(size_t idx, int64_t inc)
+    {
+        size_t negindex = -updroot(idx, size);
+        const size_t negidx = -idx;
+
+        // ERROR: do nothing if negindex = 0
+        while (negindex != negidx) {
+            const int height = rho(-negindex);
+            const size_t level_idx = (-negindex) >> (1 + height);
+            std::cout << "index = " << level[height] + level_idx << "\n";
+            tree[level[height] + level_idx] += inc;
+            negindex ^= 1ULL << lambda(negindex ^ negidx);
+        }
+
+        const int height = rho(idx);
+        const size_t level_idx = idx >> (1 + height);
+        std::cout << "index = " << level[height] + level_idx << "\n";
+        tree[level[height] + level_idx] += inc;
     }
 
 };
@@ -130,22 +173,20 @@ public:
         }
     }
 
-    // top-down: from the "root" to idx
-    uint64_t reversed_prefix(size_t idx) const
+    uint64_t topdown_prefix(size_t idx) const
     {
         uint64_t sum = 0;
         size_t index = 0;
 
         while (idx != index) {
-            index += mask_lambda(idx ^ index);
+            index ^= mask_lambda(idx ^ index);
             sum += tree[index - 1];
         }
 
         return sum;
     }
 
-    // bottom-up: classical parent relationship and conversion
-    uint64_t fenwick_prefix(size_t idx) const
+    uint64_t bottomup_prefix(size_t idx) const
     {
         uint64_t sum = 0;
 
@@ -157,13 +198,34 @@ public:
         return sum;
     }
 
+
+    void bottomup_add(size_t idx, int64_t inc)
+    {
+        while (idx <= size) {
+            tree[idx-1] += inc;
+            idx += mask_rho(idx);
+        }
+    }
+
+    void topdown_add(size_t idx, int64_t inc)
+    {
+        size_t negindex = -updroot(idx, size);
+        const size_t negidx = -idx;
+
+        while (negindex != negidx) {
+            tree[-negindex] += inc;
+            negindex ^= 1ULL << lambda(negindex ^ negidx);
+        }
+
+        tree[idx] += inc;
+    }
+
 };
 
 
 
 int main(int argc, char *argv[])
 {
-    using namespace hft;
     using namespace std;
     using namespace std::chrono;
 
@@ -175,7 +237,7 @@ int main(int argc, char *argv[])
 
     random_device rd;
     mt19937 mte(rd());
-    uniform_int_distribution<size_t> idxdist(0, SIZE);
+    uniform_int_distribution<size_t> idxdist(1, SIZE);
     uniform_int_distribution<size_t> valdist(0, 64);
 
     auto sequence = make_unique<uint64_t[]>(SIZE);
@@ -184,42 +246,47 @@ int main(int argc, char *argv[])
 
     FenwickF fenF(sequence.get(), SIZE);
     FenwickL fenL(sequence.get(), SIZE);
-    // hft::fenwick::FixedL<64> realL(sequence.get(), SIZE);
-    // hft::fenwick::FixedF<64> realF(sequence.get(), SIZE);
+
+    size_t pippo = idxdist(mte);
+    cout << "pippo = " << pippo << "\n";
+    //fenF.bottomup_add(pippo, 0);
+    //fenF.topdown_add(pippo, 0);
+    fenL.bottomup_add(pippo, 0);
+    fenL.topdown_add(pippo, 0);
 
     uint64_t tmp = 0;
     high_resolution_clock::time_point begin, end;
 
     // repeat the benchmark few times to see if the results are consistent
     for (size_t i = 0; i < 3; i++) {
-        cout << "fenF fenwick_prefix... " << flush;
+        cout << "fenF bottomup_prefix... " << flush;
         begin = high_resolution_clock::now();
         for (size_t i = 0; i < QUERIES; ++i)
-            tmp ^= fenF.fenwick_prefix(idxdist(mte));
+            tmp ^= fenF.bottomup_prefix(idxdist(mte));
         end = high_resolution_clock::now();
         auto fenf_fenwick_prefix = duration_cast<nanoseconds>(end-begin).count();
         cout << fenf_fenwick_prefix * C << " ns\n";
 
-        cout << "fenF reversed_prefix... " << flush;
+        cout << "fenF topdown_prefix... " << flush;
         begin = high_resolution_clock::now();
         for (size_t i = 0; i < QUERIES; ++i)
-            tmp ^= fenF.reversed_prefix(idxdist(mte));
+            tmp ^= fenF.topdown_prefix(idxdist(mte));
         end = high_resolution_clock::now();
         auto fenf_reversed_prefix = duration_cast<nanoseconds>(end-begin).count();
         cout << fenf_reversed_prefix * C << " ns\n";
 
-        cout << "fenL fenwick_prefix... " << flush;
+        cout << "fenL bottomup_prefix... " << flush;
         begin = high_resolution_clock::now();
         for (size_t i = 0; i < QUERIES; ++i)
-            tmp ^= fenL.fenwick_prefix(idxdist(mte));
+            tmp ^= fenL.bottomup_prefix(idxdist(mte));
         end = high_resolution_clock::now();
         auto fenl_fenwick_prefix = duration_cast<nanoseconds>(end-begin).count();
         cout << fenl_fenwick_prefix * C << " ns\n";
 
-        cout << "fenL reversed_prefix... " << flush;
+        cout << "fenL topdown_prefix... " << flush;
         begin = high_resolution_clock::now();
         for (size_t i = 0; i < QUERIES; ++i)
-            tmp ^= fenL.reversed_prefix(idxdist(mte));
+            tmp ^= fenL.topdown_prefix(idxdist(mte));
         end = high_resolution_clock::now();
         auto fenl_reversed_prefix = duration_cast<nanoseconds>(end-begin).count();
         cout << fenl_reversed_prefix * C << " ns\n";
@@ -232,22 +299,6 @@ int main(int argc, char *argv[])
         auto fenl_level_prefix = duration_cast<nanoseconds>(end-begin).count();
         cout << fenl_level_prefix * C << " ns\n";
 
-        // cout << "realF prefix... " << flush;
-        // begin = high_resolution_clock::now();
-        // for (size_t i = 0; i < QUERIES; ++i)
-        //     tmp ^= realF.prefix(idxdist(mte));
-        // end = high_resolution_clock::now();
-        // auto realF_prefix = duration_cast<nanoseconds>(end-begin).count();
-        // cout << realF_prefix * C << " ns\n";
-
-        // cout << "realL prefix... " << flush;
-        // begin = high_resolution_clock::now();
-        // for (size_t i = 0; i < QUERIES; ++i)
-        //     tmp ^= realL.prefix(idxdist(mte));
-        // end = high_resolution_clock::now();
-        // auto realL_prefix = duration_cast<nanoseconds>(end-begin).count();
-        // cout << realL_prefix * C << " ns\n";
-
         cout << "\n";
     }
 
@@ -255,23 +306,18 @@ int main(int argc, char *argv[])
     const volatile uint64_t __attribute__((unused)) unused = tmp;
 
     // Check if everything is working
-    // for (size_t i = 0; i < SIZE; ++i) {
-    //     auto a = fenF.fenwick_prefix(i);
-    //     auto b = fenF.reversed_prefix(i);
-    //     auto c = fenL.fenwick_prefix(i);
-    //     auto d = fenL.reversed_prefix(i);
-    //     auto e = fenL.level_prefix(i);
-    //     auto f = realF.prefix(i);
-    //     auto g = realL.prefix(i);
+    for (size_t i = 0; i < SIZE; ++i) {
+        auto a = fenF.bottomup_prefix(i);
+        auto b = fenF.topdown_prefix(i);
+        auto c = fenL.bottomup_prefix(i);
+        auto d = fenL.topdown_prefix(i);
+        auto e = fenL.level_prefix(i);
 
-    //     bool error = a != b || b != c || c != d || d != e || e != f || f != g;
+        bool error = a != b || b != c || c != d || d != e;
 
-    //     if (error) {
-    //         cout << "idx(" << i << ") => "
-    //                   << a << " " << b << " " << c << " " << d << " " << e << " " << f << " " << g << "\n";
-
-    //     }
-    // }
+        if (error)
+            cout << "idx(" << i << ") => " << a << " " << b << " " << c << " " << d << " " << e << "\n";
+    }
 
     return 0;
 }
