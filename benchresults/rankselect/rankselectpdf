@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+import sys, numpy, matplotlib, os.path
+import matplotlib.pyplot as pyplot
+from matplotlib.ticker import FuncFormatter
+
+matplotlib.rcParams['text.usetex'] = True
+matplotlib.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
+
+titles = {'rank0.csv': r'$\operatorname{\textsf{rank0}}$',
+          'rank1.csv': r'$\operatorname{\textsf{rank1}}$',
+          'select0.csv': r'$\operatorname{\textsf{select0}}$',
+          'select1.csv': r'$\operatorname{\textsf{select1}}$',
+          'update.csv': r'$\operatorname{\textsf{update}}$'}
+
+if __name__ == '__main__':
+    for filename in ['rank0.csv', 'rank1.csv', 'select0.csv', 'select1.csv', 'update.csv']:
+        fname = os.path.join(sys.argv[1], filename)
+        title = titles[filename]
+        data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
+        plot = pyplot.figure().add_subplot(1,1,1)
+        matplotlib.rcParams.update({'font.size': 8})
+        ########################################################################################################################################
+        # NOTE: Comment what you want to hide it and uncomment what you want to draw it
+        ########################################################################################################################################
+        plot.semilogx(data['Elements'], data['fixed[F]'],           linestyle='-',  color='#e6194B', label='fixed[F]')
+        plot.semilogx(data['Elements'], data['fixed[$\ell$]'],      linestyle='-',  color='#3cb44b', label='fixed[$\ell$]')
+        plot.semilogx(data['Elements'], data['byte[F]'],            linestyle='-',  color='#ffe119', label='byte[F]')
+        plot.semilogx(data['Elements'], data['byte[$\ell$]'],       linestyle='-',  color='#4363d8', label='byte[$\ell$]')
+        plot.semilogx(data['Elements'], data['bit[F]'],             linestyle='-',  color='#f58231', label='bit[F]')
+        plot.semilogx(data['Elements'], data['bit[$\ell$]'],        linestyle='-',  color='#911eb4', label='bit[$\ell$]')
+        ####################################
+        plot.semilogx(data['Elements'], data['fixed[$16$]fixed'],   linestyle='-',  color='#42d4f4', label='fixed[$16$]fixed')
+        plot.semilogx(data['Elements'], data['byte[$16$]byte'],     linestyle='-',  color='#f032e6', label='byte[$16$]byte')
+        plot.semilogx(data['Elements'], data['bit[$16$]bit'],       linestyle='-',  color='#bfef45', label='bit[$16$]bit')
+        plot.semilogx(data['Elements'], data['fixed[$16$]byte'],    linestyle='-',  color='#fabebe', label='fixed[$16$]byte')
+        plot.semilogx(data['Elements'], data['fixed[$16$]bit'],     linestyle='-',  color='#9A6324', label='fixed[$16$]bit')
+        plot.semilogx(data['Elements'], data['byte[$16$]bit'],      linestyle='-',  color='#000075', label='byte[$16$]bit')
+        ########################################################################
+        plot.semilogx(data['Elements'], data['fixed[F]8'],          linestyle=':',  color='#e6194B', label='fixed[F]8')
+        plot.semilogx(data['Elements'], data['fixed[$\ell$]8'],     linestyle=':',  color='#3cb44b', label='fixed[$\ell$]8')
+        plot.semilogx(data['Elements'], data['byte[F]8'],           linestyle=':',  color='#ffe119', label='byte[F]8')
+        plot.semilogx(data['Elements'], data['byte[$\ell$]8'],      linestyle=':',  color='#4363d8', label='byte[$\ell$]8')
+        plot.semilogx(data['Elements'], data['bit[F]8'],            linestyle=':',  color='#f58231', label='bit[F]8')
+        plot.semilogx(data['Elements'], data['bit[$\ell$]8'],       linestyle=':',  color='#911eb4', label='bit[$\ell$]8')
+        ####################################
+        plot.semilogx(data['Elements'], data['fixed[$16$]fixed8'],  linestyle=':',  color='#42d4f4', label='fixed[$16$]fixed8')
+        plot.semilogx(data['Elements'], data['byte[$16$]byte8'],    linestyle=':',  color='#f032e6', label='byte[$16$]byte8')
+        plot.semilogx(data['Elements'], data['bit[$16$]bit8'],      linestyle=':',  color='#bfef45', label='bit[$16$]bit8')
+        plot.semilogx(data['Elements'], data['fixed[$16$]byte8'],   linestyle=':',  color='#fabebe', label='fixed[$16$]byte8')
+        plot.semilogx(data['Elements'], data['fixed[$16$]bit8'],    linestyle=':',  color='#9A6324', label='fixed[$16$]bit8')
+        plot.semilogx(data['Elements'], data['byte[$16$]bit8'],     linestyle=':',  color='#000075', label='byte[$16$]bit8')
+        ########################################################################
+        plot.semilogx(data['Elements'], data['fixed[F]16'],         linestyle='--', color='#e6194B', label='fixed[F]16')
+        plot.semilogx(data['Elements'], data['fixed[$\ell$]16'],    linestyle='--', color='#3cb44b', label='fixed[$\ell$]16')
+        plot.semilogx(data['Elements'], data['byte[F]16'],          linestyle='--', color='#ffe119', label='byte[F]16')
+        plot.semilogx(data['Elements'], data['byte[$\ell$]16'],     linestyle='--', color='#4363d8', label='byte[$\ell$]16')
+        plot.semilogx(data['Elements'], data['bit[F]16'],           linestyle='--', color='#f58231', label='bit[F]16')
+        plot.semilogx(data['Elements'], data['bit[$\ell$]16'],      linestyle='--', color='#911eb4', label='bit[$\ell$]16')
+        ####################################
+        plot.semilogx(data['Elements'], data['fixed[$16$]fixed16'], linestyle='--', color='#42d4f4', label='fixed[$16$]fixed16')
+        plot.semilogx(data['Elements'], data['byte[$16$]byte16'],   linestyle='--', color='#f032e6', label='byte[$16$]byte16')
+        plot.semilogx(data['Elements'], data['bit[$16$]bit16'],     linestyle='--', color='#bfef45', label='bit[$16$]bit16')
+        plot.semilogx(data['Elements'], data['fixed[$16$]byte16'],  linestyle='--', color='#fabebe', label='fixed[$16$]byte16')
+        plot.semilogx(data['Elements'], data['fixed[$16$]bit16'],   linestyle='--', color='#9A6324', label='fixed[$16$]bit16')
+        plot.semilogx(data['Elements'], data['byte[$16$]bit16'],    linestyle='--', color='#000075', label='byte[$16$]bit16')
+        ########################################################################
+        plot.semilogx(data['Elements'], data['fixed[F]32'],         linestyle='-.',  color='#e6194B', label='fixed[F]32')
+        plot.semilogx(data['Elements'], data['fixed[$\ell$]32'],    linestyle='-.',  color='#3cb44b', label='fixed[$\ell$]32')
+        plot.semilogx(data['Elements'], data['byte[F]32'],          linestyle='-.',  color='#ffe119', label='byte[F]32')
+        plot.semilogx(data['Elements'], data['byte[$\ell$]32'],     linestyle='-.',  color='#4363d8', label='byte[$\ell$]32')
+        plot.semilogx(data['Elements'], data['bit[F]32'],           linestyle='-.',  color='#f58231', label='bit[F]32')
+        plot.semilogx(data['Elements'], data['bit[$\ell$]32'],      linestyle='-.',  color='#911eb4', label='bit[$\ell$]32')
+        ####################################
+        plot.semilogx(data['Elements'], data['fixed[$16$]fixed32'], linestyle='-.',  color='#42d4f4', label='fixed[$16$]fixed32')
+        plot.semilogx(data['Elements'], data['byte[$16$]byte32'],   linestyle='-.',  color='#f032e6', label='byte[$16$]byte32')
+        plot.semilogx(data['Elements'], data['bit[$16$]bit32'],     linestyle='-.',  color='#bfef45', label='bit[$16$]bit32')
+        plot.semilogx(data['Elements'], data['fixed[$16$]byte32'],  linestyle='-.',  color='#fabebe', label='fixed[$16$]byte32')
+        plot.semilogx(data['Elements'], data['fixed[$16$]bit32'],   linestyle='-.',  color='#9A6324', label='fixed[$16$]bit32')
+        plot.semilogx(data['Elements'], data['byte[$16$]bit32'],    linestyle='-.',  color='#000075', label='byte[$16$]bit32')
+        ########################################################################
+        plot.semilogx(data['Elements'], data['fixed[F]64'],         linestyle=':',   color='#e6194B', label='fixed[F]64')
+        plot.semilogx(data['Elements'], data['fixed[$\ell$]64'],    linestyle=':',   color='#3cb44b', label='fixed[$\ell$]64')
+        plot.semilogx(data['Elements'], data['byte[F]64'],          linestyle=':',   color='#ffe119', label='byte[F]64')
+        plot.semilogx(data['Elements'], data['byte[$\ell$]64'],     linestyle=':',   color='#4363d8', label='byte[$\ell$]64')
+        plot.semilogx(data['Elements'], data['bit[F]64'],           linestyle=':',   color='#f58231', label='bit[F]64')
+        plot.semilogx(data['Elements'], data['bit[$\ell$]64'],      linestyle=':',   color='#911eb4', label='bit[$\ell$]64')
+        ####################################
+        plot.semilogx(data['Elements'], data['fixed[$16$]fixed64'], linestyle=':',   color='#42d4f4', label='fixed[$16$]fixed64')
+        plot.semilogx(data['Elements'], data['byte[$16$]byte64'],   linestyle=':',   color='#f032e6', label='byte[$16$]byte64')
+        plot.semilogx(data['Elements'], data['bit[$16$]bit64'],     linestyle=':',   color='#bfef45', label='bit[$16$]bit64')
+        plot.semilogx(data['Elements'], data['fixed[$16$]byte64'],  linestyle=':',   color='#fabebe', label='fixed[$16$]byte64')
+        plot.semilogx(data['Elements'], data['fixed[$16$]bit64'],   linestyle=':',   color='#9A6324', label='fixed[$16$]bit64')
+        plot.semilogx(data['Elements'], data['byte[$16$]bit64'],    linestyle=':',   color='#000075', label='byte[$16$]bit64')
+        ########################################################################
+        plot.semilogx(data['Elements'], data['Prezza'],    linestyle='-', color='#000000', label='Prezza')
+        ########################################################################################################################################
+        pyplot.title('Rank select: {}'.format(title), fontsize='large')
+        pyplot.xlabel('$\#$ elements', fontsize='medium')
+        pyplot.ylabel('time (nS)', fontsize='medium')
+        pyplot.legend(loc="upper left", bbox_to_anchor=[0, 1], ncol=3, shadow=True, fancybox=True, prop={'size': 6})
+        ########################################################################################################################################
+        pyplot.savefig('{}/{}.{}'.format('./imgrankselect', filename.split('.')[0], 'pdf'))
+        #pyplot.show()

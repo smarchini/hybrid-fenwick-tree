@@ -1,0 +1,38 @@
+\documentclass{article}
+
+\usepackage[paperwidth=30cm, paperheight=35cm, left=5mm, top=5mm, bottom=5mm, right=5mm, margin=5mm]{geometry}
+\usepackage{graphicx}
+
+\begin{document}
+
+\section*{Rank \& Select: No HugeTLB}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/rankselect_nohugetlb/rank0}
+\includegraphics[width=.49\textwidth]{img/rankselect_nohugetlb/rank1}
+\includegraphics[width=.49\textwidth]{img/rankselect_nohugetlb/select0}
+\includegraphics[width=.49\textwidth]{img/rankselect_nohugetlb/select1}
+\includegraphics[width=.50\textwidth]{img/rankselect_nohugetlb/update}
+\end{center}
+
+\section*{Rank \& Select: HugeTLB}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_nornd/rank0}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_nornd/rank1}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_nornd/select0}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_nornd/select1}
+\includegraphics[width=.50\textwidth]{img/rankselect_hugetlb_nornd/update}
+\end{center}
+
+\section*{Rank \& Select: HugeTLB with MADV RANDOM}
+
+\begin{center}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_rnd/rank0}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_rnd/rank1}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_rnd/select0}
+\includegraphics[width=.49\textwidth]{img/rankselect_hugetlb_rnd/select1}
+\includegraphics[width=.50\textwidth]{img/rankselect_hugetlb_rnd/update}
+\end{center}
+
+\end{document}

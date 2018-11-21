@@ -11,6 +11,8 @@
  * For the classical tree (FenwickF) we only have topdown_function and
  * fenwick_function.
  *
+ * Compile with: g++ -O3 -march=native -o selfcontained selfcontained.cpp
+ *
  */
 
 #include <iostream>
