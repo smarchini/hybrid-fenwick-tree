@@ -204,6 +204,7 @@ public:
     {
         while (idx <= size) {
             tree[idx-1] += inc;
+            std::cout << "idx = " << idx << "\n";
             idx += mask_rho(idx);
         }
     }
@@ -214,10 +215,12 @@ public:
         const size_t negidx = -idx;
 
         while (negindex != negidx) {
+            std::cout << "index = " << -negindex << "\n";
             tree[-negindex] += inc;
             negindex ^= 1ULL << lambda(negindex ^ negidx);
         }
 
+        std::cout << "index = " << idx << "\n";
         tree[idx] += inc;
     }
 
@@ -247,6 +250,13 @@ int main(int argc, char *argv[])
 
     FenwickF fenF(sequence.get(), SIZE);
     FenwickL fenL(sequence.get(), SIZE);
+
+    for (size_t pippo = 1; pippo <= SIZE; pippo++) {
+        cout << "pippo = " << pippo << "\n";
+        fenF.bottomup_add(pippo, 0);
+        fenF.topdown_add(pippo, 0);
+        cout << endl;
+    }
 
     uint64_t tmp = 0;
     high_resolution_clock::time_point begin, end;

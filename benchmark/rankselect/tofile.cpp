@@ -260,7 +260,7 @@ int main(int argc, char *argv[])
 
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
                     "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
-                    "fixed[F]86,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,"
+                    "fixed[F]8,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,"
                     "fixed[$16$]fixed8,byte[$16$]byte8,bit[$16$]bit8,fixed[$16$]byte8,fixed[$16$]bit8,byte[$16$]bit8,"
                     "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,"
                     "fixed[$16$]fixed16,byte[$16$]byte16,bit[$16$]bit16,fixed[$16$]byte16,fixed[$16$]bit16,byte[$16$]bit16,"
