@@ -1,3 +1,6 @@
+#define HFT_USE_HUGETLB
+//#define HFT_TRANSPARENT
+
 #include <chrono>
 #include <algorithm>
 #include <random>
@@ -107,50 +110,74 @@ public:
         auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
         fbuild << to_string(build / (double)size);
 
-        cout << "rank0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.rankZero(idxdist(mte));
-        end = high_resolution_clock::now();
-        auto rank0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank0 << to_string(rank0 * c);
+
+        constexpr int REPS = 5;
+        constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
+
+        cout << "rank0: " << flush;
+        vector<chrono::nanoseconds::rep> rank0;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= bv.rankZero(idxdist(mte));
+            end = high_resolution_clock::now();
+            rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (rank0.begin(), rank0.end());
+        frank0 << to_string(rank0[MID] * c);
 
         cout << "select0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.selectZero(sel0dist(mte));
-        end = high_resolution_clock::now();
-        auto select0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect0 << to_string(select0 * c);
+        vector<chrono::nanoseconds::rep> select0;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= bv.selectZero(sel0dist(mte));
+            end = high_resolution_clock::now();
+            select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (select0.begin(), select0.end());
+        fselect0 << to_string(select0[MID] * c);
 
         cout << "rank1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.rank(idxdist(mte));
-        end = high_resolution_clock::now();
-        auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank1 << to_string(rank1 * c);
+        vector<chrono::nanoseconds::rep> rank1;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= bv.rank(idxdist(mte));
+            end = high_resolution_clock::now();
+            rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (rank1.begin(), rank1.end());
+        frank1 << to_string(rank1[MID] * c);
 
         cout << "select1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.select(sel1dist(mte));
-        end = high_resolution_clock::now();
-        auto select1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect1 << to_string(select1 * c);
+        vector<chrono::nanoseconds::rep> select1;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= bv.select(sel1dist(mte));
+            end = high_resolution_clock::now();
+            select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (rank1.begin(), rank1.end());
+        fselect1 << to_string(select1[MID] * c);
 
-        cout << "update... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= bv.toggle(bitdist(mte));
-        // for(uint64_t i = 0; i < queries; ++i) {
-        //     size_t index = bitdist(mte) / 64;
-        //     uint64_t value = bv.bitvector()[index] ^ (1 << (bitdist(mte) % 64));
-        //     u ^= bv.update(index, value);
-        // }
-        end = high_resolution_clock::now();
-        auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fupdate << to_string(update * c);
+        cout << "toggle... " << flush;
+        vector<chrono::nanoseconds::rep> update;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= bv.toggle(bitdist(mte));
+            end = high_resolution_clock::now();
+            update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (update.begin(), update.end());
+        fupdate << to_string(update[MID] * c);
 
         cout << "bitspace... " << flush;
         fbitspace << to_string(bv.bit_count() / (size * 64.));
@@ -176,47 +203,75 @@ public:
         auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
         fbuild << to_string(build / (double)size);
 
-        cout << "rank0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.rank0(idxdist(mte));
-        end = high_resolution_clock::now();
-        auto rank0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank0 << to_string(rank0 * c);
+        constexpr int REPS = 5;
+        constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
+
+        cout << "rank0: " << flush;
+        vector<chrono::nanoseconds::rep> rank0;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= dynamic.rank0(idxdist(mte));
+            end = high_resolution_clock::now();
+            rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (rank0.begin(), rank0.end());
+        frank0 << to_string(rank0[MID] * c);
 
         cout << "select0... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.select0(sel0dist(mte));
-        end = high_resolution_clock::now();
-        auto select0 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect0 << to_string(select0 * c);
+        vector<chrono::nanoseconds::rep> select0;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= dynamic.select0(sel0dist(mte));
+            end = high_resolution_clock::now();
+            select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (select0.begin(), select0.end());
+        fselect0 << to_string(select0[MID] * c);
 
         cout << "rank1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.rank1(sel0dist(mte));
-        end = high_resolution_clock::now();
-        auto rank1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        frank1 << to_string(rank1 * c);
+        vector<chrono::nanoseconds::rep> rank1;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= dynamic.rank1(sel0dist(mte));
+            end = high_resolution_clock::now();
+            rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (rank1.begin(), rank1.end());
+        frank1 << to_string(rank1[MID] * c);
 
         cout << "select1... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i)
-            u ^= dynamic.select1(sel1dist(mte));
-        end = high_resolution_clock::now();
-        auto select1 = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fselect1 << to_string(select1 * c);
-
-        cout << "update... " << flush;
-        begin = high_resolution_clock::now();
-        for(uint64_t i = 0; i < queries; ++i) {
-            size_t index = bitdist(mte);
-            dynamic.set(index, !dynamic.at(index));
+        vector<chrono::nanoseconds::rep> select1;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i)
+                u ^= dynamic.select1(sel1dist(mte));
+            end = high_resolution_clock::now();
+            select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        end = high_resolution_clock::now();
-        auto update = duration_cast<chrono::nanoseconds>(end-begin).count();
-        fupdate << to_string(update * c);
+        std::sort (rank1.begin(), rank1.end());
+        fselect1 << to_string(select1[MID] * c);
+
+        cout << "toggle... " << flush;
+        vector<chrono::nanoseconds::rep> update;
+        for (int r = 0; r < REPS; r++) {
+            cout << r << " " << flush;
+            begin = high_resolution_clock::now();
+            for(uint64_t i = 0; i < queries; ++i) {
+                size_t index = bitdist(mte);
+                dynamic.set(index, !dynamic.at(index));
+            }
+            end = high_resolution_clock::now();
+            update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        }
+        std::sort (update.begin(), update.end());
+        fupdate << to_string(update[MID] * c);
 
         cout << "bitspace... " << flush;
         fbitspace << to_string(dynamic.bit_size() / (size * 64.));
@@ -268,6 +323,8 @@ int main(int argc, char *argv[])
                     "fixed[$16$]fixed32,byte[$16$]byte32,bit[$16$]bit32,fixed[$16$]byte32,fixed[$16$]bit32,byte[$16$]bit32,"
                     "fixed[F]64,fixed[$\\ell$]64,byte[F]64,byte[$\\ell$]64,bit[F]64,bit[$\\ell$]64,"
                     "fixed[$16$]fixed64,byte[$16$]byte64,bit[$16$]bit64,fixed[$16$]byte64,fixed[$16$]bit64,byte[$16$]bit64"); //,Prezza
+
+    // bench.filesinit("Prezza");
 
     cout << "Fenw:            "; bench.run<Word<FixedF>>();              bench.separator();
     cout << "LFenw:           "; bench.run<Word<FixedL>>();              bench.separator();
@@ -334,7 +391,7 @@ int main(int argc, char *argv[])
     cout << "LFenw[16]Bit64:  "; bench.run<Stride<LNaiveBit16, 64>>();   bench.separator();
     cout << "LByte[16]Bit64:  "; bench.run<Stride<LByteBit16, 64>>();    bench.separator("\n");
 
-    //cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
+    // cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
 
 
     return 0;

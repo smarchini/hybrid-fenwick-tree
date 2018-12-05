@@ -24,7 +24,6 @@ namespace hft {
     public:
         static constexpr size_t PAGESIZE = 2048*1024;
         static constexpr int PROTECTION = PROT_READ | PROT_WRITE;
-        static constexpr int FLAGS = MAP_PRIVATE | MAP_ANONYMOUS;
         static constexpr int ADVICE = MADV_HUGEPAGE;
 
     private:
@@ -39,9 +38,14 @@ namespace hft {
             _size(size),
             space(mround(PAGESIZE, (size > 0 ? size : 1) * sizeof(T)))
         {
-            void *result = mmap(nullptr, space, PROTECTION, FLAGS, -1, 0);
+#ifdef HFT_TRANSPARENT
+            void *result = mmap(nullptr, space, PROTECTION, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
             assert(result != MAP_FAILED);
             madvise(result, space, ADVICE);
+#else
+            void *result = mmap(nullptr, space, PROTECTION, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
+            assert(result != MAP_FAILED);
+#endif
             buffer = static_cast<T*>(result);
         }
 

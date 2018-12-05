@@ -188,10 +188,11 @@ want to try huge pages.
 ## Huge TLB pages
 
 A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
-Linux's 2MB huge TLB pages capabilities, otherwise it is a wrapper for
-`std::uniqueptr<T[]>`. To use huge pages you should first (manually) enable them
-in your operating system. For more information refer to [hugetlbpage] on the
-Linux kernel documentation.
+Linux's 2MB huge TLB pages capabilities and with an additional `#define
+HFT_TRANSPARENT` will make it use transparent huge pages (through `madvise`);
+otherwise this class is a simple wrapper for `std::uniqueptr<T[]>`. To use huge
+pages you should first (manually) enable them in your operating system. For more
+information refer to [hugetlbpage] on the Linux kernel documentation.
 
 At the moment the data structures in this library are dynamic as in *dynamic
 arrays*: they deal with mutable data of fixed size. Although, an implementation
