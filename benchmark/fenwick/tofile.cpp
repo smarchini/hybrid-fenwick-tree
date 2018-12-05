@@ -119,39 +119,63 @@ private:
       auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
       fbuild << to_string(build / (double)size);
 
-      cout << "prefix... " << flush;
-      begin = high_resolution_clock::now();
-      for (uint64_t i = 0; i < queries; ++i)
-        u ^= tree.prefix(idxdist(mte));
-      end = high_resolution_clock::now();
-      auto prefix = duration_cast<chrono::nanoseconds>(end - begin).count();
-      fprefix << to_string(prefix * c);
+      constexpr int REPS = 5;
+      constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
 
-      cout << "add... " << flush;
-      begin = high_resolution_clock::now();
-      for (uint64_t i = 0; i < queries; ++i) {
-        size_t idx = idxdist(mte);
-        tree.add(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
+      cout << "prefix: " << flush;
+      vector<chrono::nanoseconds::rep> prefix;
+      for (int r = 0; r < REPS; r++) {
+          cout << r << " " << flush;
+          begin = high_resolution_clock::now();
+          for (uint64_t i = 0; i < queries; ++i)
+              u ^= tree.prefix(idxdist(mte));
+          end = high_resolution_clock::now();
+          prefix.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
       }
-      end = high_resolution_clock::now();
-      auto add = duration_cast<chrono::nanoseconds>(end - begin).count();
-      fadd << to_string(add * c);
+      std::sort(prefix.begin(), prefix.end());
+      fprefix << to_string(prefix[MID] * c);
 
-      cout << "find... " << flush;
-      begin = high_resolution_clock::now();
-      for (uint64_t i = 0; i < queries; ++i)
-        u ^= tree.find(cumseqdist(mte));
-      end = high_resolution_clock::now();
-      auto find = duration_cast<chrono::nanoseconds>(end - begin).count();
-      ffind << to_string(find * c);
+      cout << "add: " << flush;
+      vector<chrono::nanoseconds::rep> add;
+      for (int r = 0; r < REPS; r++) {
+          cout << r << " " << flush;
+          begin = high_resolution_clock::now();
+          for (uint64_t i = 0; i < queries; ++i) {
+              size_t sign = queries & 1 ? 1 : -1;
+              size_t idx = idxdist(mte) * sign;
+              tree.add(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
+          }
+          end = high_resolution_clock::now();
+          add.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+      }
+      std::sort(add.begin(), add.end());
+      fadd << to_string(add[MID] * c);
 
-      cout << "findc... " << flush;
-      begin = high_resolution_clock::now();
-      for (uint64_t i = 0; i < queries; ++i)
-        u ^= tree.compfind(cumseqdist(mte));
-      end = high_resolution_clock::now();
-      auto findc = duration_cast<chrono::nanoseconds>(end - begin).count();
-      ffindc << to_string(findc * c);
+      cout << "find: " << flush;
+      vector<chrono::nanoseconds::rep> find;
+      for (int r = 0; r < REPS; r++) {
+          cout << r << " " << flush;
+          begin = high_resolution_clock::now();
+          for (uint64_t i = 0; i < queries; ++i)
+              u ^= tree.find(cumseqdist(mte));
+          end = high_resolution_clock::now();
+          find.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+      }
+      std::sort(find.begin(), find.end());
+      ffind << to_string(find[MID] * c);
+
+      cout << "findc: " << flush;
+      vector<chrono::nanoseconds::rep> findc;
+      for (int r = 0; r < REPS; r++) {
+          cout << r << " " << flush;
+          begin = high_resolution_clock::now();
+          for (uint64_t i = 0; i < queries; ++i)
+              u ^= tree.compfind(cumseqdist(mte));
+          end = high_resolution_clock::now();
+          findc.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+      }
+      std::sort(findc.begin(), findc.end());
+      ffindc << to_string(findc[MID] * c);
 
       cout << "bitspace... " << flush;
       fbitspace << to_string(tree.bit_count() / (size * 64.));

@@ -124,10 +124,10 @@ public:
             end = high_resolution_clock::now();
             rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank0.begin(), rank0.end());
+        std::sort(rank0.begin(), rank0.end());
         frank0 << to_string(rank0[MID] * c);
 
-        cout << "select0... " << flush;
+        cout << "select0: " << flush;
         vector<chrono::nanoseconds::rep> select0;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -137,10 +137,10 @@ public:
             end = high_resolution_clock::now();
             select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (select0.begin(), select0.end());
+        std::sort(select0.begin(), select0.end());
         fselect0 << to_string(select0[MID] * c);
 
-        cout << "rank1... " << flush;
+        cout << "rank1: " << flush;
         vector<chrono::nanoseconds::rep> rank1;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -150,10 +150,10 @@ public:
             end = high_resolution_clock::now();
             rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank1.begin(), rank1.end());
+        std::sort(rank1.begin(), rank1.end());
         frank1 << to_string(rank1[MID] * c);
 
-        cout << "select1... " << flush;
+        cout << "select1: " << flush;
         vector<chrono::nanoseconds::rep> select1;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -163,10 +163,10 @@ public:
             end = high_resolution_clock::now();
             select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank1.begin(), rank1.end());
+        std::sort(select1.begin(), select1.end());
         fselect1 << to_string(select1[MID] * c);
 
-        cout << "toggle... " << flush;
+        cout << "toggle: " << flush;
         vector<chrono::nanoseconds::rep> update;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -176,7 +176,7 @@ public:
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (update.begin(), update.end());
+        std::sort(update.begin(), update.end());
         fupdate << to_string(update[MID] * c);
 
         cout << "bitspace... " << flush;
@@ -216,10 +216,10 @@ public:
             end = high_resolution_clock::now();
             rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank0.begin(), rank0.end());
+        std::sort(rank0.begin(), rank0.end());
         frank0 << to_string(rank0[MID] * c);
 
-        cout << "select0... " << flush;
+        cout << "select0: " << flush;
         vector<chrono::nanoseconds::rep> select0;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -232,7 +232,7 @@ public:
         std::sort (select0.begin(), select0.end());
         fselect0 << to_string(select0[MID] * c);
 
-        cout << "rank1... " << flush;
+        cout << "rank1: " << flush;
         vector<chrono::nanoseconds::rep> rank1;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -242,10 +242,10 @@ public:
             end = high_resolution_clock::now();
             rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank1.begin(), rank1.end());
+        std::sort(rank1.begin(), rank1.end());
         frank1 << to_string(rank1[MID] * c);
 
-        cout << "select1... " << flush;
+        cout << "select1: " << flush;
         vector<chrono::nanoseconds::rep> select1;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -255,10 +255,10 @@ public:
             end = high_resolution_clock::now();
             select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (rank1.begin(), rank1.end());
+        std::sort(select1.begin(), select1.end());
         fselect1 << to_string(select1[MID] * c);
 
-        cout << "toggle... " << flush;
+        cout << "toggle: " << flush;
         vector<chrono::nanoseconds::rep> update;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
@@ -270,7 +270,7 @@ public:
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
-        std::sort (update.begin(), update.end());
+        std::sort(update.begin(), update.end());
         fupdate << to_string(update[MID] * c);
 
         cout << "bitspace... " << flush;
