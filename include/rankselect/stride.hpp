@@ -116,27 +116,34 @@ namespace hft {
             virtual bool set(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] |= uint64_t(1) << (index % 64);
-                bool is_changed = _bitvector[index / 64] != old;
-                tree.add(index / (WORDS * 64) + 1, is_changed);
 
-                return !is_changed;
+                if (_bitvector[index / 64] != old) {
+                    tree.add(index / (WORDS * 64) + 1, 1);
+                    return false;
+                }
+
+                return true;
             }
 
             virtual bool clear(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] &= ~(uint64_t(1) << (index % 64));
-                bool is_changed = _bitvector[index / 64] != old;
-                tree.add(index / (WORDS * 64) + 1, -is_changed);
 
-                return is_changed;
+                if (_bitvector[index / 64] != old) {
+                    tree.add(index / (WORDS * 64) + 1, -1);
+                    return true;
+                }
+
+                return false;
             }
 
             virtual bool toggle(size_t index) {
                 const uint64_t old = _bitvector[index / 64];
                 _bitvector[index / 64] ^= uint64_t(1) << (index % 64);
-                tree.add(index / (WORDS * 64) + 1, _bitvector[index / 64] > old ? 1 : -1);
+                bool was_set = _bitvector[index / 64] < old;
+                tree.add(index / (WORDS * 64) + 1, was_set ? -1 : 1);
 
-                return _bitvector[index / 64] > old ? 0 : 1;
+                return was_set;
             }
 
             virtual size_t bit_count() const
