@@ -1,3 +1,6 @@
+#define HFT_USE_HUGETLB
+//#define HFT_TRANSPARENT
+
 #include <iostream>
 #include <chrono>
 #include <algorithm>
