@@ -1,3 +1,7 @@
+// Copyright (c) 2017, Nicola Prezza.  All rights reserved.
+// Use of this source code is governed
+// by a MIT license that can be found in the LICENSE file.
+
 //============================================================================
 // Name        : bwt.hpp
 // Author      : Nicola Prezza
@@ -17,10 +21,10 @@
 #ifndef DYNAMICBWT_H_
 #define DYNAMICBWT_H_
 
-#include <includes.hpp>
+#include "includes.hpp"
 
-#include <gap_bitvector.hpp>
-#include <rle_string.hpp>
+#include "gap_bitvector.hpp"
+#include "rle_string.hpp"
 #include "wt_string.hpp"
 
 namespace dyn {

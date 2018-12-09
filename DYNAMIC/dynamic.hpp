@@ -1,3 +1,7 @@
+// Copyright (c) 2017, Nicola Prezza.  All rights reserved.
+// Use of this source code is governed
+// by a MIT license that can be found in the LICENSE file.
+
 /*
  * dynamic.hpp
  *
@@ -16,6 +20,7 @@
 #include <internal/bwt.hpp>
 #include <internal/sparse_vector.hpp>
 #include <internal/packed_vector.hpp>
+//#include <internal/packed_array.hpp>
 #include <internal/wt_string.hpp>
 #include <internal/fm_index.hpp>
 
