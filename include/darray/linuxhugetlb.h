@@ -87,7 +87,7 @@ namespace hft {
 
         size_t bit_count() const
         {
-            return sizeof(DArray<T>)*8 + sizeof(T) * space * 8;
+            return sizeof(DArray<T>)*8 + space * 8;
         }
     };
 

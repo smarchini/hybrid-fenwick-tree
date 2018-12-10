@@ -77,7 +77,8 @@ namespace hft {
                 for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
                     if (node+m-1 >= size()) continue;
 
-                    uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)];
+                    uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)])
+                        & BYTE_MASK[get_bytesize(node+m)];
 
                     if (*val >= value) {
                         node += m;
@@ -97,7 +98,8 @@ namespace hft {
                     if (node+m-1 >= size()) continue;
 
                     uint64_t value = (LEAF_MAXVAL << rho(node+m))
-                        - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)]) & BYTE_MASK[get_bytesize(node+m)]);
+                        - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)])
+                           & BYTE_MASK[get_bytesize(node+m)]);
 
                     if (*val >= value) {
                         node += m;

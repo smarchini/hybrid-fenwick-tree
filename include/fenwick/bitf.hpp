@@ -106,6 +106,7 @@ namespace hft {
 
                     const size_t bit_pos = get_bitpos(node+m-1);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+
                     uint64_t value = bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + rho(node+m));
 
                     if (*val >= value) {
@@ -128,7 +129,9 @@ namespace hft {
                     const int height = rho(node+m);
                     const size_t bit_pos = get_bitpos(node+m-1);
                     const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-                    uint64_t value = (LEAF_MAXVAL << height) - bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
+
+                    uint64_t value = (LEAF_MAXVAL << height)
+                        - bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
 
                     if (*val >= value) {
                         node += m;
