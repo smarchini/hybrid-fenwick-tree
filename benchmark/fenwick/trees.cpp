@@ -1,4 +1,4 @@
-#define HFT_USE_HUGETLB
+//#define HFT_USE_HUGETLB
 
 #include <iostream>
 #include <iomanip>
@@ -80,11 +80,11 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     auto constructor = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
     // prefix
-    begin = chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < size; i++)
-        u ^= tree.prefix(order[i]);
-    end = chrono::high_resolution_clock::now();
-    auto prefix = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = chrono::high_resolution_clock::now();
+    // for (size_t i = 0; i < size; i++)
+    //     u ^= tree.prefix(order[i]);
+    // end = chrono::high_resolution_clock::now();
+    // auto prefix = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
     // find
     begin = chrono::high_resolution_clock::now();
@@ -94,21 +94,21 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     auto find = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
     // add
-    begin = chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < size; i++)
-        tree.add(order[i], add_updates[i]);
-    end = chrono::high_resolution_clock::now();
-    auto add = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
+    // begin = chrono::high_resolution_clock::now();
+    // for (size_t i = 0; i < size; i++)
+    //     tree.add(order[i], add_updates[i]);
+    // end = chrono::high_resolution_clock::now();
+    // auto add = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
-    for (size_t i = 0; i < size; i++)
-        tree.add(order[i], -add_updates[i]);
+    // for (size_t i = 0; i < size; i++)
+    //     tree.add(order[i], -add_updates[i]);
 
-    // find complement (after tree.add, so sequence[] is not cached)
-    begin = chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < size; i++)
-        u ^= tree.compfind(sequence[i]);
-    end = chrono::high_resolution_clock::now();
-    auto findc = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
+    // // find complement (after tree.add, so sequence[] is not cached)
+    // begin = chrono::high_resolution_clock::now();
+    // for (size_t i = 0; i < size; i++)
+    //     u ^= tree.compfind(sequence[i]);
+    // end = chrono::high_resolution_clock::now();
+    // auto findc = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
 
     const volatile uint64_t __attribute__((unused)) unused = u;
@@ -116,8 +116,8 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     const double c = 1. / size;
     cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
     cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
-    cout << "prefix:" << fixed << setw(12) << prefix * c << " ns/item\n";
-    cout << "set:   " << fixed << setw(12) << add * c << " ns/item\n";
+    //cout << "prefix:" << fixed << setw(12) << prefix * c << " ns/item\n";
+    //cout << "add:   " << fixed << setw(12) << add * c << " ns/item\n";
     cout << "find:  " << fixed << setw(12) << find * c << " ns/item\n";
-    cout << "findc: " << fixed << setw(12) << findc * c << " ns/item\n";
+    //cout << "findc: " << fixed << setw(12) << findc * c << " ns/item\n";
 }

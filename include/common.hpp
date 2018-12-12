@@ -231,7 +231,9 @@ namespace hft {
      */
     inline uint64_t bitextract(uint64_t word, uint from, uint to)
     {
-        return __builtin_ia32_bextr_u64(word, (from & 0xff) | ((to & 0xff) << 8));
+        // TODO: ifdef
+        // return __builtin_ia32_bextr_u64(word, (from & 0xff) | ((to & 0xff) << 8));
+        return (word >> from) & ((1ULL << to) - 1);
     }
 
     /**

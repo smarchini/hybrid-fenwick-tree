@@ -135,22 +135,6 @@ private:
       std::sort(prefix.begin(), prefix.end());
       fprefix << to_string(prefix[MID] * c);
 
-      cout << "add: " << flush;
-      vector<chrono::nanoseconds::rep> add;
-      for (int r = 0; r < REPS; r++) {
-          cout << r << " " << flush;
-          begin = high_resolution_clock::now();
-          for (uint64_t i = 0; i < queries; ++i) {
-              size_t sign = queries & 1 ? 1 : -1;
-              size_t idx = idxdist(mte) * sign;
-              tree.add(idx, (sequence[idx] + seqdist(mte)) % LEAF_MAXVAL);
-          }
-          end = high_resolution_clock::now();
-          add.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-      }
-      std::sort(add.begin(), add.end());
-      fadd << to_string(add[MID] * c);
-
       cout << "find: " << flush;
       vector<chrono::nanoseconds::rep> find;
       for (int r = 0; r < REPS; r++) {
@@ -164,22 +148,41 @@ private:
       std::sort(find.begin(), find.end());
       ffind << to_string(find[MID] * c);
 
-      cout << "findc: " << flush;
-      vector<chrono::nanoseconds::rep> findc;
+      cout << "add: " << flush;
+      vector<chrono::nanoseconds::rep> add;
       for (int r = 0; r < REPS; r++) {
           cout << r << " " << flush;
           begin = high_resolution_clock::now();
-          for (uint64_t i = 0; i < queries; ++i)
-              u ^= tree.compfind(cumseqdist(mte));
+          for (uint64_t i = 0; i < queries; ++i) {
+              size_t idx = idxdist(mte);
+              uint64_t val = seqdist(mte);
+              tree.add(idx, sequence[idx] + val < LEAF_MAXVAL ? val : -val);
+          }
           end = high_resolution_clock::now();
-          findc.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+          add.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
       }
-      std::sort(findc.begin(), findc.end());
-      ffindc << to_string(findc[MID] * c);
+      std::sort(add.begin(), add.end());
+      fadd << to_string(add[MID] * c);
 
-      cout << "bitspace... " << flush;
-      fbitspace << to_string(tree.bit_count() / (size * 64.));
-      cout << "done.  " << endl;
+      // The add cannot be erased
+      u ^= tree.prefix(idxdist(mte));
+
+      // cout << "findc: " << flush;
+      // vector<chrono::nanoseconds::rep> findc;
+      // for (int r = 0; r < REPS; r++) {
+      //     cout << r << " " << flush;
+      //     begin = high_resolution_clock::now();
+      //     for (uint64_t i = 0; i < queries; ++i)
+      //         u ^= tree.compfind(cumseqdist(mte));
+      //     end = high_resolution_clock::now();
+      //     findc.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+      // }
+      // std::sort(findc.begin(), findc.end());
+      // ffindc << to_string(findc[MID] * c);
+
+      // cout << "bitspace... " << flush;
+      // fbitspace << to_string(tree.bit_count() / (size * 64.));
+      // cout << "done.  " << endl;
 
       const volatile uint64_t __attribute__((unused)) unused = u;
     }
@@ -197,7 +200,7 @@ private:
             file << text << endl;
         }
 
-        file << size*64 << ",";
+        file << size << ",";
     }
 };
 
@@ -220,9 +223,9 @@ int main(int argc, char *argv[])
     bench.datainit(mte);
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
                     "fixed[$12$]fixed,byte[$12$]byte,bit[$12$]bit,fixed[$12$]byte,fixed[$12$]bit,byte[$12$]bit,"
-                    "fixed[$14$]fixed,byte[$14$]byte,bit[$14$]bit,fixed[$14$]byte,fixed[$14$]bit,byte[$14$]bit,"
+                    //"fixed[$14$]fixed,byte[$14$]byte,bit[$14$]bit,fixed[$14$]byte,fixed[$14$]bit,byte[$14$]bit,"
                     "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
-                    "fixed[$18$]fixed,byte[$18$]byte,bit[$18$]bit,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]bit,"
+                    //"fixed[$18$]fixed,byte[$18$]byte,bit[$18$]bit,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]bit,"
                     "fixed[$20$]fixed,byte[$20$]byte,bit[$20$]bit,fixed[$20$]byte,fixed[$20$]bit,byte[$20$]bit");
 
     cout << "fixed[F](" << size << ", " << queries << "):       "; bench.run<FixedF>(); bench.separator();
@@ -239,12 +242,12 @@ int main(int argc, char *argv[])
     cout << "fixed[12]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit12>(); bench.separator();
     cout << "byte[12]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit12>(); bench.separator();
 
-    cout << "fixed[14]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive14>(); bench.separator();
-    cout << "byte[14]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte14>(); bench.separator();
-    cout << "bit[14]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit14>(); bench.separator();
-    cout << "fixed[14]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte14>(); bench.separator();
-    cout << "fixed[14]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit14>(); bench.separator();
-    cout << "byte[14]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit14>(); bench.separator();
+    //cout << "fixed[14]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive14>(); bench.separator();
+    //cout << "byte[14]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte14>(); bench.separator();
+    //cout << "bit[14]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit14>(); bench.separator();
+    //cout << "fixed[14]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte14>(); bench.separator();
+    //cout << "fixed[14]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit14>(); bench.separator();
+    //cout << "byte[14]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit14>(); bench.separator();
 
     cout << "fixed[16]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive16>(); bench.separator();
     cout << "byte[16]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte16>(); bench.separator();
@@ -253,12 +256,12 @@ int main(int argc, char *argv[])
     cout << "fixed[16]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit16>(); bench.separator();
     cout << "byte[16]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit16>(); bench.separator();
 
-    cout << "fixed[18]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive18>(); bench.separator();
-    cout << "byte[18]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte18>(); bench.separator();
-    cout << "bit[18]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit18>(); bench.separator();
-    cout << "fixed[18]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte18>(); bench.separator();
-    cout << "fixed[18]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit18>(); bench.separator();
-    cout << "byte[18]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit18>(); bench.separator();
+    //cout << "fixed[18]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive18>(); bench.separator();
+    //cout << "byte[18]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte18>(); bench.separator();
+    //cout << "bit[18]bit(" << size << ", " << queries << "):     "; bench.run<LBitBit18>(); bench.separator();
+    //cout << "fixed[18]byte(" << size << ", " << queries << "):  "; bench.run<LNaiveByte18>(); bench.separator();
+    //cout << "fixed[18]bit(" << size << ", " << queries << "):   "; bench.run<LNaiveBit18>(); bench.separator();
+    //cout << "byte[18]bit(" << size << ", " << queries << "):    "; bench.run<LByteBit18>(); bench.separator();
 
     cout << "fixed[20]fixed(" << size << ", " << queries << "): "; bench.run<LNaiveNaive20>(); bench.separator();
     cout << "byte[20]byte(" << size << ", " << queries << "):   "; bench.run<LByteByte20>(); bench.separator();

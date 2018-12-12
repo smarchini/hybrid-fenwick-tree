@@ -1,6 +1,8 @@
+#ifdef __HFT_BENCHMARK_FUNCTION__
+
 #include "microbench.h"
 
-// g++ -std=c++17 -O3 -march=native bytef.cpp -o bytef
+// g++ -std=c++17 -O3 -march=native bitf.cpp -o bitf
 int main(int argc, char **argv)
 {
     using namespace std;
@@ -17,7 +19,10 @@ int main(int argc, char **argv)
     size_t size = std::stoi(argv[1]);
     size_t queries = std::stoi(argv[2]);
 
-    bench<ByteF<64>>("ByteF", size, queries, re);
+    // run the benchmark
+    __HFT_BENCHMARK_FUNCTION__
 
     return 0;
 }
+
+#endif
