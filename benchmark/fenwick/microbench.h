@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <random>
 
-#include "../../include/fenwick.hpp"
-#include "../../include/darray.hpp"
+#include <darray.hpp>
+#include <fenwick.hpp>
 
 template<typename T>
 void find(const char* name, size_t size, size_t queries, std::default_random_engine re)

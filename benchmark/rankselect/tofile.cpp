@@ -114,65 +114,67 @@ public:
         constexpr int REPS = 5;
         constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
 
-        cout << "rank0: " << flush;
-        vector<chrono::nanoseconds::rep> rank0;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.rankZero(idxdist(mte));
-            end = high_resolution_clock::now();
-            rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort(rank0.begin(), rank0.end());
-        frank0 << to_string(rank0[MID] * c);
+        // cout << "rank0: " << flush;
+        // vector<chrono::nanoseconds::rep> rank0;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= bv.rankZero(idxdist(mte));
+        //     end = high_resolution_clock::now();
+        //     rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort(rank0.begin(), rank0.end());
+        // frank0 << to_string(rank0[MID] * c);
 
-        cout << "select0: " << flush;
-        vector<chrono::nanoseconds::rep> select0;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.selectZero(sel0dist(mte));
-            end = high_resolution_clock::now();
-            select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort(select0.begin(), select0.end());
-        fselect0 << to_string(select0[MID] * c);
+        // cout << "select0: " << flush;
+        // vector<chrono::nanoseconds::rep> select0;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= bv.selectZero(sel0dist(mte));
+        //     end = high_resolution_clock::now();
+        //     select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort(select0.begin(), select0.end());
+        // fselect0 << to_string(select0[MID] * c);
 
-        cout << "rank1: " << flush;
-        vector<chrono::nanoseconds::rep> rank1;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.rank(idxdist(mte));
-            end = high_resolution_clock::now();
-            rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort(rank1.begin(), rank1.end());
-        frank1 << to_string(rank1[MID] * c);
+        // cout << "rank1: " << flush;
+        // vector<chrono::nanoseconds::rep> rank1;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= bv.rank(idxdist(mte));
+        //     end = high_resolution_clock::now();
+        //     rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort(rank1.begin(), rank1.end());
+        // frank1 << to_string(rank1[MID] * c);
 
-        cout << "select1: " << flush;
-        vector<chrono::nanoseconds::rep> select1;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.select(sel1dist(mte));
-            end = high_resolution_clock::now();
-            select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort(select1.begin(), select1.end());
-        fselect1 << to_string(select1[MID] * c);
+        // cout << "select1: " << flush;
+        // vector<chrono::nanoseconds::rep> select1;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= bv.select(sel1dist(mte));
+        //     end = high_resolution_clock::now();
+        //     select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort(select1.begin(), select1.end());
+        // fselect1 << to_string(select1[MID] * c);
 
-        cout << "toggle: " << flush;
+        cout << "update: " << flush;
         vector<chrono::nanoseconds::rep> update;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.toggle(bitdist(mte));
+            for(uint64_t i = 0; i < queries; ++i) {
+                if (i & 1) u ^= bv.set(bitdist(mte));
+                else u ^= bv.clear(bitdist(mte));
+            }
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -258,14 +260,14 @@ public:
         std::sort(select1.begin(), select1.end());
         fselect1 << to_string(select1[MID] * c);
 
-        cout << "toggle: " << flush;
+        cout << "update: " << flush;
         vector<chrono::nanoseconds::rep> update;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i) {
-                size_t index = bitdist(mte);
-                dynamic.set(index, !dynamic.at(index));
+                if (i & 1) dynamic.set(bitdist(mte), true);
+                else dynamic.set(bitdist(mte), false);
             }
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
@@ -313,85 +315,85 @@ int main(int argc, char *argv[])
 
     bench.datainit(mte);
 
-    bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
-                    "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
-                    "fixed[F]8,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,"
-                    "fixed[$16$]fixed8,byte[$16$]byte8,bit[$16$]bit8,fixed[$16$]byte8,fixed[$16$]bit8,byte[$16$]bit8,"
-                    "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,"
-                    "fixed[$16$]fixed16,byte[$16$]byte16,bit[$16$]bit16,fixed[$16$]byte16,fixed[$16$]bit16,byte[$16$]bit16,"
-                    "fixed[F]32,fixed[$\\ell$]32,byte[F]32,byte[$\\ell$]32,bit[F]32,bit[$\\ell$]32,"
-                    "fixed[$16$]fixed32,byte[$16$]byte32,bit[$16$]bit32,fixed[$16$]byte32,fixed[$16$]bit32,byte[$16$]bit32,"
-                    "fixed[F]64,fixed[$\\ell$]64,byte[F]64,byte[$\\ell$]64,bit[F]64,bit[$\\ell$]64,"
-                    "fixed[$16$]fixed64,byte[$16$]byte64,bit[$16$]bit64,fixed[$16$]byte64,fixed[$16$]bit64,byte[$16$]bit64"); //,Prezza
+    // bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
+    //                 "fixed[$16$]fixed,byte[$16$]byte,bit[$16$]bit,fixed[$16$]byte,fixed[$16$]bit,byte[$16$]bit,"
+    //                 "fixed[F]8,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,"
+    //                 "fixed[$16$]fixed8,byte[$16$]byte8,bit[$16$]bit8,fixed[$16$]byte8,fixed[$16$]bit8,byte[$16$]bit8,"
+    //                 "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,"
+    //                 "fixed[$16$]fixed16,byte[$16$]byte16,bit[$16$]bit16,fixed[$16$]byte16,fixed[$16$]bit16,byte[$16$]bit16,"
+    //                 "fixed[F]32,fixed[$\\ell$]32,byte[F]32,byte[$\\ell$]32,bit[F]32,bit[$\\ell$]32,"
+    //                 "fixed[$16$]fixed32,byte[$16$]byte32,bit[$16$]bit32,fixed[$16$]byte32,fixed[$16$]bit32,byte[$16$]bit32,"
+    //                 "fixed[F]64,fixed[$\\ell$]64,byte[F]64,byte[$\\ell$]64,bit[F]64,bit[$\\ell$]64,"
+    //                 "fixed[$16$]fixed64,byte[$16$]byte64,bit[$16$]bit64,fixed[$16$]byte64,fixed[$16$]bit64,byte[$16$]bit64"); //,Prezza
 
-    // bench.filesinit("Prezza");
+    bench.filesinit("Prezza");
 
-    cout << "Fenw:            "; bench.run<Word<FixedF>>();              bench.separator();
-    cout << "LFenw:           "; bench.run<Word<FixedL>>();              bench.separator();
-    cout << "Byte:            "; bench.run<Word<ByteF>>();               bench.separator();
-    cout << "LByte:           "; bench.run<Word<ByteL>>();               bench.separator();
-    cout << "Bit:             "; bench.run<Word<BitF>>();                bench.separator();
-    cout << "LBit:            "; bench.run<Word<BitL>>();                bench.separator();
-    cout << "LFenw[16]Fenw:   "; bench.run<Word<LNaiveNaive16>>();       bench.separator();
-    cout << "LByte[16]Byte:   "; bench.run<Word<LByteByte16>>();         bench.separator();
-    cout << "LBit[16]Bit:     "; bench.run<Word<LBitBit16>>();           bench.separator();
-    cout << "LFenw[16]Byte:   "; bench.run<Word<LNaiveByte16>>();        bench.separator();
-    cout << "LFenw[16]Bit:    "; bench.run<Word<LNaiveBit16>>();         bench.separator();
-    cout << "LByte[16]Bit:    "; bench.run<Word<LByteBit16>>();          bench.separator();
+    // cout << "Fenw:            "; bench.run<Word<FixedF>>();              bench.separator();
+    // cout << "LFenw:           "; bench.run<Word<FixedL>>();              bench.separator();
+    // cout << "Byte:            "; bench.run<Word<ByteF>>();               bench.separator();
+    // cout << "LByte:           "; bench.run<Word<ByteL>>();               bench.separator();
+    // cout << "Bit:             "; bench.run<Word<BitF>>();                bench.separator();
+    // cout << "LBit:            "; bench.run<Word<BitL>>();                bench.separator();
+    // cout << "LFenw[16]Fenw:   "; bench.run<Word<LNaiveNaive16>>();       bench.separator();
+    // cout << "LByte[16]Byte:   "; bench.run<Word<LByteByte16>>();         bench.separator();
+    // cout << "LBit[16]Bit:     "; bench.run<Word<LBitBit16>>();           bench.separator();
+    // cout << "LFenw[16]Byte:   "; bench.run<Word<LNaiveByte16>>();        bench.separator();
+    // cout << "LFenw[16]Bit:    "; bench.run<Word<LNaiveBit16>>();         bench.separator();
+    // cout << "LByte[16]Bit:    "; bench.run<Word<LByteBit16>>();          bench.separator();
 
-    cout << "Fenw8:           "; bench.run<Stride<FixedF, 8>>();         bench.separator();
-    cout << "LFenw8:          "; bench.run<Stride<FixedL, 8>>();         bench.separator();
-    cout << "Byte8:           "; bench.run<Stride<ByteF, 8>>();          bench.separator();
-    cout << "LByte8:          "; bench.run<Stride<ByteL, 8>>();          bench.separator();
-    cout << "Bit8:            "; bench.run<Stride<BitF, 8>>();           bench.separator();
-    cout << "LBit8:           "; bench.run<Stride<BitL, 8>>();           bench.separator();
-    cout << "LFenw[16]Fenw8:  "; bench.run<Stride<LNaiveNaive16, 8>>();  bench.separator();
-    cout << "LByte[16]Byte8:  "; bench.run<Stride<LByteByte16, 8>>();    bench.separator();
-    cout << "LBit[16]Bit8:    "; bench.run<Stride<LBitBit16, 8>>();      bench.separator();
-    cout << "LFenw[16]Byte8:  "; bench.run<Stride<LNaiveByte16, 8>>();   bench.separator();
-    cout << "LFenw[16]Bit8:   "; bench.run<Stride<LNaiveBit16, 8>>();    bench.separator();
-    cout << "LByte[16]Bit8:   "; bench.run<Stride<LByteBit16, 8>>();     bench.separator();
+    // cout << "Fenw8:           "; bench.run<Stride<FixedF, 8>>();         bench.separator();
+    // cout << "LFenw8:          "; bench.run<Stride<FixedL, 8>>();         bench.separator();
+    // cout << "Byte8:           "; bench.run<Stride<ByteF, 8>>();          bench.separator();
+    // cout << "LByte8:          "; bench.run<Stride<ByteL, 8>>();          bench.separator();
+    // cout << "Bit8:            "; bench.run<Stride<BitF, 8>>();           bench.separator();
+    // cout << "LBit8:           "; bench.run<Stride<BitL, 8>>();           bench.separator();
+    // cout << "LFenw[16]Fenw8:  "; bench.run<Stride<LNaiveNaive16, 8>>();  bench.separator();
+    // cout << "LByte[16]Byte8:  "; bench.run<Stride<LByteByte16, 8>>();    bench.separator();
+    // cout << "LBit[16]Bit8:    "; bench.run<Stride<LBitBit16, 8>>();      bench.separator();
+    // cout << "LFenw[16]Byte8:  "; bench.run<Stride<LNaiveByte16, 8>>();   bench.separator();
+    // cout << "LFenw[16]Bit8:   "; bench.run<Stride<LNaiveBit16, 8>>();    bench.separator();
+    // cout << "LByte[16]Bit8:   "; bench.run<Stride<LByteBit16, 8>>();     bench.separator();
 
-    cout << "Fenw16:          "; bench.run<Stride<FixedF, 16>>();        bench.separator();
-    cout << "LFenw16:         "; bench.run<Stride<FixedL, 16>>();        bench.separator();
-    cout << "Byte16:          "; bench.run<Stride<ByteF, 16>>();         bench.separator();
-    cout << "LByte16:         "; bench.run<Stride<ByteL, 16>>();         bench.separator();
-    cout << "Bit16:           "; bench.run<Stride<BitF, 16>>();          bench.separator();
-    cout << "LBit16:          "; bench.run<Stride<BitL, 16>>();          bench.separator();
-    cout << "LFenw[16]Fenw16: "; bench.run<Stride<LNaiveNaive16, 16>>(); bench.separator();
-    cout << "LByte[16]Byte16: "; bench.run<Stride<LByteByte16, 16>>();   bench.separator();
-    cout << "LBit[16]Bit16:   "; bench.run<Stride<LBitBit16, 16>>();     bench.separator();
-    cout << "LFenw[16]Byte16: "; bench.run<Stride<LNaiveByte16, 16>>();  bench.separator();
-    cout << "LFenw[16]Bit16:  "; bench.run<Stride<LNaiveBit16, 16>>();   bench.separator();
-    cout << "LByte[16]Bit16:  "; bench.run<Stride<LByteBit16, 16>>();    bench.separator();
+    // cout << "Fenw16:          "; bench.run<Stride<FixedF, 16>>();        bench.separator();
+    // cout << "LFenw16:         "; bench.run<Stride<FixedL, 16>>();        bench.separator();
+    // cout << "Byte16:          "; bench.run<Stride<ByteF, 16>>();         bench.separator();
+    // cout << "LByte16:         "; bench.run<Stride<ByteL, 16>>();         bench.separator();
+    // cout << "Bit16:           "; bench.run<Stride<BitF, 16>>();          bench.separator();
+    // cout << "LBit16:          "; bench.run<Stride<BitL, 16>>();          bench.separator();
+    // cout << "LFenw[16]Fenw16: "; bench.run<Stride<LNaiveNaive16, 16>>(); bench.separator();
+    // cout << "LByte[16]Byte16: "; bench.run<Stride<LByteByte16, 16>>();   bench.separator();
+    // cout << "LBit[16]Bit16:   "; bench.run<Stride<LBitBit16, 16>>();     bench.separator();
+    // cout << "LFenw[16]Byte16: "; bench.run<Stride<LNaiveByte16, 16>>();  bench.separator();
+    // cout << "LFenw[16]Bit16:  "; bench.run<Stride<LNaiveBit16, 16>>();   bench.separator();
+    // cout << "LByte[16]Bit16:  "; bench.run<Stride<LByteBit16, 16>>();    bench.separator();
 
-    cout << "Fenw32:          "; bench.run<Stride<FixedF, 32>>();        bench.separator();
-    cout << "LFenw32:         "; bench.run<Stride<FixedL, 32>>();        bench.separator();
-    cout << "Byte32:          "; bench.run<Stride<ByteF, 32>>();         bench.separator();
-    cout << "LByte32:         "; bench.run<Stride<ByteL, 32>>();         bench.separator();
-    cout << "Bit32:           "; bench.run<Stride<BitF, 32>>();          bench.separator();
-    cout << "LBit32:          "; bench.run<Stride<BitL, 32>>();          bench.separator();
-    cout << "LFenw[16]Fenw32: "; bench.run<Stride<LNaiveNaive16, 32>>(); bench.separator();
-    cout << "LByte[16]Byte32: "; bench.run<Stride<LByteByte16, 32>>();   bench.separator();
-    cout << "LBit[16]Bit32:   "; bench.run<Stride<LBitBit16, 32>>();     bench.separator();
-    cout << "LFenw[16]Byte32: "; bench.run<Stride<LNaiveByte16, 32>>();  bench.separator();
-    cout << "LFenw[16]Bit32:  "; bench.run<Stride<LNaiveBit16, 32>>();   bench.separator();
-    cout << "LByte[16]Bit32:  "; bench.run<Stride<LByteBit16, 32>>();    bench.separator();
+    // cout << "Fenw32:          "; bench.run<Stride<FixedF, 32>>();        bench.separator();
+    // cout << "LFenw32:         "; bench.run<Stride<FixedL, 32>>();        bench.separator();
+    // cout << "Byte32:          "; bench.run<Stride<ByteF, 32>>();         bench.separator();
+    // cout << "LByte32:         "; bench.run<Stride<ByteL, 32>>();         bench.separator();
+    // cout << "Bit32:           "; bench.run<Stride<BitF, 32>>();          bench.separator();
+    // cout << "LBit32:          "; bench.run<Stride<BitL, 32>>();          bench.separator();
+    // cout << "LFenw[16]Fenw32: "; bench.run<Stride<LNaiveNaive16, 32>>(); bench.separator();
+    // cout << "LByte[16]Byte32: "; bench.run<Stride<LByteByte16, 32>>();   bench.separator();
+    // cout << "LBit[16]Bit32:   "; bench.run<Stride<LBitBit16, 32>>();     bench.separator();
+    // cout << "LFenw[16]Byte32: "; bench.run<Stride<LNaiveByte16, 32>>();  bench.separator();
+    // cout << "LFenw[16]Bit32:  "; bench.run<Stride<LNaiveBit16, 32>>();   bench.separator();
+    // cout << "LByte[16]Bit32:  "; bench.run<Stride<LByteBit16, 32>>();    bench.separator();
 
-    cout << "Fenw64:          "; bench.run<Stride<FixedF, 64>>();        bench.separator();
-    cout << "LFenw64:         "; bench.run<Stride<FixedL, 64>>();        bench.separator();
-    cout << "Byte64:          "; bench.run<Stride<ByteF, 64>>();         bench.separator();
-    cout << "LByte64:         "; bench.run<Stride<ByteL, 64>>();         bench.separator();
-    cout << "Bit64:           "; bench.run<Stride<BitF, 64>>();          bench.separator();
-    cout << "LBit64:          "; bench.run<Stride<BitL, 64>>();          bench.separator();
-    cout << "LFenw[16]Fenw64: "; bench.run<Stride<LNaiveNaive16, 64>>(); bench.separator();
-    cout << "LByte[16]Byte64: "; bench.run<Stride<LByteByte16, 64>>();   bench.separator();
-    cout << "LBit[16]Bit64:   "; bench.run<Stride<LBitBit16, 64>>();     bench.separator();
-    cout << "LFenw[16]Byte64: "; bench.run<Stride<LNaiveByte16, 64>>();  bench.separator();
-    cout << "LFenw[16]Bit64:  "; bench.run<Stride<LNaiveBit16, 64>>();   bench.separator();
-    cout << "LByte[16]Bit64:  "; bench.run<Stride<LByteBit16, 64>>();    bench.separator("\n");
+    // cout << "Fenw64:          "; bench.run<Stride<FixedF, 64>>();        bench.separator();
+    // cout << "LFenw64:         "; bench.run<Stride<FixedL, 64>>();        bench.separator();
+    // cout << "Byte64:          "; bench.run<Stride<ByteF, 64>>();         bench.separator();
+    // cout << "LByte64:         "; bench.run<Stride<ByteL, 64>>();         bench.separator();
+    // cout << "Bit64:           "; bench.run<Stride<BitF, 64>>();          bench.separator();
+    // cout << "LBit64:          "; bench.run<Stride<BitL, 64>>();          bench.separator();
+    // cout << "LFenw[16]Fenw64: "; bench.run<Stride<LNaiveNaive16, 64>>(); bench.separator();
+    // cout << "LByte[16]Byte64: "; bench.run<Stride<LByteByte16, 64>>();   bench.separator();
+    // cout << "LBit[16]Bit64:   "; bench.run<Stride<LBitBit16, 64>>();     bench.separator();
+    // cout << "LFenw[16]Byte64: "; bench.run<Stride<LNaiveByte16, 64>>();  bench.separator();
+    // cout << "LFenw[16]Bit64:  "; bench.run<Stride<LNaiveBit16, 64>>();   bench.separator();
+    // cout << "LByte[16]Bit64:  "; bench.run<Stride<LByteBit16, 64>>();    bench.separator("\n");
 
-    // cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
+    cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
 
 
     return 0;
