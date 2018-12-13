@@ -1,9 +1,6 @@
-CC = g++ -std=c++17 -Wall -Wextra -O3 -fno-exceptions -fno-rtti -march=native -fno-omit-frame-pointer -I../../../include
+CC = g++ -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include
 
 all: prefix add find
-
-
-
 
 
 prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl prefix_fixed18fixed prefix_fixed19byte prefix_fixed20bit prefix_byte19byte prefix_byte20bit prefix_bit20bit prefix_fixed20fixed prefix_fixed21byte prefix_fixed25bit prefix_byte21byte prefix_byte25bit prefix_bit25bit
