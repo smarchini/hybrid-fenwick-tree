@@ -23,7 +23,7 @@ template <size_t N> using Fixed19Byte = Hybrid<FixedL, ByteF, N, 19>;
 template <size_t N> using Fixed20Bit = Hybrid<FixedL, BitF, N, 20>;
 template <size_t N> using Byte19Byte = Hybrid<ByteL, ByteF, N, 19>;
 template <size_t N> using Byte20Bit = Hybrid<ByteL, BitF, N, 20>;
-template <size_t N> using Byte20Bit = Hybrid<BitL, BitF, N, 20>;
+template <size_t N> using Bit20Bit = Hybrid<BitL, BitF, N, 20>;
 
 // The size of a bottom tree is enough for the (8MB = 4 * 2MB huge pages) cache
 template <size_t N> using Fixed20Fixed = Hybrid<FixedL, FixedF, N, 20>;
@@ -31,7 +31,7 @@ template <size_t N> using Fixed21Byte = Hybrid<FixedL, ByteF, N, 21>;
 template <size_t N> using Fixed25Bit = Hybrid<FixedL, BitF, N, 25>;
 template <size_t N> using Byte21Byte = Hybrid<ByteL, ByteF, N, 21>;
 template <size_t N> using Byte25Bit = Hybrid<ByteL, BitF, N, 25>;
-template <size_t N> using Byte25Bit = Hybrid<BitL, BitF, N, 25>;
+template <size_t N> using Bit25Bit = Hybrid<BitL, BitF, N, 25>;
 
 
 template <size_t LEAF_MAXVAL> class Benchmark {
