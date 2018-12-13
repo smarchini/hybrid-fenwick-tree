@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <sys/mman.h>
 #include <assert.h>
+#include <iostream>
 
 #include "../common.hpp"
 
@@ -39,10 +40,12 @@ namespace hft {
             space(mround(PAGESIZE, (size > 0 ? size : 1) * sizeof(T)))
         {
 #ifdef HFT_TRANSPARENT
+            std::cout << "transparent space = " << space << std::endl;
             void *result = mmap(nullptr, space, PROTECTION, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
             assert(result != MAP_FAILED);
             madvise(result, space, ADVICE);
 #else
+            std::cout << "space = " << space << std::endl;
             void *result = mmap(nullptr, space, PROTECTION, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
             assert(result != MAP_FAILED);
 #endif

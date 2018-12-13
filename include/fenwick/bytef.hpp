@@ -124,12 +124,12 @@ namespace hft {
         private:
             static inline size_t get_bytesize(size_t n)
             {
-                return (rho(n) + LEAF_BITSIZE - 1) / 8 + 1;
+                return ((rho(n) + LEAF_BITSIZE - 1) >> 3) + 1;
             }
 
             static inline size_t get_bytepos(size_t idx)
             {
-                // TODO: if constexpr
+                // TODO: if constexpr?
                 return idx
                     + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
                     + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;
