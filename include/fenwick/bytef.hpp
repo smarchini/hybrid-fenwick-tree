@@ -27,7 +27,7 @@ namespace hft {
         public:
             ByteF(uint64_t sequence[], size_t size) :
                 _size(size),
-                tree(get_bytepos(size))
+                tree(get_bytepos(size) + 8)
             {
                 for (size_t i = 1; i <= size; i++) {
                     auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(i-1)]);
@@ -133,7 +133,7 @@ namespace hft {
                 static constexpr size_t MEDIUM = round_pow2(LEAF_BITSIZE) - LEAF_BITSIZE + 1;
                 static constexpr size_t LARGE = 8 - SMALL - 1;
 
-                static constexpr size_t MULTIPLIER = 8 - SMALL ;
+                static constexpr size_t MULTIPLIER = 8 - SMALL;
 
                 return idx * SMALL
                     + (idx >> MEDIUM)
