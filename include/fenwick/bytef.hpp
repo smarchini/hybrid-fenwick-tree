@@ -95,11 +95,11 @@ namespace hft {
                 size_t node = 0;
 
                 for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
-                    if (node+m-1 >= size()) continue;
+                    if (node + m - 1 >= size()) continue;
 
-                    uint64_t value = (LEAF_MAXVAL << rho(node+m))
-                        - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)])
-                           & BYTE_MASK[get_bytesize(node+m)]);
+                    uint64_t value = (LEAF_MAXVAL << rho(node + m))
+                        - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node + m - 1)])
+                              & BYTE_MASK[get_bytesize(node + m)]);
 
                     if (*val >= value) {
                         node += m;
@@ -117,7 +117,7 @@ namespace hft {
 
             virtual size_t bit_count() const
             {
-                return sizeof(ByteF<LEAF_BITSIZE>)*8
+                return sizeof(ByteF<LEAF_BITSIZE>) * 8
                     + tree.bit_count() - sizeof(tree);
             }
 
@@ -129,10 +129,15 @@ namespace hft {
 
             static inline size_t get_bytepos(size_t idx)
             {
-                // TODO: if constexpr?
-                return idx
-                    + (idx >> (LEAF_BITSIZE <=  8 ? ( 8 - LEAF_BITSIZE + 1) : 0))
-                    + (idx >> (LEAF_BITSIZE <= 16 ? (16 - LEAF_BITSIZE + 1) : 0)) * 6;
+                static constexpr size_t SMALL = ((LEAF_BITSIZE - 1) >> 3) + 1;
+                static constexpr size_t MEDIUM = round_pow2(LEAF_BITSIZE) - LEAF_BITSIZE + 1;
+                static constexpr size_t LARGE = 8 - SMALL - 1;
+
+                static constexpr size_t MULTIPLIER = 8 - SMALL ;
+
+                return idx * SMALL
+                    + (idx >> MEDIUM)
+                    + (idx >> LARGE) * MULTIPLIER;
             }
 
         };

@@ -140,6 +140,13 @@ TEST(fenwicktree, leafmaxval)
     fenwick_random_test<64*256>(1024-1);
     fenwick_random_test<64*512>(1024-1);
     fenwick_random_test<64*1024>(1024-1);
+
+    fenwick_random_test<256>(1024-1); // 2^8
+    fenwick_random_test<65536>(1024-1); // 2^16
+    fenwick_random_test<16777216>(1024-1); // 2^24
+    fenwick_random_test<4294967296>(1024-1); // 2^32
+    fenwick_random_test<1099511627776>(1024-1); // 2^40
+    fenwick_random_test<281474976710656>(1024-1); // 2^48
 }
 
 #endif // __TEST_FENWICK_SAME_BEHAVIOR_HPP__

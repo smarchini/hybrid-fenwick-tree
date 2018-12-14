@@ -45,7 +45,7 @@ namespace hft {
                                               0xFFFFFFFFFFFFFFFFULL };
 
     /**
-     * log2() - Static (i.e. computed at compile time) log2 roundup
+     * log2() - Static (i.e. computed at compile time) log2 roundup.
      *
      */
     constexpr size_t log2(size_t n)
@@ -53,6 +53,26 @@ namespace hft {
         return ((n<2) ? 1 : 1+log2(n/2));
     }
 
+    /**
+     * round_pow2 - Static round up to the next highest power of two.
+     * @v: Value to round up.
+     *
+     * This algorithm is a well known bit hack [1].
+     *
+     * [1] https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+     *
+     */
+    constexpr uint64_t round_pow2(uint64_t v)
+    {
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        v |= v >> 32;
+        return v+1;
+    }
 
     /**
      * Required for select64

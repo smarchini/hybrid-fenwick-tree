@@ -148,7 +148,7 @@ namespace hft {
 
             virtual size_t bit_count() const
             {
-                return sizeof(ByteL<LEAF_BITSIZE>)*8
+                return sizeof(ByteL<LEAF_BITSIZE>) * 8
                     + tree.bit_count() - sizeof(tree)
                     + levels * sizeof(size_t) * 8;
             }
@@ -156,7 +156,7 @@ namespace hft {
         private:
             static inline size_t get_size(size_t height)
             {
-                return (height+LEAF_BITSIZE-1) / 8 + 1;
+                return ((height + LEAF_BITSIZE - 1) >> 3) + 1;
             }
         };
 
