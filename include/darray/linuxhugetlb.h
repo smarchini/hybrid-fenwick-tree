@@ -15,14 +15,14 @@ namespace hft {
      *
      * This class is a wrapper for mmap to take advantage of hugepages [1].
      *
-     * [1] https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+     * [1] https://www.kernel.org/doc/html/latest/admin-guide/mm/hugetlbpage.html
      *
      */
     template <typename T>
     class DArray
     {
     public:
-        static constexpr size_t PAGESIZE = 2048*1024;
+        static constexpr size_t PAGESIZE = 2048 * 1024;
         static constexpr int PROTECTION = PROT_READ | PROT_WRITE;
         static constexpr int ADVICE = MADV_HUGEPAGE;
 
@@ -81,7 +81,7 @@ namespace hft {
         }
 
         // data access capabilities
-        inline T*  get() const { return buffer; }
+        inline T* get() const { return buffer; }
         inline T& operator[](size_t i) const { return buffer[i]; };
         inline size_t size() const { return _size; }
 
