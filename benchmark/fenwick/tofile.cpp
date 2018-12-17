@@ -1,4 +1,4 @@
-#define HFT_USE_HUGETLB
+//#define HFT_USE_HUGETLB
 //#define HFT_TRANSPARENT
 
 #include <iostream>
@@ -16,6 +16,14 @@ using namespace std;
 using namespace hft::fenwick;
 using namespace std::chrono;
 
+
+// The size of a bottom tree is enough for a single (4kB tlb) memory page
+template <size_t N> using Fixed9Fixed = Hybrid<FixedL, FixedF, N, 9>;
+template <size_t N> using Fixed11Byte = Hybrid<FixedL, ByteF, N, 11>;
+template <size_t N> using Fixed12Bit = Hybrid<FixedL, BitF, N, 12>;
+template <size_t N> using Byte11Byte = Hybrid<ByteL, ByteF, N, 11>;
+template <size_t N> using Byte12Bit = Hybrid<ByteL, BitF, N, 12>;
+template <size_t N> using Bit12Bit = Hybrid<BitL, BitF, N, 12>;
 
 // The size of a bottom tree is enough for a single (2MB hugetlb) memory page
 template <size_t N> using Fixed18Fixed = Hybrid<FixedL, FixedF, N, 18>;
@@ -197,6 +205,7 @@ int main(int argc, char *argv[])
     bench.datainit(mte);
 
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
+                    "fixed[$9$]fixed,fixed[$11$]byte,fixed[$12$]bit,byte[$11$]byte,byte[$12$]bit,byte[$12]bit,"
                     "fixed[$18$]fixed,fixed[$19$]byte,fixed[$20$]bit,byte[$19$]byte,byte[$20$]bit,byte[$20$]bit,"
                     "fixed[$20$]fixed,fixed[$21$]byte,fixed[$25$]bit,byte[$21$]byte,byte[$25$]bit,byte[$25$]bit");
 
@@ -206,6 +215,13 @@ int main(int argc, char *argv[])
     cout << "size = " << size << ", queries = " << queries << " => byte[l]:        "; bench.run<ByteL>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[F]:         "; bench.run<BitF>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[l]:         "; bench.run<BitL>(); bench.separator();
+
+    cout << "size = " << size << ", queries = " << queries << " => fixed[9]fixed:  ";  bench.run<Fixed9Fixed>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[11]byte:  ";  bench.run<Fixed11Byte>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[12]bit:   ";  bench.run<Fixed12Bit>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => byte[11]byte:   ";  bench.run<Byte11Byte>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => byte[12]bit:    ";  bench.run<Byte12Bit>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => byte[12]bit:    ";  bench.run<Byte12Bit>(); bench.separator();
 
     cout << "size = " << size << ", queries = " << queries << " => fixed[18]fixed: ";  bench.run<Fixed18Fixed>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[19]byte:  ";  bench.run<Fixed19Byte>(); bench.separator();
