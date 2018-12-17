@@ -1,4 +1,6 @@
 bin/
+hugebin/
+tranbin/
 obj/
 stats/
 coverage/
