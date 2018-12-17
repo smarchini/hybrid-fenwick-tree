@@ -33,9 +33,9 @@ namespace hft {
                     const size_t bytepos = get_bytepos(i-1);
 
                     switch (LEAF_BITSIZE + rho(i)) {
-                    case 17 ... 64: *reinterpret_cast<auint64_t*>(&tree[bytepos]) = sequence[i-1]; break;
-                    case  9 ... 16: *reinterpret_cast<auint16_t*>(&tree[bytepos]) = sequence[i-1]; break;
-                    default:        *reinterpret_cast< auint8_t*>(&tree[bytepos]) = sequence[i-1];
+                    case 17 ... 64: reinterpret_cast<auint64_t&>(tree[bytepos]) = sequence[i-1]; break;
+                    case  9 ... 16: reinterpret_cast<auint16_t&>(tree[bytepos]) = sequence[i-1]; break;
+                    default:        reinterpret_cast< auint8_t&>(tree[bytepos]) = sequence[i-1];
                     }
                 }
 
@@ -47,19 +47,19 @@ namespace hft {
                         switch (LEAF_BITSIZE + rho(idx)) {
                         case 17 ... 64:
                             switch (LEAF_BITSIZE + rho(idx - m/2)) {
-                            case 17 ... 64: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
-                            case  9 ... 16: *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
-                            default:        *reinterpret_cast<auint64_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
+                            case 17 ... 64: reinterpret_cast<auint64_t&>(tree[left]) += *reinterpret_cast<auint64_t*>(&tree[right]); break;
+                            case  9 ... 16: reinterpret_cast<auint64_t&>(tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
+                            default:        reinterpret_cast<auint64_t&>(tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                             }
                             break;
                         case  9 ... 16:
                             switch (LEAF_BITSIZE + rho(idx - m/2)) {
-                            case  9 ... 16: *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
-                            default:        *reinterpret_cast<auint16_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
+                            case  9 ... 16: reinterpret_cast<auint16_t&>(tree[left]) += *reinterpret_cast<auint16_t*>(&tree[right]); break;
+                            default:        reinterpret_cast<auint16_t&>(tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                             }
                             break;
                         default:
-                            *reinterpret_cast< auint8_t*>(&tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
+                            reinterpret_cast< auint8_t&>(tree[left]) += *reinterpret_cast< auint8_t*>(&tree[right]);
                         }
                     }
                 }

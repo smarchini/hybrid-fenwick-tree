@@ -42,7 +42,7 @@ namespace hft {
                         const size_t curr_bit_pos = level[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
                         const size_t curr_shift = curr_bit_pos & 0b111;
                         const uint64_t curr_mask = compact_bitmask(LEAF_BITSIZE+l, curr_shift);
-                        auint64_t * const curr_element = reinterpret_cast<auint64_t*>(&tree[curr_bit_pos/8]);
+                        auint64_t &curr_element = reinterpret_cast<auint64_t&>(tree[curr_bit_pos/8]);
 
                         size_t sequence_idx = node-1;
                         uint64_t value = sequence[sequence_idx];
@@ -52,13 +52,13 @@ namespace hft {
                             const size_t prev_bit_pos = level[j] + (LEAF_BITSIZE+j) * sequence_idx;
                             const size_t prev_shift = prev_bit_pos & 0b111;
                             const uint64_t prev_mask = compact_bitmask(LEAF_BITSIZE+j, prev_shift);
-                            const auint64_t * const prev_element = reinterpret_cast<auint64_t*>(&tree[prev_bit_pos/8]);
+                            const uint64_t prev_element = *reinterpret_cast<auint64_t*>(&tree[prev_bit_pos/8]);
 
-                            value += (*prev_element & prev_mask) >> prev_shift;
+                            value += (prev_element & prev_mask) >> prev_shift;
                         }
 
-                        *curr_element &= ~curr_mask;
-                        *curr_element |= curr_mask & (value << curr_shift);
+                        curr_element &= ~curr_mask;
+                        curr_element |= curr_mask & (value << curr_shift);
                     }
                 }
             }
@@ -71,9 +71,9 @@ namespace hft {
                     const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
-                    const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    const auint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
-                    sum += bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
+                    sum += bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
 
                     idx = clear_rho(idx);
                 }
@@ -87,9 +87,9 @@ namespace hft {
                     const int height = rho(idx);
                     const size_t level_idx = idx >> (1 + height);
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
-                    auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    auint64_t &compact_element = reinterpret_cast<auint64_t&>(tree[bit_pos/8]);
 
-                    *compact_element += inc << (bit_pos & 0b111);
+                    compact_element += inc << (bit_pos & 0b111);
 
                     idx += mask_rho(idx);
                 }
@@ -102,13 +102,13 @@ namespace hft {
 
                 for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
-                    const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    const uint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
                     idx <<= 1;
 
                     if (bit_pos >= level[height+1]) continue;
 
-                    uint64_t value = bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
+                    uint64_t value = bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
 
                     if (*val >= value) {
                         idx++;
@@ -127,13 +127,13 @@ namespace hft {
 
                 for (size_t height = levels - 2; height != SIZE_MAX; height--) {
                     const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
-                    const auint64_t * const compact_element = reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
+                    const uint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
 
                     idx <<= 1;
 
                     if (bit_pos >= level[height+1]) continue;
 
-                    uint64_t value = (LEAF_MAXVAL << height) - bitextract(*compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
+                    uint64_t value = (LEAF_MAXVAL << height) - bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
 
                     if (*val >= value) {
                         idx++;

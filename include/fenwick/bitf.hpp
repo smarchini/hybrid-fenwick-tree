@@ -28,30 +28,30 @@ namespace hft {
         public:
             BitF(uint64_t sequence[], size_t size) :
                 _size(size),
-                tree((get_bitpos(size) >> 3) + 8) // +7 to prevent segfault the last element
+                tree((get_bitpos(size) >> 3) + 8) // +8 to prevent segfault the last element
             {
                 for (size_t i = 1; i <= size; i++) {
                     const size_t bitpos = get_bitpos(i-1);
-                    auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[bitpos >> 3]);
+                    auint64_t &element = reinterpret_cast<auint64_t&>(tree[bitpos >> 3]);
 
                     const int bitsize = LEAF_BITSIZE + rho(i);
                     const size_t shift = bitpos & 0b111;
                     const uint64_t mask = ((1ULL << bitsize) - 1) << shift;
 
-                    *element &= ~mask;
-                    *element |= mask & (sequence[i-1] << shift);
+                    element &= ~mask;
+                    element |= mask & (sequence[i-1] << shift);
                 }
 
                 for (size_t m = 2; m <= size; m <<= 1) {
                     for (size_t idx = m; idx <= size; idx += m) {
                         const size_t elem_bitpos = get_bitpos(idx-1);
-                        auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[elem_bitpos >> 3]);
+                        auint64_t &element = reinterpret_cast<auint64_t&>(tree[elem_bitpos >> 3]);
 
                         const size_t subtree_bitpos = get_bitpos(idx - m/2 - 1);
                         const auint64_t subtree = *reinterpret_cast<auint64_t*>(&tree[subtree_bitpos >> 3]);
                         const uint64_t value = bitextract(subtree, subtree_bitpos & 0b111, LEAF_BITSIZE + rho(idx - m/2));
 
-                        *element += value << (elem_bitpos & 0b111);
+                        element += value << (elem_bitpos & 0b111);
                     }
                 }
             }
@@ -75,9 +75,9 @@ namespace hft {
             {
                 while (idx <= size()) {
                     const size_t bit_pos = get_bitpos(idx-1);
-                    auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[bit_pos >> 3]);
+                    auint64_t &element = reinterpret_cast<auint64_t&>(tree[bit_pos >> 3]);
 
-                    *element += inc << (bit_pos & 0b111);
+                    element += inc << (bit_pos & 0b111);
 
                     idx += mask_rho(idx);
                 }

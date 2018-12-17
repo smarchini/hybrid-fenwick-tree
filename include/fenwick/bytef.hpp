@@ -30,20 +30,20 @@ namespace hft {
                 tree(get_bytepos(size) + 8)
             {
                 for (size_t i = 1; i <= size; i++) {
-                    auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(i-1)]);
+                    auint64_t &element = reinterpret_cast<auint64_t&>(tree[get_bytepos(i-1)]);
 
                     const size_t bytesize = get_bytesize(i);
-                    *element &= ~BYTE_MASK[bytesize];
-                    *element |= sequence[i-1] & BYTE_MASK[bytesize];
+                    element &= ~BYTE_MASK[bytesize];
+                    element |= sequence[i-1] & BYTE_MASK[bytesize];
                 }
 
                 for (size_t m = 2; m <= size; m <<= 1) {
                     for (size_t idx = m; idx <= size; idx += m) {
-                        auint64_t * const left_element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
-                        auint64_t * const right_element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx - m/2 - 1)]);
+                        auint64_t &left_element = reinterpret_cast<auint64_t&>(tree[get_bytepos(idx-1)]);
+                        auint64_t right_element = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx - m/2 - 1)]);
 
-                        uint64_t value = *right_element & BYTE_MASK[get_bytesize(idx - m/2)];
-                        *left_element += value;
+                        uint64_t value = right_element & BYTE_MASK[get_bytesize(idx - m/2)];
+                        left_element += value;
                     }
                 }
             }
@@ -53,8 +53,8 @@ namespace hft {
                 uint64_t sum = 0;
 
                 while (idx != 0) {
-                    const auint64_t * const element = reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
-                    sum += *element & BYTE_MASK[get_bytesize(idx)];
+                    const uint64_t element = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
+                    sum += element & BYTE_MASK[get_bytesize(idx)];
                     idx = clear_rho(idx);
                 }
 
@@ -64,7 +64,7 @@ namespace hft {
             virtual void add(size_t idx, int64_t inc)
             {
                 while (idx <= size()) {
-                    *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]) += inc;
+                    reinterpret_cast<auint64_t&>(tree[get_bytepos(idx-1)]) += inc;
                     idx += mask_rho(idx);
                 }
             }
