@@ -129,11 +129,13 @@ namespace hft {
 
             static inline size_t get_bytepos(size_t idx)
             {
-                static constexpr size_t SMALL = ((LEAF_BITSIZE - 1) >> 3) + 1;
-                static constexpr size_t MEDIUM = round_pow2(LEAF_BITSIZE) - LEAF_BITSIZE + 1;
-                static constexpr size_t LARGE = 8 - SMALL - 1;
+                constexpr size_t NEXTBYTE = ((LEAF_BITSIZE - 1) | (8 - 1)) + 1;
 
-                static constexpr size_t MULTIPLIER = 8 - SMALL;
+                constexpr size_t SMALL = ((LEAF_BITSIZE - 1) >> 3) + 1;
+                constexpr size_t MEDIUM = NEXTBYTE - LEAF_BITSIZE + 1;
+                constexpr size_t LARGE = MEDIUM + 8;
+
+                constexpr size_t MULTIPLIER = 8 - SMALL - 1;
 
                 return idx * SMALL
                     + (idx >> MEDIUM)
