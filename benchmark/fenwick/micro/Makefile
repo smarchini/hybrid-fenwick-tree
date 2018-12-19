@@ -17,6 +17,9 @@ trantlb: CC += -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
 trantlb: BINDIR = ./tranbin
 trantlb: all
 
+dir:
+	mkdir bin hugebin tranbin
+
 
 prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl prefix_fixed18fixed prefix_fixed19byte prefix_fixed20bit prefix_byte19byte prefix_byte20bit prefix_bit20bit prefix_fixed20fixed prefix_fixed21byte prefix_fixed25bit prefix_byte21byte prefix_byte25bit prefix_bit25bit
 
