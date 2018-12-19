@@ -60,7 +60,7 @@ size_t vigna_ktsl(uint64_t *sigmainv, uint64_t *rho, size_t len)
 
     size_t wordlen = len/64 + (len%64 != 0);
     dynbv b(DArray<uint64_t>(wordlen), wordlen);
-    cout << setw(15) << b.bit_count() << " bits\t";
+    cout << setw(15) << b.bitCount() << " bits\t";
 
     for (size_t i = 0; i < len; i++)
     {

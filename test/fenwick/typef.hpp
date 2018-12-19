@@ -15,7 +15,7 @@ TEST(type_fenwick_tree, increments_by_one)
 
     std::string tree_str = "000000010000001000000001000000000000010000000001000000100000000100000000000010000000000100000010000000010000000000000100000000010000001000000001";
 
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -32,10 +32,10 @@ TEST(type_fenwick_tree, increments_by_one)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq1[k-1]; i < 64*(k+1)-seq1[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add
@@ -66,7 +66,7 @@ TEST(type_fenwick_tree, increasing_increments)
 
     std::string tree_str = "000011110001101100001101000000000010101000001011000100110000100100000000001001000000011100001011000001010000000000001010000000110000001100000001";
 
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -83,10 +83,10 @@ TEST(type_fenwick_tree, increasing_increments)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq2[k-1]; i < 64*(k+1)-seq2[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add
@@ -115,7 +115,7 @@ TEST(type_fenwick_tree, non_complete)
     TypeF_Test t(inc3, 20);
 
     std::string tree_str = "000001000000000100000010000000010000000000010000000000010000001000000001000000000000010000000001000000100000000100000000000010000000000100000010000000010000000000000100000000010000001000000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);
@@ -132,10 +132,10 @@ TEST(type_fenwick_tree, non_complete)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 20; k++) {
         for (std::uint64_t i = 64*k-seq3[k-1]; i < 64*(k+1)-seq3[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add

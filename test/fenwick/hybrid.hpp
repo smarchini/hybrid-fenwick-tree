@@ -43,7 +43,7 @@ void fenwick_random_test(std::size_t size)
 
     // find complement
     for (std::uint64_t i = 0; i < size; i++)
-        EXPECT_EQ(naive.compfind(i), mixed.compfind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
+        EXPECT_EQ(naive.compFind(i), mixed.compFind(i)) << "At index: " << i << "\nsize: " << size << "\ntemplate argument: " << typeid(T).name();
 
     delete[] increments;
     delete[] add_updates;

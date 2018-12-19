@@ -30,51 +30,51 @@ class FixedF_Test : public hft::fenwick::FixedF<64> {
 public:
     FixedF_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::FixedF<64>(sequence, length) {}
-    using hft::fenwick::FixedF<64>::tree;
+    using hft::fenwick::FixedF<64>::Tree;
 };
 
 class TypeL_Test : public hft::fenwick::TypeL<64> {
 public:
     TypeL_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::TypeL<64>(sequence, length) {}
-    using hft::fenwick::TypeL<64>::tree8;
-    using hft::fenwick::TypeL<64>::tree16;
-    using hft::fenwick::TypeL<64>::tree64;
+    using hft::fenwick::TypeL<64>::Tree8;
+    using hft::fenwick::TypeL<64>::Tree16;
+    using hft::fenwick::TypeL<64>::Tree64;
 };
 
 class TypeF_Test : public hft::fenwick::TypeF<64> {
 public:
     TypeF_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::TypeF<64>(sequence, length) {}
-    using hft::fenwick::TypeF<64>::tree;
+    using hft::fenwick::TypeF<64>::Tree;
 };
 
 class ByteL_Test : public hft::fenwick::ByteL<64> {
 public:
     ByteL_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::ByteL<64>(sequence, length) {}
-    using hft::fenwick::ByteL<64>::tree;
+    using hft::fenwick::ByteL<64>::Tree;
 };
 
 class ByteF_Test : public hft::fenwick::ByteF<64> {
 public:
     ByteF_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::ByteF<64>(sequence, length) {}
-    using hft::fenwick::ByteF<64>::tree;
+    using hft::fenwick::ByteF<64>::Tree;
 };
 
 class BitL_Test : public hft::fenwick::BitL<64> {
 public:
     BitL_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::BitL<64>(sequence, length) {}
-    using hft::fenwick::BitL<64>::tree;
+    using hft::fenwick::BitL<64>::Tree;
 };
 
 class BitF_Test : public hft::fenwick::BitF<64> {
 public:
     BitF_Test(std::uint64_t sequence[], std::size_t length) :
         hft::fenwick::BitF<64>(sequence, length) {}
-    using hft::fenwick::BitF<64>::tree;
+    using hft::fenwick::BitF<64>::Tree;
 };
 
 

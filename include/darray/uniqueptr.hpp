@@ -1,64 +1,51 @@
 #ifndef __UNIQUEPTR_HPP__
 #define __UNIQUEPTR_HPP__
 
-#include <memory>
 #include <algorithm>
+#include <memory>
 
 namespace hft {
 
-    /**
-     * class DArray - Dinamically-allocated fixed-sized array
-     *
-     */
-    template <typename T>
-    class DArray
-    {
-    private:
-        size_t _size = 0;
-        std::unique_ptr<T[]> buffer;
+/**
+ * class DArray - Dinamically-allocated fixed-sized array
+ *
+ */
+template <typename T> class DArray {
+private:
+  size_t Size = 0;
+  std::unique_ptr<T[]> Buffer;
 
-    public:
-        // constructors
-        DArray<T>() : DArray<T>(0) { };
-        explicit DArray(size_t size):
-            _size(size),
-            buffer(std::make_unique<T[]>(size))
-        { }
+public:
+  DArray<T>() : DArray<T>(0){};
+  explicit DArray(size_t size)
+      : Size(size), Buffer(std::make_unique<T[]>(size)) {}
 
-        // move constructor
-        DArray(DArray<T>&& oth):
-            _size(std::exchange(oth._size, 0)),
-            buffer(std::move(oth.buffer)) { }
+  DArray(DArray<T> &&oth)
+      : Size(std::exchange(oth.Size, 0)), Buffer(std::move(oth.Buffer)) {}
 
-        // move assignment (copy&swap idiom)
-        DArray& operator=(DArray oth)
-        {
-            swap(*this, oth);
-            return *this;
-        }
+  DArray &operator=(DArray oth) {
+    swap(*this, oth);
+    return *this;
+  }
 
-        // destructor
-        ~DArray() = default;
+  ~DArray() = default;
 
-        // swap
-        friend void swap(DArray& first, DArray& second) noexcept
-        {
-            using std::swap;
-            swap(first._size, second._size);
-            swap(first.buffer, second.buffer);
-        }
+  friend void swap(DArray &first, DArray &second) noexcept {
+    std::swap(first.Size, second.Size);
+    std::swap(first.Buffer, second.Buffer);
+  }
 
-        // data access capabilities
-        inline T*  get() const { return buffer.get(); }
-        inline T& operator[](size_t i) const { return buffer[i]; };
-        inline size_t size() const { return _size; }
+  inline T *get() const { return Buffer.get(); }
 
-        size_t bit_count() const
-        {
-            return sizeof(DArray<T>)*8 + sizeof(T)*_size*8;
-        }
-    };
+  inline T &operator[](size_t i) const { return Buffer[i]; };
 
-}
+  inline size_t size() const { return Size; }
+
+  size_t bitCount() const {
+    return sizeof(DArray<T>) * 8 + Size * sizeof(T) * 8;
+  }
+};
+
+} // namespace hft
 
 #endif // __UNIQUEPTR_HPP__

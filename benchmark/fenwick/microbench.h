@@ -19,9 +19,9 @@ void find(const char* name, size_t size, size_t queries, std::default_random_eng
 
     uint64_t u = 0;
     const double c = 1. / queries;
-    constexpr size_t LEAF_MAXVAL = 64, REPS = 5, IDXMID = (REPS-1)/2;
-    uniform_int_distribution<uint64_t> seqdist(0, LEAF_MAXVAL);
-    uniform_int_distribution<uint64_t> cumseqdist(0, LEAF_MAXVAL*size);
+    constexpr size_t BOUND = 64, REPS = 5, IDXMID = (REPS-1)/2;
+    uniform_int_distribution<uint64_t> seqdist(0, BOUND);
+    uniform_int_distribution<uint64_t> cumseqdist(0, BOUND*size);
     uniform_int_distribution<size_t> idxdist(1, size);
 
     unique_ptr<uint64_t[]> sequence = make_unique<uint64_t[]>(size);
@@ -32,7 +32,7 @@ void find(const char* name, size_t size, size_t queries, std::default_random_eng
     T fenwick(sequence.get(), size);
     end = chrono::high_resolution_clock::now();
     auto ctor = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
-    cout << name << ": " << fenwick.bit_count() / (double)size << " b/item\n";
+    cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";
     cout << "ctor: " << ctor / (double)size << setw(12) << " ns/item" << endl;
 
     // find
@@ -63,9 +63,9 @@ void add(const char* name, size_t size, size_t queries, std::default_random_engi
 
     uint64_t u = 0;
     const double c = 1. / queries;
-    constexpr size_t LEAF_MAXVAL = 64, REPS = 5, IDXMID = (REPS-1)/2;
-    uniform_int_distribution<uint64_t> seqdist(0, LEAF_MAXVAL);
-    uniform_int_distribution<uint64_t> cumseqdist(0, LEAF_MAXVAL*size);
+    constexpr size_t BOUND = 64, REPS = 5, IDXMID = (REPS-1)/2;
+    uniform_int_distribution<uint64_t> seqdist(0, BOUND);
+    uniform_int_distribution<uint64_t> cumseqdist(0, BOUND*size);
     uniform_int_distribution<size_t> idxdist(1, size);
 
     unique_ptr<uint64_t[]> sequence = make_unique<uint64_t[]>(size);
@@ -76,7 +76,7 @@ void add(const char* name, size_t size, size_t queries, std::default_random_engi
     T fenwick(sequence.get(), size);
     end = chrono::high_resolution_clock::now();
     auto ctor = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
-    cout << name << ": " << fenwick.bit_count() / (double)size << " b/item\n";
+    cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";
     cout << "ctor: " << ctor / (double)size << setw(12) << " ns/item" << endl;
 
     // add
@@ -110,9 +110,9 @@ void prefix(const char* name, size_t size, size_t queries, std::default_random_e
 
     uint64_t u = 0;
     const double c = 1. / queries;
-    constexpr size_t LEAF_MAXVAL = 64, REPS = 5, IDXMID = (REPS-1)/2;
-    uniform_int_distribution<uint64_t> seqdist(0, LEAF_MAXVAL);
-    uniform_int_distribution<uint64_t> cumseqdist(0, LEAF_MAXVAL*size);
+    constexpr size_t BOUND = 64, REPS = 5, IDXMID = (REPS-1)/2;
+    uniform_int_distribution<uint64_t> seqdist(0, BOUND);
+    uniform_int_distribution<uint64_t> cumseqdist(0, BOUND*size);
     uniform_int_distribution<size_t> idxdist(1, size);
 
     unique_ptr<uint64_t[]> sequence = make_unique<uint64_t[]>(size);
@@ -123,7 +123,7 @@ void prefix(const char* name, size_t size, size_t queries, std::default_random_e
     T fenwick(sequence.get(), size);
     end = chrono::high_resolution_clock::now();
     auto ctor = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
-    cout << name << ": " << fenwick.bit_count() / (double)size << " b/item\n";
+    cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";
     cout << "ctor: " << ctor / (double)size << setw(12) << " ns/item" << endl;
 
     // find

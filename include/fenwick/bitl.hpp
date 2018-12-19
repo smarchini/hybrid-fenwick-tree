@@ -3,162 +3,149 @@
 
 #include "fenwick_tree.hpp"
 
-namespace hft {
-    namespace fenwick {
+namespace hft::fenwick {
 
-        /**
-         * class BitL - bit compression and level ordered node layout.
-         * @sequence: sequence of integers.
-         * @size: number of elements.
-         * @LEAF_MAXVAL: maximum value that @sequence can store.
-         *
-         */
-        template<size_t LEAF_MAXVAL>
-        class BitL : public FenwickTree
-        {
-        public:
-            static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
+/**
+ * class BitL - bit compression and level ordered node layout.
+ * @sequence: sequence of integers.
+ * @size: number of elements.
+ * @BOUND: maximum value that @sequence can store.
+ *
+ */
+template <size_t BOUND> class BitL : public FenwickTree {
+public:
+  static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
+                "Leaves can't be stored in a 64-bit word");
 
-        protected:
-            const size_t _size, levels;
-            DArray<uint8_t> tree;
-            unique_ptr<size_t[]> level;
+protected:
+  const size_t Size, Levels;
+  DArray<uint8_t> Tree;
+  unique_ptr<size_t[]> Level;
 
-        public:
-            BitL(uint64_t sequence[], size_t size) :
-                _size(size),
-                levels(lambda(size+1)+2),
-                level(make_unique<size_t[]>(levels))
-            {
-                level[0] = 0;
-                for (size_t i = 1; i < levels; i++)
-                    level[i] = ((size + (1<<(i-1))) / (1<<i)) * (LEAF_BITSIZE-1+i) + level[i-1];
+public:
+  BitL(uint64_t sequence[], size_t size)
+      : Size(size), Levels(lambda(size + 1) + 2),
+        Level(make_unique<size_t[]>(Levels)) {
+    Level[0] = 0;
+    for (size_t i = 1; i < Levels; i++)
+      Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * (BOUNDSIZE - 1 + i) +
+                 Level[i - 1];
 
-                tree = DArray<uint8_t>((level[levels-1] >> 3) + 8); // +8 to prevent segfault on the last element
+    Tree = DArray<uint8_t>((Level[Levels - 1] >> 3) + 8); // +8 for safety
 
-                for (size_t l = 0; l < levels - 1; l++) {
-                    for (size_t node = 1<<l; node <= size; node += 1 << (l+1)) {
-                        const size_t curr_bit_pos = level[l] + (LEAF_BITSIZE+l) * (node >> (l+1));
-                        const size_t curr_shift = curr_bit_pos & 0b111;
-                        const uint64_t curr_mask = compact_bitmask(LEAF_BITSIZE+l, curr_shift);
-                        auint64_t &curr_element = reinterpret_cast<auint64_t&>(tree[curr_bit_pos/8]);
+    for (size_t l = 0; l < Levels - 1; l++) {
+      for (size_t node = 1 << l; node <= size; node += 1 << (l + 1)) {
+        size_t highpos = Level[l] + (BOUNDSIZE + l) * (node >> (l + 1));
+        size_t highshift = highpos & 0b111;
+        uint64_t highmask = compact_bitmask(BOUNDSIZE + l, highshift);
+        auint64_t &high = reinterpret_cast<auint64_t &>(Tree[highpos >> 3]);
 
-                        size_t sequence_idx = node-1;
-                        uint64_t value = sequence[sequence_idx];
-                        for (size_t j = 0; j < l; j++) {
-                            sequence_idx >>= 1;
+        size_t sequence_idx = node - 1;
+        uint64_t value = sequence[sequence_idx];
 
-                            const size_t prev_bit_pos = level[j] + (LEAF_BITSIZE+j) * sequence_idx;
-                            const size_t prev_shift = prev_bit_pos & 0b111;
-                            const uint64_t prev_mask = compact_bitmask(LEAF_BITSIZE+j, prev_shift);
-                            const uint64_t prev_element = *reinterpret_cast<auint64_t*>(&tree[prev_bit_pos/8]);
+        for (size_t j = 0; j < l; j++) {
+          sequence_idx >>= 1;
+          size_t lowpos = Level[j] + (BOUNDSIZE + j) * sequence_idx;
+          size_t lowshift = lowpos & 0b111;
+          uint64_t lowmask = compact_bitmask(BOUNDSIZE + j, lowshift);
+          uint64_t low = *reinterpret_cast<auint64_t *>(&Tree[lowpos >> 3]);
 
-                            value += (prev_element & prev_mask) >> prev_shift;
-                        }
+          value += (low & lowmask) >> lowshift;
+        }
 
-                        curr_element &= ~curr_mask;
-                        curr_element |= curr_mask & (value << curr_shift);
-                    }
-                }
-            }
-
-            virtual uint64_t prefix(size_t idx) const
-            {
-                uint64_t sum = 0;
-
-                while (idx != 0) {
-                    const int height = rho(idx);
-                    const size_t level_idx = idx >> (1 + height);
-                    const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
-                    const auint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
-                    sum += bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
-
-                    idx = clear_rho(idx);
-                }
-
-                return sum;
-            }
-
-            virtual void add(size_t idx, int64_t inc)
-            {
-                while (idx <= size()) {
-                    const int height = rho(idx);
-                    const size_t level_idx = idx >> (1 + height);
-                    const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * level_idx;
-                    auint64_t &compact_element = reinterpret_cast<auint64_t&>(tree[bit_pos/8]);
-
-                    compact_element += inc << (bit_pos & 0b111);
-
-                    idx += mask_rho(idx);
-                }
-            }
-
-            using FenwickTree::find;
-            virtual size_t find(uint64_t *val) const
-            {
-                size_t node = 0, idx = 0;
-
-                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
-                    const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
-                    const uint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
-                    idx <<= 1;
-
-                    if (bit_pos >= level[height+1]) continue;
-
-                    uint64_t value = bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
-
-                    if (*val >= value) {
-                        idx++;
-                        *val -= value;
-                        node += 1 << height;
-                    }
-                }
-
-                return min(node, size());
-            }
-
-            using FenwickTree::compfind;
-            virtual size_t compfind(uint64_t *val) const
-            {
-                size_t node = 0, idx = 0;
-
-                for (size_t height = levels - 2; height != SIZE_MAX; height--) {
-                    const size_t bit_pos = level[height] + (LEAF_BITSIZE+height) * idx;
-                    const uint64_t compact_element = *reinterpret_cast<auint64_t*>(&tree[bit_pos/8]);
-
-                    idx <<= 1;
-
-                    if (bit_pos >= level[height+1]) continue;
-
-                    uint64_t value = (LEAF_MAXVAL << height) - bitextract(compact_element, bit_pos & 0b111, LEAF_BITSIZE + height);
-
-                    if (*val >= value) {
-                        idx++;
-                        *val -= value;
-                        node += 1 << height;
-                    }
-                }
-
-                return min(node, size());
-            }
-
-            virtual size_t size() const
-            {
-                return _size;
-            }
-
-            virtual size_t bit_count() const
-            {
-                return sizeof(BitL<LEAF_BITSIZE>)*8
-                    + tree.bit_count() - sizeof(tree)
-                    + levels * sizeof(size_t) * 8;
-            }
-        };
-
+        high &= ~highmask;
+        high |= (value << highshift) & highmask;
+      }
     }
-}
+  }
+
+  virtual uint64_t prefix(size_t idx) const {
+    uint64_t sum = 0;
+
+    while (idx != 0) {
+      int height = rho(idx);
+      size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
+      auint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+
+      sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
+      idx = clear_rho(idx);
+    }
+
+    return sum;
+  }
+
+  virtual void add(size_t idx, int64_t inc) {
+    while (idx <= Size) {
+      int height = rho(idx);
+      size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
+      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+
+      element += inc << (pos & 0b111);
+      idx += mask_rho(idx);
+    }
+  }
+
+  using FenwickTree::find;
+  virtual size_t find(uint64_t *val) const {
+    size_t node = 0, idx = 0;
+
+    for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
+      size_t pos = Level[height] + idx * (BOUNDSIZE + height);
+
+      idx <<= 1;
+
+      if (pos >= Level[height + 1])
+        continue;
+
+      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
+
+      if (*val >= value) {
+        idx++;
+        *val -= value;
+        node += 1 << height;
+      }
+    }
+
+    return min(node, Size);
+  }
+
+  using FenwickTree::compFind;
+  virtual size_t compFind(uint64_t *val) const {
+    size_t node = 0, idx = 0;
+
+    for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
+      size_t pos = Level[height] + idx * (BOUNDSIZE + height);
+
+      idx <<= 1;
+
+      if (pos >= Level[height + 1])
+        continue;
+
+      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      uint64_t value = (BOUND << height) -
+                       bitextract(element, pos & 0b111, BOUNDSIZE + height);
+
+      if (*val >= value) {
+        idx++;
+        *val -= value;
+        node += 1 << height;
+      }
+    }
+
+    return min(node, Size);
+  }
+
+  virtual size_t size() const { return Size; }
+
+  virtual size_t bitCount() const {
+    return sizeof(BitL<BOUNDSIZE>) * 8 +
+           Tree.bitCount() - sizeof(Tree) +
+           Levels * sizeof(size_t) * 8;
+  }
+};
+
+} // namespace hft::fenwick
 
 #endif // __FENWICK_LBIT_HPP__

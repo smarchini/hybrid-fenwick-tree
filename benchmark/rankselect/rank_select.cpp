@@ -168,7 +168,7 @@ void internal(const char *name, uint64_t *bitvector, uint64_t *rank0, uint64_t *
     const volatile uint64_t __attribute__((unused)) unused = u;
 
     const double c = 1. / queries;
-    cout << "\n" << name << ": " << bv.bit_count() / (double)size << " b/item\n";
+    cout << "\n" << name << ": " << bv.bitCount() / (double)size << " b/item\n";
     // cout << "build: " << fixed << setw(12) << insert / (double)size << " ns/item\n";
     // cout << "rank0: " << fixed << setw(12) << ran0 * c << " ns/item\n";
     // cout << "rank1: " << fixed << setw(12) << ran1 * c << " ns/item\n";

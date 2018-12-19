@@ -35,8 +35,8 @@ inline size_t updroot(size_t j, size_t n) { return n & (-1ULL << lambda((j ^ n) 
 class FenwickL
 {
 public:
-    static constexpr size_t LEAF_MAXVAL = 64; // Leaves store values up to 64
-    static constexpr size_t LEAF_BITSIZE = 9; // log2(65);
+    static constexpr size_t BOUND = 64; // Leaves store values up to 64
+    static constexpr size_t BOUNDSIZE = 9; // log2(65);
 
 protected:
     std::unique_ptr<uint64_t[]> tree;
@@ -154,8 +154,8 @@ public:
 class FenwickF
 {
 public:
-    static constexpr size_t LEAF_MAXVAL = 64; // Leaves store values up to 64
-    static constexpr size_t LEAF_BITSIZE = 9; // log2(65);
+    static constexpr size_t BOUND = 64; // Leaves store values up to 64
+    static constexpr size_t BOUNDSIZE = 9; // log2(65);
 
 protected:
     std::unique_ptr<uint64_t[]> tree;

@@ -3,148 +3,133 @@
 
 #include "fenwick_tree.hpp"
 
-namespace hft {
-    namespace fenwick {
+namespace hft::fenwick {
 
-        /**
-         * class ByteF - byte compression and classical node layout.
-         * @sequence: sequence of integers.
-         * @size: number of elements.
-         * @LEAF_MAXVAL: maximum value that @sequence can store.
-         *
-         */
-        template<size_t LEAF_MAXVAL>
-        class ByteF : public FenwickTree
-        {
-        public:
-            static constexpr size_t LEAF_BITSIZE = log2(LEAF_MAXVAL);
-            static_assert(LEAF_BITSIZE >= 1 && LEAF_BITSIZE <= 64, "Leaves can't be stored in a 64-bit word");
+/**
+ * class ByteF - byte compression and classical node layout.
+ * @sequence: sequence of integers.
+ * @size: number of elements.
+ * @BOUND: maximum value that @sequence can store.
+ *
+ */
+template <size_t BOUND> class ByteF : public FenwickTree {
+public:
+  static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
+                "Leaves can't be stored in a 64-bit word");
 
-        protected:
-            const size_t _size;
-            DArray<uint8_t> tree;
+protected:
+  const size_t Size;
+  DArray<uint8_t> Tree;
 
-        public:
-            ByteF(uint64_t sequence[], size_t size) :
-                _size(size),
-                tree(get_bytepos(size) + 8)
-            {
-                for (size_t i = 1; i <= size; i++) {
-                    auint64_t &element = reinterpret_cast<auint64_t&>(tree[get_bytepos(i-1)]);
+public:
+  ByteF(uint64_t sequence[], size_t size)
+      : Size(size), Tree(bytepos(size) + 8) {
+    for (size_t i = 1; i <= size; i++) {
+      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[bytepos(i - 1)]);
 
-                    const size_t bytesize = get_bytesize(i);
-                    element &= ~BYTE_MASK[bytesize];
-                    element |= sequence[i-1] & BYTE_MASK[bytesize];
-                }
-
-                for (size_t m = 2; m <= size; m <<= 1) {
-                    for (size_t idx = m; idx <= size; idx += m) {
-                        auint64_t &left_element = reinterpret_cast<auint64_t&>(tree[get_bytepos(idx-1)]);
-                        auint64_t right_element = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx - m/2 - 1)]);
-
-                        uint64_t value = right_element & BYTE_MASK[get_bytesize(idx - m/2)];
-                        left_element += value;
-                    }
-                }
-            }
-
-            virtual uint64_t prefix(size_t idx) const
-            {
-                uint64_t sum = 0;
-
-                while (idx != 0) {
-                    const uint64_t element = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(idx-1)]);
-                    sum += element & BYTE_MASK[get_bytesize(idx)];
-                    idx = clear_rho(idx);
-                }
-
-                return sum;
-            }
-
-            virtual void add(size_t idx, int64_t inc)
-            {
-                while (idx <= size()) {
-                    reinterpret_cast<auint64_t&>(tree[get_bytepos(idx-1)]) += inc;
-                    idx += mask_rho(idx);
-                }
-            }
-
-            using FenwickTree::find;
-            virtual size_t find(uint64_t *val) const
-            {
-                size_t node = 0;
-
-                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
-                    if (node+m-1 >= size()) continue;
-
-                    uint64_t value = *reinterpret_cast<auint64_t*>(&tree[get_bytepos(node+m-1)])
-                        & BYTE_MASK[get_bytesize(node+m)];
-
-                    if (*val >= value) {
-                        node += m;
-                        *val -= value;
-                    }
-                }
-
-                return node;
-            }
-
-            using FenwickTree::compfind;
-            virtual size_t compfind(uint64_t *val) const
-            {
-                size_t node = 0;
-
-                for (size_t m = mask_lambda(size()); m != 0; m >>= 1) {
-                    if (node + m - 1 >= size()) continue;
-
-                    uint64_t value = (LEAF_MAXVAL << rho(node + m))
-                        - (*reinterpret_cast<auint64_t*>(&tree[get_bytepos(node + m - 1)])
-                              & BYTE_MASK[get_bytesize(node + m)]);
-
-                    if (*val >= value) {
-                        node += m;
-                        *val -= value;
-                    }
-                }
-
-                return node;
-            }
-
-            virtual size_t size() const
-            {
-                return _size;
-            }
-
-            virtual size_t bit_count() const
-            {
-                return sizeof(ByteF<LEAF_BITSIZE>) * 8
-                    + tree.bit_count() - sizeof(tree);
-            }
-
-        private:
-            static inline size_t get_bytesize(size_t n)
-            {
-                return ((rho(n) + LEAF_BITSIZE - 1) >> 3) + 1;
-            }
-
-            static inline size_t get_bytepos(size_t idx)
-            {
-                constexpr size_t NEXTBYTE = ((LEAF_BITSIZE - 1) | (8 - 1)) + 1;
-
-                constexpr size_t SMALL = ((LEAF_BITSIZE - 1) >> 3) + 1;
-                constexpr size_t MEDIUM = NEXTBYTE - LEAF_BITSIZE + 1;
-                constexpr size_t LARGE = MEDIUM + 8;
-
-                constexpr size_t MULTIPLIER = 8 - SMALL - 1;
-
-                return idx * SMALL
-                    + (idx >> MEDIUM)
-                    + (idx >> LARGE) * MULTIPLIER;
-            }
-
-        };
-
+      size_t isize = bytesize(i);
+      element &= ~BYTE_MASK[isize];
+      element |= sequence[i - 1] & BYTE_MASK[isize];
     }
-}
+
+    for (size_t m = 2; m <= size; m <<= 1) {
+      for (size_t idx = m; idx <= size; idx += m) {
+        auint64_t &left = reinterpret_cast<auint64_t &>(Tree[bytepos(idx - 1)]);
+        auint64_t right = *reinterpret_cast<auint64_t *>(&Tree[bytepos(idx - m / 2 - 1)]);
+
+        uint64_t value = right & BYTE_MASK[bytesize(idx - m / 2)];
+        left += value;
+      }
+    }
+  }
+
+  virtual uint64_t prefix(size_t idx) const {
+    uint64_t sum = 0;
+
+    while (idx != 0) {
+      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[bytepos(idx - 1)]);
+      sum += element & BYTE_MASK[bytesize(idx)];
+      idx = clear_rho(idx);
+    }
+
+    return sum;
+  }
+
+  virtual void add(size_t idx, int64_t inc) {
+    while (idx <= Size) {
+      reinterpret_cast<auint64_t &>(Tree[bytepos(idx - 1)]) += inc;
+      idx += mask_rho(idx);
+    }
+  }
+
+  using FenwickTree::find;
+  virtual size_t find(uint64_t *val) const {
+    size_t node = 0;
+
+    for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
+      if (node + m - 1 >= Size)
+        continue;
+
+      uint64_t value =
+          *reinterpret_cast<auint64_t *>(&Tree[bytepos(node + m - 1)]) &
+          BYTE_MASK[bytesize(node + m)];
+
+      if (*val >= value) {
+        node += m;
+        *val -= value;
+      }
+    }
+
+    return node;
+  }
+
+  using FenwickTree::compFind;
+  virtual size_t compFind(uint64_t *val) const {
+    size_t node = 0;
+
+    for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
+      if (node + m - 1 >= Size)
+        continue;
+
+      uint64_t value =
+          (BOUND << rho(node + m)) -
+          (*reinterpret_cast<auint64_t *>(&Tree[bytepos(node + m - 1)]) &
+           BYTE_MASK[bytesize(node + m)]);
+
+      if (*val >= value) {
+        node += m;
+        *val -= value;
+      }
+    }
+
+    return node;
+  }
+
+  virtual size_t size() const { return Size; }
+
+  virtual size_t bitCount() const {
+    return sizeof(ByteF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
+  }
+
+private:
+  static inline size_t bytesize(size_t idx) {
+    return ((rho(idx) + BOUNDSIZE - 1) >> 3) + 1;
+  }
+
+  static inline size_t bytepos(size_t idx) {
+    constexpr size_t NEXTBYTE = ((BOUNDSIZE - 1) | (8 - 1)) + 1;
+
+    constexpr size_t SMALL = ((BOUNDSIZE - 1) >> 3) + 1;
+    constexpr size_t MEDIUM = NEXTBYTE - BOUNDSIZE + 1;
+    constexpr size_t LARGE = MEDIUM + 8;
+
+    constexpr size_t MULTIPLIER = 8 - SMALL - 1;
+
+    return idx * SMALL + (idx >> MEDIUM) + (idx >> LARGE) * MULTIPLIER;
+  }
+};
+
+} // namespace hft::fenwick
 
 #endif // __FENWICK_BYTE_HPP__

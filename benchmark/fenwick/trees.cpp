@@ -106,7 +106,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     // // find complement (after tree.add, so sequence[] is not cached)
     // begin = chrono::high_resolution_clock::now();
     // for (size_t i = 0; i < size; i++)
-    //     u ^= tree.compfind(sequence[i]);
+    //     u ^= tree.compFind(sequence[i]);
     // end = chrono::high_resolution_clock::now();
     // auto findc = chrono::duration_cast<chrono::nanoseconds>(end-begin).count();
 
@@ -114,7 +114,7 @@ void bench(const char* name, size_t size, uint64_t order[], uint64_t increments[
     const volatile uint64_t __attribute__((unused)) unused = u;
 
     const double c = 1. / size;
-    cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
+    cout << "\n" << name << ": " << tree.bitCount() / (double)size << " b/item\n";
     cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
     //cout << "prefix:" << fixed << setw(12) << prefix * c << " ns/item\n";
     //cout << "add:   " << fixed << setw(12) << add * c << " ns/item\n";

@@ -182,7 +182,7 @@ public:
         fupdate << to_string(update[MID] * c);
 
         cout << "bitspace... " << flush;
-        fbitspace << to_string(bv.bit_count() / (size * 64.));
+        fbitspace << to_string(bv.bitCount() / (size * 64.));
         cout << "done.  " << endl;
 
         const volatile uint64_t __attribute__((unused)) unused = u;

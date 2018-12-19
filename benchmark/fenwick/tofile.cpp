@@ -42,7 +42,7 @@ template <size_t N> using Byte25Bit = Hybrid<ByteL, BitF, N, 25>;
 template <size_t N> using Bit25Bit = Hybrid<BitL, BitF, N, 25>;
 
 
-template <size_t LEAF_MAXVAL> class Benchmark {
+template <size_t BOUND> class Benchmark {
 private:
     string path;
     size_t size, queries;
@@ -80,9 +80,9 @@ private:
 
     void datainit(mt19937 &engine) {
       mte = engine;
-      seqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL);
+      seqdist = uniform_int_distribution<uint64_t>(0, BOUND);
       idxdist = uniform_int_distribution<size_t>(1, size);
-      cumseqdist = uniform_int_distribution<uint64_t>(0, LEAF_MAXVAL*size);
+      cumseqdist = uniform_int_distribution<uint64_t>(0, BOUND*size);
 
       for (size_t i = 0; i < size; i++)
         sequence[i] = seqdist(mte);
@@ -95,7 +95,7 @@ private:
 
       cout << "Constructor... " << flush;
       begin = high_resolution_clock::now();
-      T<LEAF_MAXVAL> tree(sequence.get(), size);
+      T<BOUND> tree(sequence.get(), size);
       end = high_resolution_clock::now();
       auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
       fbuild << to_string(build / (double)size);
@@ -137,7 +137,7 @@ private:
           for (uint64_t i = 0; i < queries; ++i) {
               size_t idx = idxdist(mte);
               uint64_t val = seqdist(mte);
-              tree.add(idx, sequence[idx] + val < LEAF_MAXVAL ? val : -val);
+              tree.add(idx, sequence[idx] + val < BOUND ? val : -val);
           }
           end = high_resolution_clock::now();
           add.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
@@ -154,7 +154,7 @@ private:
       //     cout << r << " " << flush;
       //     begin = high_resolution_clock::now();
       //     for (uint64_t i = 0; i < queries; ++i)
-      //         u ^= tree.compfind(cumseqdist(mte));
+      //         u ^= tree.compFind(cumseqdist(mte));
       //     end = high_resolution_clock::now();
       //     findc.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
       // }
@@ -162,7 +162,7 @@ private:
       // ffindc << to_string(findc[MID] * c);
 
       cout << "bitspace... " << flush;
-      fbitspace << to_string(tree.bit_count() / (size * 64.));
+      fbitspace << to_string(tree.bitCount() / (size * 64.));
       cout << "done.  " << endl;
 
       const volatile uint64_t __attribute__((unused)) unused = u;
@@ -199,9 +199,9 @@ int main(int argc, char *argv[])
     const size_t size = std::stoi(argv[2]);
     const size_t queries = std::stoi(argv[3]);
 
-    constexpr size_t LEAF_MAXVAL = 64;
+    constexpr size_t BOUND = 64;
 
-    Benchmark<LEAF_MAXVAL> bench(argv[1], size, queries);
+    Benchmark<BOUND> bench(argv[1], size, queries);
     bench.datainit(mte);
 
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"

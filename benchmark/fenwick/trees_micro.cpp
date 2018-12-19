@@ -94,7 +94,7 @@ void microbench(const char* name, size_t size, uint64_t *increments)
     const volatile uint64_t __attribute__((unused)) unused = u;
 
     const double c = 1. / multiplier; // size;
-    cout << "\n" << name << ": " << tree.bit_count() / (double)size << " b/item\n";
+    cout << "\n" << name << ": " << tree.bitCount() / (double)size << " b/item\n";
     cout << "build: " << fixed << setw(12) << constructor * c << " ns/item\n";
     cout << "prefix:   " << fixed << setw(12) << prefix * c << " ns/item\n";
     cout << "add:   " << fixed << setw(12) << add * c << " ns/item\n";

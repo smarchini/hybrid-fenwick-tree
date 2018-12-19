@@ -13,7 +13,7 @@ You can find a brief description of each method in
 
 There are two different node layouts:
 - the *classical* (**F**): better for *prefix* and *add*, and
-- the *level-ordered* (**L**): better for *find* and *compfind*.
+- the *level-ordered* (**L**): better for *find* and *compFind*.
 
 And there are some different types of compression:
 - **Fixed**: no compression, aimed for small trees;
@@ -89,91 +89,96 @@ The following examples can be built with `g++ -I/path/to/include example.cpp`.
 
 ## Fenwick tree
 ``` cpp
-// uncomment the line below if you want to use HugeTLB
+// Uncomment the line below if you want to use HugeTLB
 // #define HFT_USE_HUGETLB
+// #define HFT_TRANSPARENT
 
-#include <iostream>
 #include <fenwick.hpp>
+#include <iostream>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
 //   where both of them have a medium (Byte) compression strategy
-template <size_t B> using MyHybird = hft::fenwick::Hybrid<hft::fenwick::ByteL, hft::fenwick::ByteF, B, 16>;
+template <size_t B>
+using MyHybird =
+    hft::fenwick::Hybrid<hft::fenwick::ByteL, hft::fenwick::ByteF, B, 16>;
 
-int main()
-{
-    // Library (hybrid fenwick tree) namespace
-    using namespace hft;
+int main() {
+  // Library (hybrid fenwick tree) namespace
+  using namespace hft;
 
-    // Definition of the sequence
-    constexpr size_t BOUND = 63;
-    constexpr size_t SIZE = 10;
-    uint64_t sequence[SIZE] = { 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10 };
+  // Definition of the sequence
+  constexpr size_t BOUND = 63;
+  constexpr size_t SIZE = 10;
+  uint64_t sequence[SIZE] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
-    // Definition three different fenwick trees on the same sequence
-    fenwick::FixedF<BOUND> fen1(sequence, SIZE);  // no compression, classical layout
-    fenwick::BitL<BOUND> fen2(sequence, SIZE);    // high compression, level-ordered layout
-    MyHybird<BOUND> fen3(sequence, SIZE);         // the hybrid Fenwick tree defined above
+  // Definition three different fenwick trees on the same sequence
+  fenwick::FixedF<BOUND> fen1(sequence, SIZE); // no compression, classical layout
+  fenwick::BitL<BOUND> fen2(sequence, SIZE); // high compression, level-ordered layout
+  MyHybird<BOUND> fen3(sequence, SIZE); // the hybrid Fenwick tree defined above
 
-    // Each tree does a different thing
-    fen1.add(0, 50);
-    fen2.add(4, 10);
-    fen3.add(7, -5);
+  // Each tree does a different thing
+  fen1.add(0, 50);
+  fen2.add(4, 10);
+  fen3.add(7, -5);
 
-    // Printing the prefix sum in 8
-    std::cout << "fen1.prefix(8) = " << fen1.prefix(8) << "\n"; // 95
-    std::cout << "fen2.prefix(8) = " << fen2.prefix(8) << "\n"; // 55
-    std::cout << "fen3.prefix(8) = " << fen3.prefix(8) << "\n"; // 40
+  // Printing the prefix sum in 8
+  std::cout << "fen1.prefix(8) = " << fen1.prefix(8) << "\n"; // 95
+  std::cout << "fen2.prefix(8) = " << fen2.prefix(8) << "\n"; // 55
+  std::cout << "fen3.prefix(8) = " << fen3.prefix(8) << "\n"; // 40
 
-    return 0;
+  return 0;
 }
 ```
 
 ## Rank and selection
 
 ``` cpp
-#include <iostream>
 #include <fenwick.hpp>
+#include <iostream>
 #include <rankselect.hpp>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
 //   where both of them have a medium (Byte) compression strategy
-template <size_t B> using MyHybrid = hft::fenwick::Hybrid<hft::fenwick::ByteL, hft::fenwick::ByteF, B, 16>;
+template <size_t B>
+using MyHybrid = hft::fenwick::Hybrid<hft::fenwick::ByteL, hft::fenwick::ByteF, B, 16>;
 
-int main()
-{
-    // Library (hybrid fenwick tree) namespace
-    using namespace hft;
+int main() {
+  // Library (hybrid fenwick tree) namespace
+  using namespace hft;
 
-    // Definition of the bitvector
-    constexpr size_t SIZE = 10;
-    uint64_t bitvector[SIZE] = { 0b0010110010111010100101011100010000010011010000110000101101110101,
-                                 0b1010010011110010010000100111010111001101001110110011101001100100,
-                                 0b0011111111100011100111101011110110100001001111011111101110101000,
-                                 0b1110101010110010110010100010001111101001100010101100101110111110,
-                                 0b0101101011101010001001001111110000010101011101010110101000010011,
-                                 0b1011011111110100010001101000010010101110010100000011001100111110,
-                                 0b1001101100110111000111110101101111010101100110001001001011111110,
-                                 0b0101000010110001110111010110000010100010101111000011111011100110,
-                                 0b1111100001110111111010100001111100100010110010111101001010100100,
-                                 0b1101001001110001010010001111111101000100110000000001101111111100 };
+  // Definition of the bitvector
+  constexpr size_t SIZE = 10;
+  uint64_t bitvector[SIZE] = {
+      0b0010110010111010100101011100010000010011010000110000101101110101,
+      0b1010010011110010010000100111010111001101001110110011101001100100,
+      0b0011111111100011100111101011110110100001001111011111101110101000,
+      0b1110101010110010110010100010001111101001100010101100101110111110,
+      0b0101101011101010001001001111110000010101011101010110101000010011,
+      0b1011011111110100010001101000010010101110010100000011001100111110,
+      0b1001101100110111000111110101101111010101100110001001001011111110,
+      0b0101000010110001110111010110000010100010101111000011111011100110,
+      0b1111100001110111111010100001111100100010110010111101001010100100,
+      0b1101001001110001010010001111111101000100110000000001101111111100};
 
-    // Definition two different dynamic rank and select data structures
-    ranking::Word<fenwick::ByteF> bv1(bitvector, SIZE); // ByteF and stride of 1 word
-    ranking::Stride<MyHybrid, 8> bv2(bitvector, SIZE);  // MyHybrid and stride of 8 words
+  // Definition two different dynamic rank and select data structures
+  ranking::Word<fenwick::ByteF> bv1(bitvector, SIZE); // ByteF with stride of a word
+  ranking::Stride<MyHybrid, 8> bv2(bitvector, SIZE); // MyHybrid with stride of 8 words
 
-    // We change the internal bit vector of those structures
-    bv1.toggle(600); bv1.toggle(200); bv1.toggle(100);
-    bv2.update(5, 0b1111111111111111111111111111111111111111111111111111111111111111);
+  // We change the internal bit vector of those structures
+  bv1.toggle(600);
+  bv1.toggle(200);
+  bv1.toggle(100);
+  bv2.update(5, 0b1111111111111111111111111111111111111111111111111111111111111111);
 
-    // Printing rank of 100 and selection of 300
-    std::cout << "bv1.rank(100) = " << bv1.rank(100) << "\n"; // 48
-    std::cout << "bv2.rank(100) = " << bv2.rank(100) << "\n"; // 48
-    std::cout << "bv1.select(100) = " << bv1.select(300) << "\n"; // 573
-    std::cout << "bv2.select(100) = " << bv2.select(300) << "\n"; // 508
+  // Printing rank of 100 and selection of 300
+  std::cout << "bv1.rank(100) = " << bv1.rank(100) << "\n";     // 48
+  std::cout << "bv2.rank(100) = " << bv2.rank(100) << "\n";     // 48
+  std::cout << "bv1.select(100) = " << bv1.select(300) << "\n"; // 573
+  std::cout << "bv2.select(100) = " << bv2.select(300) << "\n"; // 508
 
-    return 0;
+  return 0;
 }
 ```
 

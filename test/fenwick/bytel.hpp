@@ -14,7 +14,7 @@ TEST(lbyte_fenwick_tree, increments_by_one)
     ByteL_Test t(inc1, 15);
 
     std::string tree_str = "000000000000100000000000000001000000000000000100000000100000001000000010000000100000000100000001000000010000000100000001000000010000000100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq1[15];
     increments_to_sequence(inc1, seq1, 15);
@@ -31,10 +31,10 @@ TEST(lbyte_fenwick_tree, increments_by_one)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq1[k-1]; i < 64*(k+1)-seq1[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add
@@ -64,7 +64,7 @@ TEST(lbyte_fenwick_tree, increasing_increments)
     ByteL_Test t(inc2, 15);
 
     std::string tree_str = "000000000010010000000000001010100000000000001010000110110001001100001011000000110000111100001101000010110000100100000111000001010000001100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq2[15];
     increments_to_sequence(inc2, seq2, 15);
@@ -81,10 +81,10 @@ TEST(lbyte_fenwick_tree, increasing_increments)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {
         for (std::uint64_t i = 64*k-seq2[k-1]; i < 64*(k+1)-seq2[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add
@@ -115,7 +115,7 @@ TEST(lbyte_fenwick_tree, non_complete)
     ByteL_Test t(inc3, 20);
 
     std::string tree_str = "00000000000100000000000000001000000000000000010000000000000001000000000000000100000000100000001000000010000000100000001000000001000000010000000100000001000000010000000100000001000000010000000100000001";
-    EXPECT_EQ(tree_str, tree_tostring(t.tree.get(), tree_str.length()));
+    EXPECT_EQ(tree_str, tree_tostring(t.Tree.get(), tree_str.length()));
 
     std::uint64_t seq3[20];
     increments_to_sequence(inc3, seq3, 20);
@@ -132,10 +132,10 @@ TEST(lbyte_fenwick_tree, non_complete)
 
     // find complement
     for (std::uint64_t i = 0; i < 63; i++)
-        EXPECT_EQ(0, t.compfind(i)) << "at index " << i;
+        EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 20; k++) {
         for (std::uint64_t i = 64*k-seq3[k-1]; i < 64*(k+1)-seq3[k]; i++)
-            EXPECT_EQ(k, t.compfind(i)) << "at index " << i;
+            EXPECT_EQ(k, t.compFind(i)) << "at index " << i;
     }
 
     // add
