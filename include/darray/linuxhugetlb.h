@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <memory>
 #include <sys/mman.h>
+#include <iostream>
 
 #include "../common.hpp"
 
@@ -20,32 +21,34 @@ namespace hft {
  */
 template <typename T> class DArray {
 public:
-  static constexpr size_t PAGESIZE = 2048 * 1024;
   static constexpr int PROT = PROT_READ | PROT_WRITE;
   static constexpr int FLAGS = MAP_PRIVATE | MAP_ANONYMOUS;
 
 private:
-  size_t Size;
-  size_t Space; // multiple of PAGESIZE
+  size_t Size;  // length of the array
+  size_t Space; // allocated space in memory
   T *Buffer = nullptr;
 
 public:
   DArray<T>() : DArray<T>(0){};
 
   explicit DArray<T>(size_t length) : Size(length) {
-    const size_t minlen = length > 0 ? length : 1;
-    Space = ((PAGESIZE - 1) | (minlen * sizeof(T) - 1)) + 1;
+    static constexpr size_t MAGIC = 8;
+    size_t minlen = length > 0 ? length + MAGIC : 1; // +MAGIC TO FIX SLOW MMAP
 
 #ifdef HFT_TRANSPARENT
-    void *result = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
-    assert(result != MAP_FAILED);
-    madvise(result, Space, MADV_HUGEPAGE);
+    Space = ((4096 - 1) | (minlen * sizeof(T) - 1)) + 1;
+    void *memory = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
+    assert(memory != MAP_FAILED && "mmap failed");
+    int advised = madvise(memory, Space, MADV_HUGEPAGE);
+    assert(advised == 0 && "madvise failed");
 #else
-    void *result = mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0);
-    assert(result != MAP_FAILED);
+    Space = ((2097152 - 1) | (minlen * sizeof(T) - 1)) + 1;
+    void *memory = mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0);
+    assert(memory != MAP_FAILED && "mmap failed");
 #endif
 
-    Buffer = static_cast<T *>(result);
+    Buffer = (T *)((uint64_t)(memory) + MAGIC); // +MAGIC TO FIX SLOW MMAP
   }
 
   DArray(DArray<T> &&oth)
@@ -58,10 +61,8 @@ public:
   }
 
   ~DArray<T>() {
-    if (Buffer) {
-      int result = munmap(Buffer, Space);
-      assert(result == 0);
-    }
+    int result = munmap(Buffer, Space);
+    assert(result == 0 && "mmunmap failed");
   }
 
   friend void swap(DArray<T> &first, DArray<T> &second) noexcept {
