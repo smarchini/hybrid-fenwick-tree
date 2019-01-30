@@ -9,7 +9,7 @@
 #include <fenwick.hpp>
 
 template<typename T>
-void find(const char* name, size_t size, size_t queries, std::default_random_engine re)
+void find(const char* name, size_t size, size_t queries, std::mt19937 re)
 {
     using namespace std;
     using namespace std::chrono;
@@ -53,7 +53,7 @@ void find(const char* name, size_t size, size_t queries, std::default_random_eng
 
 
 template<typename T>
-void add(const char* name, size_t size, size_t queries, std::default_random_engine re)
+void add(const char* name, size_t size, size_t queries, std::mt19937 re)
 {
     using namespace std;
     using namespace std::chrono;
@@ -100,7 +100,7 @@ void add(const char* name, size_t size, size_t queries, std::default_random_engi
 }
 
 template<typename T>
-void prefix(const char* name, size_t size, size_t queries, std::default_random_engine re)
+void prefix(const char* name, size_t size, size_t queries, std::mt19937 re)
 {
     using namespace std;
     using namespace std::chrono;
@@ -130,7 +130,6 @@ void prefix(const char* name, size_t size, size_t queries, std::default_random_e
     cout << "prefix: " << flush;
     vector<chrono::nanoseconds::rep> prefix;
     for (size_t r = 0; r < REPS; r++) {
-        cout << r << " " << flush;
         begin = high_resolution_clock::now();
         for (uint64_t i = 0; i < queries; ++i)
             u ^= fenwick.prefix(idxdist(re));

@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     using namespace hft::fenwick;
 
     random_device rd;
-    default_random_engine re(rd());
+    mt19937 re(rd());
 
     if (argc < 3) {
         cerr << "Not enough parameters: <size> <queries>\n";
