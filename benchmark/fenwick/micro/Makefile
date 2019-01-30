@@ -1,21 +1,23 @@
-CC = g++ -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include
+##CC = clang++ -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include $(CFLAGS)
+CC = g++ -g -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include $(CFLAGS)
 BINDIR = ./
 
 HUGETLB = -DHFT_USE_HUGETLB
 TRANTLB = -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
 
 all: prefix add find
+#all: add_bitf add_bytef add_fixedf
 
-notlb: BINDIR = ./bin
-notlb: all
+bin: BINDIR = ./bin
+bin: all
 
-hugetlb: CC += -DHFT_USE_HUGETLB
-hugetlb: BINDIR = ./hugebin
-hugetlb: all
+hugebin: CC += -DHFT_USE_HUGETLB
+hugebin: BINDIR = ./hugebin
+hugebin: all
 
-trantlb: CC += -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
-trantlb: BINDIR = ./tranbin
-trantlb: all
+tranbin: CC += -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
+tranbin: BINDIR = ./tranbin
+tranbin: all
 
 dir:
 	mkdir bin hugebin tranbin

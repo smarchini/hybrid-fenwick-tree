@@ -1,6 +1,10 @@
 #ifndef __COMMON_HPP__
 #define __COMMON_HPP__
 
+// TODO: remove me, it's for debugging purpose
+#define __STRINGIFY(s) #s
+#define STRINGIFY(s) __STRINGIFY(s)
+
 #include <algorithm>
 #include <cstdint>
 #include <memory>

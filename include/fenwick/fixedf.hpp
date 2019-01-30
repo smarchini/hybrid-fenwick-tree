@@ -2,6 +2,9 @@
 #define __FENWICK_NAIVE_HPP__
 
 #include "fenwick_tree.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace hft::fenwick {
 
@@ -21,6 +24,10 @@ public:
 protected:
   DArray<uint64_t> Tree;
 
+  std::ofstream addrprefix;
+  std::ofstream addradd;
+  std::ofstream addrfind;
+
 public:
   FixedF(uint64_t sequence[], size_t size) : Tree(size) {
     std::copy_n(sequence, size, Tree.get());
@@ -29,13 +36,18 @@ public:
       for (size_t idx = m; idx <= size; idx += m)
         Tree[idx - 1] += Tree[idx - m / 2 - 1];
     }
+
+    addrprefix.open(std::string("address_FixedF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    addradd.open(std::string("address_FixedF_add_") + STRINGIFY(MAGIC) + ".txt");
+    addrfind.open(std::string("address_FixedF_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
-  virtual uint64_t prefix(size_t idx) const {
+  virtual uint64_t prefix(size_t idx) {
     uint64_t sum = 0;
 
     while (idx != 0) {
       sum += Tree[idx - 1];
+      addrprefix << ((uint64_t)&Tree[idx - 1] % 4096) << "\n";
       idx = clear_rho(idx);
     }
 
@@ -46,12 +58,13 @@ public:
     size_t treeSize = Tree.size();
     while (idx <= treeSize) {
       Tree[idx - 1] += inc;
+      addradd << ((uint64_t)&Tree[idx - 1] % 4096) << "\n";
       idx += mask_rho(idx);
     }
   }
 
   using FenwickTree::find;
-  virtual size_t find(uint64_t *val) const {
+  virtual size_t find(uint64_t *val) {
     size_t treeSize = Tree.size();
     size_t node = 0;
 
@@ -60,6 +73,7 @@ public:
         continue;
 
       uint64_t value = Tree[node + m - 1];
+      addrfind << ((uint64_t)&Tree[node + m - 1] % 4096) << "\n";
 
       if (*val >= value) {
         node += m;
@@ -71,7 +85,7 @@ public:
   }
 
   using FenwickTree::compFind;
-  virtual size_t compFind(uint64_t *val) const {
+  virtual size_t compFind(uint64_t *val) {
     size_t node = 0, treeSize = Tree.size();
 
     for (size_t m = mask_lambda(treeSize); m != 0; m >>= 1) {
@@ -89,9 +103,9 @@ public:
     return node;
   }
 
-  virtual size_t size() const { return Tree.size(); }
+  virtual size_t size() { return Tree.size(); }
 
-  virtual size_t bitCount() const {
+  virtual size_t bitCount() {
     return sizeof(FixedF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
   }
 };

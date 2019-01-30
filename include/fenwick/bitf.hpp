@@ -3,6 +3,8 @@
 
 #include "fenwick_tree.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace hft::fenwick {
 
@@ -22,6 +24,10 @@ public:
 protected:
   const size_t Size;
   DArray<uint8_t> Tree;
+
+  std::ofstream addrprefix;
+  std::ofstream addradd;
+  std::ofstream addrfind;
 
 public:
   BitF(uint64_t sequence[], size_t size)
@@ -51,14 +57,19 @@ public:
         element += value << (pos & 0b111);
       }
     }
+
+    addrprefix.open(std::string("address_BitF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    addradd.open(std::string("address_BitF_add_") + STRINGIFY(MAGIC) + ".txt");
+    addrfind.open(std::string("address_BitF_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
-  virtual uint64_t prefix(size_t idx) const {
+  virtual uint64_t prefix(size_t idx) {
     uint64_t sum = 0;
 
     while (idx != 0) {
       size_t pos = bitpos(idx - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      addrprefix << ((uint64_t)&element % (4096)) << "\n";
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + rho(idx));
       idx = clear_rho(idx);
@@ -71,6 +82,7 @@ public:
     while (idx <= Size) {
       size_t pos = bitpos(idx - 1);
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+      addradd << ((uint64_t)&element % (4096)) << "\n";
 
       element += inc << (pos & 0b111);
       idx += mask_rho(idx);
@@ -78,7 +90,7 @@ public:
   }
 
   using FenwickTree::find;
-  virtual size_t find(uint64_t *val) const {
+  virtual size_t find(uint64_t *val) {
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
@@ -87,6 +99,7 @@ public:
 
       size_t pos = bitpos(node + m - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      // addrfind << ((uint64_t)&element % (4096)) << "\n";
 
       uint64_t value =
           bitextract(element, pos & 0b111, BOUNDSIZE + rho(node + m));
@@ -101,7 +114,7 @@ public:
   }
 
   using FenwickTree::compFind;
-  virtual size_t compFind(uint64_t *val) const {
+  virtual size_t compFind(uint64_t *val) {
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
@@ -124,9 +137,9 @@ public:
     return node;
   }
 
-  virtual size_t size() const { return Size; }
+  virtual size_t size() { return Size; }
 
-  virtual size_t bitCount() const {
+  virtual size_t bitCount() {
     return sizeof(BitF<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree);
   }
