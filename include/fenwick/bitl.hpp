@@ -154,9 +154,9 @@ public:
   }
 
   ~BitL() {
-    std::ofstream fprefix(std::string("address_BitL_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    std::ofstream fadd(std::string("address_BitL_add_") + STRINGIFY(MAGIC) + ".txt");
-    std::ofstream ffind(std::string("address_BitL_find_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fprefix(std::string("address_BitL_prefix_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
+    std::ofstream fadd(std::string("address_BitL_add_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
+    std::ofstream ffind(std::string("address_BitL_find_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
 
     for (auto i: addrprefix) fprefix << i << "\n";
     for (auto i: addradd) fadd << i << "\n";

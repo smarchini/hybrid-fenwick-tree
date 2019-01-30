@@ -2,9 +2,6 @@
 #define __FENWICK_BYTE_HPP__
 
 #include "fenwick_tree.hpp"
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
 namespace hft::fenwick {
 
@@ -124,9 +121,9 @@ public:
   }
 
   ~ByteF() {
-    std::ofstream fprefix(std::string("address_ByteF_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    std::ofstream fadd(std::string("address_ByteF_add_") + STRINGIFY(MAGIC) + ".txt");
-    std::ofstream ffind(std::string("address_ByteF_find_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fprefix(std::string("address_ByteF_prefix_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
+    std::ofstream fadd(std::string("address_ByteF_add_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
+    std::ofstream ffind(std::string("address_ByteF_find_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
 
     for (auto i: addrprefix) fprefix << i << "\n";
     for (auto i: addradd) fadd << i << "\n";
