@@ -26,9 +26,7 @@ protected:
   DArray<uint64_t> Tree;
   unique_ptr<size_t[]> Level;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   FixedL(uint64_t sequence[], size_t size)
@@ -50,10 +48,6 @@ public:
         Tree[Level[l] + (node >> (l + 1))] = value;
       }
     }
-
-    addrprefix.open(std::string("address_FixedL_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_FixedL_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_FixedL_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -63,7 +57,7 @@ public:
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       sum += Tree[Level[height] + level_idx];
-      addrprefix << ((uint64_t)(&Tree[Level[height] + level_idx]) % 4096) << "\n";
+      addrprefix[(uint64_t)(&Tree[Level[height] + level_idx]) % 4096]++;
 
       idx = clear_rho(idx);
     }
@@ -78,7 +72,7 @@ public:
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       Tree[Level[height] + level_idx] += inc;
-      addradd << ((uint64_t)(&Tree[Level[height] + level_idx]) % 4096) << "\n";
+      addradd[(uint64_t)(&Tree[Level[height] + level_idx]) % 4096]++;
 
       idx += mask_rho(idx);
     }
@@ -97,7 +91,7 @@ public:
         continue;
 
       uint64_t value = Tree[pos];
-      addrfind << ((uint64_t)(&Tree[pos]) % 4096) << "\n";
+      addrfind[(uint64_t)(&Tree[pos]) % 4096]++;
 
       if (*val >= value) {
         idx++;
@@ -138,6 +132,16 @@ public:
     return sizeof(FixedL<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;
+  }
+
+  ~FixedL() {
+    std::ofstream fprefix(std::string("address_FixedF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fadd(std::string("address_FixedF_add_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream ffind(std::string("address_FixedF_find_") + STRINGIFY(MAGIC) + ".txt");
+
+    for (auto i: addrprefix) fprefix << i << "\n";
+    for (auto i: addradd) fadd << i << "\n";
+    for (auto i: addrfind) ffind << i << "\n";
   }
 };
 

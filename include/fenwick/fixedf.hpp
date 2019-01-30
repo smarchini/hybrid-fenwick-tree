@@ -24,9 +24,7 @@ public:
 protected:
   DArray<uint64_t> Tree;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   FixedF(uint64_t sequence[], size_t size) : Tree(size) {
@@ -36,10 +34,6 @@ public:
       for (size_t idx = m; idx <= size; idx += m)
         Tree[idx - 1] += Tree[idx - m / 2 - 1];
     }
-
-    addrprefix.open(std::string("address_FixedF_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_FixedF_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_FixedF_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -47,7 +41,7 @@ public:
 
     while (idx != 0) {
       sum += Tree[idx - 1];
-      addrprefix << ((uint64_t)&Tree[idx - 1] % 4096) << "\n";
+      addrprefix[(uint64_t)&Tree[idx - 1] % 4096]++;
       idx = clear_rho(idx);
     }
 
@@ -58,7 +52,7 @@ public:
     size_t treeSize = Tree.size();
     while (idx <= treeSize) {
       Tree[idx - 1] += inc;
-      addradd << ((uint64_t)&Tree[idx - 1] % 4096) << "\n";
+      addradd[(uint64_t)&Tree[idx - 1] % 4096]++;
       idx += mask_rho(idx);
     }
   }
@@ -73,7 +67,7 @@ public:
         continue;
 
       uint64_t value = Tree[node + m - 1];
-      addrfind << ((uint64_t)&Tree[node + m - 1] % 4096) << "\n";
+      addrfind[(uint64_t)&Tree[node + m - 1] % 4096]++;
 
       if (*val >= value) {
         node += m;
@@ -107,6 +101,16 @@ public:
 
   virtual size_t bitCount() {
     return sizeof(FixedF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
+  }
+
+  ~FixedF() {
+    std::ofstream fprefix(std::string("address_FixedF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fadd(std::string("address_FixedF_add_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream ffind(std::string("address_FixedF_find_") + STRINGIFY(MAGIC) + ".txt");
+
+    for (auto i: addrprefix) fprefix << i << "\n";
+    for (auto i: addradd) fadd << i << "\n";
+    for (auto i: addrfind) ffind << i << "\n";
   }
 };
 

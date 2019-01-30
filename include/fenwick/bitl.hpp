@@ -26,9 +26,7 @@ protected:
   DArray<uint8_t> Tree;
   unique_ptr<size_t[]> Level;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   BitL(uint64_t sequence[], size_t size)
@@ -65,10 +63,6 @@ public:
         high |= (value << highshift) & highmask;
       }
     }
-
-    addrprefix.open(std::string("address_BitL_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_BitL_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_BitL_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -78,7 +72,7 @@ public:
       int height = rho(idx);
       size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
       auint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrprefix << ((uint64_t)(&element) % 4096) << "\n";
+      addrprefix[(uint64_t)(&element) % 4096]++;
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
       idx = clear_rho(idx);
@@ -92,7 +86,7 @@ public:
       int height = rho(idx);
       size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-      addradd << ((uint64_t)(&element) % 4096) << "\n";
+      addradd[(uint64_t)(&element) % 4096]++;
 
       element += inc << (pos & 0b111);
       idx += mask_rho(idx);
@@ -112,7 +106,7 @@ public:
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrfind << ((uint64_t)(&element) % 4096) << "\n";
+      addrfind[(uint64_t)(&element) % 4096]++;
       uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
 
       if (*val >= value) {
@@ -157,6 +151,16 @@ public:
     return sizeof(BitL<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;
+  }
+
+  ~BitL() {
+    std::ofstream fprefix(std::string("address_BitL_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fadd(std::string("address_BitL_add_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream ffind(std::string("address_BitL_find_") + STRINGIFY(MAGIC) + ".txt");
+
+    for (auto i: addrprefix) fprefix << i << "\n";
+    for (auto i: addradd) fadd << i << "\n";
+    for (auto i: addrfind) ffind << i << "\n";
   }
 };
 

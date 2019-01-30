@@ -4,6 +4,11 @@
 #include "../common.hpp"
 #include "../darray.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+
 namespace hft::fenwick {
 
 /**

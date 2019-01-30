@@ -25,9 +25,7 @@ protected:
   const size_t Size;
   DArray<uint8_t> Tree;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   ByteF(uint64_t sequence[], size_t size)
@@ -49,10 +47,6 @@ public:
         left += value;
       }
     }
-
-    addrprefix.open(std::string("address_ByteF_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_ByteF_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_ByteF_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -60,7 +54,7 @@ public:
 
     while (idx != 0) {
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[bytepos(idx - 1)]);
-      addrprefix << ((uint64_t)(&Tree[bytepos(idx - 1)]) % 4096) << "\n";
+      addrprefix[(uint64_t)(&Tree[bytepos(idx - 1)]) % 4096]++;
 
       sum += element & BYTE_MASK[bytesize(idx)];
       idx = clear_rho(idx);
@@ -72,7 +66,7 @@ public:
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[bytepos(idx - 1)]);
-      addradd << ((uint64_t)&element % 4096) << "\n";
+      addradd[(uint64_t)&element % 4096]++;
 
       element += inc;
       idx += mask_rho(idx);
@@ -90,7 +84,7 @@ public:
       uint64_t value =
           *reinterpret_cast<auint64_t *>(&Tree[bytepos(node + m - 1)]) &
           BYTE_MASK[bytesize(node + m)];
-      addrfind << ((uint64_t)(&Tree[bytepos(node + m - 1)]) % 4096) << "\n";
+      addrfind[(uint64_t)(&Tree[bytepos(node + m - 1)]) % 4096]++;
 
       if (*val >= value) {
         node += m;
@@ -127,6 +121,16 @@ public:
 
   virtual size_t bitCount() {
     return sizeof(ByteF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
+  }
+
+  ~ByteF() {
+    std::ofstream fprefix(std::string("address_ByteF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fadd(std::string("address_ByteF_add_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream ffind(std::string("address_ByteF_find_") + STRINGIFY(MAGIC) + ".txt");
+
+    for (auto i: addrprefix) fprefix << i << "\n";
+    for (auto i: addradd) fadd << i << "\n";
+    for (auto i: addrfind) ffind << i << "\n";
   }
 
 private:

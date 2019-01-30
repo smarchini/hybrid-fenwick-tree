@@ -2,9 +2,6 @@
 #define __FENWICK_BIT_HPP__
 
 #include "fenwick_tree.hpp"
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
 namespace hft::fenwick {
 
@@ -25,9 +22,7 @@ protected:
   const size_t Size;
   DArray<uint8_t> Tree;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   BitF(uint64_t sequence[], size_t size)
@@ -57,10 +52,6 @@ public:
         element += value << (pos & 0b111);
       }
     }
-
-    addrprefix.open(std::string("address_BitF_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_BitF_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_BitF_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -69,7 +60,7 @@ public:
     while (idx != 0) {
       size_t pos = bitpos(idx - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrprefix << ((uint64_t)&element % (4096)) << "\n";
+      addrprefix[(uint64_t)&element % 4096]++;
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + rho(idx));
       idx = clear_rho(idx);
@@ -82,7 +73,7 @@ public:
     while (idx <= Size) {
       size_t pos = bitpos(idx - 1);
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-      addradd << ((uint64_t)&element % (4096)) << "\n";
+      addradd[(uint64_t)&element % 4096]++;
 
       element += inc << (pos & 0b111);
       idx += mask_rho(idx);
@@ -99,7 +90,7 @@ public:
 
       size_t pos = bitpos(node + m - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      // addrfind << ((uint64_t)&element % (4096)) << "\n";
+      addrfind[(uint64_t)&element % 4096]++;
 
       uint64_t value =
           bitextract(element, pos & 0b111, BOUNDSIZE + rho(node + m));
@@ -142,6 +133,16 @@ public:
   virtual size_t bitCount() {
     return sizeof(BitF<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree);
+  }
+
+  ~BitF() {
+    std::ofstream fprefix(std::string("address_BitF_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream fadd(std::string("address_BitF_add_") + STRINGIFY(MAGIC) + ".txt");
+    std::ofstream ffind(std::string("address_BitF_find_") + STRINGIFY(MAGIC) + ".txt");
+
+    for (auto i: addrprefix) fprefix << i << "\n";
+    for (auto i: addradd) fadd << i << "\n";
+    for (auto i: addrfind) ffind << i << "\n";
   }
 
 private:

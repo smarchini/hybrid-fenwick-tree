@@ -32,7 +32,7 @@ public:
       TopFenwick.add(i + 1, BottomForest[i].prefix(BottomForest[i].size()));
   }
 
-  virtual uint64_t prefix(size_t idx) const {
+  virtual uint64_t prefix(size_t idx) {
     size_t top = idx >> CUTPOINT;
     size_t bottom = idx & BOTTOMSIZE;
 
@@ -52,7 +52,7 @@ public:
   }
 
   using FenwickTree::find;
-  virtual size_t find(uint64_t *val) const {
+  virtual size_t find(uint64_t *val) {
     size_t top = TopFenwick.size() != 0 ? TopFenwick.find(val) : 0;
     size_t bottom = top < BottomForest.size() ? BottomForest[top].find(val) : 0;
 
@@ -60,16 +60,16 @@ public:
   }
 
   using FenwickTree::compFind;
-  virtual size_t compFind(uint64_t *val) const {
+  virtual size_t compFind(uint64_t *val) {
     size_t top = TopFenwick.size() != 0 ? TopFenwick.compFind(val) : 0;
     size_t bottom = top < BottomForest.size() ? BottomForest[top].compFind(val) : 0;
 
     return (top << CUTPOINT) + bottom;
   }
 
-  virtual size_t size() const { return Size; }
+  virtual size_t size() { return Size; }
 
-  virtual size_t bitCount() const {
+  virtual size_t bitCount() {
     size_t bottomSize = 0;
     for (auto &t : BottomForest)
       bottomSize += t.bitCount();

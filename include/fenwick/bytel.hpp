@@ -26,9 +26,7 @@ protected:
   DArray<uint8_t> Tree;
   unique_ptr<size_t[]> Level;
 
-  std::ofstream addrprefix;
-  std::ofstream addradd;
-  std::ofstream addrfind;
+  std::array<int, 4096> addrprefix, addradd, addrfind;
 
 public:
   ByteL(uint64_t sequence[], size_t size)
@@ -60,10 +58,6 @@ public:
         high |= value & BYTE_MASK[heightsize(l)];
       }
     }
-
-    addrprefix.open(std::string("address_ByteL_prefix_") + STRINGIFY(MAGIC) + ".txt");
-    addradd.open(std::string("address_ByteL_add_") + STRINGIFY(MAGIC) + ".txt");
-    addrfind.open(std::string("address_ByteL_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
   virtual uint64_t prefix(size_t idx) {
@@ -75,7 +69,7 @@ public:
 
       auint64_t &element = reinterpret_cast<auint64_t &>(
           Tree[Level[height] + (idx >> (1 + height)) * isize]);
-      addrprefix << ((uint64_t)(&element) % 4096) << "\n";
+      addrprefix[(uint64_t)(&element) % 4096]++;
 
       sum += element & BYTE_MASK[isize];
       idx = clear_rho(idx);
@@ -90,7 +84,7 @@ public:
 
       auint64_t &element = reinterpret_cast<auint64_t &>(
           Tree[Level[height] + (idx >> (1 + height)) * heightsize(height)]);
-      addradd << ((uint64_t)(&element) % 4096) << "\n";
+      addradd[(uint64_t)(&element) % 4096]++;
 
       element += inc;
       idx += mask_rho(idx);
@@ -111,7 +105,7 @@ public:
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos]);
-      addrfind << ((uint64_t)(&element) % 4096) << "\n";
+      addrfind[(uint64_t)(&element) % 4096]++;
       uint64_t value = element & BYTE_MASK[isize];
 
       if (*val >= value) {
@@ -156,6 +150,16 @@ public:
     return sizeof(ByteL<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;
+  }
+
+  ~ByteL() {
+      std::ofstream fprefix(std::string("address_ByteL_prefix_") + STRINGIFY(MAGIC) + ".txt");
+      std::ofstream fadd(std::string("address_ByteL_add_") + STRINGIFY(MAGIC) + ".txt");
+      std::ofstream ffind(std::string("address_ByteL_find_") + STRINGIFY(MAGIC) + ".txt");
+
+      for (auto i: addrprefix) fprefix << i << "\n";
+      for (auto i: addradd) fadd << i << "\n";
+      for (auto i: addrfind) ffind << i << "\n";
   }
 
 private:
