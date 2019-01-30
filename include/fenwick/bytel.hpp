@@ -105,7 +105,7 @@ public:
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos]);
-      addrfind[(uint64_t)(&element) % 4096]++;
+      addrfind[(uint64_t)(&Tree[pos]) % 4096]++;
       uint64_t value = element & BYTE_MASK[isize];
 
       if (*val >= value) {

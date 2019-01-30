@@ -23,11 +23,11 @@ dir:
 	mkdir bin hugebin tranbin
 
 
-prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl prefix_fixed18fixed prefix_fixed19byte prefix_fixed20bit prefix_byte19byte prefix_byte20bit prefix_bit20bit prefix_fixed20fixed prefix_fixed21byte prefix_fixed25bit prefix_byte21byte prefix_byte25bit prefix_bit25bit
+prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl 
 
-add: add_fixedf add_bytef add_bitf add_fixedl add_bytel add_bitl add_fixed18fixed add_fixed19byte add_fixed20bit add_byte19byte add_byte20bit add_bit20bit add_fixed20fixed add_fixed21byte add_fixed25bit add_byte21byte add_byte25bit add_bit25bit
+add: add_fixedf add_bytef add_bitf add_fixedl add_bytel add_bitl 
 
-find: find_fixedf find_bytef find_bitf find_fixedl find_bytel find_bitl find_fixed18fixed find_fixed19byte find_fixed20bit find_byte19byte find_byte20bit find_bit20bit find_fixed20fixed find_fixed21byte find_fixed25bit find_byte21byte find_byte25bit find_bit25bit
+find: find_fixedf find_bytef find_bitf find_fixedl find_bytel find_bitl 
 
 
 prefix_fixedf: prefix_fixedf.cpp

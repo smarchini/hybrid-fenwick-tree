@@ -72,7 +72,7 @@ public:
       int height = rho(idx);
       size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
       auint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrprefix[(uint64_t)(&element) % 4096]++;
+      addrprefix[(uint64_t)(&Tree[pos >> 3]) % 4096]++;
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
       idx = clear_rho(idx);
@@ -106,7 +106,7 @@ public:
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrfind[(uint64_t)(&element) % 4096]++;
+      addrfind[(uint64_t)(&Tree[pos >> 3]) % 4096]++;
       uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
 
       if (*val >= value) {

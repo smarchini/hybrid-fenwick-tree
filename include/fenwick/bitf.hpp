@@ -60,7 +60,7 @@ public:
     while (idx != 0) {
       size_t pos = bitpos(idx - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrprefix[(uint64_t)&element % 4096]++;
+      addrprefix[(uint64_t)(&Tree[pos >> 3]) % 4096]++;
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + rho(idx));
       idx = clear_rho(idx);
