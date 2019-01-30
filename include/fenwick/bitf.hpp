@@ -90,7 +90,7 @@ public:
 
       size_t pos = bitpos(node + m - 1);
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      addrfind[(uint64_t)&element % 4096]++;
+      addrfind[(uint64_t)(&Tree[pos >> 3]) % 4096]++;
 
       uint64_t value =
           bitextract(element, pos & 0b111, BOUNDSIZE + rho(node + m));
