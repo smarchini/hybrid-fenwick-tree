@@ -136,18 +136,21 @@ public:
 
   ~FixedL() {
     using namespace std;
-    ofstream fprefix(std::string("address_FixedF_prefix_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
-    ofstream fadd(std::string("address_FixedF_add_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
-    ofstream ffind(std::string("address_FixedF_find_") + STRINGIFY(MAGIC) + ".txt", std::ofstream::app);
 
-    if (any_of(begin(addrprefix), end(addrprefix), [](int i) { return i != 0; }))
-        for (auto i: addrprefix) fprefix << i << "\n";
+    if (any_of(begin(addrprefix), end(addrprefix), [](int i) { return i != 0; })) {
+      ofstream fprefix(std::string("address_FixedL_prefix_") + STRINGIFY(MAGIC) + ".txt");
+      for (auto i: addrprefix) fprefix << i << "\n";
+    }
 
-    if (any_of(begin(addradd), end(addradd), [](int i) { return i != 0; }))
-        for (auto i: addradd) fadd << i << "\n";
+    if (any_of(begin(addradd), end(addradd), [](int i) { return i != 0; })) {
+      ofstream fadd(std::string("address_FixedL_add_") + STRINGIFY(MAGIC) + ".txt");
+      for (auto i: addradd) fadd << i << "\n";
+    }
 
-    if (any_of(begin(addrfind), end(addrfind), [](int i) { return i != 0; }))
-        for (auto i: addrfind) ffind << i << "\n";
+    if (any_of(begin(addrfind), end(addrfind), [](int i) { return i != 0; })) {
+      ofstream ffind(std::string("address_FixedL_find_") + STRINGIFY(MAGIC) + ".txt");
+      for (auto i: addrfind) ffind << i << "\n";
+    }
   }
 };
 
