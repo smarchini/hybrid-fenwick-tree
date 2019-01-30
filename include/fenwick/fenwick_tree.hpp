@@ -27,7 +27,7 @@ public:
    * is zero.
    *
    */
-  virtual std::uint64_t prefix(std::size_t idx) const = 0;
+  virtual std::uint64_t prefix(std::size_t idx) = 0;
 
   /**
    * add() - Increment an element of the sequence (not the tree).
@@ -52,8 +52,8 @@ public:
    * there are no prefixes that are greater or equal to @val).
    *
    */
-  virtual std::size_t find(std::uint64_t *val) const = 0;
-  std::size_t find(std::uint64_t val) const { return find(&val); }
+  virtual std::size_t find(std::uint64_t *val) = 0;
+  std::size_t find(std::uint64_t val) { return find(&val); }
 
   /**
    * compFind() - Complement find.
@@ -66,20 +66,20 @@ public:
    * The same considerations made for FenwickTree::find() holds.
    *
    */
-  virtual std::size_t compFind(std::uint64_t *val) const = 0;
-  std::size_t compFind(std::uint64_t val) const { return compFind(&val); }
+  virtual std::size_t compFind(std::uint64_t *val) = 0;
+  std::size_t compFind(std::uint64_t val) { return compFind(&val); }
 
   /**
    * size() - Returns the length of the sequence.
    *
    */
-  virtual std::size_t size() const = 0;
+  virtual std::size_t size() = 0;
 
   /**
    * bitCount() - Estimation of the size (in bits) of this structure.
    *
    */
-  virtual std::size_t bitCount() const = 0;
+  virtual std::size_t bitCount() = 0;
 };
 
 } // namespace hft::fenwick

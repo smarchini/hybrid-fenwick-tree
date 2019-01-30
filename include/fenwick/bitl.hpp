@@ -2,6 +2,9 @@
 #define __FENWICK_LBIT_HPP__
 
 #include "fenwick_tree.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace hft::fenwick {
 
@@ -22,6 +25,10 @@ protected:
   const size_t Size, Levels;
   DArray<uint8_t> Tree;
   unique_ptr<size_t[]> Level;
+
+  std::ofstream addrprefix;
+  std::ofstream addradd;
+  std::ofstream addrfind;
 
 public:
   BitL(uint64_t sequence[], size_t size)
@@ -58,15 +65,20 @@ public:
         high |= (value << highshift) & highmask;
       }
     }
+
+    addrprefix.open(std::string("address_BitL_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    addradd.open(std::string("address_BitL_add_") + STRINGIFY(MAGIC) + ".txt");
+    addrfind.open(std::string("address_BitL_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
-  virtual uint64_t prefix(size_t idx) const {
+  virtual uint64_t prefix(size_t idx) {
     uint64_t sum = 0;
 
     while (idx != 0) {
       int height = rho(idx);
       size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
       auint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      addrprefix << ((uint64_t)(&element) % 4096) << "\n";
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
       idx = clear_rho(idx);
@@ -80,6 +92,7 @@ public:
       int height = rho(idx);
       size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+      addradd << ((uint64_t)(&element) % 4096) << "\n";
 
       element += inc << (pos & 0b111);
       idx += mask_rho(idx);
@@ -87,7 +100,7 @@ public:
   }
 
   using FenwickTree::find;
-  virtual size_t find(uint64_t *val) const {
+  virtual size_t find(uint64_t *val) {
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
@@ -99,6 +112,7 @@ public:
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      addrfind << ((uint64_t)(&element) % 4096) << "\n";
       uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
 
       if (*val >= value) {
@@ -112,7 +126,7 @@ public:
   }
 
   using FenwickTree::compFind;
-  virtual size_t compFind(uint64_t *val) const {
+  virtual size_t compFind(uint64_t *val) {
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
@@ -137,9 +151,9 @@ public:
     return min(node, Size);
   }
 
-  virtual size_t size() const { return Size; }
+  virtual size_t size() { return Size; }
 
-  virtual size_t bitCount() const {
+  virtual size_t bitCount() {
     return sizeof(BitL<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;

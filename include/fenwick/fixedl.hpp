@@ -2,6 +2,9 @@
 #define __FENWICK_LNAIVE_HPP__
 
 #include "fenwick_tree.hpp"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace hft::fenwick {
 
@@ -23,6 +26,10 @@ protected:
   DArray<uint64_t> Tree;
   unique_ptr<size_t[]> Level;
 
+  std::ofstream addrprefix;
+  std::ofstream addradd;
+  std::ofstream addrfind;
+
 public:
   FixedL(uint64_t sequence[], size_t size)
       : Levels(lambda(size + 1) + 2), Tree(size),
@@ -43,15 +50,20 @@ public:
         Tree[Level[l] + (node >> (l + 1))] = value;
       }
     }
+
+    addrprefix.open(std::string("address_FixedL_prefix_") + STRINGIFY(MAGIC) + ".txt");
+    addradd.open(std::string("address_FixedL_add_") + STRINGIFY(MAGIC) + ".txt");
+    addrfind.open(std::string("address_FixedL_find_") + STRINGIFY(MAGIC) + ".txt");
   }
 
-  virtual uint64_t prefix(size_t idx) const {
+  virtual uint64_t prefix(size_t idx) {
     uint64_t sum = 0;
 
     while (idx != 0) {
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       sum += Tree[Level[height] + level_idx];
+      addrprefix << ((uint64_t)(&Tree[Level[height] + level_idx]) % 4096) << "\n";
 
       idx = clear_rho(idx);
     }
@@ -66,13 +78,14 @@ public:
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       Tree[Level[height] + level_idx] += inc;
+      addradd << ((uint64_t)(&Tree[Level[height] + level_idx]) % 4096) << "\n";
 
       idx += mask_rho(idx);
     }
   }
 
   using FenwickTree::find;
-  virtual size_t find(uint64_t *val) const {
+  virtual size_t find(uint64_t *val) {
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
@@ -84,6 +97,8 @@ public:
         continue;
 
       uint64_t value = Tree[pos];
+      addrfind << ((uint64_t)(&Tree[pos]) % 4096) << "\n";
+
       if (*val >= value) {
         idx++;
         *val -= value;
@@ -95,7 +110,7 @@ public:
   }
 
   using FenwickTree::compFind;
-  virtual size_t compFind(uint64_t *val) const {
+  virtual size_t compFind(uint64_t *val) {
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
@@ -117,9 +132,9 @@ public:
     return min(node, size());
   }
 
-  virtual size_t size() const { return Tree.size(); }
+  virtual size_t size() { return Tree.size(); }
 
-  virtual size_t bitCount() const {
+  virtual size_t bitCount() {
     return sizeof(FixedL<BOUNDSIZE>) * 8 +
            Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;

@@ -1,0 +1,3 @@
+-e cycles \
+-e cpu/event=0x08,umask=0x10,name=dcycles/ \
+-e cpu/event=0x85,umask=0x10,name=icycles/ 
