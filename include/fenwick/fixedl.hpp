@@ -26,7 +26,7 @@ protected:
   DArray<uint64_t> Tree;
   unique_ptr<size_t[]> Level;
 
-  std::array<int, 4096> addrprefix, addradd, addrfind;
+  std::array<uint64_t, 4096> addrprefix, addradd, addrfind;
 
 public:
   FixedL(uint64_t sequence[], size_t size)

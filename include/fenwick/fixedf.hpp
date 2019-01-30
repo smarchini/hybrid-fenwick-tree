@@ -24,7 +24,7 @@ public:
 protected:
   DArray<uint64_t> Tree;
 
-  std::array<int, 4096> addrprefix, addradd, addrfind;
+  std::array<uint64_t, 4096> addrprefix, addradd, addrfind;
 
 public:
   FixedF(uint64_t sequence[], size_t size) : Tree(size) {

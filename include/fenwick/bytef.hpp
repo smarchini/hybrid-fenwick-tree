@@ -22,7 +22,7 @@ protected:
   const size_t Size;
   DArray<uint8_t> Tree;
 
-  std::array<int, 4096> addrprefix, addradd, addrfind;
+  std::array<uint64_t, 4096> addrprefix, addradd, addrfind;
 
 public:
   ByteF(uint64_t sequence[], size_t size)
