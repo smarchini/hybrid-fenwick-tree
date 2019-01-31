@@ -46,43 +46,6 @@ prefix_bytel: prefix_bytel.cpp
 prefix_bitl: prefix_bitl.cpp
 	$(CC) -o $(BINDIR)/$@ $^
 
-prefix_fixed18fixed: prefix_fixed18fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_fixed19byte: prefix_fixed19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_fixed20bit: prefix_fixed20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_byte19byte: prefix_byte19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_byte20bit: prefix_byte20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_bit20bit: add_bit20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_fixed20fixed: prefix_fixed20fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_fixed21byte: prefix_fixed21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_fixed25bit: prefix_fixed25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_byte21byte: prefix_byte21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_byte25bit: prefix_byte25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-prefix_bit25bit: prefix_bit25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-
 
 add_fixedf: add_fixedf.cpp
 	$(CC) -o $(BINDIR)/$@ $^
@@ -102,42 +65,6 @@ add_bytel: add_bytel.cpp
 add_bitl: add_bitl.cpp
 	$(CC) -o $(BINDIR)/$@ $^
 
-add_fixed18fixed: add_fixed18fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_fixed19byte: add_fixed19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_fixed20bit: add_fixed20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_byte19byte: add_byte19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_byte20bit: add_byte20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_bit20bit: add_bit20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_fixed20fixed: add_fixed20fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_fixed21byte: add_fixed21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_fixed25bit: add_fixed25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_byte21byte: add_byte21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_byte25bit: add_byte25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-add_bit25bit: add_bit25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
 
 find_fixedf: find_fixedf.cpp
 	$(CC) -o $(BINDIR)/$@ $^
@@ -155,42 +82,6 @@ find_bytel: find_bytel.cpp
 	$(CC) -o $(BINDIR)/$@ $^
 
 find_bitl: find_bitl.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed18fixed: find_fixed18fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed19byte: find_fixed19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed20bit: find_fixed20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_byte19byte: find_byte19byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_byte20bit: find_byte20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_bit20bit: find_bit20bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed20fixed: find_fixed20fixed.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed21byte: find_fixed21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_fixed25bit: find_fixed25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_byte21byte: find_byte21byte.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_byte25bit: find_byte25bit.cpp
-	$(CC) -o $(BINDIR)/$@ $^
-
-find_bit25bit: find_bit25bit.cpp
 	$(CC) -o $(BINDIR)/$@ $^
 
 
