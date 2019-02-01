@@ -24,10 +24,6 @@ public:
   static constexpr int PROT = PROT_READ | PROT_WRITE;
   static constexpr int FLAGS = MAP_PRIVATE | MAP_ANONYMOUS;
 
-#ifndef MAGIC
-    #define MAGIC 4
-#endif
-
 private:
   size_t Size;  // length of the array
   size_t Space; // allocated space in memory
@@ -37,7 +33,7 @@ public:
   DArray<T>() : DArray<T>(0){};
 
   explicit DArray<T>(size_t length) : Size(length) {
-    size_t minlen = length > 0 ? length + MAGIC : 1; // +MAGIC TO FIX SLOW MMAP
+    size_t minlen = length > 0 ? length : 1;
 
 #ifdef HFT_TRANSPARENT
     Space = ((4096 - 1) | (minlen * sizeof(T) - 1)) + 1;
@@ -51,7 +47,7 @@ public:
     assert(memory != MAP_FAILED && "mmap failed");
 #endif
 
-    Buffer = (T *)((uint64_t)(memory) + MAGIC); // +MAGIC TO FIX SLOW MMAP
+    Buffer = static_cast<T *>(memory);
   }
 
   DArray(DArray<T> &&oth)
@@ -64,7 +60,7 @@ public:
   }
 
   ~DArray<T>() {
-    int result = munmap((void *)((uint64_t)Buffer - MAGIC), Space);
+    int result = munmap(Buffer, Space);
     assert(result == 0 && "mmunmap failed");
   }
 

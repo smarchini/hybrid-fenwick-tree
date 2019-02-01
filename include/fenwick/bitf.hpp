@@ -16,11 +16,12 @@ namespace hft::fenwick {
 template <size_t BOUND> class BitF : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static constexpr size_t STARTING_OFFSET = 65;
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
                 "Leaves can't be stored in a 64-bit word");
 
 protected:
-  const size_t Size;
+  const size_t Size; // TODO inserirlo all'inizio di Tree?
   DArray<uint8_t> Tree;
 
 public:
@@ -133,7 +134,8 @@ public:
 
 private:
   inline size_t bitpos(size_t n) const {
-    return (BOUNDSIZE + 1) * n - popcount(n);
+    //return (BOUNDSIZE + 1) * n - popcount(n);
+    return (BOUNDSIZE + 1) * n - popcount(n) + STARTING_OFFSET;
   }
 };
 

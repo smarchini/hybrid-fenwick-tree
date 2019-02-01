@@ -236,15 +236,16 @@ inline uint64_t compact_bitmask(size_t count, size_t pos) {
  * bitextract - Extract consecutives bits in a word.
  * @word: Binary word.
  * @from: Starting index (up to 63).
- * @to: Ending index (up to 63).
+ * @length: Length of the word (up to 63 - @from).
  *
- * Extracts from @word the bits in the range [@from, @to) and returns them
+ * Extracts from @word the bits in the range [@from, @from + to) and returns them
  * in the least significant bits of the result.
  *
  */
-inline uint64_t bitextract(uint64_t word, uint from, uint to) {
+inline uint64_t bitextract(uint64_t word, uint from, uint length) {
   // return __builtin_ia32_bextr_u64(word, (from & 0xff) | ((to & 0xff) << 8));
-  return (word >> from) & ((1ULL << to) - 1);
+  //return (word >> from) & ((1ULL << to) - 1);
+  return (word >> from) & (-1ULL >> (64 - length));
 }
 
 /**
