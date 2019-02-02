@@ -20,12 +20,19 @@ private:
 
 public:
   Word(uint64_t bitvector[], size_t size)
-      : Fenwick(buildFenwick(bitvector, size)), Vector(DArray<uint64_t>(size)) {
+      : Word(bitvector, size, PageKind::Default) {}
+
+  Word(uint64_t bitvector[], size_t size, PageKind page)
+      : Fenwick(buildFenwick(bitvector, size, page)),
+        Vector(DArray<uint64_t>(size, page)) {
     std::copy_n(bitvector, size, Vector.get());
   }
 
   Word(DArray<uint64_t> bitvector, size_t size)
-      : Fenwick(buildFenwick(bitvector.get(), size)),
+      : Word(bitvector, size, PageKind::Default) {}
+
+  Word(DArray<uint64_t> bitvector, size_t size, PageKind page)
+      : Fenwick(buildFenwick(bitvector.get(), size, page)),
         Vector(std::move(bitvector)) {}
 
   virtual const uint64_t *bitvector() const { return Vector.get(); }

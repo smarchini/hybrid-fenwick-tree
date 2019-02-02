@@ -11,7 +11,7 @@ namespace hft {
  * class DArray - Dinamically-allocated fixed-sized array
  *
  * This class is a wrapper of mmap. It supports hugepages [1], transparent
- * hugepags [2] and it guarantees to return a page-aligned pointer.
+ * hugepags [2]. It guarantees to return page-aligned pointers.
  *
  * [1] https://www.kernel.org/doc/html/latest/admin-guide/mm/hugetlbpage.html
  * [2] https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html
@@ -19,9 +19,6 @@ namespace hft {
  */
 template <typename T> class DArray {
 public:
-  enum PageKind { Default, Transparent, Huge };
-  size_t pagesize(PageKind page) { return page != Huge ? 4096 : 2097152; }
-
   static constexpr int PROT = PROT_READ | PROT_WRITE;
   static constexpr int FLAGS = MAP_PRIVATE | MAP_ANONYMOUS;
 
@@ -33,18 +30,18 @@ private:
 public:
   DArray<T>() = default;
 
-  explicit DArray<T>(size_t length) : DArray<T>(length, Default) {}
+  explicit DArray<T>(size_t length) : DArray<T>(length, PageKind::Default) {}
 
   explicit DArray<T>(size_t length, PageKind page)
       : Size(length),
         Space(((pagesize(page) - 1) | (Size * sizeof(T) - 1)) + 1) {
     if (Size) {
-      void *mem = page == Huge
+      void *mem = page == PageKind::Huge
                       ? mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0)
                       : mmap(nullptr, Space, PROT, FLAGS, -1, 0);
       assert(mem != MAP_FAILED && "mmap failed");
 
-      if (page == Transparent) {
+      if (page == PageKind::Transparent) {
         int adv = madvise(mem, Space, MADV_HUGEPAGE);
         assert(adv == 0 && "madvise failed");
       }

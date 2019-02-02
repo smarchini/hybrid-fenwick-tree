@@ -24,7 +24,10 @@ protected:
 
 public:
   TypeF(uint64_t sequence[], size_t size)
-      : Size(size), Tree(get_bytepos(size)) {
+      : TypeF(sequence, size, PageKind::Default) {}
+
+  TypeF(uint64_t sequence[], size_t size, PageKind page)
+      : Size(size), Tree(get_bytepos(size), page) {
     for (size_t i = 1; i <= Size; i++) {
       size_t bytepos = get_bytepos(i - 1);
 

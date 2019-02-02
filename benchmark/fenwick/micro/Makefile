@@ -1,24 +1,8 @@
 CC = g++ -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include  $(CFLAGS)
-BINDIR = ./
 
-HUGETLB = -DHFT_USE_HUGETLB
-TRANTLB = -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
+BINDIR = ./bin
 
 all: prefix add find
-
-bin: BINDIR = ./bin
-bin: all
-
-hugebin: CC += -DHFT_USE_HUGETLB
-hugebin: BINDIR = ./hugebin
-hugebin: all
-
-tranbin: CC += -DHFT_USE_HUGETLB -DHFT_TRANSPARENT
-tranbin: BINDIR = ./tranbin
-tranbin: all
-
-dir:
-	mkdir bin hugebin tranbin
 
 
 prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl 

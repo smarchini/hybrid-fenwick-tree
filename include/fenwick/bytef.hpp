@@ -24,7 +24,10 @@ protected:
 
 public:
   ByteF(uint64_t sequence[], size_t size)
-      : Size(size), Tree(bytepos(size) + 8) {
+      : ByteF(sequence, size, PageKind::Default) {}
+
+  ByteF(uint64_t sequence[], size_t size, PageKind page)
+      : Size(size), Tree(bytepos(size) + 8, page) {
     for (size_t i = 1; i <= size; i++) {
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[bytepos(i - 1)]);
 

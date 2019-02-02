@@ -26,7 +26,10 @@ protected:
 
 public:
   BitF(uint64_t sequence[], size_t size)
-      : Size(size), Tree((bitpos(size) >> 3) + 8) // +8 for safety
+      : BitF(sequence, size, PageKind::Default) {}
+
+  BitF(uint64_t sequence[], size_t size, PageKind page)
+      : Size(size), Tree((bitpos(size) >> 3) + 8, page) // +8 for safety
   {
     for (size_t i = 1; i <= size; i++) {
       size_t pos = bitpos(i - 1);

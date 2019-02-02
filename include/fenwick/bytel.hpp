@@ -25,6 +25,9 @@ protected:
 
 public:
   ByteL(uint64_t sequence[], size_t size)
+      : ByteL(sequence, size, PageKind::Default) {}
+
+  ByteL(uint64_t sequence[], size_t size, PageKind page)
       : Size(size), Levels(lambda(size + 1) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
@@ -32,7 +35,7 @@ public:
       Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * heightsize(i - 1) +
                  Level[i - 1];
 
-    Tree = DArray<uint8_t>(Level[Levels - 1] + 8); // +8 for safety
+    Tree = DArray<uint8_t>(Level[Levels - 1] + 8, page); // +8 for safety
 
     for (size_t l = 0; l < Levels - 1; l++) {
       for (size_t node = 1 << l; node <= Size; node += 1 << (l + 1)) {

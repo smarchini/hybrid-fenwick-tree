@@ -29,6 +29,9 @@ protected:
 
 public:
   TypeL(uint64_t sequence[], size_t size)
+      : TypeL(sequence, size, PageKind::Default) {}
+
+  TypeL(uint64_t sequence[], size_t size, PageKind page)
       : Size(size), Levels(lambda(size + 1) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     size_t typeEnd[3] = {0};
@@ -46,11 +49,11 @@ public:
 
     switch (Levels + BOUNDSIZE - 1) {
     case 17 ... 64:
-      Tree64 = DArray<uint64_t>(typeEnd[2]);
+      Tree64 = DArray<uint64_t>(typeEnd[2], page);
     case 9 ... 16:
-      Tree16 = DArray<uint16_t>(typeEnd[1]);
+      Tree16 = DArray<uint16_t>(typeEnd[1], page);
     default:
-      Tree8 = DArray<uint8_t>(typeEnd[0]);
+      Tree8 = DArray<uint8_t>(typeEnd[0], page);
     }
 
     if constexpr (BOUNDSIZE <= 8) {

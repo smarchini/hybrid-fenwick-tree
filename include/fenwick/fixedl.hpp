@@ -25,7 +25,10 @@ protected:
 
 public:
   FixedL(uint64_t sequence[], size_t size)
-      : Levels(lambda(size + 1) + 2), Tree(size),
+      : FixedL(sequence, size, PageKind::Default) {}
+
+  FixedL(uint64_t sequence[], size_t size, PageKind page)
+      : Levels(lambda(size + 1) + 2), Tree(size, page),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
