@@ -21,9 +21,9 @@ public:
 protected:
   const size_t Size, Levels;
 
-  DArray<uint8_t> Tree8{0};
-  DArray<uint16_t> Tree16{0};
-  DArray<uint64_t> Tree64{0};
+  DArray<uint8_t> Tree8;
+  DArray<uint16_t> Tree16;
+  DArray<uint64_t> Tree64;
 
   unique_ptr<size_t[]> Level;
 

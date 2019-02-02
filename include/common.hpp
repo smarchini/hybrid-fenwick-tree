@@ -12,6 +12,7 @@ using std::make_unique;
 using std::unique_ptr;
 
 using std::min;
+using std::max;
 
 using std::size_t;
 using std::uint16_t;

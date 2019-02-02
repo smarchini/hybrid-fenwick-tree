@@ -134,7 +134,6 @@ public:
 
 private:
   inline size_t bitpos(size_t n) const {
-    //return (BOUNDSIZE + 1) * n - popcount(n);
     return (BOUNDSIZE + 1) * n - popcount(n) + STARTING_OFFSET;
   }
 };
