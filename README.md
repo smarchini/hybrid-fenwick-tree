@@ -198,7 +198,7 @@ over hugepages. This class can behave four different ways:
  - **HFT_FORCENOHUGE**: the array is stored in 4kB (non-transparent) pages;
  - **HFT_HUGE**: small (less than 2MB) arrays are stored in 4kB (non-transparent)
    pages while the big ones (at lest 2MB) are stored in 2MB (huge) pages;
- - **by default***: small (less than 2MB) arrays are stored in 4kB
+ - **by default**: small (less than 2MB) arrays are stored in 4kB
    (non-transparent) pages while the big ones(at lest 2MB) use transparent huge
    pages; these pages are (transparently) defragmented in huge pages by the
    `khugepaged` background process (such pages are advised to be huge by calling
