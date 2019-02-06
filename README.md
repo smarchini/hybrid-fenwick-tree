@@ -68,7 +68,7 @@ There are two different implementations:
 - **Stride**: the bit vector is divided in *k* words.
 
 **Word** requires a bigger Fenwick tree (using a compressed one might be a good
-choice) and it's good if linear rank and selection searches are slow (i.e. you
+choice) and it's good if linear rank and selection searches are slow (e.g. you
 don't have some low-level assembly instructions to help you); while **Stride**
 takes a template parameter *k* and performs linear searches on *k* words with a
 much smaller underlining Fenwick tree. You probably need **Stride**.
@@ -79,13 +79,13 @@ are available under the `hft::ranking` namespace.
 # Usage and examples
 
 All you need is the `include` directory. This library is tested on a x86_64
-Linux computer with GCC 8.2. The concepts behind this library are general, but in
-fact this library uses some compiler-specific directives (i.e. the
-`__attribute__((__may_alias__))`) and built-in functions (i.e.
+Linux computer with GCC 8.2. The concepts behind this library are general, but
+in fact this library uses some compiler-specific directives (e.g.
+`__attribute__((__may_alias__))`) and built-in functions (e.g.
 `__builtin_popcountll`). For this reason, if you intend to use it in a different
 environment you better check everything works as expected.
 
-The following examples can be built with `g++ -I/path/to/include example.cpp`.
+The following examples can be built with `g++ -I/path/of/include example.cpp`.
 
 ## Fenwick tree
 ``` cpp
@@ -194,11 +194,11 @@ with [placement new]) or you can use `hft::DArray<T>`.
 Internal vectors are stored as `hft::Darray<T>`. The purpose of this class is to
 dinamically (i.e. stored in the heap) allocate an array and it is an abstraction
 over hugepages. This class can behave four different ways:
- - *HFT_FORCEHUGE*: the array is stored in 2MB (huge) pages;
- - *HFT_FORCENOHUGE*: the array is stored in 4kB (non-transparent) pages;
- - *HFT_HUGE*: small (less than 2MB) arrays are stored in 4kB (non-transparent)
+ - **HFT_FORCEHUGE**: the array is stored in 2MB (huge) pages;
+ - **HFT_FORCENOHUGE**: the array is stored in 4kB (non-transparent) pages;
+ - **HFT_HUGE**: small (less than 2MB) arrays are stored in 4kB (non-transparent)
    pages while the big ones (at lest 2MB) are stored in 2MB (huge) pages;
- - *by default*: small (less than 2MB) arrays are stored in 4kB
+ - **by default***: small (less than 2MB) arrays are stored in 4kB
    (non-transparent) pages while the big ones(at lest 2MB) use transparent huge
    pages; these pages are (transparently) defragmented in huge pages by the
    `khugepaged` background process (such pages are advised to be huge by calling
