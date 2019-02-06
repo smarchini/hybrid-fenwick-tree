@@ -8,14 +8,6 @@
 #include <darray.hpp>
 #include <fenwick.hpp>
 
-#ifdef HUGE
-static constexpr hft::PageKind page = hft::PageKind::Huge;
-#elif TRANSPARENT
-static constexpr hft::PageKind page = hft::PageKind::Transparent;
-#else
-static constexpr hft::PageKind page = hft::PageKind::Default;
-#endif
-
 template <typename T>
 void find(const char *name, size_t size, size_t queries, std::mt19937 re) {
   using namespace std;
@@ -37,7 +29,7 @@ void find(const char *name, size_t size, size_t queries, std::mt19937 re) {
 
   // constructor
   begin = chrono::high_resolution_clock::now();
-  T fenwick(sequence.get(), size, page);
+  T fenwick(sequence.get(), size);
   end = chrono::high_resolution_clock::now();
   auto ctor = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";
@@ -80,7 +72,7 @@ void add(const char *name, size_t size, size_t queries, std::mt19937 re) {
 
   // constructor
   begin = chrono::high_resolution_clock::now();
-  T fenwick(sequence.get(), size, page);
+  T fenwick(sequence.get(), size);
   end = chrono::high_resolution_clock::now();
   auto ctor = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";
@@ -127,7 +119,7 @@ void prefix(const char *name, size_t size, size_t queries, std::mt19937 re) {
 
   // constructor
   begin = chrono::high_resolution_clock::now();
-  T fenwick(sequence.get(), size, page);
+  T fenwick(sequence.get(), size);
   end = chrono::high_resolution_clock::now();
   auto ctor = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << name << ": " << fenwick.bitCount() / (double)size << " b/item\n";

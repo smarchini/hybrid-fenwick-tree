@@ -22,10 +22,7 @@ protected:
   DArray<uint64_t> Tree;
 
 public:
-  FixedF(uint64_t sequence[], size_t size)
-      : FixedF(sequence, size, PageKind::Default) {}
-
-  FixedF(uint64_t sequence[], size_t size, PageKind page) : Tree(size, page) {
+  FixedF(uint64_t sequence[], size_t size) : Tree(size) {
     std::copy_n(sequence, size, Tree.get());
 
     for (size_t m = 2; m <= size; m <<= 1) {

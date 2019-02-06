@@ -11,7 +11,15 @@ namespace hft {
  * class DArray - Dinamically-allocated fixed-sized array
  *
  * This class is a wrapper of mmap. It supports hugepages [1], transparent
- * hugepags [2]. It guarantees to return page-aligned pointers.
+ * hugepags [2]. It guarantees to return page-aligned pointers. It has four
+ * behaviors you can choose by defining their name:
+ * - HFT_FORCEHUGE: every request allocs hugepages;
+ * - HFT_FORCENOHUGE: every request allocs standard 4k pages (non-transparent)
+ * - HFT_HUGE: every request of at least 2MB allocs hugepages while smaller
+ *   requests use standard 4k pages;
+ * - by default: every request of at least 2MB allocs 4k pages, but they are
+ *   transparently defragmented into hugepages by khugepaged thanks to a call to
+ *   madvice.
  *
  * [1] https://www.kernel.org/doc/html/latest/admin-guide/mm/hugetlbpage.html
  * [2] https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html
@@ -30,21 +38,36 @@ private:
 public:
   DArray<T>() = default;
 
-  explicit DArray<T>(size_t length) : DArray<T>(length, PageKind::Default) {}
-
-  explicit DArray<T>(size_t length, PageKind page)
+  explicit DArray<T>(size_t length)
       : Size(length),
-        Space(((pagesize(page) - 1) | (Size * sizeof(T) - 1)) + 1) {
+#ifdef HFT_FORCEHUGE
+        Space(((2097152 - 1) | (Size * sizeof(T) - 1)) + 1) {
+#elif HFT_FORCENOHUGE
+        Space(((4096 - 1) | (Size * sizeof(T) - 1)) + 1) {
+#else
+        Space(((pagesize(Size) - 1) | (Size * sizeof(T) - 1)) + 1) {
+#endif
     if (Size) {
-      void *mem = page == PageKind::Huge
+#ifdef HFT_FORCEHUGE
+      void *mem = mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0);
+      assert(mem != MAP_FAILED && "mmap failed");
+#elif HFT_FORCENOHUGE
+      void *mem = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
+      assert(mem != MAP_FAILED && "mmap failed");
+#elif HFT_HUGE
+      void *mem = Space >= 2097152
                       ? mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0)
                       : mmap(nullptr, Space, PROT, FLAGS, -1, 0);
       assert(mem != MAP_FAILED && "mmap failed");
+#else
+    void *mem = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
+    assert(mem != MAP_FAILED && "mmap failed");
 
-      if (page == PageKind::Transparent) {
-        int adv = madvise(mem, Space, MADV_HUGEPAGE);
-        assert(adv == 0 && "madvise failed");
-      }
+    if (Size >= 2097152) {
+      int adv = madvise(mem, Space, MADV_HUGEPAGE);
+      assert(adv == 0 && "madvise failed");
+    }
+#endif
 
       Buffer = static_cast<T *>(mem);
     }
@@ -79,7 +102,12 @@ public:
   inline size_t size() const { return Size; }
 
   size_t bitCount() const { return sizeof(DArray<T>) * 8 + Space * 8; }
-};
+
+private:
+  size_t pagesize(size_t space) {
+    return (space >= 2097152 ? 2097152 : 4096) - 1;
+  }
+}; // namespace hft
 
 } // namespace hft
 

@@ -1,15 +1,30 @@
-CC = g++ -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include  $(CFLAGS)
+CC = g++ -g -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include
 
-BINDIR = ./bin
+dir:
+	mkdir bin hugebin tranbin
+
+# Note: TRASNSPARENT and HUGE are only used in ../microbench.h
+
+bin: CC += -DHFT_FORCENOHUGE
+bin: BINDIR = ./bin
+bin: all
+
+tranbin: BINDIR = ./tranbin
+tranbin: all
+
+hugebin: CC += -DHFT_HUGE
+hugebin: BINDIR = ./hugebin
+hugebin: all
+
 
 all: prefix add find
 
 
-prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl 
+prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl
 
-add: add_fixedf add_bytef add_bitf add_fixedl add_bytel add_bitl 
+add: add_fixedf add_bytef add_bitf add_fixedl add_bytel add_bitl
 
-find: find_fixedf find_bytef find_bitf find_fixedl find_bytel find_bitl 
+find: find_fixedf find_bytef find_bitf find_fixedl find_bytel find_bitl
 
 
 prefix_fixedf: prefix_fixedf.cpp

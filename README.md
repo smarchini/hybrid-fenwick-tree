@@ -187,21 +187,31 @@ int main() {
 As you see, bit vectors are implemented as a contiguous chuck of `uint64_t` so
 we can use fast compiler built-in functions with no issues. If you need bigger
 vectors you may want them in the heap memory. You can do it your own way (e.g.
-with [placement new]) or you can use `hft::DArray<T>`; it can be handy if you
-want to try huge pages.
+with [placement new]) or you can use `hft::DArray<T>`.
 
-## Huge TLB pages
+## DArray and Huge TLB pages
 
-A `#define HFT_USE_HUGETLB` (before any `#include`) makes `hft::Darray<T>` use
-Linux's 2MB huge TLB pages capabilities and with an additional `#define
-HFT_TRANSPARENT` will make it use transparent huge pages (through `madvise`);
-otherwise this class is a simple wrapper for `std::uniqueptr<T[]>`. To use huge
-pages you should first (manually) enable them in your operating system. For more
-information refer to [hugetlbpage] on the Linux kernel documentation.
+Internal vectors are stored as `hft::Darray<T>`. The purpose of this class is to
+dinamically (i.e. stored in the heap) allocate an array and it is an abstraction
+over hugepages. This class can behave four different ways:
+ - *HFT_FORCEHUGE*: the array is stored in 2MB (huge) pages;
+ - *HFT_FORCENOHUGE*: the array is stored in 4kB (non-transparent) pages;
+ - *HFT_HUGE*: small (less than 2MB) arrays are stored in 4kB (non-transparent)
+   pages while the big ones (at lest 2MB) are stored in 2MB (huge) pages;
+ - *by default*: small (less than 2MB) arrays are stored in 4kB
+   (non-transparent) pages while the big ones(at lest 2MB) use transparent huge
+   pages; these pages are (transparently) defragmented in huge pages by the
+   `khugepaged` background process (such pages are advised to be huge by calling
+   `madvise` with the `MADV_HUGEPAGE` flag).
+
+You can choose the behavior of `hft::Darray<T>` with by `#define` what you want
+before `#include` any of hft's library header. Take a note that the support for
+huge pages has to be enabled in your system; you can find more information about
+it in the [hugetlbpage] and [transhuge] pages of the Linux kernel documentation.
 
 At the moment the data structures in this library are dynamic as in *dynamic
-arrays*: they deal with mutable data of fixed size. Although, an implementation
-with extendibility properties is indeed possible.
+arrays*: they deal with mutable data of fixed size. Although, an fully dynamic
+implementation is indeed possible.
 
 # TODO
 - Choose a license
@@ -213,3 +223,4 @@ with extendibility properties is indeed possible.
 [fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp"
 [placement new]: https://en.cppreference.com/w/cpp/language/new#Placement_new "placement new"
 [hugetlbpage]: https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+[transhuge]: https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html

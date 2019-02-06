@@ -15,8 +15,8 @@ namespace hft::fenwick {
 template <size_t BOUND> class BitL : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = log2(BOUND);
-  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
-                "Leaves can't be stored in a 64-bit word");
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 57,
+                "Some nodes will span on multiple words");
 
 protected:
   const size_t Size, Levels;
@@ -25,9 +25,6 @@ protected:
 
 public:
   BitL(uint64_t sequence[], size_t size)
-      : BitL(sequence, size, PageKind::Default) {}
-
-  BitL(uint64_t sequence[], size_t size, PageKind page)
       : Size(size), Levels(lambda(size + 1) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
@@ -35,7 +32,7 @@ public:
       Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * (BOUNDSIZE - 1 + i) +
                  Level[i - 1];
 
-    Tree = DArray<uint8_t>((Level[Levels - 1] >> 3) + 8, page); // +8 for safety
+    Tree = DArray<uint8_t>((Level[Levels - 1] >> 3) + 8); // +8 for safety
 
     for (size_t l = 0; l < Levels - 1; l++) {
       for (size_t node = 1 << l; node <= size; node += 1 << (l + 1)) {

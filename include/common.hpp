@@ -40,16 +40,6 @@ using auint32_t = std::uint32_t __attribute__((__may_alias__));
 using auint16_t = std::uint16_t __attribute__((__may_alias__));
 using auint8_t = std::uint8_t __attribute__((__may_alias__));
 
-/**
- * PageKind - available kinds of memory pages
- *
- * [1] https://www.kernel.org/doc/html/latest/admin-guide/mm/hugetlbpage.html
- * [2] https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html
- *
- */
-enum class PageKind { Default, Transparent, Huge };
-size_t pagesize(PageKind page) { return page != PageKind::Huge ? 4096 : 2097152; }
-
 
 /**
  * Bitmask array used in fenwick::ByteL and fenwick::ByteF

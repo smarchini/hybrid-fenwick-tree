@@ -17,19 +17,16 @@ template <size_t BOUND> class BitF : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = log2(BOUND);
   static constexpr size_t STARTING_OFFSET = 65;
-  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
-                "Leaves can't be stored in a 64-bit word");
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 57,
+                "Some nodes will span on multiple words");
 
 protected:
-  const size_t Size; // TODO inserirlo all'inizio di Tree?
+  const size_t Size; // TODO try with: size_t &Size = Tree[0];
   DArray<uint8_t> Tree;
 
 public:
   BitF(uint64_t sequence[], size_t size)
-      : BitF(sequence, size, PageKind::Default) {}
-
-  BitF(uint64_t sequence[], size_t size, PageKind page)
-      : Size(size), Tree((bitpos(size) >> 3) + 8, page) // +8 for safety
+      : Size(size), Tree((bitpos(size) >> 3) + 8) // +8 for safety
   {
     for (size_t i = 1; i <= size; i++) {
       size_t pos = bitpos(i - 1);
@@ -61,10 +58,11 @@ public:
     uint64_t sum = 0;
 
     while (idx != 0) {
-      size_t pos = bitpos(idx - 1);
-      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      size_t end = alignedEnding(idx);
+      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[(end - 56) >> 3]);
+      size_t length = BOUNDSIZE + rho(idx);
 
-      sum += bitextract(element, pos & 0b111, BOUNDSIZE + rho(idx));
+      sum += element << (6 - (end & 0b111) + popcount(idx)) >> (64 - length);
       idx = clear_rho(idx);
     }
 
@@ -73,10 +71,11 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      size_t pos = bitpos(idx - 1);
-      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+      size_t end = alignedEnding(idx);
+      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[(end - 56) >> 3]);
+      size_t length = BOUNDSIZE + rho(idx);
 
-      element += inc << (pos & 0b111);
+      element += inc << (58 - length + (end & 0b111) - popcount(idx));
       idx += mask_rho(idx);
     }
   }
@@ -89,11 +88,11 @@ public:
       if (node + m - 1 >= Size)
         continue;
 
-      size_t pos = bitpos(node + m - 1);
-      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      size_t end = alignedEnding(node + m);
+      uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[(end - 56) >> 3]);
+      size_t length = BOUNDSIZE + rho(node + m);
 
-      uint64_t value =
-          bitextract(element, pos & 0b111, BOUNDSIZE + rho(node + m));
+      uint64_t value = (element << (6 - (end & 0b111) + popcount(node + m))) >> (64 - length);
 
       if (*val >= value) {
         node += m;
@@ -138,6 +137,10 @@ public:
 private:
   inline size_t bitpos(size_t n) const {
     return (BOUNDSIZE + 1) * n - popcount(n) + STARTING_OFFSET;
+  }
+
+  inline size_t alignedEnding(size_t n) const {
+    return (BOUNDSIZE + 1) * n + 64 - 1;
   }
 };
 
