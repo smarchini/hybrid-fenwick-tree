@@ -5,14 +5,14 @@ dir:
 
 # Note: TRASNSPARENT and HUGE are only used in ../microbench.h
 
-bin: CC += -DHFT_FORCENOHUGE
+bin: CC += -DHFT_DISABLE_TRANSHUGE
 bin: BINDIR = ./bin
 bin: all
 
 tranbin: BINDIR = ./tranbin
 tranbin: all
 
-hugebin: CC += -DHFT_HUGE
+hugebin: CC += -DHFT_HUGETLBPAGE
 hugebin: BINDIR = ./hugebin
 hugebin: all
 

@@ -39,7 +39,7 @@ the `hft::fenwick` namespace.
 The hybird Fenwick tree is a way to combine two different implementations of the
 Fenwick tree data structures defined above. This way, you can take advantage of
 the benefits of different compression strategies and different layouts. This
-data structure is splitted in two parts: a *Top* and *Bottom*. When you are
+data structure is split in two parts: a *Top* and *Bottom*. When you are
 building an hybird Fenwick tree, always remember:
 - if you wanna use two different node layouts, pick *level-ordered* (**L**) for
   the *Top* and the *classical* (**F**) for the *Bottom*;
@@ -89,9 +89,8 @@ The following examples can be built with `g++ -I/path/of/include example.cpp`.
 
 ## Fenwick tree
 ``` cpp
-// Uncomment the line below if you want to use HugeTLB
-// #define HFT_USE_HUGETLB
-// #define HFT_TRANSPARENT
+// Uncomment the line below if you want to enable Huge TLB pages
+// #define HFT_HUGETLBPAGE
 
 #include <fenwick.hpp>
 #include <iostream>
@@ -134,9 +133,12 @@ int main() {
 ## Rank and selection
 
 ``` cpp
+// Uncomment the line below if you want to enable Huge TLB pages
+// #define HFT_HUGETLBPAGE
+
 #include <fenwick.hpp>
-#include <iostream>
 #include <rankselect.hpp>
+#include <iostream>
 
 // Declaration of an hybrid Fenwick tree with:
 //   a level-ordered layout Top and classical layout bottom,
@@ -192,22 +194,23 @@ with [placement new]) or you can use `hft::DArray<T>`.
 ## DArray and Huge TLB pages
 
 Internal vectors are stored as `hft::Darray<T>`. The purpose of this class is to
-dinamically (i.e. stored in the heap) allocate an array and it is an abstraction
+dynamically (i.e. stored in the heap) allocate an array and it is an abstraction
 over hugepages. This class can behave four different ways:
- - **HFT_FORCEHUGE**: the array is stored in 2MB (huge) pages;
- - **HFT_FORCENOHUGE**: the array is stored in 4kB (non-transparent) pages;
- - **HFT_HUGE**: small (less than 2MB) arrays are stored in 4kB (non-transparent)
+ - **HFT_FORCE_HUGETLBPAGE**: the array is stored in 2MB (huge) pages;
+ - **HFT_DISABLE_TRANSHUGE**: the array is stored in 4kB (non-transparent) pages;
+ - **HFT_HUGETLBPAGE**: small (less than 2MB) arrays are stored in 4kB (non-transparent)
    pages while the big ones (at lest 2MB) are stored in 2MB (huge) pages;
- - **by default**: small (less than 2MB) arrays are stored in 4kB
-   (non-transparent) pages while the big ones(at lest 2MB) use transparent huge
+ - **by default (transhuge)**: small (less than 2MB) arrays are stored in 4kB
+   (non-transparent) pages while the big ones (at lest 2MB) use transparent huge
    pages; these pages are (transparently) defragmented in huge pages by the
    `khugepaged` background process (such pages are advised to be huge by calling
    `madvise` with the `MADV_HUGEPAGE` flag).
 
-You can choose the behavior of `hft::Darray<T>` with by `#define` what you want
-before `#include` any of hft's library header. Take a note that the support for
-huge pages has to be enabled in your system; you can find more information about
-it in the [hugetlbpage] and [transhuge] pages of the Linux kernel documentation.
+You can choose the behavior of `hft::Darray<T>` with a `#define` of what you
+want before `#include` the hft library headers. Take a note that the support
+for huge pages has to be enabled in your system; you can find more information
+about it in the [hugetlbpage] and [transhuge] pages of the Linux kernel
+documentation.
 
 At the moment the data structures in this library are dynamic as in *dynamic
 arrays*: they deal with mutable data of fixed size. Although, an fully dynamic
@@ -222,5 +225,5 @@ implementation is indeed possible.
 [rank_select.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/rankselect/rank_select.hpp "rank\_select.hpp"
 [fenwick_tree.hpp]: https://github.com/pacman616/fenwick_tree/blob/master/include/fenwick/fenwick_tree.hpp  "fenwick\_tree.hpp"
 [placement new]: https://en.cppreference.com/w/cpp/language/new#Placement_new "placement new"
-[hugetlbpage]: https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
-[transhuge]: https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html
+[hugetlbpage]: https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt "hugetlbpage"
+[transhuge]: https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html "transhuge"

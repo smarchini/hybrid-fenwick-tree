@@ -40,21 +40,21 @@ public:
 
   explicit DArray<T>(size_t length)
       : Size(length),
-#ifdef HFT_FORCEHUGE
+#ifdef HFT_FORCE_HUGETLBPAGE
         Space(((2097152 - 1) | (Size * sizeof(T) - 1)) + 1) {
-#elif HFT_FORCENOHUGE
+#elif HFT_DISABLE_TRANSHUGE
         Space(((4096 - 1) | (Size * sizeof(T) - 1)) + 1) {
 #else
         Space(((pagesize(Size) - 1) | (Size * sizeof(T) - 1)) + 1) {
 #endif
     if (Size) {
-#ifdef HFT_FORCEHUGE
+#ifdef HFT_FORCE_HUGETLBPAGE
       void *mem = mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0);
       assert(mem != MAP_FAILED && "mmap failed");
-#elif HFT_FORCENOHUGE
+#elif HFT_DISABLE_TRANSHUGE
       void *mem = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
       assert(mem != MAP_FAILED && "mmap failed");
-#elif HFT_HUGE
+#elif HFT_HUGETLBPAGE
       void *mem = Space >= 2097152
                       ? mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0)
                       : mmap(nullptr, Space, PROT, FLAGS, -1, 0);
