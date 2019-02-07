@@ -16,8 +16,8 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    size_t size = std::stoi(argv[1]);
-    size_t queries = std::stoi(argv[2]);
+    size_t size = std::stoul(argv[1]);
+    size_t queries = std::stoul(argv[2]);
 
     // run the benchmark
     __HFT_BENCHMARK_FUNCTION__
