@@ -1,5 +1,3 @@
-#define HFT_HUGETLBPAGE
-
 #include <iostream>
 #include <chrono>
 #include <algorithm>

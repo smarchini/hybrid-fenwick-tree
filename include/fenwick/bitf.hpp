@@ -2,7 +2,6 @@
 #define __FENWICK_BIT_HPP__
 
 #include "fenwick_tree.hpp"
-#include <iostream>
 
 namespace hft::fenwick {
 

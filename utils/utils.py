@@ -4,6 +4,8 @@ w = 64
 LL1 = 32768 * 8
 LL2 = 262144 * 8
 LL3 = 8388608 * 8
+page4k = 4096 * 8
+page2M = 2048 * 1024 * 8
 
 S = 7
 
@@ -73,14 +75,20 @@ if __name__ == '__main__':
     max_j_bit_LL1 = max_j_bit(LL1)
     max_j_bit_LL2 = max_j_bit(LL2)
     max_j_bit_LL3 = max_j_bit(LL3)
+    max_j_bit_4k = max_j_bit(page4k)
+    max_j_bit_2M = max_j_bit(page2M)
     
     max_j_byte_LL1 = max_j_byte(LL1)
     max_j_byte_LL2 = max_j_byte(LL2)
     max_j_byte_LL3 = max_j_byte(LL3)
+    max_j_byte_4k = max_j_byte(page4k)
+    max_j_byte_2M = max_j_byte(page2M)
     
     max_j_fixed_LL1 = max_j_fixed(LL1)
     max_j_fixed_LL2 = max_j_fixed(LL2)
     max_j_fixed_LL3 = max_j_fixed(LL3)
+    max_j_fixed_4k = max_j_fixed(page4k)
+    max_j_fixed_2M = max_j_fixed(page2M)
 
     print('LL1 = {} Byte -> {} bit'.format(LL1 // 8, LL1))
     print('LL2 = {} Byte -> {} bit'.format(LL2 // 8, LL2))
@@ -89,12 +97,18 @@ if __name__ == '__main__':
     print('Bit: maximum j inside LL1: {} -- C = {}'.format(max_j_bit_LL1, lbda(max_j_bit_LL1)))
     print('Bit: maximum j inside LL2: {} -- C = {}'.format(max_j_bit_LL2, lbda(max_j_bit_LL2))) 
     print('Bit: maximum j inside LL3: {} -- C = {}'.format(max_j_bit_LL3, lbda(max_j_bit_LL3)))
+    print('Bit: maximum j inside 4k: {} -- C = {}'.format(max_j_bit_4k, lbda(max_j_bit_4k)))
+    print('Bit: maximum j inside 2M: {} -- C = {}'.format(max_j_bit_2M, lbda(max_j_bit_2M)))
     print('-----------------------------------------------')
     print('Byte: maximum j inside LL1: {} -- C = {}'.format(max_j_byte_LL1, lbda(max_j_byte_LL1))) 
     print('Byte: maximum j inside LL2: {} -- C = {}'.format(max_j_byte_LL2, lbda(max_j_byte_LL2))) 
     print('Byte: maximum j inside LL3: {} -- C = {}'.format(max_j_byte_LL3, lbda(max_j_byte_LL3))) 
+    print('Byte: maximum j inside 4k: {} -- C = {}'.format(max_j_byte_4k, lbda(max_j_byte_4k)))
+    print('Byte: maximum j inside 2M: {} -- C = {}'.format(max_j_byte_2M, lbda(max_j_byte_2M)))
     print('-----------------------------------------------')
     print('Fixed: maximum j inside LL1: {} -- C = {}'.format(max_j_fixed_LL1, lbda(max_j_fixed_LL1))) 
     print('Fixed: maximum j inside LL2: {} -- C = {}'.format(max_j_fixed_LL2, lbda(max_j_fixed_LL2))) 
     print('Fixed: maximum j inside LL3: {} -- C = {}'.format(max_j_fixed_LL3, lbda(max_j_fixed_LL3))) 
+    print('Fixed: maximum j inside 4k: {} -- C = {}'.format(max_j_fixed_4k, lbda(max_j_fixed_4k)))
+    print('Fixed: maximum j inside 2M: {} -- C = {}'.format(max_j_fixed_2M, lbda(max_j_fixed_2M)))
 
