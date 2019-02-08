@@ -1,4 +1,4 @@
-# Hybrid Compact Fenwick Tree and its applications for dynamic rank and selection
+# Hybrid Compact Fenwick Trees and their application for dynamic rank and selection
 
 Different implementations of the [Fenwick tree] data structure to aim for a
 better performance through cache efficiency and compression. Those

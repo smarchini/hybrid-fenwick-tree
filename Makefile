@@ -1,4 +1,4 @@
-CC = g++ -DHFT_HUGETLBPAGE
+CC = g++ #-DHFT_HUGETLBPAGE
 RELEASE = -O3 -march=native
 DEBUG = -g -O0 -march=native --coverage -fprofile-dir=coverage
 CFLAGS = -std=c++17 -Wall -Wextra $(PARAMS)
