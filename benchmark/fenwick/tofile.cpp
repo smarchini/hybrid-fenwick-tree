@@ -16,11 +16,11 @@ using namespace std::chrono;
 
 // The size of a bottom tree is enough for a single 4kB memory page
 template <size_t N> using Fixed9Fixed = Hybrid<FixedL, FixedF, N, 9>;
-template <size_t N> using Fixed18Byte = Hybrid<FixedL, ByteF, N, 18>;
-template <size_t N> using Fixed18Bit = Hybrid<FixedL, BitF, N, 18>;
-template <size_t N> using Byte18Byte = Hybrid<ByteL, ByteF, N, 18>;
-template <size_t N> using Byte18Bit = Hybrid<ByteL, BitF, N, 18>;
-template <size_t N> using Bit18Bit = Hybrid<BitL, BitF, N, 18>;
+template <size_t N> using Fixed12Byte = Hybrid<FixedL, ByteF, N, 12>;
+template <size_t N> using Fixed12Bit = Hybrid<FixedL, BitF, N, 12>;
+template <size_t N> using Byte12Byte = Hybrid<ByteL, ByteF, N, 12>;
+template <size_t N> using Byte12Bit = Hybrid<ByteL, BitF, N, 12>;
+template <size_t N> using Bit12Bit = Hybrid<BitL, BitF, N, 12>;
 
 // The size of a bottom tree is enough for a single 2MB huge memory page
 template <size_t N> using Fixed18Fixed = Hybrid<FixedL, FixedF, N, 18>;
