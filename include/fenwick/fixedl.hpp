@@ -60,9 +60,9 @@ public:
   }
 
   virtual void add(size_t idx, int64_t inc) {
-    size_t tree_size = Tree.size();
+    size_t treeSize = Tree.size();
 
-    while (idx <= tree_size) {
+    while (idx <= treeSize) {
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       Tree[Level[height] + level_idx] += inc;

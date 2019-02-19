@@ -1,13 +1,11 @@
+import sys
 import gmpy2
 
-w = 64
 LL1 = 32768 * 8
 LL2 = 262144 * 8
 LL3 = 8388608 * 8
 page4k = 4096 * 8
 page2M = 2048 * 1024 * 8
-
-S = 7
 
 def nu(j):
     assert j >= 0, "nu is undefined"
@@ -72,6 +70,10 @@ def max_j_fixed(size):
 
 
 if __name__ == '__main__':
+    blocks = 1 if len(sys.argv) == 1 else int(sys.argv[1]) 
+    w = 64 * blocks
+    S = lbda(w)
+
     max_j_bit_LL1 = max_j_bit(LL1)
     max_j_bit_LL2 = max_j_bit(LL2)
     max_j_bit_LL3 = max_j_bit(LL3)
@@ -90,6 +92,8 @@ if __name__ == '__main__':
     max_j_fixed_4k = max_j_fixed(page4k)
     max_j_fixed_2M = max_j_fixed(page2M)
 
+    print('{} blocks -> w = {}, S = {}'.format(blocks, w, S))
+    print('-----------------------------------------------')
     print('LL1 = {} Byte -> {} bit'.format(LL1 // 8, LL1))
     print('LL2 = {} Byte -> {} bit'.format(LL2 // 8, LL2))
     print('LL3 = {} Byte -> {} bit'.format(LL3 // 8, LL3))
