@@ -44,12 +44,7 @@ public:
       for (size_t idx = m; idx <= size; idx += m) {
         size_t pos = bitpos(idx);
         auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-
-        size_t subpos = bitpos(idx - m / 2);
-        uint64_t subelem = *reinterpret_cast<auint64_t *>(&Tree[subpos >> 3]);
-        uint64_t value = bitextract(subelem, subpos & 0b111, BOUNDSIZE + rho(idx - m / 2));
-
-        element += value << (pos & 0b111);
+        element += get_partial_frequency(idx - m/2) << (pos & 0b111);
       }
     }
   }
@@ -69,7 +64,6 @@ public:
     while (idx <= Size) {
       size_t pos = bitpos(idx);
       auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-
       element += inc << (pos & 0b111);
       idx += mask_rho(idx);
     }
@@ -126,15 +120,15 @@ private:
 
   inline uint64_t get_partial_frequency(size_t j) const {
       const uint64_t prod = (BOUNDSIZE + 1) * j;
-      const uint64_t mask = (UINT64_C(1) << BOUNDSIZE + rho(j)) - 1;
+      const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(j))) - 1;
       if (prod % 64 == 0) {
          const uint64_t word = *(reinterpret_cast<auint64_t *>(&Tree[prod >> 3]) - 1);
-         return (word >> popcount(j) - 1) & mask;
+         return (word >> (popcount(j) - 1)) & mask;
       }
       else {
          const size_t pos = prod + STARTING_OFFSET - (BOUNDSIZE + 1) - popcount(j - 1);
          const uint64_t word = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-         return word >> (pos & 7) & mask;
+         return (word >> (pos & 7)) & mask;
       }
   }
 };
