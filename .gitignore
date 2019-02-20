@@ -2,3 +2,6 @@ bin/
 obj/
 stats/
 coverage/
+benchmark/fenwick/micro/bin/
+benchmark/fenwick/micro/hugebin/
+benchmark/fenwick/micro/tranbin/
