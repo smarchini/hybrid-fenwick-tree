@@ -8,9 +8,6 @@ int main(int argc, char **argv)
     using namespace std;
     using namespace hft::fenwick;
 
-    random_device rd;
-    mt19937 re(rd());
-
     if (argc < 3) {
         cerr << "Not enough parameters: <size> <queries>\n";
         return -1;
@@ -18,6 +15,11 @@ int main(int argc, char **argv)
 
     size_t size = std::stoul(argv[1]);
     size_t queries = std::stoul(argv[2]);
+
+	uint64_t seed = 0;
+	if (argc == 4) seed = std::stoul(argv[3]);
+
+    mt19937 re(seed);
 
     // run the benchmark
     __HFT_BENCHMARK_FUNCTION__
