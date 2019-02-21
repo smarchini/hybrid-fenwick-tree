@@ -26,7 +26,7 @@ protected:
 
 public:
   BitF(uint64_t sequence[], size_t size)
-      : Size(size), Tree((bitpos(size) + END_PADDING + 7) >> 3) {
+      : Size(size), Tree((first_bit_after(size) + END_PADDING + 7) >> 3) {
 
     for (size_t idx = 1; idx <= size; idx++)
       add_to_partial_frequency(idx, sequence[idx - 1]);
@@ -99,8 +99,7 @@ public:
   }
 
 private:
-  inline size_t bitpos(size_t j) const {
-    j--;
+  inline size_t first_bit_after(size_t j) const {
     return (BOUNDSIZE + 1) * j - popcount(j) + STARTING_OFFSET;
   }
 
