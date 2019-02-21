@@ -28,25 +28,12 @@ public:
   BitF(uint64_t sequence[], size_t size)
       : Size(size), Tree((bitpos(size) + END_PADDING + 7) >> 3) {
 
-    for (size_t i = 1; i <= size; i++) {
-      size_t pos = bitpos(i);
-      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+    for (size_t idx = 1; idx <= size; idx++)
+      add_to_partial_frequency(idx, sequence[idx - 1]);
 
-      int isize = BOUNDSIZE + rho(i);
-      size_t shift = pos & 0b111;
-      uint64_t mask = ((1ULL << isize) - 1) << shift;
-
-      element &= ~mask;
-      element |= mask & (sequence[i - 1] << shift);
-    }
-
-    for (size_t m = 2; m <= size; m <<= 1) {
-      for (size_t idx = m; idx <= size; idx += m) {
-        size_t pos = bitpos(idx);
-        auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-        element += get_partial_frequency(idx - m/2) << (pos & 0b111);
-      }
-    }
+    for (size_t m = 2; m <= size; m <<= 1)
+      for (size_t idx = m; idx <= size; idx += m) 
+	add_to_partial_frequency(idx, get_partial_frequency(idx - m/2));
   }
 
   virtual uint64_t prefix(size_t idx) const {
@@ -62,9 +49,7 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      size_t pos = bitpos(idx);
-      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
-      element += inc << (pos & 0b111);
+      add_to_partial_frequency(idx, inc);
       idx += mask_rho(idx);
     }
   }
@@ -94,7 +79,8 @@ public:
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
       if (node + m > Size) continue;
 
-      uint64_t value = get_partial_frequency(node + m);
+      const int height = rho(node + m);
+      uint64_t value = (BOUND << height) - get_partial_frequency(node + m);
 
       if (*val >= value) {
         node += m;
@@ -119,20 +105,27 @@ private:
   }
 
   inline uint64_t get_partial_frequency(size_t j) const {
-      const uint64_t prod = (BOUNDSIZE + 1) * j;
       const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(j))) - 1;
-      if (prod % 64 == 0) {
-         const uint64_t word = *(reinterpret_cast<auint64_t *>(&Tree[prod >> 3]) - 1);
-         return (word >> (popcount(j) - 1)) & mask;
-      }
-      else {
-         const size_t pos = prod + STARTING_OFFSET - (BOUNDSIZE + 1) - popcount(j - 1);
-         const uint64_t word = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-         return (word >> (pos & 7)) & mask;
-      }
+      j--;
+      const uint64_t prod = (BOUNDSIZE + 1) * j;
+      const size_t pos = prod + STARTING_OFFSET - popcount(j);
+
+      return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
+         (*(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) >> (pos % 64)) & mask :
+         (*(reinterpret_cast<auint64_t *>(&Tree[pos / 8])) >> (pos % 8)) & mask;
+  }
+
+  inline uint64_t add_to_partial_frequency(size_t j, uint64_t value) const {
+      j--;
+      const size_t prod = (BOUNDSIZE + 1) * j;
+      const size_t pos = prod + STARTING_OFFSET - popcount(j);
+
+      return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
+         *(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) += value << (pos % 64) :
+         *reinterpret_cast<auint64_t *>(&Tree[pos / 8]) += value << (pos % 8);
   }
 };
 
-} // namespace hft::fenwick
+} // namespace _hft::fenwick
 
 #endif // __FENWICK_BIT_HPP__
