@@ -244,7 +244,7 @@ inline uint64_t compact_bitmask(size_t count, size_t pos) {
  * in the least significant bits of the result.
  *
  */
-inline uint64_t bitextract(uint64_t word, uint from, uint length) {
+inline uint64_t bitextract(uint64_t word, int from, int length) {
   // return __builtin_ia32_bextr_u64(word, (from & 0xff) | ((to & 0xff) << 8));
   //return (word >> from) & ((1ULL << to) - 1);
   return (word >> from) & (-1ULL >> (64 - length));

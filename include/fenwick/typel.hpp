@@ -53,16 +53,16 @@ public:
       Tree8 = DArray<uint8_t>(typeEnd[0]);
     }
 
-    if constexpr (BOUNDSIZE <= 8) {
+    if (BOUNDSIZE <= 8) {
       fillTree<uint8_t, BOUNDSIZE, 8>(Tree8.get(), sequence);
       fillTree<uint16_t, 9, 16>(Tree16.get(), sequence);
       fillTree<uint64_t, 17, 32>(Tree64.get(), sequence);
       fillTree<uint64_t, 33, 64>(Tree64.get(), sequence);
-    } else if constexpr (BOUNDSIZE <= 16) {
+    } else if (BOUNDSIZE <= 16) {
       fillTree<uint16_t, BOUNDSIZE, 16>(Tree16.get(), sequence);
       fillTree<uint64_t, 17, 32>(Tree64.get(), sequence);
       fillTree<uint64_t, 33, 64>(Tree64.get(), sequence);
-    } else if constexpr (BOUNDSIZE <= 32) {
+    } else if (BOUNDSIZE <= 32) {
       fillTree<uint64_t, BOUNDSIZE, 32>(Tree64.get(), sequence);
       fillTree<uint64_t, 33, 64>(Tree64.get(), sequence);
     } else {
