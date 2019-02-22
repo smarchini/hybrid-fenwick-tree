@@ -100,14 +100,14 @@ public:
 
 private:
   inline size_t first_bit_after(size_t j) const {
-    return (BOUNDSIZE + 1) * j - popcount(j) + STARTING_OFFSET;
+    return (BOUNDSIZE + 1) * j - popcount(j) + STARTING_OFFSET + (j / (64*1024)) * 64;
   }
 
   inline uint64_t get_partial_frequency(size_t j) const {
       const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(j))) - 1;
       j--;
       const uint64_t prod = (BOUNDSIZE + 1) * j;
-      const size_t pos = prod + STARTING_OFFSET - popcount(j);
+      const size_t pos = prod + STARTING_OFFSET - popcount(j) + (j / (64*1024)) * 64;
 
       return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
          (*(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) >> (pos % 64)) & mask :
@@ -117,7 +117,7 @@ private:
   inline uint64_t add_to_partial_frequency(size_t j, uint64_t value) const {
       j--;
       const size_t prod = (BOUNDSIZE + 1) * j;
-      const size_t pos = prod + STARTING_OFFSET - popcount(j);
+      const size_t pos = prod + STARTING_OFFSET - popcount(j) + (j / (64*1024)) * 64;
 
       return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
          *(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) += value << (pos % 64) :

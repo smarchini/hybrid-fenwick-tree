@@ -126,7 +126,7 @@ private:
 
     constexpr size_t MULTIPLIER = 8 - SMALL - 1;
 
-    return idx * SMALL + (idx >> MEDIUM) + (idx >> LARGE) * MULTIPLIER;
+    return idx * SMALL + (idx >> MEDIUM) + (idx >> LARGE) * MULTIPLIER + (idx / (64*1024)) * 8;
   }
 };
 
