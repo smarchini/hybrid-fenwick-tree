@@ -22,12 +22,12 @@ protected:
   DArray<uint64_t> Tree;
 
 public:
-  FixedF(uint64_t sequence[], size_t size) : Tree(size) {
+  FixedF(uint64_t sequence[], size_t size) : Tree(pos(size) + 1) {
     std::copy_n(sequence, size, Tree.get());
 
     for (size_t m = 2; m <= size; m <<= 1) {
       for (size_t idx = m; idx <= size; idx += m)
-        Tree[idx - 1] += Tree[idx - m / 2 - 1];
+        Tree[pos(idx)] += Tree[pos(idx - m / 2)];
     }
   }
 
@@ -35,7 +35,7 @@ public:
     uint64_t sum = 0;
 
     while (idx != 0) {
-      sum += Tree[idx - 1];
+      sum += Tree[pos(idx)];
       idx = clear_rho(idx);
     }
 
@@ -45,7 +45,7 @@ public:
   virtual void add(size_t idx, int64_t inc) {
     size_t treeSize = Tree.size();
     while (idx <= treeSize) {
-      Tree[idx - 1] += inc;
+      Tree[pos(idx)] += inc;
       idx += mask_rho(idx);
     }
   }
@@ -56,10 +56,9 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(treeSize); m != 0; m >>= 1) {
-      if (node + m - 1 >= treeSize)
-        continue;
+      if (node + m > treeSize) continue;
 
-      uint64_t value = Tree[node + m - 1];
+      uint64_t value = Tree[pos(node + m)];
 
       if (*val >= value) {
         node += m;
@@ -75,10 +74,9 @@ public:
     size_t node = 0, treeSize = Tree.size();
 
     for (size_t m = mask_lambda(treeSize); m != 0; m >>= 1) {
-      if (node + m - 1 >= treeSize)
-        continue;
+      if (node + m > treeSize) continue;
 
-      uint64_t value = (BOUND << rho(node + m)) - Tree[node + m - 1];
+      uint64_t value = (BOUND << rho(node + m)) - Tree[pos(node + m)];
 
       if (*val >= value) {
         node += m;
@@ -93,6 +91,11 @@ public:
 
   virtual size_t bitCount() const {
     return sizeof(FixedF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
+  }
+
+private:
+  static inline size_t pos(size_t index) {
+     return index + index / 1024;
   }
 };
 
