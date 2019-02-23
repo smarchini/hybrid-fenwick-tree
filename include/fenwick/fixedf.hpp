@@ -20,10 +20,11 @@ public:
 
 protected:
   DArray<uint64_t> Tree;
-
+  size_t Size;
 public:
-  FixedF(uint64_t sequence[], size_t size) : Tree(pos(size) + 1) {
-    std::copy_n(sequence, size, Tree.get());
+  FixedF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size) + 1) {
+    for(size_t j = 1; j <= size; j++)
+      Tree[pos(j)] = sequence[j - 1];
 
     for (size_t m = 2; m <= size; m <<= 1) {
       for (size_t idx = m; idx <= size; idx += m)
@@ -43,8 +44,7 @@ public:
   }
 
   virtual void add(size_t idx, int64_t inc) {
-    size_t treeSize = Tree.size();
-    while (idx <= treeSize) {
+    while (idx <= Size) {
       Tree[pos(idx)] += inc;
       idx += mask_rho(idx);
     }
@@ -52,11 +52,10 @@ public:
 
   using FenwickTree::find;
   virtual size_t find(uint64_t *val) const {
-    size_t treeSize = Tree.size();
     size_t node = 0;
 
-    for (size_t m = mask_lambda(treeSize); m != 0; m >>= 1) {
-      if (node + m > treeSize) continue;
+    for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
+      if (node + m > Size) continue;
 
       uint64_t value = Tree[pos(node + m)];
 
@@ -71,10 +70,10 @@ public:
 
   using FenwickTree::compFind;
   virtual size_t compFind(uint64_t *val) const {
-    size_t node = 0, treeSize = Tree.size();
+    size_t node = 0;
 
-    for (size_t m = mask_lambda(treeSize); m != 0; m >>= 1) {
-      if (node + m > treeSize) continue;
+    for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
+      if (node + m > Size) continue;
 
       uint64_t value = (BOUND << rho(node + m)) - Tree[pos(node + m)];
 
@@ -87,7 +86,7 @@ public:
     return node;
   }
 
-  virtual size_t size() const { return Tree.size(); }
+  virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
     return sizeof(FixedF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
