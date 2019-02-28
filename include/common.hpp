@@ -56,10 +56,12 @@ static constexpr uint64_t BYTE_MASK[] = {0x0ULL,
                                          0xFFFFFFFFFFFFFFFFULL};
 
 /**
- * log2() - Static (i.e. computed at compile time) log2 roundup.
+ * ceil_log2_plus1() - Static (i.e. computed in compile time) 1 + log2 roundup.
  *
  */
-constexpr size_t log2(size_t n) { return ((n < 2) ? 1 : 1 + log2(n / 2)); }
+constexpr size_t ceil_log2_plus1(size_t n) {
+  return ((n < 2) ? 1 : 1 + ceil_log2_plus1(n / 2));
+}
 
 /**
  * round_pow2 - Static round up to the next highest power of two.

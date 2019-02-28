@@ -14,7 +14,7 @@ namespace hft::fenwick {
  */
 template <size_t BOUND> class FixedF : public FenwickTree {
 public:
-  static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
                 "Leaves can't be stored in a 64-bit word");
 

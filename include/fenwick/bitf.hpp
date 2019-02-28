@@ -14,7 +14,7 @@ namespace hft::fenwick {
  */
 template <size_t BOUND> class BitF : public FenwickTree {
 public:
-  static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static constexpr size_t STARTING_OFFSET = 1;
   static constexpr size_t END_PADDING = 56;
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 55,

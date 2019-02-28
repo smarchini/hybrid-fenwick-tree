@@ -14,7 +14,7 @@ namespace hft::fenwick {
  */
 template <size_t BOUND> class BitL : public FenwickTree {
 public:
-  static constexpr size_t BOUNDSIZE = log2(BOUND);
+  static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 57,
                 "Some nodes will span on multiple words");
 
