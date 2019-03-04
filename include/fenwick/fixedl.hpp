@@ -17,19 +17,22 @@ public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
                 "Leaves can't be stored in a 64-bit word");
+  static constexpr size_t LVL_PADDING = 8; // multiple of 8 for word alignment
 
 protected:
-  const size_t Levels;
+  const size_t Size, Levels;
   DArray<uint64_t> Tree;
   unique_ptr<size_t[]> Level;
 
 public:
   FixedL(uint64_t sequence[], size_t size)
-      : Levels(lambda(size + 1) + 2), Tree(size),
+      : Size(size), Levels(lambda(size + 1) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
-      Level[i] = ((size + (1 << (i - 1))) / (1 << i)) + Level[i - 1] + 1;
+      Level[i] = ((size + (1 << (i - 1))) / (1 << i)) + Level[i - 1] + (LVL_PADDING / 8);
+
+    Tree = DArray<uint64_t>(Level[Levels - 1]);
 
     for (size_t l = 0; l < Levels - 1; l++) {
       for (size_t node = 1 << l; node <= size; node += 1 << (l + 1)) {
@@ -60,9 +63,7 @@ public:
   }
 
   virtual void add(size_t idx, int64_t inc) {
-    size_t treeSize = Tree.size();
-
-    while (idx <= treeSize) {
+    while (idx <= Size) {
       int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       Tree[Level[height] + level_idx] += inc;
@@ -80,7 +81,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - LVL_PADDING / 8)
         continue;
 
       uint64_t value = Tree[pos];
@@ -91,7 +92,7 @@ public:
       }
     }
 
-    return min(node, size());
+    return min(node, Size);
   }
 
   using FenwickTree::compFind;
@@ -103,7 +104,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - LVL_PADDING / 8)
         continue;
 
       uint64_t value = (BOUND << height) - Tree[pos];
@@ -114,10 +115,10 @@ public:
       }
     }
 
-    return min(node, size());
+    return min(node, Size);
   }
 
-  virtual size_t size() const { return Tree.size(); }
+  virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
     return sizeof(FixedL<BOUNDSIZE>) * 8 +

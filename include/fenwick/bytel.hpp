@@ -17,6 +17,7 @@ public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
                 "Leaves can't be stored in a 64-bit word");
+  static constexpr size_t LVL_PADDING = 1;
 
 protected:
   const size_t Size, Levels;
@@ -30,7 +31,7 @@ public:
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
       Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * heightsize(i - 1) +
-                 Level[i - 1];
+                 Level[i - 1] + LVL_PADDING;
 
     Tree = DArray<uint8_t>(Level[Levels - 1] + 8); // +8 for safety
 
@@ -94,7 +95,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - LVL_PADDING)
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos]);
@@ -120,7 +121,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - LVL_PADDING)
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos]);

@@ -17,6 +17,7 @@ public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 57,
                 "Some nodes will span on multiple words");
+  static constexpr size_t LVL_PADDING = 1;
 
 protected:
   const size_t Size, Levels;
@@ -30,7 +31,7 @@ public:
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
       Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * (BOUNDSIZE - 1 + i) +
-                 Level[i - 1];
+                 Level[i - 1] + (LVL_PADDING * 8);
 
     Tree = DArray<uint8_t>((Level[Levels - 1] >> 3) + 8); // +8 for safety
 
@@ -95,7 +96,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - (LVL_PADDING * 8))
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
@@ -120,7 +121,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1])
+      if (pos >= Level[height + 1] - (LVL_PADDING * 8))
         continue;
 
       uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
