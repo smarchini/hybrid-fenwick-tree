@@ -22,7 +22,7 @@ protected:
   DArray<uint64_t> Tree;
   size_t Size;
 public:
-  FixedF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size) + 1) {
+  FixedF(uint64_t sequence[], size_t size) : Tree(pos(size) + 1), Size(size) {
     for(size_t j = 1; j <= size; j++)
       Tree[pos(j)] = sequence[j - 1];
 
