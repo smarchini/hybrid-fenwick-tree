@@ -1,7 +1,7 @@
 CC = g++ -g -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include
 
 dir:
-	mkdir bin hugebin tranbin
+	mkdir -p bin hugebin tranbin
 
 # Note: TRASNSPARENT and HUGE are only used in ../microbench.h
 
