@@ -30,13 +30,13 @@ public:
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
-      Level[i] = ((size + (1 << (i - 1))) / (1 << i)) * heightsize(i - 1) +
+      Level[i] = ((size + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1) +
                  Level[i - 1] + LVL_PADDING;
 
     Tree = DArray<uint8_t>(Level[Levels - 1] + 8); // +8 for safety
 
     for (size_t l = 0; l < Levels - 1; l++) {
-      for (size_t node = 1 << l; node <= Size; node += 1 << (l + 1)) {
+      for (size_t node = 1ULL << l; node <= Size; node += 1ULL << (l + 1)) {
         size_t highpos = Level[l] + heightsize(l) * (node >> (l + 1));
         auint64_t &high = reinterpret_cast<auint64_t &>(Tree[highpos]);
 
@@ -104,7 +104,7 @@ public:
       if (*val >= value) {
         idx++;
         *val -= value;
-        node += 1 << height;
+        node += 1ULL << height;
       }
     }
 
@@ -130,7 +130,7 @@ public:
       if (*val >= value) {
         idx++;
         *val -= value;
-        node += 1 << height;
+        node += 1ULL << height;
       }
     }
 

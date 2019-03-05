@@ -36,7 +36,7 @@ public:
 
     size_t j = (BOUNDSIZE <= 8) ? 0 : (BOUNDSIZE <= 16) ? 1 : 2;
     for (size_t i = 1; i < Levels; i++) {
-      typeEnd[j] = Level[i] = (size + (1 << (i - 1))) / (1 << i) + Level[i - 1];
+      typeEnd[j] = Level[i] = (size + (1ULL << (i - 1))) / (1ULL << i) + Level[i - 1];
 
       if (i - 1 == 8 - BOUNDSIZE || i - 1 == 16 - BOUNDSIZE) {
         Level[i] = 0;
@@ -146,7 +146,7 @@ public:
       if (*val >= value) {
         idx++;
         *val -= value;
-        node += 1 << height;
+        node += 1ULL << height;
       }
     }
 
@@ -183,7 +183,7 @@ public:
       if (*val >= value) {
         idx++;
         *val -= value;
-        node += 1 << height;
+        node += 1ULL << height;
       }
     }
 
@@ -204,7 +204,7 @@ private:
   template <typename T, size_t s, size_t e>
   inline void fillTree(T *tree, uint64_t sequence[]) {
     for (size_t l = s - BOUNDSIZE; l < Levels - 1 && l <= e - BOUNDSIZE; l++) {
-      for (size_t node = 1 << l; node <= Size; node += 1 << (l + 1)) {
+      for (size_t node = 1ULL << l; node <= Size; node += 1ULL << (l + 1)) {
         size_t sequence_idx = node - 1;
         T value = sequence[sequence_idx];
 
