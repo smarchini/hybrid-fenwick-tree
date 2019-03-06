@@ -17,7 +17,6 @@ public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
                 "Leaves can't be stored in a 64-bit word");
-  static constexpr size_t LVL_PADDING = 8; // multiple of 8 for word alignment
 
 protected:
   const size_t Size, Levels;
@@ -26,11 +25,11 @@ protected:
 
 public:
   FixedL(uint64_t sequence[], size_t size)
-      : Size(size), Levels(lambda(size + 1) + 2),
+      : Size(size), Levels(lambda(size) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
-      Level[i] = ((size + (1ULL << (i - 1))) / (1ULL << i)) + Level[i - 1] + (LVL_PADDING / 8);
+      Level[i] = ((size + (1ULL << (i - 1))) / (1ULL << i)) + Level[i - 1];
 
     Tree = DArray<uint64_t>(Level[Levels - 1]);
 
@@ -81,7 +80,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1] - LVL_PADDING / 8)
+      if (pos >= Level[height + 1])
         continue;
 
       uint64_t value = Tree[pos];
@@ -104,7 +103,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Level[height + 1] - LVL_PADDING / 8)
+      if (pos >= Level[height + 1])
         continue;
 
       uint64_t value = (BOUND << height) - Tree[pos];

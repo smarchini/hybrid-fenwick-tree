@@ -29,7 +29,7 @@ protected:
 
 public:
   TypeL(uint64_t sequence[], size_t size)
-      : Size(size), Levels(lambda(size + 1) + 2),
+      : Size(size), Levels(lambda(size) + 2),
         Level(make_unique<size_t[]>(Levels)) {
     size_t typeEnd[3] = {0};
     Level[0] = 0;
