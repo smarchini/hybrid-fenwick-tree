@@ -219,7 +219,7 @@ inline uint64_t mask_rho(uint64_t word) { return word & (-word); }
  *
  */
 inline uint64_t mask_lambda(uint64_t word) {
-  return 0x8000000000000000 >> __builtin_clzll(word);
+  return 0x8000000000000000ULL >> __builtin_clzll(word);
 }
 
 /**
