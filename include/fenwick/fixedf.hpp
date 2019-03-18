@@ -94,7 +94,7 @@ public:
 
 private:
   static inline size_t pos(size_t index) {
-     return index + index / 1024;
+     return index + ( index * 3 ) / (16 * 1024);
   }
 };
 

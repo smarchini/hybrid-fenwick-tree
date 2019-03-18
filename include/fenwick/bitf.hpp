@@ -100,7 +100,7 @@ public:
 
 private:
   inline size_t offset(size_t j) const {
-	return STARTING_OFFSET + (j / (64*1024)) * 64;
+	return STARTING_OFFSET + ((3 * j) / (16*64*1024)) * 64;
   }
 
   inline size_t first_bit_after(size_t j) const {
