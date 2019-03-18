@@ -63,10 +63,8 @@ public:
     void *mem = mmap(nullptr, Space, PROT, FLAGS, -1, 0);
     assert(mem != MAP_FAILED && "mmap failed");
 
-    if (Size >= 2097152) {
-      int adv = madvise(mem, Space, MADV_HUGEPAGE);
-      assert(adv == 0 && "madvise failed");
-    }
+    int adv = madvise(mem, Space, MADV_HUGEPAGE);
+    assert(adv == 0 && "madvise failed");
 #endif
 
       Buffer = static_cast<T *>(mem);
