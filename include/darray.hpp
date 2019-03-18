@@ -47,7 +47,7 @@ public:
 #else
         Space(((pagesize(Size) - 1) | (Size * sizeof(T) - 1)) + 1) {
 #endif
-    if (Size) {
+    if (Space) {
 #ifdef HFT_FORCE_HUGETLBPAGE
       void *mem = mmap(nullptr, Space, PROT, FLAGS | MAP_HUGETLB, -1, 0);
       assert(mem != MAP_FAILED && "mmap failed");
