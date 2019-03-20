@@ -25,7 +25,7 @@ protected:
 
 public:
   FixedL(uint64_t sequence[], size_t size)
-      : Size(size), Levels(lambda(size) + 2),
+      : Size(size), Levels(size != 0 ? lambda(size) + 2 : 1),
         Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
