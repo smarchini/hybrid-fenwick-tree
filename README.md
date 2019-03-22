@@ -198,12 +198,9 @@ dynamically (i.e. stored in the heap) allocate an array and it is an abstraction
 over hugepages. This class can behave four different ways:
  - **HFT_FORCE_HUGETLBPAGE**: the array is stored in 2MB (huge) pages;
  - **HFT_DISABLE_TRANSHUGE**: the array is stored in 4kB (non-transparent) pages;
- - **HFT_HUGETLBPAGE**: small (less than 2MB) arrays are stored in 4kB (non-transparent)
-   pages while the big ones (at lest 2MB) are stored in 2MB (huge) pages;
- - **by default (transhuge)**: small (less than 2MB) arrays are stored in 4kB
-   (non-transparent) pages while the big ones (at lest 2MB) use transparent huge
-   pages; these pages are (transparently) defragmented in huge pages by the
-   `khugepaged` background process (such pages are advised to be huge by calling
+ - **by default (transhuge)**: the array is tored in transparent hugepages;
+   these 4kB pages are (transparently) defragmented into 2MB hugepages by the
+   `khugepaged` background process (the pages are advised to be huge by calling
    `madvise` with the `MADV_HUGEPAGE` flag).
 
 You can choose the behavior of `hft::Darray<T>` with a `#define` of what you

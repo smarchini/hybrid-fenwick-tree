@@ -1,2 +1,2 @@
-#define __HFT_BENCHMARK_FUNCTION__ prefix<Hybrid<FixedL, BitF, 64, 23>>("Fixed23Bit", size, queries, re);
+#define __HFT_BENCHMARK_FUNCTION__ prefix<Hybrid<FixedL, BitF, 64, 23>>(name + "/" + "Fixed23Bit", queries, re);
 #include "../micro.cpp"

@@ -17,8 +17,10 @@ hugebin: BINDIR = ./hugebin
 hugebin: all
 
 
-all: prefix add find
+all: build prefix add find
 
+build: build.cpp
+	$(CC) -o $(BINDIR)/$@ $^
 
 prefix: prefix_fixedf prefix_bytef prefix_bitf prefix_fixedl prefix_bytel prefix_bitl prefix_fixed20fixed prefix_fixed23byte prefix_fixed23bit prefix_byte23byte prefix_byte23bit prefix_bit23bit
 

@@ -1,1 +1,0 @@
-L1-dcache-loads,L1-dcache-stores,L1-dcache-load-misses,L1-icache-load-misses,LLC-loads,LLC-stores,LLC-load-misses,LLC-store-misses,node-loads,node-stores,node-load-misses,node-store-misses,branch-loads,branch-load-misses,dTLB-loads,dTLB-stores,dTLB-load-misses,dTLB-store-misses,iTLB-loads,iTLB-load-misses

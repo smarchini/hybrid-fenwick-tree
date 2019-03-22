@@ -1,5 +1,5 @@
-#ifndef __FENWICK_BIT_HPP__
-#define __FENWICK_BIT_HPP__
+#ifndef __FENWICK_BITF_HPP__
+#define __FENWICK_BITF_HPP__
 
 #include "fenwick_tree.hpp"
 
@@ -17,30 +17,28 @@ public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
   static constexpr size_t STARTING_OFFSET = 1;
   static constexpr size_t END_PADDING = 56;
-  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 55,
-                "Some nodes will span on multiple words");
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 55, "Some nodes will span on multiple words");
 
 protected:
-  const size_t Size;
+  size_t Size;
   DArray<uint8_t> Tree;
 
 public:
   BitF(uint64_t sequence[], size_t size)
       : Size(size), Tree((first_bit_after(size) + END_PADDING + 7) >> 3) {
-
     for (size_t idx = 1; idx <= size; idx++)
-      add_to_partial_frequency(idx, sequence[idx - 1]);
+      addToPartialFrequency(idx, sequence[idx - 1]);
 
     for (size_t m = 2; m <= size; m <<= 1)
-      for (size_t idx = m; idx <= size; idx += m) 
-	add_to_partial_frequency(idx, get_partial_frequency(idx - m/2));
+      for (size_t idx = m; idx <= size; idx += m)
+        addToPartialFrequency(idx, getPartialFrequency(idx - m / 2));
   }
 
   virtual uint64_t prefix(size_t idx) const {
     uint64_t sum = 0;
 
     while (idx != 0) {
-      sum += get_partial_frequency(idx);
+      sum += getPartialFrequency(idx);
       idx = clear_rho(idx);
     }
 
@@ -49,7 +47,7 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      add_to_partial_frequency(idx, inc);
+      addToPartialFrequency(idx, inc);
       idx += mask_rho(idx);
     }
   }
@@ -59,9 +57,10 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m > Size) continue;
+      if (node + m > Size)
+        continue;
 
-      uint64_t value = get_partial_frequency(node + m);
+      const uint64_t value = getPartialFrequency(node + m);
 
       if (*val >= value) {
         node += m;
@@ -77,10 +76,11 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m > Size) continue;
+      if (node + m > Size)
+        continue;
 
       const int height = rho(node + m);
-      uint64_t value = (BOUND << height) - get_partial_frequency(node + m);
+      const uint64_t value = (BOUND << height) - getPartialFrequency(node + m);
 
       if (*val >= value) {
         node += m;
@@ -94,41 +94,55 @@ public:
   virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
-    return sizeof(BitF<BOUNDSIZE>) * 8 +
-           Tree.bitCount() - sizeof(Tree);
+    return sizeof(BitF<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree);
   }
 
 private:
-  inline size_t offset(size_t j) const {
-	return STARTING_OFFSET + ((3 * j) / (16*64*1024)) * 64;
+  inline static size_t holes(size_t idx) {
+    return STARTING_OFFSET + ((3 * idx) / (16 * 64 * 1024)) * 64;
   }
 
-  inline size_t first_bit_after(size_t j) const {
-    return (BOUNDSIZE + 1) * j - popcount(j) + offset(j);
+  inline static size_t first_bit_after(size_t idx) {
+    return (BOUNDSIZE + 1) * idx - popcount(idx) + holes(idx);
   }
 
-  inline uint64_t get_partial_frequency(size_t j) const {
-      const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(j))) - 1;
-      j--;
-      const uint64_t prod = (BOUNDSIZE + 1) * j;
-      const size_t pos = prod - popcount(j) + offset(j);
+  inline uint64_t getPartialFrequency(size_t idx) const {
+    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(idx))) - 1;
+    idx--;
+    const uint64_t prod = (BOUNDSIZE + 1) * idx;
+    const size_t pos = prod - popcount(idx) + holes(idx);
 
-      return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
-         (*(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) >> (pos % 64)) & mask :
-         (*(reinterpret_cast<auint64_t *>(&Tree[pos / 8])) >> (pos % 8)) & mask;
+    return (prod + (BOUNDSIZE + 1)) % 64 == 0
+               ? (*(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) >> (pos % 64)) & mask
+               : (*(reinterpret_cast<auint64_t *>(&Tree[pos / 8])) >> (pos % 8)) & mask;
   }
 
-  inline uint64_t add_to_partial_frequency(size_t j, uint64_t value) const {
-      j--;
-      const size_t prod = (BOUNDSIZE + 1) * j;
-      const size_t pos = prod - popcount(j) + offset(j);
+  inline uint64_t addToPartialFrequency(size_t idx, uint64_t value) {
+    idx--;
+    const size_t prod = (BOUNDSIZE + 1) * idx;
+    const size_t pos = prod - popcount(idx) + holes(idx);
 
-      return (prod + (BOUNDSIZE + 1)) % 64 == 0 ?
-         *(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) += value << (pos % 64) :
-         *reinterpret_cast<auint64_t *>(&Tree[pos / 8]) += value << (pos % 8);
+    return (prod + (BOUNDSIZE + 1)) % 64 == 0
+               ? *(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) += value << (pos % 64)
+               : *reinterpret_cast<auint64_t *>(&Tree[pos / 8]) += value << (pos % 8);
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const BitF<BOUND> &ft) {
+    const uint64_t nsize = hton(ft.Size);
+    os.write((char *)&nsize, sizeof(uint64_t));
+
+    return os << ft.Tree;
+  }
+
+  friend std::istream &operator>>(std::istream &is, BitF<BOUND> &ft) {
+    uint64_t nsize;
+    is.read((char *)(&nsize), sizeof(uint64_t));
+    ft.Size = ntoh(nsize);
+
+    return is >> ft.Tree;
   }
 };
 
-} // namespace _hft::fenwick
+} // namespace hft::fenwick
 
-#endif // __FENWICK_BIT_HPP__
+#endif // __FENWICK_BITF_HPP__

@@ -1,5 +1,5 @@
-#ifndef __FENWICK_TREE_HPP__
-#define __FENWICK_TREE_HPP__
+#ifndef __FENWICK_FENWICKTREE_HPP__
+#define __FENWICK_FENWICKTREE_HPP__
 
 #include "../common.hpp"
 #include "../darray.hpp"
@@ -27,61 +27,73 @@ public:
    * is zero.
    *
    */
-  virtual std::uint64_t prefix(std::size_t idx) const = 0;
+  virtual uint64_t prefix(size_t idx) const = 0;
 
   /**
    * add() - Increment an element of the sequence (not the tree).
    * @idx: Index (starting from 1) of the element.
    * @inc: Value to sum.
    *
-   * You are allowed to use negative values for the increment, but
-   * keep in mind you should respect the structure boundaries.
+   * You are allowed to use negative values for the increment, but keep in mind you should respect
+   * the structure boundaries.
    *
    */
-  virtual void add(std::size_t idx, std::int64_t inc) = 0;
+  virtual void add(size_t idx, int64_t inc) = 0;
 
   /**
    * find() - Search the index of the closest (less or equal than) prefix.
    * @val: Prefix to search.
    *
-   * If @val is an l-value reference its value will be changed with
-   * the distance between the found and the searched prefix (i.e. the
-   * difference between the prefix and @val).
+   * If @val is an l-value reference its value will be changed with the distance between the found
+   * and the searched prefix (i.e. the difference between the prefix and @val).
    *
-   * This method returns zero if such an element doesn't exists (i.e.
-   * there are no prefixes that are greater or equal to @val).
+   * This method returns zero if such an element doesn't exists (i.e. there are no prefixes that are
+   * greater or equal to @val).
    *
    */
-  virtual std::size_t find(std::uint64_t *val) const = 0;
-  std::size_t find(std::uint64_t val) const { return find(&val); }
+  virtual size_t find(uint64_t *val) const = 0;
+  size_t find(uint64_t val) const { return find(&val); }
 
   /**
    * compFind() - Complement find.
    * @val: Prefix to search.
    *
-   * This method search the index whose its prefix its the closest to
-   * MAXVAL-@val. MAXVAL is the maximum possibile value for such a
-   * prefix (@sequence is therefore bounded).
+   * This method search the index whose its prefix its the closest to MAXVAL-@val. MAXVAL is the
+   * maximum possibile value for such a prefix (@sequence is therefore bounded).
    *
    * The same considerations made for FenwickTree::find() holds.
    *
    */
-  virtual std::size_t compFind(std::uint64_t *val) const = 0;
-  std::size_t compFind(std::uint64_t val) const { return compFind(&val); }
+  virtual size_t compFind(uint64_t *val) const = 0;
+  size_t compFind(uint64_t val) const { return compFind(&val); }
 
   /**
    * size() - Returns the length of the sequence.
    *
    */
-  virtual std::size_t size() const = 0;
+  virtual size_t size() const = 0;
 
   /**
    * bitCount() - Estimation of the size (in bits) of this structure.
    *
    */
-  virtual std::size_t bitCount() const = 0;
+  virtual size_t bitCount() const = 0;
+
+  /**
+   * Each FenwickTree is serializable and deserializable with:
+   * - friend std::ostream &operator<<(std::ostream &os, const FenwickTree &ft);
+   * - friend std::istream &operator>>(std::istream &is, FenwickTree &ft);
+   *
+   * The data is stored and loaded with the network (big-endian) byte order to guarantee
+   * compatibility on different architectures.
+   *
+   * The serialized data follows the compression and node ordering of the specific Fenwick tree
+   * without any compatibility layer (e.g. if you serialize a FixedF, you cannot deserialize the
+   * very same data with a ByteL).
+   *
+   */
 };
 
 } // namespace hft::fenwick
 
-#endif // __FENWICK_TREE_HPP__
+#endif // __FENWICK_FENWICKTREE_HPP__

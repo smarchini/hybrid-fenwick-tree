@@ -1,5 +1,5 @@
-#ifndef __FENWICK_LNAIVE_HPP__
-#define __FENWICK_LNAIVE_HPP__
+#ifndef __FENWICK_FIXEDL_HPP__
+#define __FENWICK_FIXEDL_HPP__
 
 #include "fenwick_tree.hpp"
 
@@ -15,18 +15,16 @@ namespace hft::fenwick {
 template <size_t BOUND> class FixedL : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
-  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64,
-                "Leaves can't be stored in a 64-bit word");
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
 protected:
-  const size_t Size, Levels;
-  DArray<uint64_t> Tree;
+  size_t Size, Levels;
   unique_ptr<size_t[]> Level;
+  DArray<uint64_t> Tree;
 
 public:
   FixedL(uint64_t sequence[], size_t size)
-      : Size(size), Levels(size != 0 ? lambda(size) + 2 : 1),
-        Level(make_unique<size_t[]>(Levels)) {
+      : Size(size), Levels(size != 0 ? lambda(size) + 2 : 1), Level(make_unique<size_t[]>(Levels)) {
     Level[0] = 0;
     for (size_t i = 1; i < Levels; i++)
       Level[i] = ((size + (1ULL << (i - 1))) / (1ULL << i)) + Level[i - 1];
@@ -51,7 +49,7 @@ public:
     uint64_t sum = 0;
 
     while (idx != 0) {
-      int height = rho(idx);
+      const int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       sum += Tree[Level[height] + level_idx];
 
@@ -63,7 +61,7 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      int height = rho(idx);
+      const int height = rho(idx);
       size_t level_idx = idx >> (1 + height);
       Tree[Level[height] + level_idx] += inc;
 
@@ -76,7 +74,7 @@ public:
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
-      size_t pos = Level[height] + idx;
+      const size_t pos = Level[height] + idx;
 
       idx <<= 1;
 
@@ -99,7 +97,7 @@ public:
     size_t node = 0, idx = 0;
 
     for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
-      size_t pos = Level[height] + idx;
+      const size_t pos = Level[height] + idx;
 
       idx <<= 1;
 
@@ -120,12 +118,45 @@ public:
   virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
-    return sizeof(FixedL<BOUNDSIZE>) * 8 +
-           Tree.bitCount() - sizeof(Tree) +
+    return sizeof(FixedL<BOUNDSIZE>) * 8 + Tree.bitCount() - sizeof(Tree) +
            Levels * sizeof(size_t) * 8;
+  }
+
+private:
+  friend std::ostream &operator<<(std::ostream &os, const FixedL<BOUND> &fen) {
+    const uint64_t nsize = hton(fen.Size);
+    os.write((char *)&nsize, sizeof(uint64_t));
+
+    const uint64_t nlevels = hton(fen.Levels);
+    os.write((char *)&nlevels, sizeof(uint64_t));
+
+    for (size_t i = 0; i < fen.Levels; ++i) {
+      const uint64_t nlevel = hton(fen.Level[i]);
+      os.write((char *)&nlevel, sizeof(uint64_t));
+    }
+
+    return os << fen.Tree;
+  }
+
+  friend std::istream &operator>>(std::istream &is, FixedL<BOUND> &fen) {
+    uint64_t nsize;
+    is.read((char *)(&nsize), sizeof(uint64_t));
+    fen.Size = ntoh(nsize);
+
+    uint64_t nlevels;
+    is.read((char *)&nlevels, sizeof(uint64_t));
+    fen.Levels = ntoh(nlevels);
+
+    for (size_t i = 0; i < fen.Levels; ++i) {
+      uint64_t nlevel;
+      is.read((char *)&nlevel, sizeof(uint64_t));
+      fen.Levels = ntoh(nlevel);
+    }
+
+    return is >> fen.Tree;
   }
 };
 
 } // namespace hft::fenwick
 
-#endif // __FENWICK_LNAIVE_HPP__
+#endif // __FENWICK_FIXEDL_HPP__
