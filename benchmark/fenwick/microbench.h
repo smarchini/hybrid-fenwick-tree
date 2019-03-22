@@ -34,8 +34,12 @@ T file_to_fen(std::string name) {
 
   string filename = name + "." + to_string(BOUND) + ".bin";
   ifstream file(filename.c_str(), ios::binary);
-  file >> fenwick;
+  if (!file) {
+    cerr << "Bad Fenwick: " << filename << " does not exists\n";
+    exit(-1);
+  }
 
+  file >> fenwick;
   return fenwick;
 }
 

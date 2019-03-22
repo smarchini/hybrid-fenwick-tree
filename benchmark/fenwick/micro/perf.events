@@ -1,0 +1,14 @@
+-e cpu-cycles
+-e branch-misses
+-e cache-misses
+-e LLC-loads
+-e LLC-load-misses
+-e LLC-stores
+-e LLC-store-misses
+-e dTLB-loads
+-e dTLB-load-misses
+-e dTLB-stores
+-e dTLB-store-misses
+-e mem_inst_retired.stlb_miss_loads
+-e page-faults
+-e LD_BLOCKS_PARTIAL.ADDRESS_ALIAS
