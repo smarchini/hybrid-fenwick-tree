@@ -97,7 +97,7 @@ public:
 private:
   static inline size_t holes(size_t idx) { return (idx * 3) / (16 * 1024); }
 
-  static inline size_t pos(size_t idx) { return idx; }
+  static inline size_t pos(size_t idx) { return idx + holes(idx); }
 
   friend std::ostream &operator<<(std::ostream &os, const FixedF<BOUND> &ft) {
     uint64_t nsize = hton(ft.Size);
