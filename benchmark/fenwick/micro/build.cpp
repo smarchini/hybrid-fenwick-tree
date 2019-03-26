@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   fen_to_file<FixedF<64>>(name + "/" + "FixedF", size, re);
   fen_to_file<FixedL<64>>(name + "/" + "FixedL", size, re);
   fen_to_file<ByteF<64>>(name + "/" + "ByteF", size, re);
-  fen_to_file<ByteL<64>>(name + "/" + "ByteF", size, re);
+  fen_to_file<ByteL<64>>(name + "/" + "ByteL", size, re);
   fen_to_file<BitF<64>>(name + "/" + "BitF", size, re);
   fen_to_file<BitL<64>>(name + "/" + "BitL", size, re);
 

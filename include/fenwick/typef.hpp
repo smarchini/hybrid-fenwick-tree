@@ -197,7 +197,7 @@ private:
   }
 
   friend std::ostream &operator<<(std::ostream &os, const TypeF<BOUND> &ft) {
-    const uint64_t nsize = hton(ft.Size);
+    const uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
     return os << ft.Tree;

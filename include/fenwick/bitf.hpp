@@ -99,7 +99,11 @@ public:
 
 private:
   inline static size_t holes(size_t idx) {
+#ifdef HFT_NOHOLES
+    return STARTING_OFFSET;
+#else
     return STARTING_OFFSET + ((3 * idx) / (16 * 64 * 1024)) * 64;
+#endif
   }
 
   inline static size_t first_bit_after(size_t idx) {
@@ -128,7 +132,7 @@ private:
   }
 
   friend std::ostream &operator<<(std::ostream &os, const BitF<BOUND> &ft) {
-    const uint64_t nsize = hton(ft.Size);
+    const uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
     return os << ft.Tree;

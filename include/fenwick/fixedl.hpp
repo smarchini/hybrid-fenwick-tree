@@ -123,37 +123,38 @@ public:
   }
 
 private:
-  friend std::ostream &operator<<(std::ostream &os, const FixedL<BOUND> &fen) {
-    const uint64_t nsize = hton(fen.Size);
+  friend std::ostream &operator<<(std::ostream &os, const FixedL<BOUND> &ft) {
+    const uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
-    const uint64_t nlevels = hton(fen.Levels);
+    const uint64_t nlevels = hton((uint64_t)ft.Levels);
     os.write((char *)&nlevels, sizeof(uint64_t));
 
-    for (size_t i = 0; i < fen.Levels; ++i) {
-      const uint64_t nlevel = hton(fen.Level[i]);
+    for (size_t i = 0; i < ft.Levels; ++i) {
+      const uint64_t nlevel = hton((uint64_t)ft.Level[i]);
       os.write((char *)&nlevel, sizeof(uint64_t));
     }
 
-    return os << fen.Tree;
+    return os << ft.Tree;
   }
 
-  friend std::istream &operator>>(std::istream &is, FixedL<BOUND> &fen) {
+  friend std::istream &operator>>(std::istream &is, FixedL<BOUND> &ft) {
     uint64_t nsize;
     is.read((char *)(&nsize), sizeof(uint64_t));
-    fen.Size = ntoh(nsize);
+    ft.Size = ntoh(nsize);
 
     uint64_t nlevels;
     is.read((char *)&nlevels, sizeof(uint64_t));
-    fen.Levels = ntoh(nlevels);
+    ft.Levels = ntoh(nlevels);
 
-    for (size_t i = 0; i < fen.Levels; ++i) {
+    ft.Level = make_unique<size_t[]>(ft.Levels);
+    for (size_t i = 0; i < ft.Levels; ++i) {
       uint64_t nlevel;
       is.read((char *)&nlevel, sizeof(uint64_t));
-      fen.Levels = ntoh(nlevel);
+      ft.Level[i] = ntoh(nlevel);
     }
 
-    return is >> fen.Tree;
+    return is >> ft.Tree;
   }
 };
 

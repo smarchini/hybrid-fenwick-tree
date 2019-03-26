@@ -95,12 +95,18 @@ public:
   }
 
 private:
-  static inline size_t holes(size_t idx) { return (idx * 3) / (16 * 1024); }
+  static inline size_t holes(size_t idx) {
+#ifdef HFT_NOHOLES
+    return 0;
+#else
+    return (idx * 3) / (16 * 1024);
+#endif
+  }
 
   static inline size_t pos(size_t idx) { return idx + holes(idx); }
 
   friend std::ostream &operator<<(std::ostream &os, const FixedF<BOUND> &ft) {
-    uint64_t nsize = hton(ft.Size);
+    uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
     return os << ft.Tree;

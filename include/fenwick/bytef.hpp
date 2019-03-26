@@ -110,7 +110,13 @@ public:
 private:
   static inline size_t bytesize(size_t idx) { return ((rho(idx) + BOUNDSIZE - 1) >> 3) + 1; }
 
-  static inline size_t holes(size_t idx) { return (idx / (64 * 1024)) * 8; }
+  static inline size_t holes(size_t idx) {
+#ifdef HFT_NOHOLES
+    return 0;
+#else
+    return (idx / (64 * 1024)) * 8;
+#endif
+  }
 
   static inline size_t pos(size_t idx) {
     constexpr size_t NEXTBYTE = ((BOUNDSIZE - 1) | (8 - 1)) + 1;
@@ -124,19 +130,19 @@ private:
     return idx * SMALL + (idx >> MEDIUM) + (idx >> LARGE) * MULTIPLIER + holes(idx);
   }
 
-  friend std::ostream &operator<<(std::ostream &os, const ByteF<BOUND> &fen) {
-    uint64_t nsize = hton(fen.Size);
+  friend std::ostream &operator<<(std::ostream &os, const ByteF<BOUND> &ft) {
+    uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
-    return os << fen.Tree;
+    return os << ft.Tree;
   }
 
-  friend std::istream &operator>>(std::istream &is, ByteF<BOUND> &fen) {
+  friend std::istream &operator>>(std::istream &is, ByteF<BOUND> &ft) {
     uint64_t nsize;
     is.read((char *)(&nsize), sizeof(uint64_t));
-    fen.Size = ntoh(nsize);
+    ft.Size = ntoh(nsize);
 
-    return is >> fen.Tree;
+    return is >> ft.Tree;
   }
 };
 

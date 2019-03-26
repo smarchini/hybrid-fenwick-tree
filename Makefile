@@ -29,8 +29,8 @@ fenbench: benchmark/fenwick
 	@mkdir -p $(FENBENCH_PATH)
 	for (( m = 2; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
-			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 10000000"; \
-			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 10000000; \
+			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 100000"; \
+			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 100000; \
 		done; \
 	done
 

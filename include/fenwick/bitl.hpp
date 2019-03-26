@@ -143,14 +143,14 @@ public:
 
 private:
   friend std::ostream &operator<<(std::ostream &os, const BitL<BOUND> &ft) {
-    const uint64_t nsize = hton(ft.Size);
+    const uint64_t nsize = hton((uint64_t)ft.Size);
     os.write((char *)&nsize, sizeof(uint64_t));
 
-    const uint64_t nlevels = hton(ft.Levels);
+    const uint64_t nlevels = hton((uint64_t)ft.Levels);
     os.write((char *)&nlevels, sizeof(uint64_t));
 
     for (size_t i = 0; i < ft.Levels; ++i) {
-      const uint64_t nlevel = hton(ft.Level[i]);
+      const uint64_t nlevel = hton((uint64_t)ft.Level[i]);
       os.write((char *)&nlevel, sizeof(uint64_t));
     }
 
@@ -166,10 +166,11 @@ private:
     is.read((char *)&nlevels, sizeof(uint64_t));
     ft.Levels = ntoh(nlevels);
 
+    ft.Level = make_unique<size_t[]>(ft.Levels);
     for (size_t i = 0; i < ft.Levels; ++i) {
       uint64_t nlevel;
       is.read((char *)&nlevel, sizeof(uint64_t));
-      ft.Levels = ntoh(nlevel);
+      ft.Level[i] = ntoh(nlevel);
     }
 
     return is >> ft.Tree;

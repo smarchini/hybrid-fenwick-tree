@@ -11,7 +11,7 @@ using namespace std;
 template <template <size_t> class T>
 void runall(const char *name, size_t size, size_t queries, mt19937 re);
 
-// g++ -std=c++17 -O3 -march=native -I../../include runall.cpp -o runall
+// g++ -DHFT_DISABLE_TRANSHUGE -DHFT_NOHOLES -std=c++17 -O3 -march=native -I../../include runall.cpp
 int main(int argc, char **argv) {
   using namespace hft::fenwick;
 
@@ -45,7 +45,7 @@ void runall(const char *name, size_t size, size_t queries, mt19937 re) {
   const double c = 1. / queries;
   constexpr size_t BOUND = 64, REPS = 5, IDXMID = (REPS - 1) / 2;
   uniform_int_distribution<uint64_t> seqdist(0, BOUND);
-  uniform_int_distribution<size_t> idxdist(0, size);
+  uniform_int_distribution<size_t> idxdist(1, size);
   uniform_int_distribution<uint64_t> cumseqdist(0, BOUND * size);
 
   unique_ptr<uint64_t[]> sequence = make_unique<uint64_t[]>(size);

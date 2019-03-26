@@ -1,4 +1,5 @@
 -e cpu-cycles
+-e cycles:pp
 -e branch-misses
 -e cache-misses
 -e LLC-loads
