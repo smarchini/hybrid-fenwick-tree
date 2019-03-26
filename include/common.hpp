@@ -7,6 +7,10 @@
 #include <memory>
 #include <x86intrin.h>
 
+// Macro stringification
+#define __STRINGIFY(s) #s
+#define STRINGIFY(s) __STRINGIFY(s)
+
 namespace hft {
 
 using std::make_unique;

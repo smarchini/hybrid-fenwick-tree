@@ -99,9 +99,13 @@ public:
 
 private:
   inline static size_t holes(size_t idx) {
-#ifdef HFT_NOHOLES
+#if HFT_HOLES == 1
     return STARTING_OFFSET;
-#else
+#elif HFT_HOLES == 2
+    return STARTING_OFFSET + ((3 * idx) / (32 * 64 * 1024)) * 64;
+#elif HFT_HOLES == 3
+    return STARTING_OFFSET + ((3 * idx) / (64 * 64 * 1024)) * 64;
+#else // HFT_HOLES = 0 (same as #ifndef)
     return STARTING_OFFSET + ((3 * idx) / (16 * 64 * 1024)) * 64;
 #endif
   }

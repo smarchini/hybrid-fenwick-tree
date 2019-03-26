@@ -26,12 +26,12 @@ int main(int argc, char **argv) {
 
   mt19937 re(seed);
 
-  runall<FixedF>("FixedF", size, queries, re);
-  runall<FixedL>("FixedL", size, queries, re);
-  runall<ByteF>("ByteF", size, queries, re);
-  runall<ByteL>("ByteL", size, queries, re);
-  runall<BitF>("BitF", size, queries, re);
-  runall<BitL>("BitL", size, queries, re);
+  runall<FixedF>("FixedF (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
+  // runall<FixedL>("FixedL (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
+  runall<ByteF>("ByteF (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
+  // runall<ByteL>("ByteL (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
+  runall<BitF>("BitF (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
+  // runall<BitL>("BitL (holes " STRINGIFY(HFT_HOLES) ")", size, queries, re);
 
   return 0;
 }
