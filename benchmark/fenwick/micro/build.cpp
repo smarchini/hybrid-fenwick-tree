@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <sys/stat.h>
 
 #include "../microbench.h"
 
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
   uint64_t seed = argc == 3 ? std::stoul(argv[2]) : 0;
 
   mt19937 re(seed);
-
+  mkdir(name.c_str(), 0777);
   fen_to_file<FixedF<64>>(name + "/" + "FixedF", size, re);
   fen_to_file<FixedL<64>>(name + "/" + "FixedL", size, re);
   fen_to_file<ByteF<64>>(name + "/" + "ByteF", size, re);
