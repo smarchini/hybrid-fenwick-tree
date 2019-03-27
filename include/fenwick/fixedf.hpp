@@ -103,7 +103,7 @@ private:
 #elif HFT_HOLES == 3
     return (idx * 3) / (64 * 1024);
 #else // HFT_HOLES = 0 (same as #ifndef)
-    return (idx * 3) / (16 * 1024);
+    return idx >> 14;
 #endif
   }
 

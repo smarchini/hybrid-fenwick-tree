@@ -106,7 +106,7 @@ private:
 #elif HFT_HOLES == 3
     return STARTING_OFFSET + ((3 * idx) / (64 * 64 * 1024)) * 64;
 #else // HFT_HOLES = 0 (same as #ifndef)
-    return STARTING_OFFSET + ((3 * idx) / (16 * 64 * 1024)) * 64;
+    return STARTING_OFFSET + (idx >> 14) * 64;
 #endif
   }
 

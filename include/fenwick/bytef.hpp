@@ -116,9 +116,9 @@ private:
 #elif HFT_HOLES == 2
     return ((idx * 3) / (32 * 1024)) * 8;
 #elif HFT_HOLES == 3
-    return ((idx * 3) / (64 * 1024)) * 8;
-#else // HFT_HOLES = 0 (same as #ifndef)
     return (idx / (64 * 1024)) * 8;
+#else // HFT_HOLES = 0 (same as #ifndef)
+    return (idx >> 14) * 8;
 #endif
   }
 

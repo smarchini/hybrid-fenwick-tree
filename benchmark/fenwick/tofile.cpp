@@ -121,8 +121,10 @@ private:
       for (int r = 0; r < REPS; r++) {
           cout << r << " " << flush;
           begin = high_resolution_clock::now();
-          for (uint64_t i = 0; i < queries; ++i)
-              u ^= tree.prefix(idxdist(mte));
+          for (uint64_t i = 0; i < queries; ++i) {
+            u ^= tree.prefix(idxdist(mte) ^ (u & 1));
+            // u ^= tree.prefix(idxdist(mte));
+          }
           end = high_resolution_clock::now();
           prefix.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
       }
@@ -134,8 +136,10 @@ private:
       for (int r = 0; r < REPS; r++) {
           cout << r << " " << flush;
           begin = high_resolution_clock::now();
-          for (uint64_t i = 0; i < queries; ++i)
-              u ^= tree.find(cumseqdist(mte));
+          for (uint64_t i = 0; i < queries; ++i) {
+            u ^= tree.find(cumseqdist(mte) ^ (u & 1));
+            // u ^= tree.find(cumseqdist(mte));
+          }
           end = high_resolution_clock::now();
           find.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
       }
@@ -148,9 +152,13 @@ private:
           cout << r << " " << flush;
           begin = high_resolution_clock::now();
           for (uint64_t i = 0; i < queries; ++i) {
-              size_t idx = idxdist(mte);
-              uint64_t val = seqdist(mte);
-              tree.add(idx, sequence[idx] + val < BOUND ? val : -val);
+            size_t idx = idxdist(mte);
+            int64_t val = seqdist(mte) ^ (u & 1);
+            //tree.add(idx, i % 2 ? -val : val);
+            tree.add(idx, sequence[idx] + val < BOUND ? val : -val);
+            // size_t idx = idxdist(mte);
+            // uint64_t val = seqdist(mte);
+            // tree.add(idx, sequence[idx] + val < BOUND ? val : -val);
           }
           end = high_resolution_clock::now();
           add.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
@@ -158,7 +166,7 @@ private:
       std::sort(add.begin(), add.end());
       fadd << to_string(add[MID] * c);
 
-      // the optimizer can't erase the adds
+      // the compiler can't erase the adds
       u ^= tree.prefix(idxdist(mte));
 
       // cout << "findc: " << flush;
@@ -217,54 +225,60 @@ int main(int argc, char *argv[])
     Benchmark<BOUND> bench(argv[1], size, queries);
     bench.datainit(mte);
 
-    bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
-                    "fixed[$9$]fixed,fixed[$12$]byte,fixed[$12$]bit,byte[$12$]byte,byte[$12$]bit,bit[$12$]bit,"
-                    "fixed[$18$]fixed,fixed[$21$]byte,fixed[$21$]bit,byte[$21$]byte,byte[$21$]bit,bit[$21$]bit,"
-                    "fixed[$12$]fixed,fixed[$15$]byte,fixed[$15$]bit,byte[$15$]byte,byte[$15$]bit,bit[$15$]bit,"
-                    "fixed[$15$]fixed,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]byte,byte[$18$]bit,bit[$18$]bit,"
-                    "fixed[$20$]fixed,fixed[$23$]byte,fixed[$23$]bit,byte[$23$]byte,byte[$23$]bit,bit[$23$]bit");
+#if HFT_HOLES == 0
+    bench.filesinit("fixed[F]holes,byte[F]holes,bit[F]holes");
+#else
+    bench.filesinit("fixed[F]noholes,byte[F]noholes,bit[F]noholes");
+#endif
+
+        // bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
+        //                 "fixed[$9$]fixed,fixed[$12$]byte,fixed[$12$]bit,byte[$12$]byte,byte[$12$]bit,bit[$12$]bit,"
+        //                 "fixed[$18$]fixed,fixed[$21$]byte,fixed[$21$]bit,byte[$21$]byte,byte[$21$]bit,bit[$21$]bit,"
+        //                 "fixed[$12$]fixed,fixed[$15$]byte,fixed[$15$]bit,byte[$15$]byte,byte[$15$]bit,bit[$15$]bit,"
+        //                 "fixed[$15$]fixed,fixed[$18$]byte,fixed[$18$]bit,byte[$18$]byte,byte[$18$]bit,bit[$18$]bit,"
+        //                 "fixed[$20$]fixed,fixed[$23$]byte,fixed[$23$]bit,byte[$23$]byte,byte[$23$]bit,bit[$23$]bit");
 
     cout << "size = " << size << ", queries = " << queries << " => fixed[F]:       "; bench.run<FixedF>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[l]:       "; bench.run<FixedL>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[l]:       "; bench.run<FixedL>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => byte[F]:        "; bench.run<ByteF>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[l]:        "; bench.run<ByteL>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[F]:         "; bench.run<BitF>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[l]:         "; bench.run<BitL>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[l]:        "; bench.run<ByteL>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => bit[F]:         "; bench.run<BitF>(); bench.separator("\n");
+    //cout << "size = " << size << ", queries = " << queries << " => bit[l]:         "; bench.run<BitL>(); bench.separator();
 
-    cout << "size = " << size << ", queries = " << queries << " => fixed[9]fixed:  ";  bench.run<Fixed9Fixed>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[12]byte:  ";  bench.run<Fixed12Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[12]bit:   ";  bench.run<Fixed12Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[12]byte:   ";  bench.run<Byte12Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[12]bit:    ";  bench.run<Byte12Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[12]bit:     ";  bench.run<Bit12Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[9]fixed:  ";  bench.run<Fixed9Fixed>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[12]byte:  ";  bench.run<Fixed12Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[12]bit:   ";  bench.run<Fixed12Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[12]byte:   ";  bench.run<Byte12Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[12]bit:    ";  bench.run<Byte12Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => bit[12]bit:     ";  bench.run<Bit12Bit>(); bench.separator();
 
-    cout << "size = " << size << ", queries = " << queries << " => fixed[18]fixed: ";  bench.run<Fixed18Fixed>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[21]byte:  ";  bench.run<Fixed21Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[21]bit:   ";  bench.run<Fixed21Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[21]byte:   ";  bench.run<Byte21Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[21]bit:    ";  bench.run<Byte21Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[21]bit:     ";  bench.run<Bit21Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[18]fixed: ";  bench.run<Fixed18Fixed>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[21]byte:  ";  bench.run<Fixed21Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[21]bit:   ";  bench.run<Fixed21Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[21]byte:   ";  bench.run<Byte21Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[21]bit:    ";  bench.run<Byte21Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => bit[21]bit:     ";  bench.run<Bit21Bit>(); bench.separator();
 
-    cout << "size = " << size << ", queries = " << queries << " => fixed[12]fixed: ";  bench.run<Fixed12Fixed>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[15]byte:  ";  bench.run<Fixed15Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[15]bit:   ";  bench.run<Fixed15Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[15]byte:   ";  bench.run<Byte15Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[15]bit:    ";  bench.run<Byte15Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[15]bit:     ";  bench.run<Bit15Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[12]fixed: ";  bench.run<Fixed12Fixed>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[15]byte:  ";  bench.run<Fixed15Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[15]bit:   ";  bench.run<Fixed15Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[15]byte:   ";  bench.run<Byte15Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[15]bit:    ";  bench.run<Byte15Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => bit[15]bit:     ";  bench.run<Bit15Bit>(); bench.separator();
 
-    cout << "size = " << size << ", queries = " << queries << " => fixed[15]fixed: ";  bench.run<Fixed15Fixed>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[18]byte:  ";  bench.run<Fixed18Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[18]bit:   ";  bench.run<Fixed18Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[18]byte:   ";  bench.run<Byte18Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[18]bit:    ";  bench.run<Byte18Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[18]bit:     ";  bench.run<Bit18Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[15]fixed: ";  bench.run<Fixed15Fixed>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[18]byte:  ";  bench.run<Fixed18Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[18]bit:   ";  bench.run<Fixed18Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[18]byte:   ";  bench.run<Byte18Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[18]bit:    ";  bench.run<Byte18Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => bit[18]bit:     ";  bench.run<Bit18Bit>(); bench.separator();
 
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]fixed: ";  bench.run<Fixed20Fixed>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[23]byte:  ";  bench.run<Fixed23Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[23]bit:   ";  bench.run<Fixed23Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[23]byte:   ";  bench.run<Byte23Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => byte[23]bit:    ";  bench.run<Byte23Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => bit[23]bit:     ";  bench.run<Bit23Bit>(); bench.separator("\n");
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[20]fixed: ";  bench.run<Fixed20Fixed>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[23]byte:  ";  bench.run<Fixed23Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => fixed[23]bit:   ";  bench.run<Fixed23Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[23]byte:   ";  bench.run<Byte23Byte>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => byte[23]bit:    ";  bench.run<Byte23Bit>(); bench.separator();
+    //cout << "size = " << size << ", queries = " << queries << " => bit[23]bit:     ";  bench.run<Bit23Bit>(); bench.separator("\n");
 
     return 0;
 }
