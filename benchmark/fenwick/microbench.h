@@ -62,7 +62,7 @@ void find(std::string name, size_t queries, std::mt19937 re) {
   for (size_t r = 0; r < REPS; r++) {
     begin = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < queries; i++)
-      u ^= fenwick.find(cumseqdist(re));
+      u ^= fenwick.find(cumseqdist(re) ^ (u & 1));
     end = chrono::high_resolution_clock::now();
     find.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
@@ -93,7 +93,7 @@ void add(std::string name, size_t queries, std::mt19937 re) {
     begin = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < queries; i++) {
       size_t idx = idxdist(re);
-      fenwick.add(idx, i % 2 ? -seqdist(re) : seqdist(re));
+      fenwick.add(idx, i % 2 ? -seqdist(re) ^ (u & 1) : seqdist(re) ^ (u & 1));
     }
     end = chrono::high_resolution_clock::now();
     add.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
@@ -125,7 +125,7 @@ void prefix(std::string name, size_t queries, std::mt19937 re) {
   for (size_t r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
     for (uint64_t i = 0; i < queries; ++i)
-      u ^= fenwick.prefix(idxdist(re));
+      u ^= fenwick.prefix(idxdist(re) ^ (u & 1));
     end = high_resolution_clock::now();
     prefix.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }

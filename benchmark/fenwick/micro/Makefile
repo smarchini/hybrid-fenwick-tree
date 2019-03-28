@@ -1,4 +1,4 @@
-CC = g++ -g -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include
+CC = g++ -g -std=c++17 -Wall -Wextra -O3 -march=native -fno-exceptions -fno-rtti -fno-omit-frame-pointer -I../../../include -DHFT_HOLES=0
 
 dir:
 	mkdir -p bin hugebin tranbin
