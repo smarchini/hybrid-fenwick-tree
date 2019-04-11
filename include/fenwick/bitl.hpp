@@ -15,7 +15,7 @@ namespace hft::fenwick {
 template <size_t BOUND> class BitL : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
-  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 57, "Some nodes will span on multiple words");
+  static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
 protected:
   size_t Size, Levels;
@@ -63,7 +63,7 @@ public:
     while (idx != 0) {
       const int height = rho(idx);
       const size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
-      auint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      const auint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
 
       sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
       idx = clear_rho(idx);
@@ -95,7 +95,7 @@ public:
       if (pos >= Level[height + 1])
         continue;
 
-      const uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      const uint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
       const uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
 
       if (*val >= value) {
@@ -120,7 +120,7 @@ public:
       if (pos >= Level[height + 1])
         continue;
 
-      const uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      const uint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
       const uint64_t value =
           (BOUND << height) - bitextract(element, pos & 0b111, BOUNDSIZE + height);
 

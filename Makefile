@@ -1,4 +1,4 @@
-CC = g++ -DHFT_DISABLE_TRANSHUGE -DHFT_HOLES=0
+CC = g++ -DHFT_HOLES=0 #-DHFT_DISABLE_TRANSHUGE
 RELEASE = -O3 -march=native
 DEBUG = -g -O0 -march=native --coverage -fprofile-dir=coverage
 CFLAGS = -std=c++17 -Wall -Wextra $(PARAMS)
@@ -29,8 +29,8 @@ fenbench: benchmark/fenwick
 	@mkdir -p $(FENBENCH_PATH)
 	for (( m = 2; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
-			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 100000"; \
-			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 100000; \
+			echo "bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000"; \
+			bin/benchmark/fenwick/tofile $(FENBENCH_PATH) $$size 1000000; \
 		done; \
 	done
 
@@ -38,8 +38,8 @@ ranselbench: benchmark/rankselect
 	@mkdir -p $(RANSELBENCH_PATH)
 	for (( m = 2; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
-			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000"; \
-			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 10000000; \
+			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 100000"; \
+			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 100000; \
 		done; \
 	done
 

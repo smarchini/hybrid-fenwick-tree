@@ -11,6 +11,10 @@
 #define __STRINGIFY(s) #s
 #define STRINGIFY(s) __STRINGIFY(s)
 
+// Explicit branch prediciton
+#define likely(x) __builtin_expect(!!(x), 1)
+#define unlikely(x) __builtin_expect(!!(x), 0)
+
 namespace hft {
 
 using std::make_unique;
@@ -29,11 +33,12 @@ using std::uint8_t;
  * Aliased unsigned integers
  *
  * Strict aliasing rule: it's illegal to access the same memory location with data of different
- * types. If you have two pointers T* and a U*, the compiler can assume they are not pointingthe
+ * types. If you have two pointers T* and a U*, the compiler can assume they are not pointing the
  * same data. Accessing such a data invokes undefined behavior.
  *
- * GCC __may_alias__ attribute is basically the opposite of the C 'restrict' keywoard, it prevents
- * the compiler to makes such assumptions. With this types is now valid to access aliased data. [1]
+ * GCC __may_alias__ attribute is basically the opposite of the C ``restrict'' keywoard: it prevents
+ * the compiler to make strict aliasing assumptions. With these aliased types is now valid to access
+ * aliased pointers. [1]
  *
  * [1] https://gcc.gnu.org/onlinedocs/gcc-8.2.0/gcc/Common-Type-Attributes.html
  *
@@ -211,14 +216,17 @@ inline uint64_t compact_bitmask(size_t count, size_t pos) {
  * bitextract - Extract consecutives bits in a word.
  * @word: Binary word.
  * @from: Starting index (up to 63).
- * @length: Length of the word (up to 63 - @from).
+ * @length: Length of the word (up to 64).
  *
- * Extracts from @word the bits in the range [@from, @from + to) and returns them in the least
- * significant bits of the result.
+ * Extracts from @word the bits in the range [@from, @from + @length) and returns them in the
+ * least significant bits of the result.
  *
  */
-inline uint64_t bitextract(uint64_t word, int from, int length) {
-  return (word >> from) & (-1ULL >> (64 - length));
+inline uint64_t bitextract(const uint64_t *word, int from, int length) {
+  if (likely((from + length) <= 64))
+    return (word[0] >> from) & (-1ULL >> (64 - length));
+  else
+    return (word[0] >> from) | ((word[1] << (128 - from - length)) >> (64 - from));
 }
 
 /**
@@ -318,29 +326,34 @@ bool is_big_endian(void) {
 bool is_little_endian(void) { return !is_big_endian(); }
 
 /* swap_endian - Transform from big-endian to little-endian and vice versa
- * @value: Integral value
+ * @value: Integral value (sizeof 1, 2, 4 or 8 bytes)
  *
  */
 template <class T>
-typename std::enable_if<std::is_integral<T>::value, T>::type swap_endian(T value) {
-  switch (sizeof(T)) {
-  case 1:
-    return value;
-  case 2:
-    return ((uint16_t)swap_endian<std::uint8_t>(value & 0x00ff) << 8) |
-           (uint16_t)swap_endian<std::uint8_t>(value >> 8);
-  case 4:
-    return ((uint32_t)swap_endian<std::uint16_t>(value & 0x0000ffff) << 16) |
-           (uint32_t)swap_endian<std::uint16_t>(value >> 16);
-  case 8:
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshift-count-overflow"
-    return ((uint64_t)swap_endian<std::uint32_t>(value & 0x00000000ffffffffULL) << 32) |
-           (uint64_t)swap_endian<std::uint32_t>(value >> 32);
-#pragma GCC diagnostic pop
-  default:
-    assert(false && "unsupported size");
-  }
+typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 8, T>::type
+swap_endian(T value) {
+  return ((uint64_t)swap_endian<std::uint32_t>(value & 0x00000000ffffffffULL) << 32) |
+         (uint64_t)swap_endian<std::uint32_t>(value >> 32);
+}
+
+template <class T>
+typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 4, T>::type
+swap_endian(T value) {
+  return ((uint32_t)swap_endian<std::uint16_t>(value & 0x0000ffff) << 16) |
+         (uint32_t)swap_endian<std::uint16_t>(value >> 16);
+}
+
+template <class T>
+typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 2, T>::type
+swap_endian(T value) {
+  return ((uint16_t)swap_endian<std::uint8_t>(value & 0x00ff) << 8) |
+         (uint16_t)swap_endian<std::uint8_t>(value >> 8);
+}
+
+template <class T>
+typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 1, T>::type
+swap_endian(T value) {
+  return value;
 }
 
 /**

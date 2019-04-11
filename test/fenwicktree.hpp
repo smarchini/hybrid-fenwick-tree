@@ -147,6 +147,16 @@ TEST(fenwicktree, leafmaxval)
     fenwick_random_test<4294967296>(1024-1); // 2^32
     fenwick_random_test<1099511627776>(1024-1); // 2^40
     fenwick_random_test<281474976710656>(1024-1); // 2^48
+
+    fenwick_random_test<562949953421312>(1024-1);  // 2^49
+    fenwick_random_test<1125899906842624>(1024-1); // 2^50
+    fenwick_random_test<2251799813685248>(1024-1); // 2^51
+    fenwick_random_test<4503599627370496>(1024-1); // 2^52
+    fenwick_random_test<9007199254740992>(1024-1); // 2^53
+
+    fenwick_random_test<18014398509481984>(512-1); // 2^54
+    fenwick_random_test<36028797018963967>(512-1); // 2^55 - 1
+    // BOUND >= 2^55 is not supported in BitF
 }
 
 #endif // __TEST_FENWICK_SAME_BEHAVIOR_HPP__
