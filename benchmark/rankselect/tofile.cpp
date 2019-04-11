@@ -140,7 +140,7 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.rank(idxdist(mte));
+                u ^= bv.rank(idxdist(mte) ^ (u & 1));
             end = high_resolution_clock::now();
             rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -153,7 +153,7 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i)
-                u ^= bv.select(sel1dist(mte));
+                u ^= bv.select(sel1dist(mte) ^ (u & 1));
             end = high_resolution_clock::now();
             select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -166,8 +166,8 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i) {
-                if (i & 1) u ^= bv.set(bitdist(mte));
-                else u ^= bv.clear(bitdist(mte));
+                if (i & 1) u ^= bv.set(bitdist(mte) ^ (u & 1));
+                else u ^= bv.clear(bitdist(mte) ^ (u & 1));
             }
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
@@ -202,31 +202,31 @@ public:
         constexpr int REPS = 5;
         constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
 
-        cout << "rank0: " << flush;
-        vector<chrono::nanoseconds::rep> rank0;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= dynamic.rank0(idxdist(mte));
-            end = high_resolution_clock::now();
-            rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort(rank0.begin(), rank0.end());
-        frank0 << to_string(rank0[MID] * c);
+        // cout << "rank0: " << flush;
+        // vector<chrono::nanoseconds::rep> rank0;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= dynamic.rank0(idxdist(mte));
+        //     end = high_resolution_clock::now();
+        //     rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort(rank0.begin(), rank0.end());
+        // frank0 << to_string(rank0[MID] * c);
 
-        cout << "select0: " << flush;
-        vector<chrono::nanoseconds::rep> select0;
-        for (int r = 0; r < REPS; r++) {
-            cout << r << " " << flush;
-            begin = high_resolution_clock::now();
-            for(uint64_t i = 0; i < queries; ++i)
-                u ^= dynamic.select0(sel0dist(mte));
-            end = high_resolution_clock::now();
-            select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        }
-        std::sort (select0.begin(), select0.end());
-        fselect0 << to_string(select0[MID] * c);
+        // cout << "select0: " << flush;
+        // vector<chrono::nanoseconds::rep> select0;
+        // for (int r = 0; r < REPS; r++) {
+        //     cout << r << " " << flush;
+        //     begin = high_resolution_clock::now();
+        //     for(uint64_t i = 0; i < queries; ++i)
+        //         u ^= dynamic.select0(sel0dist(mte));
+        //     end = high_resolution_clock::now();
+        //     select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+        // }
+        // std::sort (select0.begin(), select0.end());
+        // fselect0 << to_string(select0[MID] * c);
 
         cout << "rank1: " << flush;
         vector<chrono::nanoseconds::rep> rank1;
@@ -234,7 +234,7 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i)
-                u ^= dynamic.rank1(sel0dist(mte));
+                u ^= dynamic.rank1(sel0dist(mte) ^ (u & 1));
             end = high_resolution_clock::now();
             rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -247,7 +247,7 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i)
-                u ^= dynamic.select1(sel1dist(mte));
+                u ^= dynamic.select1(sel1dist(mte) ^ (u & 1));
             end = high_resolution_clock::now();
             select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -260,8 +260,8 @@ public:
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i) {
-                if (i & 1) dynamic.set(bitdist(mte), true);
-                else dynamic.set(bitdist(mte), false);
+                if (i & 1) dynamic.set(bitdist(mte)  ^ (u & 1), true);
+                else dynamic.set(bitdist(mte) ^ (u & 1), false);
             }
             end = high_resolution_clock::now();
             update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
