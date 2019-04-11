@@ -124,6 +124,19 @@ public:
    *
    */
   virtual size_t bitCount() const = 0;
+
+  /**
+   * Each RankSelect is serializable and deserializable with:
+   * - friend std::ostream &operator<<(std::ostream &os, const RankSelect &bv);
+   * - friend std::istream &operator>>(std::istream &is, RankSelect &bv);
+   *
+   * The data is stored and loaded with the network (big-endian) byte order to guarantee
+   * compatibility on different architectures.
+   *
+   * The serialized data follows the compression and node ordering of the specific underlying
+   * data structures without any compatibility layer.
+   *
+   */
 };
 
 } // namespace hft::ranking

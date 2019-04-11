@@ -12,7 +12,7 @@ bin: all
 tranbin: BINDIR = ./tranbin
 tranbin: all
 
-hugebin: CC += -DHFT_HUGETLBPAGE
+hugebin: CC += -DHFT_FORCE_HUGETLBPAGE
 hugebin: BINDIR = ./hugebin
 hugebin: all
 

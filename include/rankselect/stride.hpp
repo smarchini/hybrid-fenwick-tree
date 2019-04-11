@@ -145,6 +145,14 @@ private:
     delete[] sequence;
     return tree;
   }
+
+  friend std::ostream &operator<<(std::ostream &os, const Stride<T, WORDS> &bv) {
+    return os << bv.Fenwick << bv.Vector;
+  }
+
+  friend std::istream &operator>>(std::istream &is, Stride<T, WORDS> &bv) {
+    return is >> bv.Fenwick >> bv.Vector;
+  }
 };
 
 } // namespace hft::ranking

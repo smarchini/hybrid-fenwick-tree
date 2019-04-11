@@ -130,6 +130,14 @@ private:
     delete[] sequence;
     return tree;
   }
+
+  friend std::ostream &operator<<(std::ostream &os, const Word<T> &bv) {
+    return os << bv.Fenwick << bv.Vector;
+  }
+
+  friend std::istream &operator>>(std::istream &is, Word<T> &bv) {
+    return is >> bv.Fenwick >> bv.Vector;
+  }
 };
 
 } // namespace hft::ranking

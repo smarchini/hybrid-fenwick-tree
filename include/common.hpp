@@ -330,30 +330,25 @@ bool is_little_endian(void) { return !is_big_endian(); }
  *
  */
 template <class T>
-typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 8, T>::type
-swap_endian(T value) {
-  return ((uint64_t)swap_endian<std::uint32_t>(value & 0x00000000ffffffffULL) << 32) |
-         (uint64_t)swap_endian<std::uint32_t>(value >> 32);
-}
-
-template <class T>
-typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 4, T>::type
-swap_endian(T value) {
-  return ((uint32_t)swap_endian<std::uint16_t>(value & 0x0000ffff) << 16) |
-         (uint32_t)swap_endian<std::uint16_t>(value >> 16);
-}
-
-template <class T>
-typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 2, T>::type
-swap_endian(T value) {
-  return ((uint16_t)swap_endian<std::uint8_t>(value & 0x00ff) << 8) |
-         (uint16_t)swap_endian<std::uint8_t>(value >> 8);
-}
-
-template <class T>
-typename std::enable_if<std::is_integral<T>::value && sizeof(T) == 1, T>::type
-swap_endian(T value) {
-  return value;
+typename std::enable_if<std::is_integral<T>::value, T>::type swap_endian(T value) {
+  switch (sizeof(T)) {
+  case 1:
+    return value;
+  case 2:
+    return ((uint16_t)swap_endian<std::uint8_t>(value & 0x00ff) << 8) |
+           (uint16_t)swap_endian<std::uint8_t>(value >> 8);
+  case 4:
+    return ((uint32_t)swap_endian<std::uint16_t>(value & 0x0000ffff) << 16) |
+           (uint32_t)swap_endian<std::uint16_t>(value >> 16);
+  case 8:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshift-count-overflow"
+    return ((uint64_t)swap_endian<std::uint32_t>(value & 0x00000000ffffffffULL) << 32) |
+           (uint64_t)swap_endian<std::uint32_t>(value >> 32);
+#pragma GCC diagnostic pop
+  default:
+    assert(false && "unsupported size");
+  }
 }
 
 /**
