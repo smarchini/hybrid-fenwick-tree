@@ -38,8 +38,8 @@ ranselbench: benchmark/rankselect
 	@mkdir -p $(RANSELBENCH_PATH)
 	for (( m = 2; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += 10**m )); do \
-			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 100000"; \
-			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 100000; \
+			echo "bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000"; \
+			bin/benchmark/rankselect/tofile $(RANSELBENCH_PATH) $$size 1000000; \
 		done; \
 	done
 
