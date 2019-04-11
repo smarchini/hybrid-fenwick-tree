@@ -14,10 +14,10 @@ using namespace hft::fenwick;
 using namespace std::chrono;
 
 
+template <size_t N> using Fixed20Byte = Hybrid<FixedL, ByteF, N, 20>;
+template <size_t N> using Fixed20Bit = Hybrid<FixedL, BitF, N, 20>;
 template <size_t N> using Fixed26Byte = Hybrid<FixedL, ByteF, N, 26>;
 template <size_t N> using Fixed26Bit = Hybrid<FixedL, BitF, N, 26>;
-template <size_t N> using Fixed32Byte = Hybrid<FixedL, ByteF, N, 32>;
-template <size_t N> using Fixed32Bit = Hybrid<FixedL, BitF, N, 32>;
 
 
 template <size_t BOUND> class Benchmark {
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
     bench.datainit(mte);
 
     bench.filesinit("fixed[F],fixed[$\\ell$],byte[F],byte[$\\ell$],bit[F],bit[$\\ell$],"
-                    "fixed[26]byte,fixed[26]bit,fixed[32]byte,fixed[32]bit");
+                    "fixed[20]byte,fixed[20]bit,fixed[26]byte,fixed[26]bit");
 
     cout << "size = " << size << ", queries = " << queries << " => fixed[F]:       "; bench.run<FixedF>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[l]:       "; bench.run<FixedL>(); bench.separator();
@@ -187,10 +187,10 @@ int main(int argc, char *argv[])
     cout << "size = " << size << ", queries = " << queries << " => bit[F]:         "; bench.run<BitF>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[l]:         "; bench.run<BitL>(); bench.separator();
 
+    cout << "size = " << size << ", queries = " << queries << " => fixed[20]byte:  ";  bench.run<Fixed20Byte>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[20]bit:   ";  bench.run<Fixed20Bit>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]byte:  ";  bench.run<Fixed26Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[26]bit:   ";  bench.run<Fixed26Bit>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[32]byte:  ";  bench.run<Fixed32Byte>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[32]bit:   ";  bench.run<Fixed32Bit>(); bench.separator("\n");
+    cout << "size = " << size << ", queries = " << queries << " => fixed[26]bit:   ";  bench.run<Fixed26Bit>(); bench.separator("\n");
 
     return 0;
 }
