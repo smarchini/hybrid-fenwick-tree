@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    string filename = argv[1] + string("fkenemy.csv");
+    string filename = argv[1] + string("fkemeny.csv");
     ofstream file(filename, ios::out | ios::app);
 
     if (is_fileempty(ifstream(filename))) {

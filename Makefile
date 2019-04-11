@@ -14,7 +14,7 @@ MACRO_CACHESIZE = -DL1_CACHE_SIZE=$(shell getconf LEVEL1_DCACHE_SIZE) -DL2_CACHE
 
 FENBENCH_PATH = benchout/fenwick/$(shell date +"%Y%m%d-%H%M%S")/
 RANSELBENCH_PATH = benchout/rankselect/$(shell date +"%Y%m%d-%H%M%S")/
-KENEMYBENCH_PATH = benchout/kenemy/$(shell date +"%Y%m%d-%H%M%S")/
+KENEMYBENCH_PATH = benchout/kemeny/$(shell date +"%Y%m%d-%H%M%S")/
 
 all: test benchmark
 
@@ -43,12 +43,12 @@ ranselbench: benchmark/rankselect
 		done; \
 	done
 
-kenemybench: benchmark/kenemy
+kemenybench: benchmark/kemeny
 	@mkdir -p $(KENEMYBENCH_PATH)
 	for (( m = 4; m < 10; m++ )); do \
 		for (( size = 10**m; size < 10**(m+1); size += (m-1)*10**(m-1) )); do \
-			echo "bin/benchmark/kenemy/tofile $(KENEMYBENCH_PATH) $$size"; \
-			bin/benchmark/kenemy/tofile $(KENEMYBENCH_PATH) $$size; \
+			echo "bin/benchmark/kemeny/tofile $(KENEMYBENCH_PATH) $$size"; \
+			bin/benchmark/kemeny/tofile $(KENEMYBENCH_PATH) $$size; \
 		done; \
 	done
 
@@ -59,7 +59,7 @@ benchmark/fenwick: bin/benchmark/fenwick/trees bin/benchmark/fenwick/tofile
 
 benchmark/rankselect: bin/benchmark/rankselect/rankselect bin/benchmark/rankselect/tofile
 
-benchmark/kenemy: bin/benchmark/kenemy/kenemy bin/benchmark/kenemy/tofile
+benchmark/kemeny: bin/benchmark/kemeny/kemeny bin/benchmark/kemeny/tofile
 
 # Test
 # https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options
@@ -87,14 +87,14 @@ bin/benchmark/rankselect/tofile: $(INCLUDES) benchmark/rankselect/tofile.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/rankselect/tofile.cpp -o bin/benchmark/rankselect/tofile
 
-# Benchmark kenemy
-bin/benchmark/kenemy/kenemy: $(INCLUDES) benchmark/kenemy/kenemy.cpp
+# Benchmark kemeny
+bin/benchmark/kemeny/kemeny: $(INCLUDES) benchmark/kemeny/kemeny.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kenemy/kenemy.cpp -o bin/benchmark/kenemy/kenemy
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kemeny/kemeny.cpp -o bin/benchmark/kemeny/kemeny
 
-bin/benchmark/kenemy/tofile: $(INCLUDES) benchmark/kenemy/tofile.cpp
+bin/benchmark/kemeny/tofile: $(INCLUDES) benchmark/kemeny/tofile.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kenemy/tofile.cpp -o bin/benchmark/kenemy/tofile
+	$(CC) $(CFLAGS) $(RELEASE) $(INCLUDE_INTERNAL) $(INCLUDE_DYNAMIC) benchmark/kemeny/tofile.cpp -o bin/benchmark/kemeny/tofile
 
 
 # Other
