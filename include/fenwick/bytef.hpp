@@ -110,17 +110,7 @@ public:
 private:
   static inline size_t bytesize(size_t idx) { return ((rho(idx) + BOUNDSIZE - 1) >> 3) + 1; }
 
-  static inline size_t holes(size_t idx) {
-#if HFT_HOLES == 1
-    return 0;
-#elif HFT_HOLES == 2
-    return ((idx * 3) / (32 * 1024)) * 8;
-#elif HFT_HOLES == 3
-    return (idx / (64 * 1024)) * 8;
-#else // HFT_HOLES = 0 (same as #ifndef)
-    return (idx >> 14) * 8;
-#endif
-  }
+  static inline size_t holes(size_t idx) { return (idx >> 14) * 8; }
 
   static inline size_t pos(size_t idx) {
     constexpr size_t NEXTBYTE = ((BOUNDSIZE - 1) | (8 - 1)) + 1;

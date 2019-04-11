@@ -24,7 +24,6 @@ TEST(naive_fenwick_tree, increments_by_one)
         EXPECT_EQ(15, t.find(i)) << "at index " << i;
 
     // find complement
-    // TODO: controllare tutti questi 0 in compFind (SIZE_MAX?)
     for (std::uint64_t i = 0; i < 63; i++)
         EXPECT_EQ(0, t.compFind(i)) << "at index " << i;
     for (std::uint64_t k = 1; k < 15; k++) {

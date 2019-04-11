@@ -95,17 +95,7 @@ public:
   }
 
 private:
-  static inline size_t holes(size_t idx) {
-#if HFT_HOLES == 1
-    return 0;
-#elif HFT_HOLES == 2
-    return (idx * 3) / (32 * 1024);
-#elif HFT_HOLES == 3
-    return (idx * 3) / (64 * 1024);
-#else // HFT_HOLES = 0 (same as #ifndef)
-    return idx >> 14;
-#endif
-  }
+  static inline size_t holes(size_t idx) { return idx >> 14; }
 
   static inline size_t pos(size_t idx) { return idx + holes(idx); }
 

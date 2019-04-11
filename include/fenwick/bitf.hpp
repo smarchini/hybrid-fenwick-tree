@@ -98,17 +98,7 @@ public:
   }
 
 private:
-  inline static size_t holes(size_t idx) {
-#if HFT_HOLES == 1
-    return STARTING_OFFSET;
-#elif HFT_HOLES == 2
-    return STARTING_OFFSET + ((3 * idx) / (32 * 64 * 1024)) * 64;
-#elif HFT_HOLES == 3
-    return STARTING_OFFSET + ((3 * idx) / (64 * 64 * 1024)) * 64;
-#else // HFT_HOLES = 0 (same as #ifndef)
-    return STARTING_OFFSET + (idx >> 14) * 64;
-#endif
-  }
+  inline static size_t holes(size_t idx) { return STARTING_OFFSET + (idx >> 14) * 64; }
 
   inline static size_t first_bit_after(size_t idx) {
     return (BOUNDSIZE + 1) * idx - popcount(idx) + holes(idx);
