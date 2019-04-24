@@ -22,9 +22,9 @@ protected:
   DArray<uint8_t> Tree;
 
 public:
-  TypeF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size)) {
+  TypeF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size + 1)) {
     for (size_t i = 1; i <= Size; i++) {
-      const size_t bytepos = pos(i - 1);
+      const size_t bytepos = pos(i);
 
       switch (BOUNDSIZE + rho(i)) {
       case 17 ... 64:
@@ -40,8 +40,8 @@ public:
 
     for (size_t m = 2; m <= Size; m <<= 1) {
       for (size_t idx = m; idx <= Size; idx += m) {
-        const size_t left = pos(idx - 1);
-        const size_t right = pos(idx - m / 2 - 1);
+        const size_t left = pos(idx);
+        const size_t right = pos(idx - m / 2);
 
         switch (BOUNDSIZE + rho(idx)) {
         case 17 ... 64:
@@ -82,7 +82,7 @@ public:
     uint64_t sum = 0;
 
     while (idx != 0) {
-      const size_t bytepos = pos(idx - 1);
+      const size_t bytepos = pos(idx);
 
       switch (BOUNDSIZE + rho(idx)) {
       case 17 ... 64:
@@ -103,7 +103,7 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      const size_t bytepos = pos(idx - 1);
+      const size_t bytepos = pos(idx);
 
       switch (BOUNDSIZE + rho(idx)) {
       case 17 ... 64:
@@ -125,10 +125,10 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m - 1 >= Size)
+      if (node + m > Size)
         continue;
 
-      const size_t bytepos = pos(node + m - 1);
+      const size_t bytepos = pos(node + m);
       const int bitlen = BOUNDSIZE + rho(node + m);
 
       uint64_t value;
@@ -157,10 +157,10 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m - 1 >= Size)
+      if (node + m > Size)
         continue;
 
-      const size_t bytepos = pos(node + m - 1);
+      const size_t bytepos = pos(node + m);
       const int height = rho(node + m);
 
       uint64_t value = BOUND << height;
@@ -192,6 +192,7 @@ public:
 
 private:
   inline static size_t pos(size_t idx) {
+    idx--;
     return idx + (idx >> (BOUNDSIZE <= 8 ? (8 - BOUNDSIZE + 1) : 0)) +
            (idx >> (BOUNDSIZE <= 16 ? (16 - BOUNDSIZE + 1) : 0)) * 6;
   }

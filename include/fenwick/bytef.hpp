@@ -22,9 +22,9 @@ protected:
   DArray<uint8_t> Tree;
 
 public:
-  ByteF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size) + 8) {
+  ByteF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size + 1) + 8) {
     for (size_t i = 1; i <= size; i++) {
-      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos(i - 1)]);
+      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos(i)]);
 
       const size_t isize = bytesize(i);
       element &= ~BYTE_MASK[isize];
@@ -33,8 +33,8 @@ public:
 
     for (size_t m = 2; m <= size; m <<= 1) {
       for (size_t idx = m; idx <= size; idx += m) {
-        auint64_t &left = reinterpret_cast<auint64_t &>(Tree[pos(idx - 1)]);
-        const auint64_t right = *reinterpret_cast<auint64_t *>(&Tree[pos(idx - m / 2 - 1)]);
+        auint64_t &left = reinterpret_cast<auint64_t &>(Tree[pos(idx)]);
+        const auint64_t right = *reinterpret_cast<auint64_t *>(&Tree[pos(idx - m / 2)]);
 
         left += right & BYTE_MASK[bytesize(idx - m / 2)];
       }
@@ -45,7 +45,7 @@ public:
     uint64_t sum = 0;
 
     while (idx != 0) {
-      const uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos(idx - 1)]);
+      const uint64_t element = *reinterpret_cast<auint64_t *>(&Tree[pos(idx)]);
       sum += element & BYTE_MASK[bytesize(idx)];
       idx = clear_rho(idx);
     }
@@ -55,7 +55,7 @@ public:
 
   virtual void add(size_t idx, int64_t inc) {
     while (idx <= Size) {
-      reinterpret_cast<auint64_t &>(Tree[pos(idx - 1)]) += inc;
+      reinterpret_cast<auint64_t &>(Tree[pos(idx)]) += inc;
       idx += mask_rho(idx);
     }
   }
@@ -65,11 +65,11 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m - 1 >= Size)
+      if (node + m > Size)
         continue;
 
       const uint64_t value =
-          *reinterpret_cast<auint64_t *>(&Tree[pos(node + m - 1)]) & BYTE_MASK[bytesize(node + m)];
+          *reinterpret_cast<auint64_t *>(&Tree[pos(node + m)]) & BYTE_MASK[bytesize(node + m)];
 
       if (*val >= value) {
         node += m;
@@ -85,12 +85,12 @@ public:
     size_t node = 0;
 
     for (size_t m = mask_lambda(Size); m != 0; m >>= 1) {
-      if (node + m - 1 >= Size)
+      if (node + m > Size)
         continue;
 
       const uint64_t value =
-          (BOUND << rho(node + m)) - (*reinterpret_cast<auint64_t *>(&Tree[pos(node + m - 1)]) &
-                                      BYTE_MASK[bytesize(node + m)]);
+          (BOUND << rho(node + m)) -
+          (*reinterpret_cast<auint64_t *>(&Tree[pos(node + m)]) & BYTE_MASK[bytesize(node + m)]);
 
       if (*val >= value) {
         node += m;
@@ -113,6 +113,7 @@ private:
   static inline size_t holes(size_t idx) { return (idx >> 14) * 8; }
 
   static inline size_t pos(size_t idx) {
+    idx--;
     constexpr size_t NEXTBYTE = ((BOUNDSIZE - 1) | (8 - 1)) + 1;
 
     constexpr size_t SMALL = ((BOUNDSIZE - 1) >> 3) + 1;
