@@ -34,13 +34,13 @@ followed by its node layout; so `FixedF` is the name of the non-compressed
 Fenwick tree with a classical node layout. All those trees are available under
 the `hft::fenwick` namespace.
 
-## Hybird Fenwick tree
+## Hybrid Fenwick tree
 
-The hybird Fenwick tree is a way to combine two different implementations of the
+The hybrid Fenwick tree is a way to combine two different implementations of the
 Fenwick tree data structures defined above. This way, you can take advantage of
 the benefits of different compression strategies and different layouts. This
 data structure is split in two parts: a *Top* and *Bottom*. When you are
-building an hybird Fenwick tree, always remember:
+building an hybrid Fenwick tree, always remember:
 - if you wanna use two different node layouts, pick *level-ordered* (**L**) for
   the *Top* and the *classical* (**F**) for the *Bottom*;
 - if you wanna use two different types of compression, choose an *higher* level
@@ -53,7 +53,7 @@ You also need to specify a parameter **c** (the *cut point*) to identify how
 many levels you want for the *Bottom* tree; for big trees a value between 14 and
 18 should be good.
 
-You can define an hybrid tree as: `template <size_t B> using MyHybirdTree =
+You can define an hybrid tree as: `template <size_t B> using MyHybridTree =
 Hybrid<ByteL, ByteF, B, 16>;`. This tree behave like any other one defined
 above, so you will need to specify the template parameter **B** (the *bound*)
 when you are gonna use it.
@@ -99,7 +99,7 @@ The following examples can be built with `g++ -I/path/of/include example.cpp`.
 //   a level-ordered layout Top and classical layout bottom,
 //   where both of them have a medium (Byte) compression strategy
 template <size_t B>
-using MyHybird =
+using MyHybrid =
     hft::fenwick::Hybrid<hft::fenwick::ByteL, hft::fenwick::ByteF, B, 16>;
 
 int main() {
@@ -114,7 +114,7 @@ int main() {
   // Definition three different fenwick trees on the same sequence
   fenwick::FixedF<BOUND> fen1(sequence, SIZE); // no compression, classical layout
   fenwick::BitL<BOUND> fen2(sequence, SIZE); // high compression, level-ordered layout
-  MyHybird<BOUND> fen3(sequence, SIZE); // the hybrid Fenwick tree defined above
+  MyHybrid<BOUND> fen3(sequence, SIZE); // the hybrid Fenwick tree defined above
 
   // Each tree does a different thing
   fen1.add(0, 50);
@@ -210,7 +210,7 @@ about it in the [hugetlbpage] and [transhuge] pages of the Linux kernel
 documentation.
 
 At the moment the data structures in this library are dynamic as in *dynamic
-arrays*: they deal with mutable data of fixed size. Although, an fully dynamic
+arrays*: they deal with mutable data of fixed size. However, an fully dynamic
 implementation is indeed possible.
 
 # TODO
