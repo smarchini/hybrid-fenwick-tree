@@ -29,8 +29,8 @@ using namespace hft::fenwick;
 using namespace hft::ranking;
 using namespace std::chrono;
 
-template <size_t N> using Fixed20Byte = Hybrid<FixedL, ByteF, N, 20>;
-template <size_t N> using Fixed20Bit = Hybrid<FixedL, BitF, N, 20>;
+template <size_t N> using Fixed24Byte = Hybrid<FixedL, ByteF, N, 24>;
+template <size_t N> using Fixed24Bit = Hybrid<FixedL, BitF, N, 24>;
 template <size_t N> using Fixed26Byte = Hybrid<FixedL, ByteF, N, 26>;
 template <size_t N> using Fixed26Bit = Hybrid<FixedL, BitF, N, 26>;
 
@@ -104,35 +104,8 @@ public:
         auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
         fbuild << to_string(build / (double)size);
 
-
         constexpr int REPS = 5;
         constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
-
-        // cout << "rank0: " << flush;
-        // vector<chrono::nanoseconds::rep> rank0;
-        // for (int r = 0; r < REPS; r++) {
-        //     cout << r << " " << flush;
-        //     begin = high_resolution_clock::now();
-        //     for(uint64_t i = 0; i < queries; ++i)
-        //         u ^= bv.rankZero(idxdist(mte));
-        //     end = high_resolution_clock::now();
-        //     rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        // }
-        // std::sort(rank0.begin(), rank0.end());
-        // frank0 << to_string(rank0[MID] * c);
-
-        // cout << "select0: " << flush;
-        // vector<chrono::nanoseconds::rep> select0;
-        // for (int r = 0; r < REPS; r++) {
-        //     cout << r << " " << flush;
-        //     begin = high_resolution_clock::now();
-        //     for(uint64_t i = 0; i < queries; ++i)
-        //         u ^= bv.selectZero(sel0dist(mte));
-        //     end = high_resolution_clock::now();
-        //     select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        // }
-        // std::sort(select0.begin(), select0.end());
-        // fselect0 << to_string(select0[MID] * c);
 
         cout << "rank1: " << flush;
         vector<chrono::nanoseconds::rep> rank1;
@@ -202,39 +175,13 @@ public:
         constexpr int REPS = 5;
         constexpr size_t MID = 2; // index of the median of a REPS elements sorted vector
 
-        // cout << "rank0: " << flush;
-        // vector<chrono::nanoseconds::rep> rank0;
-        // for (int r = 0; r < REPS; r++) {
-        //     cout << r << " " << flush;
-        //     begin = high_resolution_clock::now();
-        //     for(uint64_t i = 0; i < queries; ++i)
-        //         u ^= dynamic.rank0(idxdist(mte));
-        //     end = high_resolution_clock::now();
-        //     rank0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        // }
-        // std::sort(rank0.begin(), rank0.end());
-        // frank0 << to_string(rank0[MID] * c);
-
-        // cout << "select0: " << flush;
-        // vector<chrono::nanoseconds::rep> select0;
-        // for (int r = 0; r < REPS; r++) {
-        //     cout << r << " " << flush;
-        //     begin = high_resolution_clock::now();
-        //     for(uint64_t i = 0; i < queries; ++i)
-        //         u ^= dynamic.select0(sel0dist(mte));
-        //     end = high_resolution_clock::now();
-        //     select0.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
-        // }
-        // std::sort (select0.begin(), select0.end());
-        // fselect0 << to_string(select0[MID] * c);
-
         cout << "rank1: " << flush;
         vector<chrono::nanoseconds::rep> rank1;
         for (int r = 0; r < REPS; r++) {
             cout << r << " " << flush;
             begin = high_resolution_clock::now();
             for(uint64_t i = 0; i < queries; ++i)
-                u ^= dynamic.rank1(sel0dist(mte) ^ (u & 1));
+                u ^= dynamic.rank1(idxdist(mte) ^ (u & 1));
             end = high_resolution_clock::now();
             rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
         }
@@ -309,11 +256,12 @@ int main(int argc, char *argv[])
 
     bench.datainit(mte);
 
+    bench.filesinit("fixed[F]1,fixed[$\\ell$]1,byte[F]1,byte[$\\ell$]1,bit[F]1,bit[$\\ell$]1,fixed[24]byte1,fixed[24]bit1,fixed[26]byte1,fixed[26]bit1,"
+    "fixed[F]8,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,fixed[24]byte8,fixed[24]bit8,fixed[26]byte8,fixed[26]bit8,"
+                    "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,fixed[24]byte16,fixed[24]bit16,fixed[26]byte16,fixed[26]bit16");
 
-    bench.filesinit("fixed[F]1,fixed[$\\ell$]1,byte[F]1,byte[$\\ell$]1,bit[F]1,bit[$\\ell$]1,fixed[20]byte1,fixed[20]bit1,fixed[26]byte1,fixed[26]bit1,"
-                    "fixed[F]8,fixed[$\\ell$]8,byte[F]8,byte[$\\ell$]8,bit[F]8,bit[$\\ell$]8,fixed[26]byte8,fixed[26]bit8,fixed[32]byte8,fixed[26]bit8,"
-                    "fixed[F]16,fixed[$\\ell$]16,byte[F]16,byte[$\\ell$]16,bit[F]16,bit[$\\ell$]16,fixed[26]byte16,fixed[26]bit16,fixed[32]byte16,fixed[32]bit16");
-    // Prezza
+    //bench.filesinit("Prezza");
+    //cout << "Prezza: "; bench.run_dynamic(); bench.separator("\n");
 
     cout << "size = " << size << ", queries = " << queries << " => fixed[F]1:       "; bench.run<Word<FixedF>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[l]1:       "; bench.run<Word<FixedL>>(); bench.separator();
@@ -321,8 +269,8 @@ int main(int argc, char *argv[])
     cout << "size = " << size << ", queries = " << queries << " => byte[l]1:        "; bench.run<Word<ByteL>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[F]1:         "; bench.run<Word<BitF>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[l]1:         "; bench.run<Word<BitL>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]byte1:  "; bench.run<Word<Fixed20Byte>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]bit1:   "; bench.run<Word<Fixed20Bit>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]byte1:  "; bench.run<Word<Fixed24Byte>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]bit1:   "; bench.run<Word<Fixed24Bit>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]byte1:  "; bench.run<Word<Fixed26Byte>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]bit1:   "; bench.run<Word<Fixed26Bit>>(); bench.separator();
 
@@ -332,8 +280,8 @@ int main(int argc, char *argv[])
     cout << "size = " << size << ", queries = " << queries << " => byte[l]8:        "; bench.run<Stride<ByteL, 8>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[F]8:         "; bench.run<Stride<BitF, 8>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[l]8:         "; bench.run<Stride<BitL, 8>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]byte8:  "; bench.run<Stride<Fixed20Byte, 8>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]bit8:   "; bench.run<Stride<Fixed20Bit, 8>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]byte8:  "; bench.run<Stride<Fixed24Byte, 8>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]bit8:   "; bench.run<Stride<Fixed24Bit, 8>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]byte8:  "; bench.run<Stride<Fixed26Byte, 8>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]bit8:   "; bench.run<Stride<Fixed26Bit, 8>>(); bench.separator();
 
@@ -343,12 +291,10 @@ int main(int argc, char *argv[])
     cout << "size = " << size << ", queries = " << queries << " => byte[l]16:       "; bench.run<Stride<ByteL, 16>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[F]16:        "; bench.run<Stride<BitF, 16>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => bit[l]16:        "; bench.run<Stride<BitL, 16>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]byte16: "; bench.run<Stride<Fixed20Byte, 16>>(); bench.separator();
-    cout << "size = " << size << ", queries = " << queries << " => fixed[20]bit16:  "; bench.run<Stride<Fixed20Bit, 16>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]byte16: "; bench.run<Stride<Fixed24Byte, 16>>(); bench.separator();
+    cout << "size = " << size << ", queries = " << queries << " => fixed[24]bit16:  "; bench.run<Stride<Fixed24Bit, 16>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]byte16: "; bench.run<Stride<Fixed26Byte, 16>>(); bench.separator();
     cout << "size = " << size << ", queries = " << queries << " => fixed[26]bit16:  "; bench.run<Stride<Fixed26Bit, 16>>(); bench.separator("\n");
-
-    // cout << "Prezza:          "; bench.run_dynamic();                    bench.separator("\n");
 
     return 0;
 }
