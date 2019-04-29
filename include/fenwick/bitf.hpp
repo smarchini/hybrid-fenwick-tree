@@ -15,7 +15,7 @@ namespace hft::fenwick {
 template <size_t BOUND> class BitF : public FenwickTree {
 public:
   static constexpr size_t BOUNDSIZE = ceil_log2_plus1(BOUND);
-  static constexpr size_t STARTING_OFFSET = 1;
+  static constexpr size_t STARTING_OFFSET = 65;
   static constexpr size_t END_PADDING = 56;
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 55, "Some nodes will span on multiple words");
 
@@ -105,14 +105,11 @@ private:
   }
 
   inline uint64_t getPartialFrequency(size_t idx) const {
-    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(idx))) - 1;
-    idx--;
-    const uint64_t prod = (BOUNDSIZE + 1) * idx;
-    const size_t pos = prod - popcount(idx) + holes(idx);
-
-    return (prod + (BOUNDSIZE + 1)) % 64 == 0
-               ? (*(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) >> (pos % 64)) & mask
-               : (*(reinterpret_cast<auint64_t *>(&Tree[pos / 8])) >> (pos % 8)) & mask;
+    const uint64_t r = rho(idx);
+    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + r)) - 1;
+    const uint64_t end = (BOUNDSIZE + 1) * idx - (popcount(idx) - 1) + holes(idx - 1);
+    const uint64_t byte_pos = end / 8 - 7;
+    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> (byte_pos * 8 - (end - r + 1))) & mask;
   }
 
   inline uint64_t addToPartialFrequency(size_t idx, uint64_t value) {
