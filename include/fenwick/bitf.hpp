@@ -1,6 +1,6 @@
 #ifndef __FENWICK_BITF_HPP__
 #define __FENWICK_BITF_HPP__
-
+#include <iostream>
 #include "fenwick_tree.hpp"
 
 namespace hft::fenwick {
@@ -107,9 +107,9 @@ private:
   inline uint64_t getPartialFrequency(size_t idx) const {
     const uint64_t r = rho(idx);
     const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + r)) - 1;
-    const uint64_t end = (BOUNDSIZE + 1) * idx - (popcount(idx) - 1) + holes(idx - 1);
+    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx - 1);
     const uint64_t byte_pos = end / 8 - 7;
-    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> (byte_pos * 8 - (end - r + 1))) & mask;
+    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> ((end - (r + BOUNDSIZE) + 1) - byte_pos * 8)) & mask;
   }
 
   inline uint64_t addToPartialFrequency(size_t idx, uint64_t value) {
