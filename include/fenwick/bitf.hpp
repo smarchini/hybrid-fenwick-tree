@@ -101,23 +101,22 @@ private:
   inline static size_t holes(size_t idx) { return STARTING_OFFSET + (idx >> 14) * 64; }
 
   inline static size_t first_bit_after(size_t idx) {
-    return (BOUNDSIZE + 1) * idx - popcount(idx) + holes(idx);
+    return (BOUNDSIZE + 1) * idx - popcount(idx) + holes(idx + 1);
   }
 
   inline uint64_t getPartialFrequency(size_t idx) const {
-    const uint64_t r = rho(idx);
-    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + r)) - 1;
-    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx - 1);
+    const uint64_t size = BOUNDSIZE + rho(idx);
+    const uint64_t mask = (UINT64_C(1) << size) - 1;
+    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx);
     const uint64_t byte_pos = end / 8 - 7;
-    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> ((end - (r + BOUNDSIZE) + 1) - byte_pos * 8)) & mask;
+    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> ((end - size + 1) - byte_pos * 8)) & mask;
   }
 
   inline void addToPartialFrequency(size_t idx, uint64_t value) {
-    const uint64_t r = rho(idx);
-    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + r)) - 1;
-    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx - 1);
+    const uint64_t size = BOUNDSIZE + rho(idx);
+    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx);
     const uint64_t byte_pos = end / 8 - 7;
-    (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) += value << ((end - (r + BOUNDSIZE) + 1) - byte_pos * 8));
+    (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) += value << ((end - size + 1) - byte_pos * 8));
   }
 
   friend std::ostream &operator<<(std::ostream &os, const BitF<BOUND> &ft) {
