@@ -113,12 +113,11 @@ private:
   }
 
   inline void addToPartialFrequency(size_t idx, uint64_t value) {
-    idx--;
-    const size_t prod = (BOUNDSIZE + 1) * idx;
-    const size_t pos = prod - popcount(idx) + holes(idx);
-
-    if ((prod + (BOUNDSIZE + 1)) % 64 == 0) *(reinterpret_cast<auint64_t *>(&Tree[0]) + pos / 64) += value << (pos % 64);
-    else *reinterpret_cast<auint64_t *>(&Tree[pos / 8]) += value << (pos % 8);
+    const uint64_t r = rho(idx);
+    const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + r)) - 1;
+    const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx - 1);
+    const uint64_t byte_pos = end / 8 - 7;
+    (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) += value << ((end - (r + BOUNDSIZE) + 1) - byte_pos * 8));
   }
 
   friend std::ostream &operator<<(std::ostream &os, const BitF<BOUND> &ft) {
