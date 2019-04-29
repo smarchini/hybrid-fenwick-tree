@@ -2,6 +2,7 @@
 #define __FENWICK_BITF_HPP__
 #include <iostream>
 #include "fenwick_tree.hpp"
+#include <cstring>
 
 namespace hft::fenwick {
 
@@ -109,14 +110,19 @@ private:
     const uint64_t mask = (UINT64_C(1) << size) - 1;
     const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx);
     const uint64_t byte_pos = end / 8 - 7;
-    return (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) >> ((end - size + 1) - byte_pos * 8)) & mask;
+    uint64_t t;
+    memcpy(&t, &Tree[0] + byte_pos, 8);
+    return t >> ((end - size + 1) - byte_pos * 8) & mask;
   }
 
   inline void addToPartialFrequency(size_t idx, uint64_t value) {
     const uint64_t size = BOUNDSIZE + rho(idx);
     const uint64_t end = (BOUNDSIZE + 1) * idx - popcount(idx) - 1 + holes(idx);
     const uint64_t byte_pos = end / 8 - 7;
-    (*(reinterpret_cast<auint64_t *>(&Tree[0] + byte_pos)) += value << ((end - size + 1) - byte_pos * 8));
+    uint64_t t;
+    memcpy(&t, &Tree[0] + byte_pos, 8);
+    t += value << ((end - size + 1) - byte_pos * 8);
+    memcpy(&Tree[0] + byte_pos, &t, 8);
   }
 
   friend std::ostream &operator<<(std::ostream &os, const BitF<BOUND> &ft) {
