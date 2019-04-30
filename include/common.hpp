@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <cstring>
 #include <memory>
 #include <x86intrin.h>
 
@@ -16,6 +17,8 @@
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
 namespace hft {
+
+using std::memcpy;
 
 using std::make_unique;
 using std::unique_ptr;
@@ -227,6 +230,65 @@ inline uint64_t bitextract(const uint64_t *word, int from, int length) {
     return (word[0] >> from) & (-1ULL >> (64 - length));
   else
     return (word[0] >> from) | ((word[1] << (128 - from - length)) >> (64 - from));
+}
+
+inline uint64_t byteread(const void *const word, int length) {
+  uint64_t ret;
+  memcpy(&ret, word, sizeof(uint64_t));
+  return ret & BYTE_MASK[length];
+}
+
+inline void bytewrite(void *const word, int length, uint64_t val) {
+  uint64_t old;
+  memcpy(&old, word, sizeof(uint64_t));
+
+  old = (old & ~BYTE_MASK[length]) | (val & BYTE_MASK[length]);
+  memcpy(word, &old, sizeof(uint64_t));
+}
+
+inline void bytewrite_inc(void *const word, uint64_t inc) {
+  uint64_t value;
+  memcpy(&value, word, sizeof(uint64_t));
+  value += inc;
+  memcpy(word, &value, sizeof(uint64_t));
+}
+
+inline uint64_t bitread(const void *const word, int from, int length) {
+  const uint8_t *const byte = static_cast<const uint8_t *>(word);
+
+  uint64_t ret;
+  memcpy(&ret, byte + from / 8, sizeof(uint64_t));
+
+  if (likely((from + length) <= 64)) {
+    return (ret >> from) & (-1ULL >> (64 - length));
+  } else {
+    uint64_t nextbyte = byte[sizeof(uint64_t)];
+    return (ret >> from) | ((nextbyte << (128 - from - length)) >> (64 - from));
+  }
+}
+
+inline void bitwrite(void *const word, int from, int length, uint64_t val) {
+  uint64_t old;
+  memcpy(&old, word, sizeof(uint64_t));
+
+  if (likely((from + length) <= 64)) {
+    const uint64_t mask = (-1ULL >> (64 - length)) << from;
+    old = (old & ~mask) | (val << from);
+    memcpy(word, &old, sizeof(uint64_t));
+  } else {
+    const uint64_t maskw = -1ULL << from;
+    old = (old & ~maskw) | (val << from);
+    memcpy(word, &old, sizeof(uint64_t));
+
+    const uint64_t maskb = 0xFF >> (64 + 8 - from - length);
+    uint8_t &nextbyte = static_cast<uint8_t *>(word)[sizeof(uint64_t)];
+    nextbyte = (nextbyte & ~maskb) | (val >> (128 - from - length));
+  }
+}
+
+inline void bitwrite_inc(void *const word, int from, int length, uint64_t inc) {
+  uint64_t value = bitread(word, from, length) + inc;
+  bitwrite(word, from, length, value);
 }
 
 /**

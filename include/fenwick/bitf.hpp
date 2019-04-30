@@ -1,7 +1,7 @@
 #ifndef __FENWICK_BITF_HPP__
 #define __FENWICK_BITF_HPP__
-#include <cstring>
 #include "fenwick_tree.hpp"
+#include <cstring>
 
 namespace hft::fenwick {
 
@@ -112,11 +112,11 @@ private:
 
     uint64_t t;
     if ((prod + (BOUNDSIZE + 1)) % 64 == 0) {
-        memcpy(&t, (uint64_t *)&Tree[0] + pos / 64, 8);
-        return t >> (pos % 64) & mask;
+      memcpy(&t, (uint64_t *)&Tree[0] + pos / 64, 8);
+      return t >> (pos % 64) & mask;
     } else {
-        memcpy(&t, &Tree[0] + pos / 8, 8);
-        return t >> (pos % 8) & mask;
+      memcpy(&t, &Tree[0] + pos / 8, 8);
+      return t >> (pos % 8) & mask;
     }
   }
 
@@ -127,15 +127,15 @@ private:
 
     uint64_t t;
     if ((prod + (BOUNDSIZE + 1)) % 64 == 0) {
-        uint64_t * const p = (uint64_t *)&Tree[0] + pos / 64;
-        memcpy(&t, p, 8);
-        t += value << (pos % 64);
-        memcpy(p, &t, 8);
+      uint64_t *const p = (uint64_t *)&Tree[0] + pos / 64;
+      memcpy(&t, p, 8);
+      t += value << (pos % 64);
+      memcpy(p, &t, 8);
     } else {
-        uint8_t * const p = &Tree[0] + pos / 8;
-        memcpy(&t, p, 8);
-        t += value << (pos % 8);
-        memcpy(p, &t, 8);
+      uint8_t *const p = &Tree[0] + pos / 8;
+      memcpy(&t, p, 8);
+      t += value << (pos % 8);
+      memcpy(p, &t, 8);
     }
   }
 

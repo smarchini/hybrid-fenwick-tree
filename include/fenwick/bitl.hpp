@@ -33,26 +33,17 @@ public:
 
     for (size_t l = 0; l < Levels - 1; l++) {
       for (size_t node = 1ULL << l; node <= size; node += 1ULL << (l + 1)) {
-        const size_t highpos = Level[l] + (BOUNDSIZE + l) * (node >> (l + 1));
-        const size_t highshift = highpos & 0b111;
-        const uint64_t highmask = compact_bitmask(BOUNDSIZE + l, highshift);
-        auint64_t &high = reinterpret_cast<auint64_t &>(Tree[highpos >> 3]);
-
         size_t sequence_idx = node - 1;
         uint64_t value = sequence[sequence_idx];
 
         for (size_t j = 0; j < l; j++) {
           sequence_idx >>= 1;
           const size_t lowpos = Level[j] + (BOUNDSIZE + j) * sequence_idx;
-          const size_t lowshift = lowpos & 0b111;
-          const uint64_t lowmask = compact_bitmask(BOUNDSIZE + j, lowshift);
-          const uint64_t low = *reinterpret_cast<auint64_t *>(&Tree[lowpos >> 3]);
-
-          value += (low & lowmask) >> lowshift;
+          value += bitread(&Tree[lowpos / 8], lowpos % 8, BOUNDSIZE + j);
         }
 
-        high &= ~highmask;
-        high |= (value << highshift) & highmask;
+        const size_t highpos = Level[l] + (BOUNDSIZE + l) * (node >> (l + 1));
+        bitwrite_inc(&Tree[highpos / 8], highpos % 8, BOUNDSIZE + l, value);
       }
     }
   }
@@ -63,9 +54,8 @@ public:
     while (idx != 0) {
       const int height = rho(idx);
       const size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
-      const auint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
+      sum += bitread(&Tree[pos / 8], pos % 8, BOUNDSIZE + height);
 
-      sum += bitextract(element, pos & 0b111, BOUNDSIZE + height);
       idx = clear_rho(idx);
     }
 
@@ -76,9 +66,8 @@ public:
     while (idx <= Size) {
       const int height = rho(idx);
       const size_t pos = Level[height] + (idx >> (1 + height)) * (BOUNDSIZE + height);
-      auint64_t &element = reinterpret_cast<auint64_t &>(Tree[pos >> 3]);
+      bitwrite_inc(&Tree[pos / 8], pos % 8, BOUNDSIZE + height, inc);
 
-      element += inc << (pos & 0b111);
       idx += mask_rho(idx);
     }
   }
@@ -95,8 +84,7 @@ public:
       if (pos >= Level[height + 1])
         continue;
 
-      const uint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
-      const uint64_t value = bitextract(element, pos & 0b111, BOUNDSIZE + height);
+      const uint64_t value = bitread(&Tree[pos / 8], pos % 8, BOUNDSIZE + height);
 
       if (*val >= value) {
         idx++;
@@ -120,9 +108,8 @@ public:
       if (pos >= Level[height + 1])
         continue;
 
-      const uint64_t *element = reinterpret_cast<auint64_t *>(&Tree[pos >> 3]);
       const uint64_t value =
-          (BOUND << height) - bitextract(element, pos & 0b111, BOUNDSIZE + height);
+          (BOUND << height) - bitread(&Tree[pos / 8], pos % 8, BOUNDSIZE + height);
 
       if (*val >= value) {
         idx++;
