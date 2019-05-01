@@ -287,8 +287,15 @@ inline void bitwrite(void *const word, int from, int length, uint64_t val) {
 }
 
 inline void bitwrite_inc(void *const word, int from, int length, uint64_t inc) {
-  uint64_t value = bitread(word, from, length) + inc;
-  bitwrite(word, from, length, value);
+  if (likely((from + length) <= 64)) {
+    uint64_t value;
+    memcpy(&value, word, sizeof(uint64_t));
+    value += inc << from;
+    memcpy(word, &value, sizeof(uint64_t));
+  } else {
+    uint64_t value = bitread(word, from, length) + inc;
+    bitwrite(word, from, length, value);
+  }
 }
 
 /**
