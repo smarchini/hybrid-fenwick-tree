@@ -254,20 +254,19 @@ inline void bytewrite_inc(void *const word, uint64_t inc) {
 }
 
 inline uint64_t bitread(const void *const word, int from, int length) {
-  const uint8_t *const byte = static_cast<const uint8_t *>(word);
-
   uint64_t ret;
-  memcpy(&ret, byte + from / 8, sizeof(uint64_t));
+  memcpy(&ret, word, sizeof(uint64_t));
 
   if (likely((from + length) <= 64)) {
     return (ret >> from) & (-1ULL >> (64 - length));
   } else {
-    uint64_t nextbyte = byte[sizeof(uint64_t)];
-    return (ret >> from) | ((nextbyte << (128 - from - length)) >> (64 - from));
+    uint64_t next;
+    memcpy(&next, static_cast<const uint64_t *>(word) + 1, sizeof(uint64_t));
+    return (ret >> from) | (next << (128 - from - length) >> (64 - length));
   }
 }
 
-inline void bitwrite(void *const word, int from, int length, uint64_t val) {
+inline void bitwrite(void *word, int from, int length, uint64_t val) {
   uint64_t old;
   memcpy(&old, word, sizeof(uint64_t));
 
@@ -280,21 +279,31 @@ inline void bitwrite(void *const word, int from, int length, uint64_t val) {
     old = (old & ~maskw) | (val << from);
     memcpy(word, &old, sizeof(uint64_t));
 
-    const uint64_t maskb = 0xFF >> (64 + 8 - from - length);
-    uint8_t &nextbyte = static_cast<uint8_t *>(word)[sizeof(uint64_t)];
-    nextbyte = (nextbyte & ~maskb) | (val >> (128 - from - length));
+    uint64_t next;
+    memcpy(&next, static_cast<uint64_t *>(word) + 1, sizeof(uint64_t));
+    const uint64_t maskb = -1ULL >> (128 - from - length);
+    next = (next & ~maskb) | (val >> (64 - from));
+    memcpy(static_cast<uint64_t *>(word) + 1, &next, sizeof(uint64_t));
   }
 }
 
 inline void bitwrite_inc(void *const word, int from, int length, uint64_t inc) {
-  if (likely((from + length) <= 64)) {
-    uint64_t value;
-    memcpy(&value, word, sizeof(uint64_t));
+  uint64_t value;
+  memcpy(&value, word, sizeof(uint64_t));
+  const uint64_t sum = (value >> from) + inc;
+  const uint64_t carry = sum >> (64 - from);
+
+  if (likely((from + length) <= 64 || carry == 0)) {
     value += inc << from;
     memcpy(word, &value, sizeof(uint64_t));
   } else {
-    uint64_t value = bitread(word, from, length) + inc;
-    bitwrite(word, from, length, value);
+    value = (value & (-1ULL >> (64 - from))) | (sum << from);
+    memcpy(word, &value, sizeof(uint64_t));
+
+    uint64_t next;
+    memcpy(&next, static_cast<uint64_t *>(word) + 1, sizeof(uint64_t));
+    next += carry;
+    memcpy(static_cast<uint64_t *>(word) + 1, &next, sizeof(uint64_t));
   }
 }
 
