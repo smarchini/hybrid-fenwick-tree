@@ -98,6 +98,7 @@ public:
   }
 
 private:
+  // TODO: try the last micro-improvement (email 05/05/19 09:51)
   inline static size_t holes(size_t idx) { return STARTING_OFFSET + (idx >> 14) * 64; }
 
   inline static size_t first_bit_after(size_t idx) {
