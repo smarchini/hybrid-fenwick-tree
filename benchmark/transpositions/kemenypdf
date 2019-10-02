@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import sys, numpy, matplotlib, os.path
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+matplotlib.rcParams['text.usetex'] = True
+matplotlib.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
+
+if __name__ == '__main__':
+    fname = os.path.join(sys.argv[1])
+    data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
+    fig, ax = plt.subplots()
+    ax.scatter(data['Length'], data['fixed[F]1'])
+    ax.scatter(data['Length'], data['fixed[F]2'])
+    ax.scatter(data['Length'], data['fixed[F]4'])
+    ax.scatter(data['Length'], data['fixed[F]8'])
+    ax.scatter(data['Length'], data['fixed[F]16'])
+
+    for t in ['fixed[F]1', 'fixed[F]2', 'fixed[F]4', 'fixed[F]8', 'fixed[F]16']:
+        for i, txt in numpy.ndenumerate(data[t + 'S']):
+            ax.annotate(txt, (data['Length'][i], data[t][i])) 
+
+    plt.show()
+
+
+# if __name__ == '__main__':
+#     fname = os.path.join(sys.argv[1])
+#     data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
+#     plt.plot(data['Length'], data['fixed[F]1'],  's', color='#000000')
+#     plt.plot(data['Length'], data['fixed[F]2'],  'v', color='#999999')
+#     plt.plot(data['Length'], data['fixed[F]4'],  '^', color='#ff0000')
+#     plt.plot(data['Length'], data['fixed[F]8'],  '<', color='#990000')
+#     plt.plot(data['Length'], data['fixed[F]16'], '>', color='#00ff00')
+#     # plt.plot(data['Length'], data['prezza'],     'o')
+#     matplotlib.rcParams.update({'font.size': 8})
+#     plt.savefig('transp', format='pdf')

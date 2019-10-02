@@ -102,7 +102,8 @@ private:
   static inline size_t bytesize(size_t idx) { return ((rho(idx) + BOUNDSIZE - 1) >> 3) + 1; }
 
   static inline size_t holes(size_t idx) {
-    // Exhaustive benchmarking shows it is better to use zero holes on "small" trees
+    // Exhaustive benchmarking shows it is better to use no holes on (relatively) small trees,
+    // but we expect holes to be handy again in (very) big trees
     if (BOUNDSIZE >= 32)
       return 0;
 
