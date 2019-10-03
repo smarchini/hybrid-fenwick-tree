@@ -36,6 +36,8 @@ using namespace std;
 using namespace hft;
 using namespace std::chrono;
 
+inline uint64_t rotl(uint64_t x, size_t k) { return ((x << 8) & (1ULL << k) - 1) | (x >> k - 8); }
+
 template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   const size_t mask = (1ULL << bitlen) - 1;
   const double c = 1. / mask;
@@ -46,7 +48,8 @@ template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, cons
 
   auto begin = high_resolution_clock::now();
   for (size_t i = 0; i < mask; i++) {
-    p = (p * m + k) & mask; // Actually p = sigmainv[rho[i]]; (rho is the identity)
+    p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
+    p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
     d += b.rankZero(p);
     b.set(p);
   }
@@ -69,7 +72,8 @@ size_t prezza(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
 
   auto begin = high_resolution_clock::now();
   for (size_t i = 0; i < bitlen; i++) {
-    p = (p * m + k) & mask; // Actually p = sigmainv[rho[i]]; (rho is the identity)
+    p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
+    p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
     d += b.rank0(p);
     b.set(p);
   }
@@ -93,7 +97,8 @@ int main(int argc, char *argv[]) {
   }
 
   uint64_t bitlen, m, k;
-  cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]2S,fixed[F]2,fixed[F]4S,fixed[F]4,fixed[F]8S,fixed[F]8,fixed[F]16S,fixed[F]16,prezzaS,prezza\n";
+  cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]2S,fixed[F]2,fixed[F]4S,fixed[F]4,fixed[F]8S,fixed["
+          "F]8,fixed[F]16S,fixed[F]16,prezzaS,prezza\n";
 
   while (file >> bitlen >> hex >> m >> k) {
     cout << bitlen << flush;
