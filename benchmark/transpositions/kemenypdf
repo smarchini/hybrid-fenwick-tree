@@ -11,16 +11,19 @@ if __name__ == '__main__':
     fname = os.path.join(sys.argv[1])
     data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
     fig, ax = plt.subplots()
-    ax.scatter(data['Length'], data['fixed[F]1'])
-    ax.scatter(data['Length'], data['fixed[F]2'])
-    ax.scatter(data['Length'], data['fixed[F]4'])
-    ax.scatter(data['Length'], data['fixed[F]8'])
-    ax.scatter(data['Length'], data['fixed[F]16'])
+    ax.scatter(data['Length'], data['fixed[F]1'],  label='fixed[F]1')
+    ax.scatter(data['Length'], data['fixed[F]2'],  label='fixed[F]2')
+    ax.scatter(data['Length'], data['fixed[F]4'],  label='fixed[F]4')
+    ax.scatter(data['Length'], data['fixed[F]8'],  label='fixed[F]8')
+    ax.scatter(data['Length'], data['fixed[F]16'], label='fixed[F]16')
+    ax.scatter(data['Length'], data['prezza'], label='Prezza')
 
-    for t in ['fixed[F]1', 'fixed[F]2', 'fixed[F]4', 'fixed[F]8', 'fixed[F]16']:
+    for t in ['fixed[F]1', 'fixed[F]2', 'fixed[F]4', 'fixed[F]8', 'fixed[F]16', 'prezza']:
         for i, txt in numpy.ndenumerate(data[t + 'S']):
-            ax.annotate(txt, (data['Length'][i], data[t][i])) 
+            ax.annotate(txt, (data['Length'][i], data[t][i]))
 
+    ax.set(xlabel='Size ($2^n$)', ylabel='Time (ns)')
+    plt.legend(loc="upper left", ncol=2, shadow=True, fancybox=True, prop={'size': 8}, framealpha=1, frameon=True)
     plt.show()
 
 
