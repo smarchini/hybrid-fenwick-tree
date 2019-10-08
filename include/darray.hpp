@@ -121,7 +121,7 @@ private:
 
     return is;
   }
-}; // namespace hft
+};
 
 } // namespace hft
 

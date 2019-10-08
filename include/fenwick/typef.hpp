@@ -71,8 +71,7 @@ public:
           }
           break;
         default:
-          reinterpret_cast<auint8_t &>(Tree[left]) +=
-            *reinterpret_cast<auint8_t *>(&Tree[right]);
+          reinterpret_cast<auint8_t &>(Tree[left]) += *reinterpret_cast<auint8_t *>(&Tree[right]);
         }
       }
     }

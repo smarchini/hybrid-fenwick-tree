@@ -103,12 +103,12 @@ int main(int argc, char *argv[]) {
   while (file >> bitlen >> hex >> m >> k) {
     cout << bitlen << flush;
 
-    cout << (uint64_t) nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
-    cout << (uint64_t) nostro<ranking::Stride<fenwick::FixedF, 2>>(m, k, bitlen) << ",";
-    cout << (uint64_t) nostro<ranking::Stride<fenwick::FixedF, 4>>(m, k, bitlen) << ",";
-    cout << (uint64_t) nostro<ranking::Stride<fenwick::FixedF, 8>>(m, k, bitlen) << ",";
-    cout << (uint64_t) nostro<ranking::Stride<fenwick::FixedF, 16>>(m, k, bitlen) << ",";
-    cout << (uint64_t) prezza(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 2>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 4>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 8>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 16>>(m, k, bitlen) << ",";
+    cout << (uint64_t)prezza(m, k, bitlen) << ",";
 
     cout << endl;
   }

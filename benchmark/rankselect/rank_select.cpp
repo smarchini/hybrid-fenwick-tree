@@ -1,4 +1,5 @@
-// Compile: g++ -std=c++17 -O3 -march=native -I../../include -I../../DYNAMIC -I../..DYNAMIC/algorithms -I../..DYNAMIC/internal -o rank_select rank_select.cpp
+// Compile: g++ -std=c++17 -O3 -march=native -I../../include -I../../DYNAMIC
+// -I../..DYNAMIC/algorithms -I../..DYNAMIC/internal -o rank_select rank_select.cpp
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
@@ -60,7 +61,7 @@ int main(int argc, char *argv[]) {
 
   uint64_t zeroes = 64 * size - ones;
 
-  uniform_int_distribution<uint64_t> bit(0, (size-1)*64);
+  uniform_int_distribution<uint64_t> bit(0, (size - 1) * 64);
   uniform_int_distribution<uint64_t> rank(0, 64 * size);
   uniform_int_distribution<uint64_t> select0(0, zeroes - 1);
   uniform_int_distribution<uint64_t> select1(0, ones - 1);
@@ -112,10 +113,10 @@ void dynamic(const char *name, uint64_t *bitvector, uniform_int_distribution<uin
   begin = high_resolution_clock::now();
   for (uint64_t i = 0; i < size; ++i) {
     for (uint64_t j = 0; j < 64; ++j)
-      dynamic.insert(64*i + j, bitvector[i] & (1ULL << j));
+      dynamic.insert(64 * i + j, bitvector[i] & (1ULL << j));
   }
   end = high_resolution_clock::now();
-  auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
+  auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << "\n" << name << ": " << dynamic.bit_size() / (size * 64.) << " b/item\n";
   cout << "ctor: " << build / (double)size << " ns/item\n" << flush;
 
@@ -126,10 +127,10 @@ void dynamic(const char *name, uint64_t *bitvector, uniform_int_distribution<uin
   vector<chrono::nanoseconds::rep> rank1;
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
-    for(uint64_t i = 0; i < queries; ++i)
+    for (uint64_t i = 0; i < queries; ++i)
       u ^= dynamic.rank1(rank(re) ^ (u & 1));
     end = high_resolution_clock::now();
-    rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+    rank1.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
   std::sort(rank1.begin(), rank1.end());
   cout << rank1[MID] * c << " ns/item\n";
@@ -138,10 +139,10 @@ void dynamic(const char *name, uint64_t *bitvector, uniform_int_distribution<uin
   vector<chrono::nanoseconds::rep> select1;
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
-    for(uint64_t i = 0; i < queries; ++i)
+    for (uint64_t i = 0; i < queries; ++i)
       u ^= dynamic.select1(sel1(re) ^ (u & 1));
     end = high_resolution_clock::now();
-    select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+    select1.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
   std::sort(select1.begin(), select1.end());
   cout << select1[MID] * c << " ns/item\n";
@@ -151,8 +152,10 @@ void dynamic(const char *name, uint64_t *bitvector, uniform_int_distribution<uin
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
     for (uint64_t i = 0; i < queries; ++i) {
-      if (i & 1) dynamic.set(bit(re) ^ (u & 1), true);
-      else dynamic.set(bit(re) ^ (u & 1), false);
+      if (i & 1)
+        dynamic.set(bit(re) ^ (u & 1), true);
+      else
+        dynamic.set(bit(re) ^ (u & 1), false);
     }
     end = high_resolution_clock::now();
     update.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
@@ -174,7 +177,7 @@ void internal(const char *name, uint64_t *bitvector, uniform_int_distribution<ui
   begin = high_resolution_clock::now();
   T bv(bitvector, size);
   end = high_resolution_clock::now();
-  auto build = duration_cast<chrono::nanoseconds>(end-begin).count();
+  auto build = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << "\n" << name << ": " << bv.bitCount() / (size * 64.) << " b/item\n";
   cout << "ctor: " << build / (double)size << " ns/item\n" << flush;
 
@@ -185,10 +188,10 @@ void internal(const char *name, uint64_t *bitvector, uniform_int_distribution<ui
   vector<chrono::nanoseconds::rep> rank1;
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
-    for(uint64_t i = 0; i < queries; ++i)
+    for (uint64_t i = 0; i < queries; ++i)
       u ^= bv.rank(rank(re) ^ (u & 1));
     end = high_resolution_clock::now();
-    rank1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+    rank1.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
   std::sort(rank1.begin(), rank1.end());
   cout << rank1[MID] * c << " ns/item\n";
@@ -197,10 +200,10 @@ void internal(const char *name, uint64_t *bitvector, uniform_int_distribution<ui
   vector<chrono::nanoseconds::rep> select1;
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
-    for(uint64_t i = 0; i < queries; ++i)
+    for (uint64_t i = 0; i < queries; ++i)
       u ^= bv.select(sel1(re) ^ (u & 1));
     end = high_resolution_clock::now();
-    select1.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+    select1.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
   std::sort(select1.begin(), select1.end());
   cout << select1[MID] * c << " ns/item\n";
@@ -209,12 +212,14 @@ void internal(const char *name, uint64_t *bitvector, uniform_int_distribution<ui
   vector<chrono::nanoseconds::rep> update;
   for (int r = 0; r < REPS; r++) {
     begin = high_resolution_clock::now();
-    for(uint64_t i = 0; i < queries; ++i) {
-      if (i & 1) bv.set(bit(re)  ^ (u & 1));
-      else bv.clear(bit(re) ^ (u & 1));
+    for (uint64_t i = 0; i < queries; ++i) {
+      if (i & 1)
+        bv.set(bit(re) ^ (u & 1));
+      else
+        bv.clear(bit(re) ^ (u & 1));
     }
     end = high_resolution_clock::now();
-    update.push_back(duration_cast<chrono::nanoseconds>(end-begin).count());
+    update.push_back(duration_cast<chrono::nanoseconds>(end - begin).count());
   }
   std::sort(update.begin(), update.end());
   cout << update[MID] * c << " ns/item\n";

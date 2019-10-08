@@ -18,16 +18,18 @@ public:
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 64, "Leaves can't be stored in a 64-bit word");
 
 protected:
+  Vector<uint64_t> Tree;
   size_t Size;
-  DArray<uint64_t> Tree;
 
 public:
-  FixedF(uint64_t sequence[], size_t size) : Size(size), Tree(pos(size) + 1) {
-    for (size_t j = 1; j <= size; j++)
+  FixedF() : Size(0) {}
+
+  FixedF(uint64_t sequence[], size_t size) : Tree(pos(size) + 1), Size(size) {
+    for (size_t j = 1; j <= Size; j++)
       Tree[pos(j)] = sequence[j - 1];
 
-    for (size_t m = 2; m <= size; m <<= 1) {
-      for (size_t idx = m; idx <= size; idx += m)
+    for (size_t m = 2; m <= Size; m <<= 1) {
+      for (size_t idx = m; idx <= Size; idx += m)
         Tree[pos(idx)] += Tree[pos(idx - m / 2)];
     }
   }
@@ -86,6 +88,22 @@ public:
     }
 
     return node;
+  }
+
+  virtual void push(int64_t val) {
+    size_t p = pos(++Size);
+    Tree.resize(p + 1);
+    Tree[p] = val;
+
+    if ((Size & 1) == 0) {
+      for (size_t idx = Size - 1; rho(idx) < rho(Size); idx = clear_rho(idx))
+        Tree[p] += Tree[pos(idx)];
+    }
+  }
+
+  virtual void pop() {
+    Size--;
+    Tree.popBack();
   }
 
   virtual size_t size() const { return Size; }

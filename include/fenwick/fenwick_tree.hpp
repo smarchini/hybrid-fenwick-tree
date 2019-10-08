@@ -3,6 +3,7 @@
 
 #include "../common.hpp"
 #include "../darray.hpp"
+#include "../vector.hpp"
 
 namespace hft::fenwick {
 

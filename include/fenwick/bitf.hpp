@@ -20,17 +20,19 @@ public:
   static_assert(BOUNDSIZE >= 1 && BOUNDSIZE <= 55, "Some nodes will span on multiple words");
 
 protected:
+  Vector<uint8_t> Tree;
   size_t Size;
-  DArray<uint8_t> Tree;
 
 public:
+  BitF() : Tree(0), Size(0) {}
+
   BitF(uint64_t sequence[], size_t size)
       : Size(size), Tree((first_bit_after(size) + END_PADDING + 7) >> 3) {
-    for (size_t idx = 1; idx <= size; idx++)
+    for (size_t idx = 1; idx <= Size; idx++)
       addToPartialFrequency(idx, sequence[idx - 1]);
 
-    for (size_t m = 2; m <= size; m <<= 1)
-      for (size_t idx = m; idx <= size; idx += m)
+    for (size_t m = 2; m <= Size; m <<= 1)
+      for (size_t idx = m; idx <= Size; idx += m)
         addToPartialFrequency(idx, getPartialFrequency(idx - m / 2));
   }
 
@@ -90,6 +92,18 @@ public:
 
     return node;
   }
+
+  virtual void push(int64_t val) {
+    Tree.resize((first_bit_after(++Size) + END_PADDING + 7) >> 3);
+    addToPartialFrequency(Size, val);
+
+    if ((Size & 1) == 0) {
+      for (size_t idx = Size - 1; rho(idx) < rho(Size); idx = clear_rho(idx))
+        addToPartialFrequency(Size, getPartialFrequency(idx));
+    }
+  }
+
+  virtual void pop() { Size--; }
 
   virtual size_t size() const { return Size; }
 
