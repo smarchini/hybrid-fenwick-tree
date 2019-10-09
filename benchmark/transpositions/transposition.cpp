@@ -93,7 +93,7 @@ size_t prezza(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   cout << "," << b.bit_size() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
-  for (size_t i = 0; i < bitlen; i++) {
+  for (size_t i = 0; i < mask; i++) {
     p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
     p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
     d += b.rank0(p);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]8S,fixed[F]8,fixed[F]16S,fixed[F]16,byte[F]1S,byte["
           "F]1,byte[F]8S,byte[F]8,byte[F]16S,byte[F]16,scypyS,scypy,prezzaS,prezza\n";
 
-  while (file >> bitlen >> hex >> m >> k) {
+  while (file >> dec >>bitlen >> hex >> m >> k) {
     cout << bitlen << flush;
 
     cout << (uint64_t)nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
