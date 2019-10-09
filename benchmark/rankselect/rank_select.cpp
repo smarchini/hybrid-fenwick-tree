@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
   uint64_t ones = 0;
   for (size_t i = 0; i < size; i++)
-    ones += popcount(bv[i]);
+    ones += nu(bv[i]);
 
   uint64_t zeroes = 64 * size - ones;
 

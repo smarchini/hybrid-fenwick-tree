@@ -24,7 +24,7 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
   hft::fenwick::BitL<S> lbit(increments, size);
   hft::fenwick::ByteF<S> byte(increments, size);
   hft::fenwick::ByteL<S> lbyte(increments, size);
-  hft::fenwick::TypeF<S> type(increments, size);
+  // hft::fenwick::TypeF<S> type(increments, size);
   // hft::fenwick::TypeL<S> ltype(increments, size);
 
   // prefix
@@ -41,8 +41,8 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     EXPECT_EQ(naive_prefix, lbyte.prefix(i))
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-    EXPECT_EQ(naive_prefix, type.prefix(i))
-        << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+    // EXPECT_EQ(naive_prefix, type.prefix(i))
+    //     << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     // EXPECT_EQ(naive_prefix, ltype.prefix(i)) << "At index: " << i << "\nsize: " << size <<
     // "\ntemplate parameter: " << S;
   }
@@ -61,8 +61,8 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     EXPECT_EQ(naive_find, lbyte.find(i))
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-    EXPECT_EQ(naive_find, type.find(i))
-        << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+    // EXPECT_EQ(naive_find, type.find(i))
+    //     << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     // EXPECT_EQ(naive_find, ltype.find(i)) << "At index: " << i << "\nsize: " << size <<
     // "\ntemplate parameter: " << S;
   }
@@ -75,7 +75,7 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
     lbit.add(i + 1, add_updates[i]);
     byte.add(i + 1, add_updates[i]);
     lbyte.add(i + 1, add_updates[i]);
-    type.add(i + 1, add_updates[i]);
+    // type.add(i + 1, add_updates[i]);
     // ltype.add(i+1,  add_updates[i]);
   }
 
@@ -93,8 +93,8 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     EXPECT_EQ(naive_prefix, lbyte.prefix(i))
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-    EXPECT_EQ(naive_prefix, type.prefix(i))
-        << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+    // EXPECT_EQ(naive_prefix, type.prefix(i))
+    //     << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     // EXPECT_EQ(naive_prefix, ltype.prefix(i)) << "At index: " << i << "\nsize: " << size <<
     // "\ntemplate parameter: " << S;
   }
@@ -113,8 +113,8 @@ template <std::size_t S> void fenwick_random_test(std::size_t size) {
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     EXPECT_EQ(naive_findcomplement, lbyte.compFind(i))
         << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
-    EXPECT_EQ(naive_findcomplement, type.compFind(i))
-        << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
+    // EXPECT_EQ(naive_findcomplement, type.compFind(i))
+    //     << "At index: " << i << "\nsize: " << size << "\ntemplate parameter: " << S;
     // EXPECT_EQ(naive_findcomplement, ltype.compFind(i)) << "At index: " << i << "\nsize: " << size
     // << "\ntemplate parameter: " << S;
   }

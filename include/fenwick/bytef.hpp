@@ -109,6 +109,11 @@ public:
 
   virtual void pop() { Size--; }
 
+  virtual void reserve(size_t space) { Tree.reserve(pos(space) + 8); }
+
+  using FenwickTree::shrinkToFit;
+  virtual void shrink(size_t space) { Tree.shrink(pos(space) + 8); };
+
   virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {

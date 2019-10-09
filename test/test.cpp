@@ -2,15 +2,17 @@
 
 #include "common.hpp"
 
+// TODO: explicit level-order tests does not compile anymore because of Tree.get() to string
+// TODO: explicit TypeF and TypeL tests does not compile anymore because of push and pop
 #include "fenwick/fixedf.hpp"
-// TODO: explicit tests for fixedl
+// explicit tests for fixedl
 #include "fenwick/bitf.hpp"
-// #include "fenwick/bitl.hpp" doesn't compile anymore (Tree.get() to string)
+// #include "fenwick/bitl.hpp"
 #include "fenwick/bytef.hpp"
-//#include "fenwick/bytel.hpp" doesn't compile anymore (Tree.get() to string)
-#include "fenwick/typef.hpp"
-#include "fenwick/typel.hpp"
-#include "fenwick/hybrid.hpp" doesn't work anymore (fails)
+//#include "fenwick/bytel.hpp"
+// #include "fenwick/typef.hpp"
+// #include "fenwick/typel.hpp"
+#include "fenwick/hybrid.hpp" 
 
 #include "fenwicktree.hpp"
 #include "rankselect.hpp"

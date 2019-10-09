@@ -23,7 +23,7 @@ TEST(rankselect_like_dynamic, random) {
 
   size_t ones = 0;
   for (size_t i = 0; i < SIZE; i++)
-    ones += popcount(bitvect[i]);
+    ones += nu(bitvect[i]);
 
   size_t zeroes = 64 * SIZE - ones;
 

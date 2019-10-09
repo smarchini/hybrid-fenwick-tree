@@ -24,11 +24,11 @@ protected:
 public:
   BitL() : Levels(0), Size(0) {}
 
-  BitL(uint64_t sequence[], size_t size) : Levels(size != 0 ? lambda(size) + 2 : 1), Size(size) {
-    for (size_t i = 1; i < Levels; i++)
+  BitL(uint64_t sequence[], size_t size) : Levels(size != 0 ? lambda(size) + 1 : 1), Size(size) {
+    for (size_t i = 1; i <= Levels; i++)
       Tree[i - 1].resize(((size + (1ULL << (i - 1))) / (1ULL << i)) * (BOUNDSIZE - 1 + i));
 
-    for (size_t l = 0; l < Levels - 1; l++) {
+    for (size_t l = 0; l <= Levels - 1; l++) {
       for (size_t node = 1ULL << l; node <= size; node += 1ULL << (l + 1)) {
         size_t sequence_idx = node - 1;
         uint64_t value = sequence[sequence_idx];
@@ -73,7 +73,7 @@ public:
   virtual size_t find(uint64_t *val) const {
     size_t node = 0, idx = 0;
 
-    for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
+    for (size_t height = Levels - 1; height != SIZE_MAX; height--) {
       const size_t pos = idx * (BOUNDSIZE + height);
 
       idx <<= 1;
@@ -97,7 +97,7 @@ public:
   virtual size_t compFind(uint64_t *val) const {
     size_t node = 0, idx = 0;
 
-    for (size_t height = Levels - 2; height != SIZE_MAX; height--) {
+    for (size_t height = Levels - 1; height != SIZE_MAX; height--) {
       const size_t pos = idx * (BOUNDSIZE + height);
 
       idx <<= 1;
@@ -117,8 +117,6 @@ public:
 
     return min(node, Size);
   }
-
-  virtual size_t size() const { return Size; }
 
   virtual void push(int64_t val) {
     Levels = lambda(++Size) + 1;
@@ -140,11 +138,35 @@ public:
     }
   }
 
-  virtual void pop() {}
+  virtual void pop() {
+    int height = rho(Size);
+    size_t pos = (BOUNDSIZE + height) * (Size >> (1 + height));
+    Tree[height].resize(pos / 8);
+    Size--;
+  }
+
+  virtual void reserve(size_t space) {
+    size_t levels = lambda(space) + 1;
+    for (size_t i = 1; i <= levels; i++)
+      Tree[i - 1].reserve(((space + (1ULL << (i - 1))) / (1ULL << i)) * (BOUNDSIZE - 1 + i));
+  }
+
+  using FenwickTree::shrinkToFit;
+  virtual void shrink(size_t space) {
+    size_t levels = lambda(space) + 1;
+    for (size_t i = 1; i <= levels; i++)
+      Tree[i - 1].shrink(((space + (1ULL << (i - 1))) / (1ULL << i)) * (BOUNDSIZE - 1 + i));
+  };
+
+  virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
-    return sizeof(BitL<BOUNDSIZE>) * 8 + Tree[0].bitCount() - sizeof(Tree) +
-           Levels * sizeof(size_t) * 8;
+    size_t ret = sizeof(BitL<BOUNDSIZE>) * 8;
+
+    for (size_t i = 0; i < 64; i++)
+      ret += Tree[i].bitCount() - sizeof(Tree[i]);
+
+    return ret;
   }
 
 private:

@@ -79,7 +79,7 @@ public:
 
     for (size_t i = 0; i < size; i++) {
       bitvector[i] = bvdist(mte);
-      ones += popcount(bitvector[i]);
+      ones += nu(bitvector[i]);
     }
 
     zeroes = 64 * size - ones;

@@ -146,17 +146,33 @@ public:
   }
 
   virtual void pop() {
-    int height = rho(Size - 1);
+    int height = rho(Size); // TODO: rho(Size - 1) ?
     Tree[height].resize((Size >> (1 + height)) * heightsize(height));
     Size--;
   }
 
+  virtual void reserve(size_t space) {
+    size_t levels = lambda(space) + 1;
+    for (size_t i = 1; i <= levels; i++)
+      Tree[i - 1].resize(((space + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1) + 7);
+  }
+
+  using FenwickTree::shrinkToFit;
+  virtual void shrink(size_t space) {
+    size_t levels = lambda(space) + 1;
+    for (size_t i = 1; i <= levels; i++)
+      Tree[i - 1].shrink(((space + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1) + 7);
+  };
+
   virtual size_t size() const { return Size; }
 
-  // TODO: fix all level-order bitCounts
   virtual size_t bitCount() const {
-    return sizeof(ByteL<BOUNDSIZE>) * 8 + Tree[0].bitCount() - sizeof(Tree) +
-           Levels * sizeof(size_t) * 8;
+    size_t ret = sizeof(ByteL<BOUNDSIZE>) * 8;
+
+    for (size_t i = 0; i < 64; i++)
+      ret += Tree[i].bitCount() - sizeof(Tree[i]);
+
+    return ret;
   }
 
 private:

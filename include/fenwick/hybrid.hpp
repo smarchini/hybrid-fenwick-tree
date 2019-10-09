@@ -67,6 +67,12 @@ public:
 
   virtual size_t size() const { return Size; }
 
+  virtual void push(int64_t val) { assert(false && "Unimplemented"); }
+  virtual void pop() { assert(false && "Unimplemented"); }
+  virtual void reserve(size_t space) { assert(false && "Unimplemented"); }
+  using FenwickTree::shrinkToFit;
+  virtual void shrink(size_t space) { assert(false && "Unimplemented"); };
+
   virtual size_t bitCount() const {
     size_t bottomSize = 0;
     for (auto &t : BottomForest)

@@ -100,9 +100,9 @@ size_t linear_rankZero(uint64_t *bv, size_t pos) {
   size_t i = 0, rank = 0;
 
   for (i = 0; i < pos / 64; i++)
-    rank += popcount(~bv[i]);
+    rank += nu(~bv[i]);
 
-  return rank + popcount((~bv[i] & compact_bitmask(pos % 64, 0)));
+  return rank + nu((~bv[i] & compact_bitmask(pos % 64, 0)));
 }
 
 size_t vigna_linearsearch(uint64_t *sigmainv, uint64_t *rho, size_t len) {

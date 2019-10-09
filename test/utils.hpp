@@ -16,8 +16,8 @@
 #include "../include/fenwick/fixedf.hpp"
 #include "../include/fenwick/fixedl.hpp"
 #include "../include/fenwick/hybrid.hpp"
-#include "../include/fenwick/typef.hpp"
-#include "../include/fenwick/typel.hpp"
+// #include "../include/fenwick/typef.hpp"
+// #include "../include/fenwick/typel.hpp"
 
 #include "../include/rankselect/rank_select.hpp"
 #include "../include/rankselect/stride.hpp"
@@ -32,21 +32,21 @@ public:
   using hft::fenwick::FixedF<64>::Tree;
 };
 
-class TypeL_Test : public hft::fenwick::TypeL<64> {
-public:
-  TypeL_Test(std::uint64_t sequence[], std::size_t length)
-      : hft::fenwick::TypeL<64>(sequence, length) {}
-  using hft::fenwick::TypeL<64>::Tree8;
-  using hft::fenwick::TypeL<64>::Tree16;
-  using hft::fenwick::TypeL<64>::Tree64;
-};
-
-class TypeF_Test : public hft::fenwick::TypeF<64> {
-public:
-  TypeF_Test(std::uint64_t sequence[], std::size_t length)
-      : hft::fenwick::TypeF<64>(sequence, length) {}
-  using hft::fenwick::TypeF<64>::Tree;
-};
+// class TypeL_Test : public hft::fenwick::TypeL<64> {
+// public:
+// TypeL_Test(std::uint64_t sequence[], std::size_t length)
+// : hft::fenwick::TypeL<64>(sequence, length) {}
+// using hft::fenwick::TypeL<64>::Tree8;
+// using hft::fenwick::TypeL<64>::Tree16;
+// using hft::fenwick::TypeL<64>::Tree64;
+// };
+// 
+// class TypeF_Test : public hft::fenwick::TypeF<64> {
+// public:
+// TypeF_Test(std::uint64_t sequence[], std::size_t length)
+// : hft::fenwick::TypeF<64>(sequence, length) {}
+// using hft::fenwick::TypeF<64>::Tree;
+// };
 
 class ByteL_Test : public hft::fenwick::ByteL<64> {
 public:

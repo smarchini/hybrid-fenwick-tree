@@ -180,7 +180,13 @@ inline int lambda(uint64_t word) { return 63 ^ __builtin_clzll(word); }
  * @word: Binary word.
  *
  */
-inline uint64_t clear_rho(uint64_t word) { return word & (word - 1ULL); }
+inline uint64_t clear_rho(uint64_t word) {
+#ifndef __haswell__
+  return _blsr_u64(word);
+#else
+  return word & (word - 1);
+#endif
+}
 
 /**
  * mask_rho - Bitmask where only the least significant 1-bit is set.
@@ -291,13 +297,13 @@ inline void bitwrite_inc(void *const word, int from, int length, uint64_t inc) {
   uint64_t value;
   memcpy(&value, word, sizeof(uint64_t));
   const uint64_t sum = (value >> from) + inc;
-  const uint64_t carry = sum >> (64 - from);
+  const uint64_t carry = from > 0 ? sum >> (64 - from) : 0;
 
   if (likely((from + length) <= 64 || carry == 0)) {
     value += inc << from;
     memcpy(word, &value, sizeof(uint64_t));
   } else {
-    value = (value & (-1ULL >> (64 - from))) | (sum << from);
+    value = from > 0 ? (value & (-1ULL >> (64 - from))) | (sum << from) : (sum << from);
     memcpy(word, &value, sizeof(uint64_t));
 
     uint64_t next;
@@ -308,11 +314,11 @@ inline void bitwrite_inc(void *const word, int from, int length, uint64_t inc) {
 }
 
 /**
- * popcount - Count the number of 1-bits in a word.
+ * nu - Count the number of 1-bits in a word.
  * @word: Binary word.
  *
  */
-inline int popcount(uint64_t word) { return __builtin_popcountll(word); }
+inline int nu(uint64_t word) { return __builtin_popcountll(word); }
 
 /**
  * mround - Returns a number rounded to the desired power of two multiple.
@@ -366,7 +372,7 @@ inline uint64_t select64(uint64_t x, uint64_t k) {
 
   uint64_t kStep8 = k * kOnesStep8;
   uint64_t geqKStep8 = (((kStep8 | kLAMBDAsStep8) - byteSums) & kLAMBDAsStep8);
-  uint64_t place = popcount(geqKStep8) * 8;
+  uint64_t place = nu(geqKStep8) * 8;
   uint64_t byteRank = k - (((byteSums << 8) >> place) & uint64_t(0xFF));
   return place + kSelectInByte[((x >> place) & 0xFF) | (byteRank << 8)];
 #elif defined(__GNUC__) || defined(__clang__)

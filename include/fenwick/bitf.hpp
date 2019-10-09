@@ -105,6 +105,15 @@ public:
 
   virtual void pop() { Size--; }
 
+  virtual void reserve(size_t space) {
+    Tree.reserve((first_bit_after(space) + END_PADDING + 7) >> 3);
+  }
+
+  using FenwickTree::shrinkToFit;
+  virtual void shrink(size_t space) {
+    Tree.reserve((first_bit_after(space) + END_PADDING + 7) >> 3);
+  };
+
   virtual size_t size() const { return Size; }
 
   virtual size_t bitCount() const {
@@ -112,18 +121,17 @@ public:
   }
 
 private:
-  // TODO: try the last micro-improvement (email 05/05/19 09:51)
   inline static size_t holes(size_t idx) { return STARTING_OFFSET + (idx >> 14) * 64; }
 
   inline static size_t first_bit_after(size_t idx) {
-    return (BOUNDSIZE + 1) * idx - popcount(idx) + holes(idx);
+    return (BOUNDSIZE + 1) * idx - nu(idx) + holes(idx);
   }
 
   inline uint64_t getPartialFrequency(size_t idx) const {
     const uint64_t mask = (UINT64_C(1) << (BOUNDSIZE + rho(idx))) - 1;
     idx--;
     const uint64_t prod = (BOUNDSIZE + 1) * idx;
-    const uint64_t pos = prod - popcount(idx) + holes(idx);
+    const uint64_t pos = prod - nu(idx) + holes(idx);
 
     uint64_t t;
     if ((prod + (BOUNDSIZE + 1)) % 64 == 0) {
@@ -138,7 +146,7 @@ private:
   inline void addToPartialFrequency(size_t idx, uint64_t value) {
     idx--;
     const uint64_t prod = (BOUNDSIZE + 1) * idx;
-    const uint64_t pos = prod - popcount(idx) + holes(idx);
+    const uint64_t pos = prod - nu(idx) + holes(idx);
 
     uint64_t t;
     if ((prod + (BOUNDSIZE + 1)) % 64 == 0) {
