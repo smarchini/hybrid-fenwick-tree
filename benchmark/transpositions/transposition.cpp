@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
   cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]8S,fixed[F]8,fixed[F]16S,fixed[F]16,byte[F]1S,byte["
           "F]1,byte[F]8S,byte[F]8,byte[F]16S,byte[F]16,scypyS,scypy,prezzaS,prezza\n";
 
-  while (file >> bitlen >> hex >> m >> k) {
+  while (file >> dec >>bitlen >> hex >> m >> k) {
     cout << bitlen << flush;
 
     cout << (uint64_t)nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
