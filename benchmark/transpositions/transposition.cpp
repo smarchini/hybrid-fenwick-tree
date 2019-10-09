@@ -38,6 +38,28 @@ using namespace std::chrono;
 
 inline uint64_t rotl(uint64_t x, size_t k) { return ((x << 8) & (1ULL << k) - 1) | (x >> k - 8); }
 
+size_t scipy(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
+  const size_t mask = (1ULL << bitlen) - 1;
+  const double c = 1. / mask;
+  size_t d = 0, p = 0;
+
+  hft::fenwick::fixedf<1> b(DArray<uint64_t>(mask + 1), mask + 1);
+  cout << "," << b.bitCount() * c << "," << flush;
+
+  auto begin = high_resolution_clock::now();
+  for (size_t i = 0; i < mask; i++) {
+    p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
+    p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
+    d += b.prefix(p + 1);
+    b.add(p + 1, 1);
+  }
+  auto end = high_resolution_clock::now();
+  auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
+  cout << elapsed * c << flush;
+
+  return d;
+}
+
 template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   const size_t mask = (1ULL << bitlen) - 1;
   const double c = 1. / mask;
@@ -97,17 +119,21 @@ int main(int argc, char *argv[]) {
   }
 
   uint64_t bitlen, m, k;
-  cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]2S,fixed[F]2,fixed[F]4S,fixed[F]4,fixed[F]8S,fixed["
-          "F]8,fixed[F]16S,fixed[F]16,prezzaS,prezza\n";
+  cout << "Length,fixed[F]1S,fixed[F]1,fixed[F]8S,fixed[F]8,fixed[F]16S,fixed[F]16,byte[F]1S,byte["
+          "F]1,byte[F]8S,byte[F]8,byte[F]16S,byte[F]16,scypyS,scypy,prezzaS,prezza\n";
 
   while (file >> bitlen >> hex >> m >> k) {
     cout << bitlen << flush;
 
     cout << (uint64_t)nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
-    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 2>>(m, k, bitlen) << ",";
-    cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 4>>(m, k, bitlen) << ",";
     cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 8>>(m, k, bitlen) << ",";
     cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 16>>(m, k, bitlen) << ",";
+
+    cout << (uint64_t)nostro<ranking::Word<fenwick::ByteF>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::ByteF, 8>>(m, k, bitlen) << ",";
+    cout << (uint64_t)nostro<ranking::Stride<fenwick::ByteF, 16>>(m, k, bitlen) << ",";
+
+    cout << (uint64_t)scipy(m, k, bitlen) << ",";
     cout << (uint64_t)prezza(m, k, bitlen) << ",";
 
     cout << endl;
