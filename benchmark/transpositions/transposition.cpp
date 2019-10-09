@@ -90,7 +90,7 @@ size_t prezza(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   size_t d = 0, p = 0;
 
   dyn::suc_bv b;
-  for (size_t i = 0; i < mask; i++)
+  for (size_t i = 0; i <= mask; i++)
     b.push_back(0);
   cout << "," << b.bit_size() * c << "," << flush;
 
