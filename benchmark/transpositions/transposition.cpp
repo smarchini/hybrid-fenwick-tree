@@ -44,7 +44,7 @@ size_t scipy(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   uint64_t *array = new uint64_t[mask + 1]();
   hft::fenwick::FixedF<1> b(array, mask + 1);
   delete[] array;
-  cout << "," << b.bitCount() * c << "," << flush;
+  cout << b.bitCount() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
   for (size_t i = 0; i < mask; i++) {
@@ -67,7 +67,7 @@ template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, cons
   size_t d = 0, p = 0;
 
   dynbv b(DArray<uint64_t>(mask / 64 + 1), mask / 64 + 1);
-  cout << "," << b.bitCount() * c << "," << flush;
+  cout << b.bitCount() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
   for (size_t i = 0; i < mask; i++) {
@@ -92,7 +92,7 @@ size_t prezza(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   dyn::suc_bv b;
   for (size_t i = 0; i <= mask; i++)
     b.push_back(0);
-  cout << "," << b.bit_size() * c << "," << flush;
+  cout << b.bit_size() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
   for (size_t i = 0; i < mask; i++) {
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     cout << (uint64_t)nostro<ranking::Stride<fenwick::ByteF, 16>>(m, k, bitlen) << ",";
 
     cout << (uint64_t)scipy(m, k, bitlen) << ",";
-    cout << (uint64_t)prezza(m, k, bitlen) << ",";
+    cout << (uint64_t)prezza(m, k, bitlen);
 
     cout << endl;
   }
