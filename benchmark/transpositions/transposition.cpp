@@ -18,8 +18,6 @@
 #include <fenwick/fixedf.hpp>
 #include <fenwick/fixedl.hpp>
 #include <fenwick/hybrid.hpp>
-#include <fenwick/typef.hpp>
-#include <fenwick/typel.hpp>
 
 #include <dynamic.hpp>
 
@@ -43,7 +41,9 @@ size_t scipy(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   const double c = 1. / mask;
   size_t d = 0, p = 0;
 
-  hft::fenwick::fixedf<1> b(DArray<uint64_t>(mask + 1), mask + 1);
+  uint64_t *array = new uint64_t[mask + 1]();
+  hft::fenwick::FixedF<1> b(array, mask + 1);
+  delete[] array;
   cout << "," << b.bitCount() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
