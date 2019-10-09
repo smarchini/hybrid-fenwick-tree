@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
           "F]1,byte[F]8S,byte[F]8,byte[F]16S,byte[F]16,scypyS,scypy,prezzaS,prezza\n";
 
   while (file >> dec >>bitlen >> hex >> m >> k) {
-    cout << bitlen << flush;
+    cout << bitlen << "," << flush;
 
     cout << (uint64_t)nostro<ranking::Word<fenwick::FixedF>>(m, k, bitlen) << ",";
     cout << (uint64_t)nostro<ranking::Stride<fenwick::FixedF, 8>>(m, k, bitlen) << ",";
