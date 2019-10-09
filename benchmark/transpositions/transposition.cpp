@@ -57,6 +57,7 @@ size_t scipy(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed * c << flush;
 
+  cout << ",d=" << d << flush;
   return d;
 }
 
@@ -79,6 +80,7 @@ template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, cons
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed * c << flush;
 
+  cout << ",d=" << d << flush;
   return d;
 }
 
@@ -103,6 +105,7 @@ size_t prezza(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed * c << flush;
 
+  cout << ",d=" << d << flush;
   return d;
 }
 
