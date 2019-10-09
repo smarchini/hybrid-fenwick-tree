@@ -19,10 +19,10 @@ public:
 
 protected:
   Vector<uint64_t> Tree[64];
-  size_t Size, Levels;
+  size_t Levels, Size;
 
 public:
-  FixedL() : Size(0), Levels(0) {}
+  FixedL() : Levels(0), Size(0) {}
 
   FixedL(uint64_t sequence[], size_t size) : Levels(size != 0 ? lambda(size) + 1 : 1), Size(size) {
     for (size_t i = 1; i <= Levels; i++)

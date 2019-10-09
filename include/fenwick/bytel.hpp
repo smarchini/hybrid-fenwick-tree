@@ -19,16 +19,16 @@ public:
 
 protected:
   Vector<uint8_t> Tree[64];
-  size_t Size, Levels;
+  size_t Levels, Size;
 
 public:
-  ByteL() : Size(0), Levels(0) {}
+  ByteL() : Levels(0), Size(0) {}
 
   ByteL(uint64_t sequence[], size_t size) : Levels(size != 0 ? lambda(size) + 1 : 1), Size(size) {
     for (size_t i = 1; i <= Levels; i++)
-      Tree[i - 1].resize(((size + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1) + 7);
+      Tree[i - 1].resize(((size + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1));
 
-    for (size_t l = 0; l < Levels; l++) {
+    for (size_t l = 0; l <= Levels; l++) {
       for (size_t node = 1ULL << l; node <= Size; node += 1ULL << (l + 1)) {
         size_t sequence_idx = node - 1;
         uint64_t value = sequence[sequence_idx];
@@ -81,7 +81,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Tree[height].size())
+      if (pos + isize > Tree[height].size())
         continue;
 
       const uint64_t value = byteread(&Tree[height][pos], isize);
@@ -106,7 +106,7 @@ public:
 
       idx <<= 1;
 
-      if (pos >= Tree[height].size())
+      if (pos + isize > Tree[height].size())
         continue;
 
       const uint64_t value = (BOUND << height) - byteread(&Tree[height][pos], isize);
