@@ -28,7 +28,7 @@ public:
     for (size_t i = 1; i <= Levels; i++)
       Tree[i - 1].resize(((size + (1ULL << (i - 1))) / (1ULL << i)) * (BOUNDSIZE - 1 + i));
 
-    for (size_t l = 0; l <= Levels; l++) {
+    for (size_t l = 0; l < Levels; l++) {
       for (size_t node = 1ULL << l; node <= size; node += 1ULL << (l + 1)) {
         size_t sequence_idx = node - 1;
         uint64_t value = sequence[sequence_idx];

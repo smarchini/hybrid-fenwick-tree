@@ -47,7 +47,7 @@ size_t scipy(const uint64_t m, const uint64_t k, const uint64_t bitlen) {
   cout << b.bitCount() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
-  for (size_t i = 0; i < mask; i++) {
+  for (size_t i = 0; i <= mask; i++) {
     p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
     p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
     d += b.prefix(p + 1);
@@ -70,7 +70,7 @@ template <typename dynbv> size_t nostro(const uint64_t m, const uint64_t k, cons
   cout << b.bitCount() * c << "," << flush;
 
   auto begin = high_resolution_clock::now();
-  for (size_t i = 0; i < mask; i++) {
+  for (size_t i = 0; i <= mask; i++) {
     p = (p * m + k) & mask;                  // Actually p = sigmainv[rho[i]]; (rho is the identity)
     p = (rotl(p, bitlen) * 0x9E377B) & mask; // Mitigate the power of 2 LCG problems on lower bits
     d += b.rankZero(p);

@@ -28,7 +28,7 @@ public:
     for (size_t i = 1; i <= Levels; i++)
       Tree[i - 1].resize(((size + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1));
 
-    for (size_t l = 0; l <= Levels; l++) {
+    for (size_t l = 0; l < Levels; l++) {
       for (size_t node = 1ULL << l; node <= Size; node += 1ULL << (l + 1)) {
         size_t sequence_idx = node - 1;
         uint64_t value = sequence[sequence_idx];
@@ -81,7 +81,7 @@ public:
 
       idx <<= 1;
 
-      if (pos + isize > Tree[height].size())
+      if (pos + isize >= Tree[height].size())
         continue;
 
       const uint64_t value = byteread(&Tree[height][pos], isize);
@@ -106,7 +106,7 @@ public:
 
       idx <<= 1;
 
-      if (pos + isize > Tree[height].size())
+      if (pos + isize >= Tree[height].size())
         continue;
 
       const uint64_t value = (BOUND << height) - byteread(&Tree[height][pos], isize);

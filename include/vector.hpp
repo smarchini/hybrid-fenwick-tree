@@ -83,7 +83,7 @@ public:
 
   inline size_t capacity() const { return Capacity; }
 
-  size_t bitCount() const { return sizeof(Vector<T, PT>) * 8 + Capacity; }
+  size_t bitCount() const { return sizeof(Vector<T, PT>) * 8 + Capacity * 8; }
 
 private:
   static size_t page_aligned(size_t size) {
@@ -97,7 +97,7 @@ private:
     if (size == 0)
       return;
 
-    size_t space = page_aligned(size * sizeof(T));
+    size_t space = page_aligned(size);
     void *mem = Capacity == 0 ? mmap(nullptr, space, PROT, FLAGS, -1, 0)
                               : mremap(Data, Capacity, space, MREMAP_MAYMOVE, -1, 0);
     assert(mem != MAP_FAILED && "mmap failed");
