@@ -1,3 +1,7 @@
+# IMPORTANT: This repository is now part of [sux]
+For an up-to-date version of this repository check [sux]. Any pull requests should 
+be made there. 
+
 # Hybrid Compact Fenwick Trees and their application for dynamic rank and selection
 
 Different implementations of the [Fenwick tree] data structure to aim for a
@@ -224,3 +228,4 @@ implementation is indeed possible.
 [placement new]: https://en.cppreference.com/w/cpp/language/new#Placement_new "placement new"
 [hugetlbpage]: https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt "hugetlbpage"
 [transhuge]: https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html "transhuge"
+[sux]: https://github.com/vigna/sux/
