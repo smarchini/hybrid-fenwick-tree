@@ -25,25 +25,25 @@ using namespace hft;
 using namespace std::chrono;
 
 template <typename dynft> size_t nostro(const uint64_t n, const uint64_t d) {
-	assert(n >= d);
+  assert(n >= d);
 
-	dynft f;
-	for(int i = 0; i < d; i++)
-    f.push(1);  // NOTA: non dovrebbe essere d?
+  dynft f;
+  for (int i = 0; i < d; i++)
+    f.push(1); // NOTA: non dovrebbe essere d?
 
-	uint64_t sum_degrees = d;
+  uint64_t sum_degrees = d;
 
-	for(uint64_t i = d; i < n; i++) {
-		for(uint64_t j = 0; j < d; j++) {
-			uint64_t x = f.find(next() % sum_degrees); // New vertex to connect to
-			assert(x >= 0);
-			assert(x < i);
-			sum_degrees++;
-			f.add(x + 1, 1);
-		}
-		f.push(d);
-		sum_degrees += d;
-	}
+  for (uint64_t i = d; i < n; i++) {
+    for (uint64_t j = 0; j < d; j++) {
+      uint64_t x = f.find(next() % sum_degrees); // New vertex to connect to
+      assert(x >= 0);
+      assert(x < i);
+      sum_degrees++;
+      f.add(x + 1, 1);
+    }
+    f.push(d);
+    sum_degrees += d;
+  }
 
   return sum_degrees;
 }
@@ -54,8 +54,8 @@ size_t networkx(const uint64_t n, const uint64_t d) {
   for (int i = 0; i < d; i++)
     f.push_back(i);
 
-	for(uint64_t i = d; i < n; i++) {
-		for(uint64_t j = 0; j < d; j++) {
+  for (uint64_t i = d; i < n; i++) {
+    for (uint64_t j = 0; j < d; j++) {
       f.push_back(f[next() % f.size()]);
     }
 
@@ -66,8 +66,7 @@ size_t networkx(const uint64_t n, const uint64_t d) {
   return f.size();
 }
 
-template<size_t n, size_t d>
-void run_bench() {
+template <size_t n, size_t d> void run_bench() {
   cout << n << "," << d << "," << flush;
 
   auto begin = high_resolution_clock::now();
@@ -97,7 +96,7 @@ void run_bench() {
   begin = high_resolution_clock::now();
   cout << "res=" << networkx(n, d) << ",";
   end = high_resolution_clock::now();
-  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count(); 
+  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed << endl;
 }
 

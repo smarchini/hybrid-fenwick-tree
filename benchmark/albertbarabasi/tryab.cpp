@@ -25,25 +25,25 @@ using namespace hft;
 using namespace std::chrono;
 
 template <typename dynft> size_t nostro(const uint64_t n, const uint64_t d) {
-	assert(n >= d);
+  assert(n >= d);
 
-	dynft f;
-	for(int i = 0; i < d; i++)
+  dynft f;
+  for (int i = 0; i < d; i++)
     f.push(1);
 
-	uint64_t sum_degrees = d;
+  uint64_t sum_degrees = d;
 
-	for(uint64_t i = d; i < n; i++) {
-		for(uint64_t j = 0; j < d; j++) {
-			uint64_t x = f.find(next() % sum_degrees); // New vertex to connect to
-			assert(x >= 0);
-			assert(x < i);
-			sum_degrees++;
-			f.add(x + 1, 1);
-		}
-		f.push(d);
-		sum_degrees += d;
-	}
+  for (uint64_t i = d; i < n; i++) {
+    for (uint64_t j = 0; j < d; j++) {
+      uint64_t x = f.find(next() % sum_degrees); // New vertex to connect to
+      assert(x >= 0);
+      assert(x < i);
+      sum_degrees++;
+      f.add(x + 1, 1);
+    }
+    f.push(d);
+    sum_degrees += d;
+  }
 
   cout << "space = " << f.bitCount() << ", ";
   return sum_degrees;
@@ -55,8 +55,8 @@ size_t networkx(const uint64_t n, const uint64_t d) {
   for (int i = 0; i < d; i++)
     f.push_back(i);
 
-	for(uint64_t i = d; i < n; i++) {
-		for(uint64_t j = 0; j < d; j++) {
+  for (uint64_t i = d; i < n; i++) {
+    for (uint64_t j = 0; j < d; j++) {
       f.push_back(f[next() % f.size()]);
     }
 
@@ -78,12 +78,6 @@ void run_bench(size_t n, size_t d) {
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed << " ns" << endl;
 
-  begin = high_resolution_clock::now();
-  cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
-  end = high_resolution_clock::now();
-  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
-  cout << elapsed << ",";
-
   // begin = high_resolution_clock::now();
   // cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
   // end = high_resolution_clock::now();
@@ -93,7 +87,7 @@ void run_bench(size_t n, size_t d) {
   begin = high_resolution_clock::now();
   cout << "Netw_X(" << networkx(n, d) << ") = ";
   end = high_resolution_clock::now();
-  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count(); 
+  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed << " ns" << endl;
 }
 

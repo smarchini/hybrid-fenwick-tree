@@ -27,8 +27,8 @@ public:
   ByteL(uint64_t sequence[], size_t size) : Levels(size != 0 ? lambda(size) + 1 : 1), Size(size) {
     for (size_t i = 1; i <= Levels; i++) {
       size_t space = ((size + (1ULL << (i - 1))) / (1ULL << i)) * heightsize(i - 1);
-      Tree[i - 1].reserve(space);
-      Tree[i - 1].resize(space);
+      Tree[i - 1].reserve(space + 8);
+      Tree[i - 1].resize(space + 8);
     }
 
     for (size_t l = 0; l < Levels; l++) {
@@ -78,13 +78,13 @@ public:
   virtual size_t find(uint64_t *val) const {
     size_t node = 0, idx = 0;
 
-    for (int height = Levels - 1; height >= 0; --height) {
+    for (int height = Levels - 1; height != SIZE_MAX; height--) {
       const size_t isize = heightsize(height);
       const size_t pos = idx * heightsize(height);
 
       idx <<= 1;
 
-      if (pos + isize >= Tree[height].size())
+      if (pos >= Tree[height].size() - 8)
         continue;
 
       const uint64_t value = byteread(&Tree[height][pos], isize);
@@ -109,7 +109,7 @@ public:
 
       idx <<= 1;
 
-      if (pos + isize >= Tree[height].size())
+      if (pos >= Tree[height].size() - 8)
         continue;
 
       const uint64_t value = (BOUND << height) - byteread(&Tree[height][pos], isize);
@@ -149,8 +149,8 @@ public:
   }
 
   virtual void pop() {
-    int height = rho(Size); // TODO: rho(Size - 1) ?
-    Tree[height].resize((Size >> (1 + height)) * heightsize(height));
+    int height = rho(Size);
+    Tree[height].resize((Size >> (1 + height)) * heightsize(height) + 7);
     Size--;
   }
 

@@ -40,7 +40,7 @@ public:
 // using hft::fenwick::TypeL<64>::Tree16;
 // using hft::fenwick::TypeL<64>::Tree64;
 // };
-// 
+//
 // class TypeF_Test : public hft::fenwick::TypeF<64> {
 // public:
 // TypeF_Test(std::uint64_t sequence[], std::size_t length)

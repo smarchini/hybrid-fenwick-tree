@@ -12,7 +12,7 @@
 //#include "fenwick/bytel.hpp"
 // #include "fenwick/typef.hpp"
 // #include "fenwick/typel.hpp"
-#include "fenwick/hybrid.hpp" 
+#include "fenwick/hybrid.hpp"
 
 #include "fenwicktree.hpp"
 #include "rankselect.hpp"

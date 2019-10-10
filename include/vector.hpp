@@ -42,6 +42,11 @@ public:
     return *this;
   }
 
+  void shrink(size_t size) {
+    if (size * sizeof(T) < Capacity)
+      remap(size);
+  }
+
   void reserve(size_t size) {
     if (size * sizeof(T) > Capacity)
       remap(size);
@@ -53,18 +58,9 @@ public:
     Size = size;
   }
 
-  void shrink(size_t size) {
-    if (size * sizeof(T) < Capacity)
-      remap(size);
-  }
-
-  // TODO: perfect forwarding or something?
   void pushBack(T elem) {
-    std::cout << "Pushing Back" << std::endl;
-    if (++Size > Capacity)
-      reserve(Capacity != 0 ? Capacity * 2 : 32);
-
-    Data[Size] = elem;
+    resize(Size + 1);
+    Data[Size - 1] = elem;
   }
 
   T popBack() { return Data[--Size]; }

@@ -69,7 +69,9 @@ constexpr size_t ceil_log2_plus1(size_t n) { return ((n < 2) ? 1 : 1 + ceil_log2
  * ceil_log2() - log2 rounded up.
  *
  */
-constexpr int inline ceil_log2(const uint64_t x) { return x <= 2 ? x - 1 : 64 - __builtin_clzll(x - 1); }
+constexpr int inline ceil_log2(const uint64_t x) {
+  return x <= 2 ? x - 1 : 64 - __builtin_clzll(x - 1);
+}
 
 /**
  * round_pow2 - Static round up to the next highest power of two.

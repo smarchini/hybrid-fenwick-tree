@@ -12,9 +12,11 @@ if __name__ == '__main__':
     data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
     matplotlib.rcParams.update({'font.size': 8})
     #######
-    plt.plot(data['d'], data['fixedl'],   linestyle='-',  color='#999999', label='fixed[$\ell$]')
-    plt.plot(data['d'], data['bytel'],    linestyle='-',  color='#990000', label='byte[$\ell$]')
-    plt.plot(data['d'], data['networkx'], linestyle='-',  color='#d2691e', label='NetworkX')
+    plt.plot(data['d'], data['fixedf'],   linestyle='-',  color='#000000', label='fixed[F]')
+    plt.plot(data['d'], data['fixedl'],   linestyle='-',  color='#a9a9a9', label='fixed[$\ell$]')
+    plt.plot(data['d'], data['bytef'],    linestyle='-',  color='#800000', label='byte[F]')
+    plt.plot(data['d'], data['bytel'],    linestyle='-',  color='#f58231', label='byte[$\ell$]')
+    #plt.plot(data['d'], data['networkx'], linestyle='-',  color='#d2691e', label='NetworkX')
     #######
     plt.xlabel('d', fontsize='medium')
     plt.ylabel('Time (nS)', fontsize='medium')
