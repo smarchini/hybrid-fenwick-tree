@@ -16,7 +16,7 @@ if __name__ == '__main__':
     plt.plot(data['d'], data['bytel'],    linestyle='-',  color='#990000', label='byte[$\ell$]')
     plt.plot(data['d'], data['networkx'], linestyle='-',  color='#d2691e', label='NetworkX')
     #######
-    plt.xlabel('Size ($2^n$)', fontsize='medium')
+    plt.xlabel('d', fontsize='medium')
     plt.ylabel('Time (nS)', fontsize='medium')
     plt.legend(loc="upper left", ncol=2, shadow=True, fancybox=True, prop={'size': 8}, framealpha=1, frameon=True)
     plt.show()

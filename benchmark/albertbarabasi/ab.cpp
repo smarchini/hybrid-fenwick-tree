@@ -71,9 +71,21 @@ void run_bench() {
   cout << n << "," << d << "," << flush;
 
   auto begin = high_resolution_clock::now();
-  cout << "res=" << nostro<fenwick::FixedL<n * d>>(n, d) << ",";
+  cout << "res=" << nostro<fenwick::FixedF<n * d>>(n, d) << ",";
   auto end = high_resolution_clock::now();
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
+  cout << elapsed << ",";
+
+  begin = high_resolution_clock::now();
+  cout << "res=" << nostro<fenwick::FixedL<n * d>>(n, d) << ",";
+  end = high_resolution_clock::now();
+  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
+  cout << elapsed << ",";
+
+  begin = high_resolution_clock::now();
+  cout << "res=" << nostro<fenwick::ByteF<d * n>>(n, d) << ",";
+  end = high_resolution_clock::now();
+  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed << ",";
 
   begin = high_resolution_clock::now();
@@ -90,7 +102,7 @@ void run_bench() {
 }
 
 int main(int argc, char *argv[]) {
-  std::cout << "n,d,fixedl,bytel,networkx\n";
+  std::cout << "n,d,fixedf,fixedl,bytef,bytel,networkx\n";
 
   run_bench<1000000, 10>();
   run_bench<1000000, 20>();

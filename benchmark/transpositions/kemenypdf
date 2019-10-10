@@ -24,7 +24,7 @@ if __name__ == '__main__':
     plt.xlabel('Size ($2^n$)', fontsize='medium')
     plt.ylabel('Time (nS)', fontsize='medium')
     plt.legend(loc="upper left", ncol=2, shadow=True, fancybox=True, prop={'size': 8}, framealpha=1, frameon=True)
-    plt.show()
+    plt.savefig('transpositions.pdf', format='pdf')
 
 
 # if __name__ == '__main__':

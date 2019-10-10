@@ -49,7 +49,7 @@ public:
 
   void resize(size_t size) {
     if (size * sizeof(T) > Capacity)
-      reserve(size);
+      reserve(1ULL << (lambda(size) + 1));
     Size = size;
   }
 

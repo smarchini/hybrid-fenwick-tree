@@ -29,7 +29,7 @@ template <typename dynft> size_t nostro(const uint64_t n, const uint64_t d) {
 
 	dynft f;
 	for(int i = 0; i < d; i++)
-    f.push(1);  // NOTA: non dovrebbe essere d?
+    f.push(1);
 
 	uint64_t sum_degrees = d;
 
@@ -45,6 +45,7 @@ template <typename dynft> size_t nostro(const uint64_t n, const uint64_t d) {
 		sum_degrees += d;
 	}
 
+  cout << "space = " << f.bitCount() << ", ";
   return sum_degrees;
 }
 
@@ -63,6 +64,7 @@ size_t networkx(const uint64_t n, const uint64_t d) {
       f.push_back(i);
   }
 
+  cout << "space = " << f.capacity() * sizeof(uint64_t) << ", ";
   return f.size();
 }
 
@@ -71,10 +73,16 @@ void run_bench(size_t n, size_t d) {
   cout << "d = " << d << endl;
 
   auto begin = high_resolution_clock::now();
-  cout << "fixedl(" << nostro<fenwick::FixedL<1>>(n, d) << ") = ";
+  cout << "fixedf(" << nostro<fenwick::FixedF<1>>(n, d) << ") = ";
   auto end = high_resolution_clock::now();
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
   cout << elapsed << " ns" << endl;
+
+  begin = high_resolution_clock::now();
+  cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
+  end = high_resolution_clock::now();
+  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
+  cout << elapsed << ",";
 
   // begin = high_resolution_clock::now();
   // cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
