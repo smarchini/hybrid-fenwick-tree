@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys, numpy, matplotlib, os.path
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+matplotlib.rcParams['text.usetex'] = True
+matplotlib.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
+
+if __name__ == '__main__':
+    fname = os.path.join(sys.argv[1])
+    data = numpy.genfromtxt(fname, delimiter=',', missing_values=set([0, '0']), names=True, autostrip=True, case_sensitive=True, deletechars='', dtype=None)
+    matplotlib.rcParams.update({'font.size': 8})
+    #######
+    plt.plot(data['d'], data['fixedl'],   linestyle='-',  color='#999999', label='fixed[$\ell$]')
+    plt.plot(data['d'], data['bytel'],    linestyle='-',  color='#990000', label='byte[$\ell$]')
+    plt.plot(data['d'], data['networkx'], linestyle='-',  color='#d2691e', label='NetworkX')
+    #######
+    plt.xlabel('Size ($2^n$)', fontsize='medium')
+    plt.ylabel('Time (nS)', fontsize='medium')
+    plt.legend(loc="upper left", ncol=2, shadow=True, fancybox=True, prop={'size': 8}, framealpha=1, frameon=True)
+    plt.show()

@@ -66,54 +66,40 @@ size_t networkx(const uint64_t n, const uint64_t d) {
   return f.size();
 }
 
-template<size_t n, size_t d>
-void run_bench() {
-  cout << n << "," << d << "," << flush;
+void run_bench(size_t n, size_t d) {
+  cout << "n = " << n << "\n";
+  cout << "d = " << d << endl;
 
   auto begin = high_resolution_clock::now();
-  cout << "res=" << nostro<fenwick::FixedL<n * d>>(n, d) << ",";
+  cout << "fixedl(" << nostro<fenwick::FixedL<1>>(n, d) << ") = ";
   auto end = high_resolution_clock::now();
   auto elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
-  cout << elapsed << ",";
+  cout << elapsed << " ns" << endl;
+
+  // begin = high_resolution_clock::now();
+  // cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
+  // end = high_resolution_clock::now();
+  // elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
+  // cout << elapsed << ",";
 
   begin = high_resolution_clock::now();
-  cout << "res=" << nostro<fenwick::ByteL<d * n>>(n, d) << ",";
-  end = high_resolution_clock::now();
-  elapsed = duration_cast<chrono::nanoseconds>(end - begin).count();
-  cout << elapsed << ",";
-
-  begin = high_resolution_clock::now();
-  cout << "res=" << networkx(n, d) << ",";
+  cout << "Netw_X(" << networkx(n, d) << ") = ";
   end = high_resolution_clock::now();
   elapsed = duration_cast<chrono::nanoseconds>(end - begin).count(); 
-  cout << elapsed << endl;
+  cout << elapsed << " ns" << endl;
 }
 
 int main(int argc, char *argv[]) {
-  std::cout << "n,d,fixedl,bytel,networkx\n";
+  if (argc != 3) {
+    std::cout << "Usage ./bin/tryab [n] [d]\n";
+    return 1;
+  }
 
-  run_bench<1000000, 10>();
-  run_bench<1000000, 20>();
-  run_bench<1000000, 30>();
-  run_bench<1000000, 40>();
-  run_bench<1000000, 50>();
-  run_bench<1000000, 60>();
-  run_bench<1000000, 70>();
-  run_bench<1000000, 80>();
-  run_bench<1000000, 90>();
+  size_t n, d;
+  istringstream(argv[1]) >> n;
+  istringstream(argv[2]) >> d;
 
-  run_bench<1000000, 100>();
-  run_bench<1000000, 200>();
-  run_bench<1000000, 300>();
-  run_bench<1000000, 400>();
-  run_bench<1000000, 500>();
-  run_bench<1000000, 600>();
-  run_bench<1000000, 700>();
-  run_bench<1000000, 800>();
-  run_bench<1000000, 900>();
-
-  run_bench<1000000, 1000>();
-  run_bench<1000000, 2000>();
+  run_bench(n, d);
 
   return 0;
 }
